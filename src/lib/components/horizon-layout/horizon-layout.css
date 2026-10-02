@@ -1,3 +1,25 @@
+/* The standalone horizon-layout package ships its own --hl-* defaults on :root
+   and .light. Re-point them at the design tokens on the layout's root element
+   (which the popout window also carries), so the package's rules render in the
+   design-system theme whichever stylesheet the bundler loads last. */
+.horizon-layout {
+	--hl-background: var(--background);
+	--hl-foreground: var(--foreground);
+	--hl-primary: var(--primary);
+	--hl-popover: var(--popover);
+	--hl-border: var(--border);
+	--hl-card: var(--card);
+	--hl-secondary: var(--secondary);
+	--hl-muted-foreground: var(--muted-foreground);
+	--hl-ring: var(--ring);
+	--hl-accent: var(--accent);
+	--hl-radius: var(--radius);
+	--hl-glass-blur: var(--glass-blur);
+	--hl-tab-inactive-color: var(--tab-inactive-color);
+	--hl-drop-hint-border: var(--drop-hint-border);
+	--hl-drop-hint-bg: var(--drop-hint-bg);
+}
+
 .horizon-layout {
 	width: 100%;
 	height: 100%;
