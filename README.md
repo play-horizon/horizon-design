@@ -2450,24 +2450,25 @@ Override any token in your CSS:
 
 | Token                  | Dark (default)                | Light (`.light`)              |
 | ---------------------- | ----------------------------- | ----------------------------- |
-| `--background`         | `oklch(0.09 0.02 264)`        | `oklch(0.96 0.01 264)`        |
-| `--foreground`         | `oklch(0.89 0.02 255)`        | `oklch(0.13 0.02 264)`        |
-| `--primary`            | `oklch(0.65 0.18 277)`        | `oklch(0.55 0.18 277)`        |
-| `--primary-foreground` | `white`                       | `white`                       |
-| `--secondary`          | `oklch(0.16 0.03 265)`        | `oklch(0.9 0.02 264)`         |
-| `--muted`              | `oklch(0.16 0.03 265)`        | `oklch(0.92 0.015 264)`       |
-| `--muted-foreground`   | `oklch(0.59 0.03 255)`        | `oklch(0.42 0.04 255)`        |
-| `--accent`             | `oklch(0.22 0.05 266)`        | `oklch(0.88 0.025 264)`       |
-| `--card`               | `oklch(0.13 0.02 264)`        | `white`                       |
-| `--popover`            | `oklch(0.12 0.02 264 / 0.92)` | `oklch(0.98 0.01 264 / 0.95)` |
-| `--border`             | `oklch(0.22 0.05 266)`        | `oklch(0.82 0.02 264)`        |
-| `--input`              | `oklch(0.19 0.02 264)`        | `oklch(0.88 0.02 264)`        |
-| `--ring`               | `oklch(0.65 0.18 277 / 0.55)` | `oklch(0.55 0.18 277 / 0.55)` |
-| `--destructive`        | `oklch(0.6 0.22 25)`          | same                          |
-| `--success`            | `oklch(0.65 0.18 142)`        | same                          |
-| `--warning`            | `oklch(0.75 0.18 85)`         | same                          |
-| `--info`               | `oklch(0.65 0.18 220)`        | same                          |
-| `--radius`             | `0.5rem`                      | same                          |
+| `--background`         | `#111624`                     | `#f8fafc`                     |
+| `--foreground`         | `#f1f5f9`                     | `#0f172a`                     |
+| `--primary`            | `#2d65f2`                     | same                          |
+| `--primary-foreground` | `#ffffff`                     | same                          |
+| `--primary-hover`      | `#4577f5`                     | `#1d4ed8`                     |
+| `--secondary`          | `#192138`                     | `#f1f5f9`                     |
+| `--muted`              | `#182035`                     | `#f1f5f9`                     |
+| `--muted-foreground`   | `#7888a6`                     | `#64748b`                     |
+| `--accent`             | `#1e2944`                     | `#e2e8f0`                     |
+| `--card`               | `#141a2b`                     | `#ffffff`                     |
+| `--popover`            | `#171e32`                     | `#ffffff`                     |
+| `--border`             | `#212c47`                     | `oklch(0.9288 0.0126 255.5)`  |
+| `--input`              | `#151c2e`                     | `#ffffff`                     |
+| `--ring`               | `#2d65f2`                     | same                          |
+| `--destructive`        | `#ef4444`                     | same                          |
+| `--success`            | `#10b981`                     | same                          |
+| `--warning`            | `#f59e0b`                     | same                          |
+| `--info`               | `#38bdf8`                     | `#3b82f6`                     |
+| `--radius`             | `0.375rem`                    | same                          |
 
 ---
 

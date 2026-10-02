@@ -2848,7 +2848,7 @@
 
 	/* Hero dot-grid pattern */
 	.dot-grid {
-		background-image: radial-gradient(circle, oklch(0.65 0.18 277 / 0.14) 1px, transparent 1px);
+		background-image: radial-gradient(circle, oklch(from var(--primary) l c h / 0.14) 1px, transparent 1px);
 		background-size: 28px 28px;
 	}
 
@@ -2856,10 +2856,10 @@
 	.shimmer-title {
 		background: linear-gradient(
 			110deg,
-			oklch(0.89 0.02 255) 0%,
-			oklch(0.65 0.22 277) 40%,
-			oklch(0.78 0.14 300) 60%,
-			oklch(0.89 0.02 255) 100%
+			var(--foreground) 0%,
+			var(--primary) 40%,
+			var(--info) 60%,
+			var(--foreground) 100%
 		);
 		background-size: 250% auto;
 		-webkit-background-clip: text;
@@ -2885,7 +2885,7 @@
 		font-weight: 700;
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: oklch(0.65 0.18 277);
+		color: var(--primary);
 		margin-bottom: 0.5rem;
 	}
 	.section-tag::before {
@@ -2893,7 +2893,7 @@
 		display: block;
 		width: 14px;
 		height: 1.5px;
-		background: oklch(0.65 0.18 277);
+		background: var(--primary);
 		border-radius: 9999px;
 	}
 </style>
