@@ -41,7 +41,7 @@
 		<Popover.Positioner>
 			<Popover.Content
 				class={cn(
-					'z-50 data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border text-popover-foreground bg-popover w-72 rounded-xl border shadow-xl backdrop-blur-xl outline-none',
+					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border text-popover-foreground bg-popover z-50 w-72 rounded-xl border shadow-xl backdrop-blur-xl outline-none',
 					contentClass
 				)}
 				data-slot="popover-content"

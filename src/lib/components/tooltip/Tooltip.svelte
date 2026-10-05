@@ -37,7 +37,7 @@
 		<Tooltip.Positioner>
 			<Tooltip.Content
 				class={cn(
-					'z-50 animate-fade-in border-border bg-popover text-popover-foreground rounded-lg border px-3 py-1.5 text-xs shadow-xl backdrop-blur-xl',
+					'animate-fade-in border-border bg-popover text-popover-foreground z-50 rounded-lg border px-3 py-1.5 text-xs shadow-xl backdrop-blur-xl',
 					contentClass
 				)}
 				data-slot="tooltip-content"

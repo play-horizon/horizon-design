@@ -58,7 +58,7 @@
 		<Select.Positioner>
 			<Select.Content
 				class={cn(
-					'z-50 data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border text-popover-foreground bg-popover min-w-(--reference-width) rounded-xl border p-1 shadow-xl backdrop-blur-xl outline-none',
+					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border text-popover-foreground bg-popover z-50 min-w-(--reference-width) rounded-xl border p-1 shadow-xl backdrop-blur-xl outline-none',
 					contentClass
 				)}
 				data-slot="select-content"

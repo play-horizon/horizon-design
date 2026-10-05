@@ -29,7 +29,7 @@
 		<HoverCard.Positioner>
 			<HoverCard.Content
 				class={cn(
-					'z-50 data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground w-64 rounded-xl border p-4 shadow-xl backdrop-blur-xl outline-none',
+					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 w-64 rounded-xl border p-4 shadow-xl backdrop-blur-xl outline-none',
 					contentClass
 				)}
 				data-slot="hover-card-content"
