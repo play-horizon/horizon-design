@@ -118,7 +118,7 @@
 .horizon-layout-split__ratio {
 	position: absolute;
 	padding: 2px 7px;
-	border-radius: var(--radius-sm, 0.25rem);
+	border-radius: 0.125rem;
 	background: var(--popover);
 	border: 1px solid var(--border);
 	color: var(--primary);
