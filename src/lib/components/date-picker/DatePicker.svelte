@@ -50,7 +50,7 @@
 	</DatePicker.Control>
 	<DatePicker.Positioner>
 		<DatePicker.Content
-			class="z-50 data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover w-fit rounded-xl border p-3 shadow-xl backdrop-blur-xl outline-none"
+			class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover z-50 w-fit rounded-xl border p-3 shadow-xl backdrop-blur-xl outline-none"
 			data-slot="date-picker-content"
 		>
 			<DatePicker.View view="day">

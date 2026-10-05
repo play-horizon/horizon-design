@@ -33,7 +33,7 @@
 	>
 		<MingcuteLoading3Fill
 			aria-hidden="true"
-			class={cn('animate-spin shrink-0', sizes[size])}
+			class={cn('shrink-0 animate-spin', sizes[size])}
 			data-slot="spinner"
 		/>
 		<span data-slot="spinner-label">{label}</span>

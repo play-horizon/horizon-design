@@ -279,7 +279,7 @@
 							isExpanded && 'rotate-90'
 						)}
 					/>
-					<span class="flex-1 font-medium leading-none">{card.title}</span>
+					<span class="flex-1 leading-none font-medium">{card.title}</span>
 					{#if card.subtitle}
 						<span class="text-muted-foreground text-xs">{card.subtitle}</span>
 					{/if}
@@ -296,7 +296,7 @@
 				>
 					<span class="grid grid-cols-2 gap-0.75 p-0.5">
 						{#each [0, 1, 2, 3, 4, 5] as dot (dot)}
-							<span class="bg-current size-0.75 rounded-full"></span>
+							<span class="size-0.75 rounded-full bg-current"></span>
 						{/each}
 					</span>
 				</button>

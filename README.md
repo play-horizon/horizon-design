@@ -2342,9 +2342,7 @@ A resizable, drag-to-reorder tabbed layout engine. Wrapper around [horizon-layou
 	import { SvelteMap } from 'svelte/reactivity';
 
 	let config: LayoutConfig = $state({
-		root: {
-			/* ... */
-		}
+		root: {/* ... */}
 	});
 
 	const views = new SvelteMap<Id, View>([['panel-a', { title: 'Panel A', snippet: mySnippetA }]]);

@@ -86,7 +86,7 @@
 	disabled={isLoading || disabled}
 	{...rest}
 >
-	<span class="flex items-center justify-center gap-2 w-full">
+	<span class="flex w-full items-center justify-center gap-2">
 		{#if isLoading}
 			<Spinner aria-hidden="true" />
 		{/if}
