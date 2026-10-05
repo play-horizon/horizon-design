@@ -18,8 +18,8 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2
       horizon-layout:
-        specifier: ^1.0.2
-        version: 1.0.2(svelte@5.57.1(@typescript-eslint/types@8.71.0))
+        specifier: ^1.0.3
+        version: 1.0.3(svelte@5.57.1(@typescript-eslint/types@8.71.0))
       tailwind-merge:
         specifier: ^3.7.0
         version: 3.7.0
@@ -1041,8 +1041,8 @@ packages:
   hookified@2.2.0:
     resolution: {integrity: sha512-p/LgFzRN5FeoD3DLS6bkUapeye6E4SI6yJs6KetENd18S+FBthqYq2amJUWpt5z0EQwwHemidjY5OqJGEKm5uA==}
 
-  horizon-layout@1.0.2:
-    resolution: {integrity: sha512-lAeO0uYrk/OXJxAj3k0EdOoBhEM5/eqm5Ia8unOAMxkHFKpUECvy/ZNuXx0B2gb0ysdtipaWSzgbydPpnRLnWw==}
+  horizon-layout@1.0.3:
+    resolution: {integrity: sha512-wSljcdBxthI6ZGQPYAqUYv0KCh2oYm5x5CN6bip5ZUUdCw7QZ5LjlSif+8i1Qzk1AERG6XiMzZ2i6ESZXmrBCw==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -2994,7 +2994,7 @@ snapshots:
 
   hookified@2.2.0: {}
 
-  horizon-layout@1.0.2(svelte@5.57.1(@typescript-eslint/types@8.71.0)):
+  horizon-layout@1.0.3(svelte@5.57.1(@typescript-eslint/types@8.71.0)):
     dependencies:
       svelte: 5.57.1(@typescript-eslint/types@8.71.0)
 
