@@ -1,5 +1,14 @@
 # horizon-design
 
+<div align="center">
+	<a href="https://www.npmjs.com/package/horizon-design">
+		<img src="https://img.shields.io/npm/v/horizon-design.svg" alt="npm version" />
+	</a>
+	<a href="https://www.npmjs.com/package/horizon-design">
+		<img src="https://img.shields.io/npm/l/horizon-design.svg" alt="npm license" />
+	</a>
+</div>
+
 Horizon's design system and Svelte 5 UI component library. Built on [Ark UI](https://ark-ui.com) for headless behaviour and [Tailwind CSS v4](https://tailwindcss.com) for styling, with OKLCH color tokens and full dark/light theme support.
 
 ---
@@ -2333,7 +2342,7 @@ An accordion-style panel of cards with drag-to-reorder and full keyboard navigat
 
 ### HorizonLayout
 
-A resizable, drag-to-reorder tabbed layout engine. Wrapper around [horizon-layout](https://github.com/horizon-engine/horizon-layout).
+A resizable, drag-to-reorder tabbed layout engine. Wrapper around [horizon-layout](https://github.com/play-horizon/horizon-layout).
 
 ```svelte
 <script>
