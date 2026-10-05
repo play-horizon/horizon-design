@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Fail on CRLF line endings
         run: |
@@ -24,7 +24,7 @@ jobs:
         with:
           version: 10
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: pnpm
@@ -35,7 +35,7 @@ jobs:
       - name: Type check
         run: pnpm run check
 
-      - name: Check formatting & lint
+      - name: Lint & check formatting
         run: pnpm run lint
 
   release:
@@ -68,7 +68,7 @@ jobs:
         with:
           version: 10
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.tag_exists.outputs.exists == 'false'
         with:
           node-version: 22
