@@ -1,11 +1,16 @@
 <!--
 @component
-A date field with a calendar popover (Ark DatePicker); `placeholder` and Ark `translations` are
-passed in.
+A date field with a calendar popover (Ark DatePicker). `label` names the field; `placeholder` and
+`translations` (the names of the controls and the roles the popover and its tables are announced
+as) are passed in.
 -->
 <script lang="ts">
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
-	import type { DatePickerValueChangeDetails, DateValue } from '@ark-ui/svelte/date-picker';
+	import type {
+		DatePickerDateView,
+		DatePickerValueChangeDetails,
+		DateValue
+	} from '@ark-ui/svelte/date-picker';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteCalendarLine from '~icons/mingcute/calendar-line';
@@ -14,7 +19,7 @@ passed in.
 
 	let {
 		class: className = '',
-		label = '',
+		label,
 		placeholder = '',
 		value = $bindable(),
 		onValueChange,
@@ -23,8 +28,8 @@ passed in.
 	}: {
 		/** Classes merged onto the root. */
 		class?: string;
-		/** The field's visible label, such as "Release date". */
-		label?: string;
+		/** The field's visible label, which names it, such as "Release date". */
+		label: string;
 		/** The text shown while no date is chosen. */
 		placeholder?: string;
 		/** The chosen dates (bindable); when unset, `defaultValue` gives the first ones. */
@@ -34,20 +39,28 @@ passed in.
 		/**
 		 * The accessible names Ark gives the controls: the calendar button (`trigger(open)`), the
 		 * popover (`content`), each day (`dayCell(state)`, from its formatted `valueText`), the
-		 * previous and next buttons and the view switch (`viewTrigger`).
+		 * previous and next buttons and the view switch (`viewTrigger`); and the roles the popover
+		 * (`contentRoleDescription`, such as "date picker") and the table of each view
+		 * (`tableRoleDescription(view)`, such as "calendar month" for `day`) are announced as.
 		 */
 		translations: Required<
 			Pick<
 				NonNullable<DatePickerRootProps['translations']>,
 				'trigger' | 'content' | 'dayCell' | 'prevTrigger' | 'nextTrigger' | 'viewTrigger'
 			>
-		>;
+		> & {
+			contentRoleDescription: string;
+			tableRoleDescription: (view: DatePickerDateView) => string;
+		};
 		/**
 		 * Other props of Ark's `DatePicker.Root`: `selectionMode` (`single`, `multiple` or
 		 * `range`), `locale`, `min` and `max`.
 		 */
 		[key: string]: unknown;
 	} = $props();
+
+	const { contentRoleDescription, tableRoleDescription, ...arkTranslations } =
+		$derived(translations);
 
 	const cellClass =
 		'flex size-8 items-center justify-center rounded-lg text-sm transition-colors hover:bg-hover data-today:font-semibold data-selected:bg-primary data-selected:text-on-primary data-outside-range:opacity-30 data-disabled:pointer-events-none data-disabled:opacity-30';
@@ -60,16 +73,14 @@ passed in.
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="date-picker"
 	{value}
-	{translations}
+	translations={arkTranslations}
 	onValueChange={(details) => {
 		value = details.value;
 		onValueChange?.(details);
 	}}
 	{...rest}
 >
-	{#if label}
-		<DatePicker.Label class="text-sm font-medium text-fg">{label}</DatePicker.Label>
-	{/if}
+	<DatePicker.Label class="text-sm font-medium text-fg">{label}</DatePicker.Label>
 	<DatePicker.Control class="relative flex items-center">
 		<DatePicker.Input
 			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 pr-9 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
@@ -84,6 +95,7 @@ passed in.
 	<Portal>
 		<DatePicker.Positioner>
 			<DatePicker.Content
+				aria-roledescription={contentRoleDescription}
 				class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
 				data-slot="date-picker-content"
 			>
@@ -103,7 +115,10 @@ passed in.
 					</div>
 					<DatePicker.Context>
 						{#snippet render(api)}
-							<DatePicker.Table class="w-full border-collapse">
+							<DatePicker.Table
+								class="w-full border-collapse"
+								aria-roledescription={tableRoleDescription('day')}
+							>
 								<DatePicker.TableHead>
 									<DatePicker.TableRow>
 										{#each api().weekDays as weekDay (weekDay.long)}
@@ -149,7 +164,10 @@ passed in.
 					</div>
 					<DatePicker.Context>
 						{#snippet render(api)}
-							<DatePicker.Table class="w-full border-collapse">
+							<DatePicker.Table
+								class="w-full border-collapse"
+								aria-roledescription={tableRoleDescription('month')}
+							>
 								<DatePicker.TableBody>
 									{#each api().getMonthsGrid() as months (months[0].value)}
 										<DatePicker.TableRow>
@@ -184,7 +202,10 @@ passed in.
 					</div>
 					<DatePicker.Context>
 						{#snippet render(api)}
-							<DatePicker.Table class="w-full border-collapse">
+							<DatePicker.Table
+								class="w-full border-collapse"
+								aria-roledescription={tableRoleDescription('year')}
+							>
 								<DatePicker.TableBody>
 									{#each api().getYearsGrid() as years (years[0].value)}
 										<DatePicker.TableRow>
