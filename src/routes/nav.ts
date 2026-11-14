@@ -32,7 +32,8 @@ export const navGroups: NavGroup[] = [
 			{ id: 'swap', label: 'Swap' },
 			{ id: 'toggle', label: 'Toggle' },
 			{ id: 'toggle-group', label: 'Toggle Group' },
-			{ id: 'toggle-tooltip', label: 'Toggle Tooltip' }
+			{ id: 'toggle-tooltip', label: 'Toggle Tooltip' },
+			{ id: 'vote-buttons', label: 'Vote Buttons' }
 		]
 	},
 	{
@@ -63,6 +64,7 @@ export const navGroups: NavGroup[] = [
 			{ id: 'signature-pad', label: 'Signature Pad' },
 			{ id: 'slider', label: 'Slider' },
 			{ id: 'switch', label: 'Switch' },
+			{ id: 'tag-picker', label: 'Tag Picker' },
 			{ id: 'textarea', label: 'Textarea' }
 		]
 	},
