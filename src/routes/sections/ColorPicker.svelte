@@ -16,8 +16,13 @@ Docs: ColorPicker. Live examples of the ColorPicker component.
 				labels={{
 					trigger: 'Choose a colour',
 					area: 'Saturation and brightness',
+					areaRoleDescription: '2D slider',
+					areaValue: (saturation, brightness) =>
+						`Saturation ${saturation}, brightness ${brightness}`,
 					hue: 'Hue',
+					hueValue: (hue) => `${hue} degrees`,
 					alpha: 'Opacity',
+					alphaValue: (alpha) => `${Math.round(alpha * 100)}%`,
 					hex: 'Hex',
 					swatch: (color) => `Use ${color}`
 				}}

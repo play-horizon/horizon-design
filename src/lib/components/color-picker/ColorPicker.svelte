@@ -2,7 +2,8 @@
 @component
 Picks a colour: a hex field and a swatch trigger opening an area, hue and alpha sliders and
 fields (Ark ColorPicker); swatches are passed in. `labels` names every control for assistive
-technology; the trigger takes the visible `label` when there is one.
+technology and gives the values the sliders announce; the trigger takes the visible `label` when
+there is one.
 -->
 <script lang="ts">
 	import {
@@ -32,10 +33,21 @@ technology; the trigger takes the visible `label` when there is one.
 			trigger: string;
 			/** The saturation and brightness area, such as "Saturation and brightness". */
 			area: string;
+			/** The role the area is announced as, such as "2D slider". */
+			areaRoleDescription: string;
+			/**
+			 * The area's announced value, from its saturation and brightness (lightness under an HSL
+			 * `format`), each from 0 to 100, such as `Saturation ${saturation}, brightness ${brightness}`.
+			 */
+			areaValue: (saturation: number, brightness: number) => string;
 			/** The hue slider, such as "Hue". */
 			hue: string;
+			/** The hue slider's announced value, from the hue in degrees, such as `${hue} degrees`. */
+			hueValue: (hue: number) => string;
 			/** The alpha slider and field, such as "Opacity". */
 			alpha: string;
+			/** The alpha slider's announced value, from the alpha from 0 to 1, such as `${alpha * 100}%`. */
+			alphaValue: (alpha: number) => string;
 			/** The hex fields, such as "Hex". */
 			hex: string;
 			/** A preset swatch, from its colour string, such as `Use ${color}`. */
@@ -50,6 +62,11 @@ technology; the trigger takes the visible `label` when there is one.
 		/** Other props of Ark's `ColorPicker.Root`, such as `defaultValue`, `disabled` and `name`. */
 		[key: string]: unknown;
 	} = $props();
+
+	/** The colour in the HSB or HSL form the area and the sliders work in, chosen as Ark does. */
+	function toAreaColor(color: Color, format: string): Color {
+		return color.toFormat(format.startsWith('hsl') ? 'hsla' : 'hsba');
+	}
 </script>
 
 <ColorPicker.Root
@@ -86,33 +103,47 @@ technology; the trigger takes the visible `label` when there is one.
 	<Portal>
 		<ColorPicker.Positioner>
 			<ColorPicker.Content
+				aria-label={labels.trigger}
 				class="z-50 flex w-64 flex-col gap-3 rounded-xl border border-border bg-raised p-4 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
 				data-slot="color-picker-content"
 			>
-				<ColorPicker.Area class="h-36 w-full overflow-hidden rounded-lg">
-					<ColorPicker.AreaBackground class="h-full w-full rounded-lg" />
-					<ColorPicker.AreaThumb
-						aria-label={labels.area}
-						class="size-4 rounded-full border-2 border-paper shadow-md"
-					/>
-				</ColorPicker.Area>
+				<ColorPicker.Context>
+					{#snippet render(api)}
+						{@const area = toAreaColor(api().value, api().format)}
+						{@const [, xChannel, yChannel] = area.getChannels()}
+						<ColorPicker.Area class="h-36 w-full overflow-hidden rounded-lg">
+							<ColorPicker.AreaBackground class="h-full w-full rounded-lg" />
+							<ColorPicker.AreaThumb
+								aria-label={labels.area}
+								aria-roledescription={labels.areaRoleDescription}
+								aria-valuetext={labels.areaValue(
+									area.getChannelValue(xChannel),
+									area.getChannelValue(yChannel)
+								)}
+								class="size-4 rounded-full border-2 border-paper shadow-md"
+							/>
+						</ColorPicker.Area>
 
-				<ColorPicker.ChannelSlider channel="hue" class="h-3 w-full rounded-full">
-					<ColorPicker.ChannelSliderTrack class="h-full w-full rounded-full" />
-					<ColorPicker.ChannelSliderThumb
-						aria-label={labels.hue}
-						class="size-4 -translate-y-0.5 rounded-full border-2 border-paper shadow-md"
-					/>
-				</ColorPicker.ChannelSlider>
+						<ColorPicker.ChannelSlider channel="hue" class="h-3 w-full rounded-full">
+							<ColorPicker.ChannelSliderTrack class="h-full w-full rounded-full" />
+							<ColorPicker.ChannelSliderThumb
+								aria-label={labels.hue}
+								aria-valuetext={labels.hueValue(area.getChannelValue('hue'))}
+								class="size-4 -translate-y-0.5 rounded-full border-2 border-paper shadow-md"
+							/>
+						</ColorPicker.ChannelSlider>
 
-				<ColorPicker.ChannelSlider channel="alpha" class="h-3 w-full rounded-full">
-					<ColorPicker.TransparencyGrid class="rounded-full" />
-					<ColorPicker.ChannelSliderTrack class="h-full w-full rounded-full" />
-					<ColorPicker.ChannelSliderThumb
-						aria-label={labels.alpha}
-						class="size-4 -translate-y-0.5 rounded-full border-2 border-paper shadow-md"
-					/>
-				</ColorPicker.ChannelSlider>
+						<ColorPicker.ChannelSlider channel="alpha" class="h-3 w-full rounded-full">
+							<ColorPicker.TransparencyGrid class="rounded-full" />
+							<ColorPicker.ChannelSliderTrack class="h-full w-full rounded-full" />
+							<ColorPicker.ChannelSliderThumb
+								aria-label={labels.alpha}
+								aria-valuetext={labels.alphaValue(area.getChannelValue('alpha'))}
+								class="size-4 -translate-y-0.5 rounded-full border-2 border-paper shadow-md"
+							/>
+						</ColorPicker.ChannelSlider>
+					{/snippet}
+				</ColorPicker.Context>
 
 				<div class="flex gap-2">
 					<ColorPicker.ChannelInput
