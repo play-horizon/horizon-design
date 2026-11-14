@@ -15,16 +15,16 @@ Docs: ToggleTooltip. Live examples of the ToggleTooltip component.
 	<Card>
 		<div class="flex gap-1">
 			<ToggleTooltip label="Bold">
-				<MingcuteBoldLine class="size-4" />
+				<MingcuteBoldLine class="size-4" aria-hidden="true" />
 			</ToggleTooltip>
 			<ToggleTooltip label="Italic">
-				<MingcuteItalicLine class="size-4" />
+				<MingcuteItalicLine class="size-4" aria-hidden="true" />
 			</ToggleTooltip>
 			<ToggleTooltip label="Underline">
-				<MingcuteUnderlineLine class="size-4" />
+				<MingcuteUnderlineLine class="size-4" aria-hidden="true" />
 			</ToggleTooltip>
 			<ToggleTooltip label="Strikethrough">
-				<MingcuteStrikethroughLine class="size-4" />
+				<MingcuteStrikethroughLine class="size-4" aria-hidden="true" />
 			</ToggleTooltip>
 		</div>
 	</Card>
