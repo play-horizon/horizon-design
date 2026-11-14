@@ -5,7 +5,11 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 `prevTriggerLabel`, `nextTriggerLabel`, `itemLabel`).
 -->
 <script lang="ts">
-	import { Pagination, type PaginationPageChangeDetails } from '@ark-ui/svelte';
+	import {
+		Pagination,
+		type PaginationRootProps,
+		type PaginationPageChangeDetails
+	} from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
@@ -17,6 +21,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 		siblingCount = 1,
 		page = $bindable(),
 		onPageChange,
+		translations,
 		...rest
 	}: {
 		/** Classes added to the row of links. */
@@ -31,6 +36,15 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 		page?: number;
 		/** Called on every change of page, after `page` is updated. */
 		onPageChange?: (details: PaginationPageChangeDetails) => void;
+		/** Names of the navigation (`rootLabel`), the previous and next buttons and each page link (`itemLabel`). */
+		translations: Required<
+			Pick<
+				NonNullable<PaginationRootProps['translations']>,
+				'rootLabel' | 'prevTriggerLabel' | 'nextTriggerLabel' | 'itemLabel'
+			>
+		> &
+			NonNullable<PaginationRootProps['translations']>;
+		/** Other props of Ark's `Pagination.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -39,6 +53,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 </script>
 
 <Pagination.Root
+	{translations}
 	{count}
 	{pageSize}
 	{siblingCount}

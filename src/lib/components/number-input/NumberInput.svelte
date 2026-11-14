@@ -6,7 +6,11 @@ the field; without it, Ark's `defaultValue` sets the first value. Ark's `transla
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { NumberInput, type NumberInputValueChangeDetails } from '@ark-ui/svelte';
+	import {
+		NumberInput,
+		type NumberInputRootProps,
+		type NumberInputValueChangeDetails
+	} from '@ark-ui/svelte';
 	import MingcuteUpLine from '~icons/mingcute/up-line';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 	import { cn } from '$lib/utils';
@@ -17,6 +21,7 @@ the field; without it, Ark's `defaultValue` sets the first value. Ark's `transla
 		children,
 		value = $bindable(),
 		onValueChange,
+		translations,
 		...rest
 	}: {
 		/** Classes added to the root, around the label and the field. */
@@ -29,11 +34,18 @@ the field; without it, Ark's `defaultValue` sets the first value. Ark's `transla
 		value?: string;
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: NumberInputValueChangeDetails) => void;
+		/** Names of the step buttons (`incrementLabel`, `decrementLabel`), and optionally `valueText`, the value as announced. */
+		translations: Required<
+			Pick<NonNullable<NumberInputRootProps['translations']>, 'incrementLabel' | 'decrementLabel'>
+		> &
+			NonNullable<NumberInputRootProps['translations']>;
+		/** Other props of Ark's `NumberInput.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <NumberInput.Root
+	{translations}
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"
 	{value}

@@ -6,7 +6,11 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { PinInput, type PinInputValueChangeDetails } from '@ark-ui/svelte';
+	import {
+		PinInput,
+		type PinInputRootProps,
+		type PinInputValueChangeDetails
+	} from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
 	let {
@@ -16,6 +20,7 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 		count = 4,
 		value = $bindable(),
 		onValueChange,
+		translations,
 		...rest
 	}: {
 		/** Classes added to the root, around the label and the fields. */
@@ -30,6 +35,10 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 		value?: string[];
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: PinInputValueChangeDetails) => void;
+		/** `inputLabel(index, length)` names each field, such as "Digit 2 of 6". */
+		translations: Required<Pick<NonNullable<PinInputRootProps['translations']>, 'inputLabel'>> &
+			NonNullable<PinInputRootProps['translations']>;
+		/** Other props of Ark's `PinInput.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -37,6 +46,7 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 </script>
 
 <PinInput.Root
+	{translations}
 	class={cn('flex flex-col gap-2', className)}
 	data-slot="pin-input"
 	{count}

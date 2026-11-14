@@ -5,7 +5,11 @@ A row of stars to give a rating (Ark RatingGroup). `label` names the group; Ark'
 Ark's `defaultValue` sets the first one.
 -->
 <script lang="ts">
-	import { RatingGroup, type RatingGroupValueChangeDetails } from '@ark-ui/svelte';
+	import {
+		RatingGroup,
+		type RatingGroupRootProps,
+		type RatingGroupValueChangeDetails
+	} from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteStarFill from '~icons/mingcute/star-fill';
 
@@ -15,6 +19,7 @@ Ark's `defaultValue` sets the first one.
 		count = 5,
 		value = $bindable(),
 		onValueChange,
+		translations,
 		...rest
 	}: {
 		/** Classes added to the root, around the label and the stars. */
@@ -27,11 +32,18 @@ Ark's `defaultValue` sets the first one.
 		value?: number;
 		/** Called on every change of the rating, after `value` is updated. */
 		onValueChange?: (details: RatingGroupValueChangeDetails) => void;
+		/** `ratingValueText(index)` names each star, such as "3 stars". */
+		translations: Required<
+			Pick<NonNullable<RatingGroupRootProps['translations']>, 'ratingValueText'>
+		> &
+			NonNullable<RatingGroupRootProps['translations']>;
+		/** Other props of Ark's `RatingGroup.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <RatingGroup.Root
+	{translations}
 	{count}
 	{value}
 	onValueChange={(details) => {

@@ -9,7 +9,11 @@ import NumberInput from './NumberInput.svelte';
 
 describe('NumberInput', () => {
 	it('starts from defaultValue when no value is bound', () => {
-		const { getByRole } = render(NumberInput, { label: 'Quantity', defaultValue: '5' });
+		const { getByRole } = render(NumberInput, {
+			label: 'Quantity',
+			defaultValue: '5',
+			translations: { incrementLabel: 'Increase', decrementLabel: 'Decrease' }
+		});
 		expect((getByRole('spinbutton', { name: 'Quantity' }) as HTMLInputElement).value).toBe('5');
 	});
 
