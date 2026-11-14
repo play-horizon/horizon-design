@@ -1,23 +1,35 @@
 <!--
 @component
 Crops an image to a frame that can be moved and resized (Ark ImageCropper), for avatars and
-thumbnails.
+thumbnails; Ark `translations` name and describe it for assistive technology.
 -->
 <script lang="ts">
-	import { ImageCropper } from '@ark-ui/svelte';
+	import { ImageCropper, type ImageCropperRootProps } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
 	let {
 		src,
 		alt = '',
 		axis = 'both',
+		translations,
 		class: className = '',
 		...rest
 	}: {
+		/** The image's URL. */
 		src: string;
+		/** The image's text alternative; empty when the cropper's own name says enough. */
 		alt?: string;
+		/** Which rule-of-thirds lines (horizontal, vertical or both) show while the frame moves. */
 		axis?: 'horizontal' | 'vertical' | 'both';
+		/**
+		 * Every text Ark reads out (the cropper's and the frame's names, instructions and values,
+		 * some as functions of the crop), translated; all are required, so none falls back to
+		 * Ark's English.
+		 */
+		translations: Required<NonNullable<ImageCropperRootProps['translations']>>;
+		/** Classes merged onto the root. */
 		class?: string;
+		/** Other props of Ark's `ImageCropper.Root`, such as `aspectRatio`, `cropShape` or `onCropChange`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -29,6 +41,7 @@ thumbnails.
 		className
 	)}
 	data-slot="image-cropper"
+	{translations}
 	{...rest}
 >
 	<ImageCropper.Viewport class="size-full overflow-hidden" data-slot="image-cropper-viewport">
