@@ -1,6 +1,7 @@
 <!--
 @component
-A horizontal or vertical divider.
+A horizontal or vertical divider. Decorative by default, hidden from assistive technology; with
+`decorative` false, it is announced as a separator.
 -->
 <script lang="ts">
 	import { cn } from '$lib/utils';
@@ -11,8 +12,11 @@ A horizontal or vertical divider.
 		decorative = true,
 		...rest
 	}: {
+		/** Classes added to the line. */
 		class?: string;
+		/** A horizontal line, full width, or a vertical one, full height. */
 		orientation?: 'horizontal' | 'vertical';
+		/** Whether it only decorates; false when it separates content assistive technology should know apart. */
 		decorative?: boolean;
 		[key: string]: unknown;
 	} = $props();
