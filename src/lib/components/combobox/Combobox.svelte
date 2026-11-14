@@ -12,13 +12,17 @@ A text field that filters a list of options to choose from (Ark Combobox).
 	let {
 		items = [],
 		label,
-		placeholder = 'Search…',
+		placeholder = '',
+		emptyText,
 		class: className = '',
 		...rest
 	}: {
 		items?: Array<{ label: string; value: string }>;
 		label?: string;
+		/** The field's placeholder, such as "Search…". */
 		placeholder?: string;
+		/** Shown when no option matches, such as "No results found." */
+		emptyText: string;
 		class?: string;
 		[key: string]: unknown;
 	} = $props();
@@ -54,7 +58,7 @@ A text field that filters a list of options to choose from (Ark Combobox).
 				data-slot="combobox-content"
 			>
 				<Combobox.Empty class="px-2.5 py-4 text-center text-sm text-muted">
-					No results found.
+					{emptyText}
 				</Combobox.Empty>
 				{#each items as item (item.value)}
 					<Combobox.Item

@@ -18,7 +18,12 @@ Docs: Combobox. Live examples of the Combobox component.
 <section id="combobox">
 	<Card>
 		<div>
-			<Combobox items={comboboxItems} label="Framework" placeholder="Search frameworks…" />
+			<Combobox
+				items={comboboxItems}
+				label="Framework"
+				placeholder="Search frameworks…"
+				emptyText="No results found."
+			/>
 		</div>
 	</Card>
 </section>

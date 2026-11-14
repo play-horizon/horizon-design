@@ -10,11 +10,14 @@ A pad to draw a signature or a sketch (Ark SignaturePad).
 	let {
 		class: className = '',
 		label = '',
+		clearLabel,
 		children,
 		...rest
 	}: {
 		class?: string;
 		label?: string;
+		/** The clear button's text, such as "Clear". */
+		clearLabel: string;
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
@@ -36,7 +39,7 @@ A pad to draw a signature or a sketch (Ark SignaturePad).
 		<SignaturePad.ClearTrigger
 			class="inline-flex h-7 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-muted transition-colors hover:bg-hover hover:text-fg"
 		>
-			Clear
+			{clearLabel}
 		</SignaturePad.ClearTrigger>
 	</div>
 	<SignaturePad.Context>
