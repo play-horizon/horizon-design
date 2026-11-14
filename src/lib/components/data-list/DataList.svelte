@@ -27,7 +27,7 @@ A list of label and value pairs, such as the details of a game.
 </script>
 
 <dl class={cn('flex flex-col gap-3', className)} data-slot="data-list" {...rest}>
-	{#each items as item, i (i)}
+	{#each items as item (item.label)}
 		<div class="flex flex-row gap-4" data-slot="data-list-item">
 			<dt class="min-w-28 text-sm font-medium text-muted" data-slot="data-list-label">
 				{item.label}

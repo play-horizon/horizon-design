@@ -22,6 +22,7 @@ Docs: Table. Live examples of the Table component.
 					{ name: 'Bob Smith', status: 'away', role: 'Developer', joined: 'Mar 2024' },
 					{ name: 'Carol White', status: 'offline', role: 'Designer', joined: 'Jun 2024' }
 				]}
+				rowKey={(row) => String(row.name)}
 			/>
 		</div>
 	</Card>

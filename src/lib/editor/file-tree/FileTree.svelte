@@ -150,7 +150,7 @@ A tree of files and folders (Ark TreeView), with expandable folders and custom i
 		ref={rootRef}
 	>
 		<TreeView.Tree class="flex flex-col">
-			{#each collection.rootNode.children ?? [] as node, i (i)}
+			{#each collection.rootNode.children ?? [] as node, i (collection.getNodeValue(node))}
 				{@render renderNode(node as AnyNode, [i])}
 			{/each}
 		</TreeView.Tree>
@@ -188,7 +188,7 @@ A tree of files and folders (Ark TreeView), with expandable folders and custom i
 							class="flex flex-col data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open"
 							data-slot="file-tree-branch-content"
 						>
-							{#each node.children as child, j (j)}
+							{#each node.children as child, j (collection.getNodeValue(child as TreeNode))}
 								{@render renderNode(child as AnyNode, [...indexPath, j])}
 							{/each}
 						</TreeView.BranchContent>

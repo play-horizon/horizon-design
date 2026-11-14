@@ -33,6 +33,7 @@ A horizontal slideshow with previous and next controls and indicators (Ark Carou
 	{...rest}
 >
 	<Carousel.ItemGroup class="flex touch-pan-y items-start" data-slot="carousel-item-group">
+		<!-- Slides are snippets with no identity of their own, given in a fixed order: keyed by place. -->
 		{#each slides as slide, i (i)}
 			<Carousel.Item index={i} class="min-w-0 shrink-0 grow-0 basis-full" data-slot="carousel-item">
 				{@render slide()}

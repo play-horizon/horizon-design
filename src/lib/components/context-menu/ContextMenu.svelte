@@ -10,8 +10,9 @@ for a translucent surface.
 	import { cn } from '$lib/utils';
 
 	interface ContextMenuItem {
+		/** A stable, unique id, which is also an item's value in the menu. */
+		id: string;
 		type?: 'item' | 'separator' | 'label';
-		value?: string;
 		label?: string;
 		disabled?: boolean;
 	}
@@ -47,7 +48,7 @@ for a translucent surface.
 				)}
 				data-slot="context-menu-content"
 			>
-				{#each items as item, i (i)}
+				{#each items as item (item.id)}
 					{#if item.type === 'separator'}
 						<div
 							class="-mx-1 my-1 h-px bg-border"
@@ -63,7 +64,7 @@ for a translucent surface.
 						</div>
 					{:else}
 						<Menu.Item
-							value={item.value ?? ''}
+							value={item.id}
 							disabled={item.disabled}
 							class={cn(
 								'relative flex h-7.5 items-center gap-2 rounded-md px-2 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg',

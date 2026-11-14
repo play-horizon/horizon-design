@@ -20,11 +20,14 @@ A data table from columns and rows.
 	let {
 		columns = [],
 		rows = [],
+		rowKey,
 		class: className = '',
 		...rest
 	}: {
 		columns?: Column[];
 		rows?: Row[];
+		/** A stable, unique key of a row, such as its id. */
+		rowKey: (row: Row) => string;
 		class?: string;
 		[key: string]: unknown;
 	} = $props();
@@ -52,7 +55,7 @@ A data table from columns and rows.
 			</tr>
 		</thead>
 		<tbody class="[&_tr:last-child]:border-0" data-slot="table-body">
-			{#each rows as row, i (i)}
+			{#each rows as row (rowKey(row))}
 				<tr
 					class="border-b border-border transition-colors hover:bg-hover data-[state=selected]:bg-hover"
 					data-slot="table-row"

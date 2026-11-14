@@ -29,7 +29,7 @@ The trail of pages leading to the current one, each a link but the last; `label`
 
 <nav class={cn(className)} aria-label={label} data-slot="breadcrumb" {...rest}>
 	<ol class="flex flex-wrap items-center gap-1.5 text-sm text-muted" data-slot="breadcrumb-list">
-		{#each items as item, i (i)}
+		{#each items as item, i (`${item.label}:${item.href ?? ''}`)}
 			<li class="inline-flex items-center gap-1.5" data-slot="breadcrumb-item">
 				{#if item.href}
 					<a class="transition-colors hover:text-fg" href={item.href} data-slot="breadcrumb-link">
