@@ -66,10 +66,8 @@ opens (the dialog unmounts its content on close), so every opening starts with a
 		collection,
 		open: results.length > 0,
 		inputValue: query,
-		onInputValueChange: (details) => {
-			query = details.inputValue;
-			list?.scrollToIndex(0);
-		},
+		// Ark scrolls the list back to its top as the search changes.
+		onInputValueChange: (details) => (query = details.inputValue),
 		highlightedValue: highlighted,
 		onHighlightChange: (details) => (chosen = details.highlightedValue),
 		// Choosing a command runs it; it never becomes a selected value (nor fills the field).
@@ -84,7 +82,10 @@ opens (the dialog unmounts its content on close), so every opening starts with a
 		// The dialog is the only dismissable layer: Escape closes it at once, and the list
 		// collapsing when nothing matches must not dismiss it.
 		disableLayer: true,
-		scrollToIndexFn: ({ index }) => list?.scrollToIndex(index)
+		scrollToIndexFn: ({ index }) => list?.scrollToIndex(index),
+		// The palette announces its empty text itself, below; Ark's own announcements would be in
+		// English.
+		translations: { resultsCount: () => '', noResults: '', loading: '' }
 	}));
 </script>
 

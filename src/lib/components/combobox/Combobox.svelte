@@ -3,7 +3,9 @@
 A text field that filters a list of options to choose from (Ark Combobox): typing keeps the
 options whose label contains the text, ignoring case and accents, and `emptyText` shows when none
 does. `label`, required, names the field, and Ark `translations` name the open button
-(`triggerLabel`).
+(`triggerLabel`). Ark announces the number of matching options to screen readers only when
+`translations` gives the messages (`resultsCount`, `noResults`, `loading`): it has no English of its
+own to fall back on here.
 -->
 <script lang="ts">
 	import {
@@ -17,6 +19,10 @@ does. `label`, required, names the field, and Ark `translations` name the open b
 	import { cn } from '$lib/utils';
 	import MingcuteSelectorVerticalLine from '~icons/mingcute/selector-vertical-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
+
+	type ArkTranslations = NonNullable<
+		ComboboxRootProps<{ label: string; value: string }>['translations']
+	>;
 
 	let {
 		items = [],
@@ -38,18 +44,20 @@ does. `label`, required, names the field, and Ark `translations` name the open b
 		emptyText: string;
 		/** Called with the field's text when it changes. */
 		onInputValueChange?: (details: ComboboxInputValueChangeDetails) => void;
-		/** `triggerLabel` names the button that opens the options. */
-		translations: Required<
-			Pick<
-				NonNullable<ComboboxRootProps<{ label: string; value: string }>['translations']>,
-				'triggerLabel'
-			>
-		>;
+		/**
+		 * `triggerLabel` names the button that opens the options; `resultsCount`, `noResults` and
+		 * `loading`, when given, are announced to screen readers as the options settle.
+		 */
+		translations: Required<Pick<ArkTranslations, 'triggerLabel'>> &
+			Pick<ArkTranslations, 'resultsCount' | 'noResults' | 'loading'>;
 		/** Classes merged onto the root. */
 		class?: string;
 		/** Other props of Ark's `Combobox.Root`, such as `value`, `onValueChange` and `multiple`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// Ark's announcements default to English: silent unless `translations` gives them.
+	const silentAnnouncements = { resultsCount: () => '', noResults: '', loading: '' };
 
 	const filters = useFilter({ sensitivity: 'base' });
 	let query = $state('');
@@ -67,7 +75,7 @@ does. `label`, required, names the field, and Ark `translations` name the open b
 <Combobox.Root
 	{collection}
 	onInputValueChange={changeInput}
-	{translations}
+	translations={{ ...silentAnnouncements, ...translations }}
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="combobox"
 	{...rest}

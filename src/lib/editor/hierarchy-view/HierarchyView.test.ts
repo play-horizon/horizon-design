@@ -216,7 +216,8 @@ describe('HierarchyView', () => {
 
 		await fireEvent.dblClick(row('light'));
 		const second = getByRole('textbox', { name: 'Name' }) as HTMLInputElement;
-		expect(second.value).toBe('Light');
+		// Ark fills the field in the next frame.
+		await vi.waitFor(() => expect(second.value).toBe('Light'));
 		await fireEvent.input(second, { target: { value: 'Sun' } });
 		await fireEvent.keyDown(second, { key: 'Escape' });
 		expect(onDataChange).toHaveBeenCalledTimes(1);

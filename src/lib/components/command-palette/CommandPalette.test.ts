@@ -194,15 +194,22 @@ describe('CommandPalette', () => {
 	});
 
 	it('announces the empty text in a live region', async () => {
-		const { input, getByRole } = await setup();
-		expect(getByRole('status').textContent?.trim()).toBe('');
+		const { input, getAllByRole } = await setup();
+		// Ark adds its own live regions, which the palette leaves silent.
+		const status = () => getAllByRole('status').find((region) => !region.dataset.liveAnnouncer);
+		expect(status()?.textContent?.trim()).toBe('');
 		await fireEvent.input(input, { target: { value: 'zzz' } });
-		expect(getByRole('status').textContent?.trim()).toBe('No command matches.');
+		expect(status()?.textContent?.trim()).toBe('No command matches.');
+		const arkRegions = getAllByRole('status').filter((region) => region.dataset.liveAnnouncer);
+		await new Promise((resolve) => setTimeout(resolve, 1200));
+		expect(arkRegions.map((region) => region.textContent)).toEqual(arkRegions.map(() => ''));
 	});
 
 	it('scrolls back to the first command, which it highlights, when the query changes', async () => {
 		const { input, getByRole, getAllByRole } = await setup();
 		const listbox = getByRole('listbox');
+		// jsdom has no layout: the list shows four rows.
+		Object.defineProperty(listbox, 'clientHeight', { configurable: true, value: 136 });
 		listbox.scrollTop = 60;
 		await fireEvent.scroll(listbox);
 		await fireEvent.keyDown(input, { key: 'ArrowDown' });

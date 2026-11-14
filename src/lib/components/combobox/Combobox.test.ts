@@ -1,10 +1,12 @@
 /**
  * Tests of `Combobox`: typing keeps the options whose label contains the text, ignoring case
- * and accents, and shows `emptyText` when none does.
+ * and accents, and shows `emptyText` when none does; Ark announces the options found only in
+ * the messages `translations` gives.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import type { ComponentProps } from 'svelte';
 import Combobox from './Combobox.svelte';
 
 const items = [
@@ -13,13 +15,10 @@ const items = [
 	{ label: 'Drift', value: 'drift' }
 ];
 
-function setup() {
-	const view = render(Combobox, {
-		items,
-		label: 'Mode',
-		emptyText: 'No match',
-		translations: { triggerLabel: 'Show modes' }
-	});
+function setup(
+	translations: ComponentProps<typeof Combobox>['translations'] = { triggerLabel: 'Show modes' }
+) {
+	const view = render(Combobox, { items, label: 'Mode', emptyText: 'No match', translations });
 	return { ...view, input: view.getByRole('combobox', { name: 'Mode' }) as HTMLInputElement };
 }
 
@@ -45,5 +44,30 @@ describe('Combobox', () => {
 		await type(input, 'kart');
 		await waitFor(() => expect(queryAllByRole('option')).toEqual([]));
 		expect(getByText('No match')).toBeTruthy();
+	});
+
+	/** The text of Ark's live regions once its announcement delay (1 s) has passed. */
+	async function announcements(): Promise<string[]> {
+		await new Promise((resolve) => setTimeout(resolve, 1200));
+		return [...document.querySelectorAll<HTMLElement>('[data-live-announcer]')]
+			.map((region) => region.textContent ?? '')
+			.filter((text) => text !== '');
+	}
+
+	it('announces nothing when translations gives no announcement', async () => {
+		const { input } = setup();
+		await type(input, 'r');
+		expect(await announcements()).toEqual([]);
+	});
+
+	it('announces the options found in the messages translations gives', async () => {
+		const { input } = setup({
+			triggerLabel: 'Show modes',
+			resultsCount: (count) => `${count} modes`,
+			noResults: 'No mode',
+			loading: 'Looking for modes'
+		});
+		await type(input, 'ra');
+		expect(await announcements()).toEqual(['2 modes']);
 	});
 });
