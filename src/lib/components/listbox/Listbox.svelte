@@ -1,28 +1,49 @@
 <!--
 @component
-A list of options to choose one or several from (Ark Listbox).
+A list of options to choose one or several from (Ark Listbox), named by its `label`; `value`
+binds the chosen options.
 -->
+<script lang="ts" module>
+	/** One option of a `Listbox`. */
+	export interface ListboxOption {
+		/** Its text, translated. */
+		label: string;
+		/** Its stable id, what `value` holds. */
+		value: string;
+	}
+</script>
+
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Listbox, createListCollection } from '@ark-ui/svelte';
+	import { Listbox, createListCollection, type ListboxValueChangeDetails } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 
 	let {
 		deselectable,
 		class: className = '',
-		label = '',
+		label,
 		items = [],
 		renderItem,
 		value = $bindable([]),
+		onValueChange,
 		...rest
 	}: {
+		/** Whether choosing the chosen option again unchooses it. */
 		deselectable?: boolean;
+		/** Classes merged onto the root. */
 		class?: string;
-		label?: string;
-		items?: Array<{ label: string; value: string }>;
-		renderItem?: Snippet<[{ label: string; value: string }]>;
+		/** The visible label, which names the list. */
+		label: string;
+		/** The options, in the order shown. */
+		items?: readonly ListboxOption[];
+		/** Draws an option, instead of its `label`. */
+		renderItem?: Snippet<[ListboxOption]>;
+		/** The chosen options' values (bindable). */
 		value?: string[];
+		/** Called with the new choice when it changes. */
+		onValueChange?: (details: ListboxValueChangeDetails<ListboxOption>) => void;
+		/** Other props of Ark's `Listbox.Root`, such as `selectionMode="multiple"` or `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -35,12 +56,13 @@ A list of options to choose one or several from (Ark Listbox).
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="listbox"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
-	{#if label}
-		<Listbox.Label class="text-sm font-medium text-fg">{label}</Listbox.Label>
-	{/if}
+	<Listbox.Label class="text-sm font-medium text-fg">{label}</Listbox.Label>
 	<Listbox.Content
 		class="max-h-60 overflow-auto rounded-xl border border-border bg-raised p-1 shadow-lg"
 	>
@@ -58,7 +80,7 @@ A list of options to choose one or several from (Ark Listbox).
 					{/if}
 				</Listbox.ItemText>
 				<Listbox.ItemIndicator class="ml-auto">
-					<MingcuteCheckLine class="size-4 text-primary" />
+					<MingcuteCheckLine class="size-4 text-primary" aria-hidden="true" />
 				</Listbox.ItemIndicator>
 			</Listbox.Item>
 		{/each}
