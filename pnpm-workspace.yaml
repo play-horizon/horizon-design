@@ -1,0 +1,5 @@
+# pnpm settings of horizon-design. pnpm installs no version published less than a day ago
+# (minimumReleaseAge); horizon-layout is ours, released by our own CI, so its versions are
+# installed as soon as they are published.
+minimumReleaseAgeExclude:
+  - horizon-layout

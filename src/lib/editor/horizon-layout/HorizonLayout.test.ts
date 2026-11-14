@@ -1,13 +1,15 @@
 /**
- * Tests of `HorizonLayout`'s own part, the restore button: shown only while a view is maximised,
- * named by `restoreLabel`, restoring the layout when pressed, and replaced by `restoreButton`.
+ * Tests of `HorizonLayout`'s own part: the restore button, shown only while a view is maximised,
+ * named by `restoreLabel`, restoring the layout when pressed, and replaced by `restoreButton`; and
+ * the `translations` it passes on, which name the split handles, the tab lists and the floating
+ * panels.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 import { fireEvent, render } from '@testing-library/svelte';
-import type { Id, LayoutConfig, View } from 'horizon-layout';
+import type { Id, LayoutConfig, LayoutTranslations, View } from 'horizon-layout';
 import HorizonLayout from './HorizonLayout.svelte';
 
 /** A view whose body is its title, for `views`. */
@@ -26,9 +28,17 @@ function setup(
 			['console', view('Console')]
 		]),
 		restoreLabel: 'Restore view',
+		translations,
 		...extra
 	});
 }
+
+/** Text unlike horizon-layout's English, to tell it apart. */
+const translations: LayoutTranslations = {
+	resizePane: (pane) => `Redimensionner le panneau ${pane}`,
+	floatingPanel: (title) => `${title}, panneau flottant`,
+	tabList: (title) => `Onglets, ${title} affiché`
+};
 
 const split: LayoutConfig['root'] = {
 	direction: 'horizontal',
@@ -61,5 +71,22 @@ describe('HorizonLayout', () => {
 		);
 		expect(getByRole('button', { name: 'Restore console' })).toBeTruthy();
 		expect(queryByRole('button', { name: 'Restore view' })).toBeNull();
+	});
+
+	it('names the split handles and tab lists with its translations', () => {
+		const { getByRole } = setup({ root: split });
+		expect(getByRole('separator', { name: 'Redimensionner le panneau 1' })).toBeTruthy();
+		expect(getByRole('tablist', { name: 'Onglets, Scene affiché' })).toBeTruthy();
+		expect(getByRole('tablist', { name: 'Onglets, Console affiché' })).toBeTruthy();
+	});
+
+	it('names a floating panel with its translations', () => {
+		const { getByRole } = setup({
+			root: { tabs: ['scene'], activeTabIndex: 0 },
+			floating: [
+				{ tabs: ['console'], activeTabIndex: 0, rect: { x: 10, y: 10, width: 200, height: 120 } }
+			]
+		});
+		expect(getByRole('dialog', { name: 'Console, panneau flottant' })).toBeTruthy();
 	});
 });

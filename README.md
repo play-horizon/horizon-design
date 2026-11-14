@@ -197,6 +197,9 @@ and `ColorPicker`'s `labels` (each control, the area's role and the values its a
 announce) and `Timer`'s `labels` (its buttons) name the controls Ark leaves unnamed.
 `AngleSlider`'s and `CircularSlider`'s `valueText` format the values they show and announce.
 
+`HorizonLayout` takes horizon-layout's `translations` (`resizePane`, `floatingPanel`, `tabList`)
+required and complete, where horizon-layout itself would fill in English for a key left out.
+
 ## Text selection
 
 Like a desktop app's, interface text isn't selectable: the base styles set `user-select: none` on
@@ -398,12 +401,12 @@ variants).
 
 ### Editor
 
-| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`FileTree`](https://play-horizon.github.io/horizon-design/file-tree)             | A tree of files and folders on `VirtualTree` (only the rows in view are rendered) from a `collection`, with expandable folders and custom icons; only files are selected. `label`, required, names it, and `selectedValue`, `expandedValue` and `focusedValue` bind.                                                                                                                                                                                                        |
-| [`HierarchyView`](https://play-horizon.github.io/horizon-design/hierarchy-view)   | The Editor's hierarchy of a scene's objects, on `VirtualTree`: keyboard navigation, multiple selection, renaming, deletion, and drag and drop ([pragmatic-drag-and-drop](#drag-and-drop)) to reparent and reorder, which reports each change of `data` through `onDataChange`. `label`, `renameLabel` and `dragLabel` are required; `nodeWithName` writes a renamed node when `nodeToString` reads a field other than `name`, and `selectedValue` and `expandedValue` bind. |
-| [`HorizonLayout`](https://play-horizon.github.io/horizon-design/horizon-layout)   | The Editor window's docking layout: horizon-layout styled with horizon-design, with a button that restores a maximised view; `config` binds, `views` holds the views, and `restoreLabel`, required, names the restore button.                                                                                                                                                                                                                                               |
-| [`InspectorPanel`](https://play-horizon.github.io/horizon-design/inspector-panel) | The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by drag ([pragmatic-drag-and-drop](#drag-and-drop)) or keyboard; `cards` and `expandedIds` bind.                                                                                                                                                                                                                                                                             |
+| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`FileTree`](https://play-horizon.github.io/horizon-design/file-tree)             | A tree of files and folders on `VirtualTree` (only the rows in view are rendered) from a `collection`, with expandable folders and custom icons; only files are selected. `label`, required, names it, and `selectedValue`, `expandedValue` and `focusedValue` bind.                                                                                                                                                                                                                |
+| [`HierarchyView`](https://play-horizon.github.io/horizon-design/hierarchy-view)   | The Editor's hierarchy of a scene's objects, on `VirtualTree`: keyboard navigation, multiple selection, renaming, deletion, and drag and drop ([pragmatic-drag-and-drop](#drag-and-drop)) to reparent and reorder, which reports each change of `data` through `onDataChange`. `label`, `renameLabel` and `dragLabel` are required; `nodeWithName` writes a renamed node when `nodeToString` reads a field other than `name`, and `selectedValue` and `expandedValue` bind.         |
+| [`HorizonLayout`](https://play-horizon.github.io/horizon-design/horizon-layout)   | The Editor window's docking layout: horizon-layout 2.0.2 styled with horizon-design, taking every prop of its `HorizonLayout`, with docked panes that meet on a single line, floating panels raised over them, and a button that restores a maximised view; `config` binds, `views` holds the views, horizon-layout's `translations`, required and complete, name the split handles, the tab lists and the floating panels, and `restoreLabel`, required, names the restore button. |
+| [`InspectorPanel`](https://play-horizon.github.io/horizon-design/inspector-panel) | The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by drag ([pragmatic-drag-and-drop](#drag-and-drop)) or keyboard; `cards` and `expandedIds` bind.                                                                                                                                                                                                                                                                                     |
 
 ## Drag and drop
 
@@ -440,6 +443,12 @@ pnpm build   # the docs site (build/) and the package (dist/)
 
 Every new component gets a docs page with live examples and component tests. Publishing: a push
 to `main` that bumps the version publishes to npm and deploys the docs site.
+
+Upgrading horizon-layout: `src/lib/editor/horizon-layout/horizon-layout.css` is a copy of the
+library's default theme with horizon-design's differences, listed in its header. Diff the
+library's default theme (`src/lib/horizon-layout.css` in horizon-layout) between the version
+pinned in `package.json` and the new one, apply that diff to the copy, keeping the listed
+differences, and update the version the header names.
 
 ## Fonts
 

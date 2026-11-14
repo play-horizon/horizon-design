@@ -7,7 +7,6 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 	import { AvatarStack } from '#lib/components/avatar-stack/index.js';
 	import { Badge } from '#lib/components/badge/index.js';
 	import { Button } from '#lib/components/button/index.js';
-	import { Card } from '#lib/components/card/index.js';
 	import { CircularProgress } from '#lib/components/circular-progress/index.js';
 	import { Input } from '#lib/components/input/index.js';
 	import { NativeSelect } from '#lib/components/native-select/index.js';
@@ -18,13 +17,21 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 	import { Switch } from '#lib/components/switch/index.js';
 	import { Textarea } from '#lib/components/textarea/index.js';
 	import MingcuteDownloadLine from '~icons/mingcute/download-line';
+	import MingcuteExternalLinkLine from '~icons/mingcute/external-link-line';
 	import MingcuteFullscreenLine from '~icons/mingcute/fullscreen-line';
 	import MingcuteHeartLine from '~icons/mingcute/heart-line';
 	import MingcuteSettings2Line from '~icons/mingcute/settings-2-line';
 	import MingcuteStarLine from '~icons/mingcute/star-line';
 	import { SvelteMap } from 'svelte/reactivity';
 	import HorizonLayout from '#lib/editor/horizon-layout/HorizonLayout.svelte';
-	import type { LayoutConfig, Id, View } from 'horizon-layout';
+	import {
+		englishTranslations,
+		floatView,
+		removeView,
+		type LayoutConfig,
+		type Id,
+		type View
+	} from 'horizon-layout';
 
 	let layoutConfig: LayoutConfig = $state({
 		root: {
@@ -41,16 +48,42 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 				}
 			],
 			splitPoints: [0.4]
-		}
+		},
+		floating: [
+			{ tabs: ['notes'], activeTabIndex: 0, rect: { x: 24, y: 200, width: 280, height: 180 } }
+		]
 	});
 
 	const layoutViews = new SvelteMap<Id, View>([
 		['controls', { title: 'Controls', snippet: layoutControlsPanel }],
 		['inputs', { title: 'Inputs', snippet: layoutInputsPanel }],
 		['visual', { title: 'Visual', snippet: layoutVisualPanel }],
-		['feedback', { title: 'Feedback', snippet: layoutFeedbackPanel }]
+		['feedback', { title: 'Feedback', snippet: layoutFeedbackPanel }],
+		['notes', { title: 'Notes', snippet: layoutNotesPanel }]
 	]);
+
+	/** Moves a view into a window of its own. */
+	function popOut(id: Id) {
+		removeView(layoutConfig, id);
+		layoutConfig.popouts = [...(layoutConfig.popouts ?? []), id];
+	}
+
+	/** Brings back the view of a popout window the user closed, floating over the layout. */
+	function floatClosedPopout(id: Id) {
+		floatView(layoutConfig, id, { x: 48, y: 64, width: 320, height: 220 });
+	}
 </script>
+
+{#snippet layoutPopOutBtn(activeViewId: Id)}
+	<button
+		class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
+		onclick={() => popOut(activeViewId)}
+		aria-label="Pop out"
+		title="Pop out"
+	>
+		<MingcuteExternalLinkLine class="size-3.5" aria-hidden="true" />
+	</button>
+{/snippet}
 
 {#snippet layoutMaximizeBtn(activeViewId: Id)}
 	{#if layoutConfig.maximizedView !== activeViewId}
@@ -121,7 +154,7 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 		</div>
 		<div>
 			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Select</p>
-			<NativeSelect>
+			<NativeSelect aria-label="Framework">
 				<option>Svelte</option>
 				<option>React</option>
 				<option>Vue</option>
@@ -141,7 +174,10 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 {/snippet}
 
 {#snippet layoutVisualPanel()}
-	<div class="h-full space-y-4 overflow-auto p-4">
+	<!-- A panel that scrolls with nothing focusable in it takes the focus, so the keyboard
+	scrolls it too. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div role="region" aria-label="Visual" tabindex="0" class="h-full space-y-4 overflow-auto p-4">
 		<div>
 			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Badges</p>
 			<div class="flex flex-wrap gap-1.5">
@@ -185,7 +221,10 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 {/snippet}
 
 {#snippet layoutFeedbackPanel()}
-	<div class="h-full space-y-4 overflow-auto p-4">
+	<!-- A panel that scrolls with nothing focusable in it takes the focus, so the keyboard
+	scrolls it too. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div role="region" aria-label="Feedback" tabindex="0" class="h-full space-y-4 overflow-auto p-4">
 		<div>
 			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Progress</p>
 			<div class="space-y-2">
@@ -226,19 +265,35 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 	</div>
 {/snippet}
 
+{#snippet layoutNotesPanel()}
+	<!-- A panel that scrolls with nothing focusable in it takes the focus, so the keyboard
+	scrolls it too. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div
+		role="region"
+		aria-label="Notes"
+		tabindex="0"
+		class="h-full overflow-auto p-4 text-sm text-fg-2"
+	>
+		A floating panel: drag its tab bar to move it, an edge or a corner to resize it, and its tab
+		onto the layout to dock it again.
+	</div>
+{/snippet}
+
 <section id="horizon-layout">
 	<p class="mb-6 text-sm text-muted">
-		Drag tabs between panes, resize splits, and pop views out into separate windows.
+		Drag tabs between panes, resize splits, float panels over the layout, and pop views out into
+		separate windows.
 	</p>
-	<Card class="overflow-hidden p-0">
-		<div class="h-120">
-			<HorizonLayout
-				restoreLabel="Restore view"
-				bind:config={layoutConfig}
-				views={layoutViews}
-				tabgroupControls={[layoutMaximizeBtn]}
-				showSplitRatio
-			/>
-		</div>
-	</Card>
+	<div class="h-120">
+		<HorizonLayout
+			restoreLabel="Restore view"
+			translations={englishTranslations}
+			bind:config={layoutConfig}
+			views={layoutViews}
+			tabgroupControls={[layoutPopOutBtn, layoutMaximizeBtn]}
+			onPopoutClose={floatClosedPopout}
+			showSplitRatio
+		/>
+	</div>
 </section>

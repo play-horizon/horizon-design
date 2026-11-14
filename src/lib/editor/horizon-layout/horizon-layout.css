@@ -1,15 +1,52 @@
-/* The look of horizon-layout's docking layout in horizon-design: panels on the surface colour,
-   tab bars with the active tab raised and topped by a primary bar, resize handles and drop hints
-   in the primary colour. horizon-layout itself is headless; these rules style its BEM classes. */
+/*
+ * horizon-layout 2.0.2's default theme (`src/lib/horizon-layout.css` at its tag v2.0.2), adapted to
+ * horizon-design. It keeps the library's rules, in its order, so that upgrading horizon-layout is a
+ * diff of the library's new default theme against 2.0.2's, applied here, with these deliberate
+ * differences kept:
+ *
+ * - The `--hl-*` variables take horizon-design's tokens, set on the layout's root
+ *   (`.horizon-layout`, which a popout's root is too) rather than on `:root`, so the docked and
+ *   floating layout follow the theme (`data-theme`) it is in, a theme island included, and a popout
+ *   window the page's (on its `<html>` and `<body>`); the library's light values (`.light`) are
+ *   dropped, as the tokens have both. `--hl-glass-blur` is dropped with the ratio label's blur.
+ * - The layout's and the popouts' font family and size, and the tab titles' size, are the type
+ *   tokens (`--font-sans`, `--text-base`, `--text-xs`).
+ * - Tabs are square and full height, divided by a line on their right (no radius, no margins),
+ *   spaced on whole pixels (`gap` 0.375rem, `padding` 0 0.6875rem), their titles unspaced; hovered,
+ *   a tab takes `--hover`, and its text `--fg` (`--hl-muted-foreground`, the library's colour of a
+ *   hovered tab, maps to it); the active tab is set in weight 600 and topped by a 2px `--primary`
+ *   bar (`.horizon-layout-tabgroup__tab--active::after`); the focus ring is square. The library's
+ *   light-theme tab rules (`.light .horizon-layout-tabgroup__tab…`) are dropped.
+ * - The split ratio label has the small radius, the strong border and the small elevation, and no
+ *   backdrop blur: its fill is opaque, and horizon-design blurs nothing by default.
+ * - A floating group's tab group has the strong border.
+ */
+.horizon-layout {
+	--hl-background: var(--background);
+	--hl-foreground: var(--fg);
+	--hl-primary: var(--primary);
+	--hl-popover: var(--raised);
+	--hl-border: var(--border);
+	--hl-card: var(--surface);
+	--hl-secondary: var(--surface);
+	--hl-muted-foreground: var(--fg);
+	--hl-ring: var(--primary);
+	--hl-accent: var(--hover);
+	--hl-radius: var(--radius-lg);
+	--hl-tab-inactive-color: var(--muted);
+	--hl-drop-hint-border: color-mix(in oklch, var(--primary) 80%, transparent);
+	--hl-drop-hint-bg: color-mix(in oklch, var(--primary) 12%, transparent);
+	--hl-floating-shadow: var(--elevation-lg);
+}
 
 .horizon-layout {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	background: var(--background);
+	background: var(--hl-background);
 	font-family: var(--font-sans);
 	font-size: var(--text-base);
-	color: var(--fg);
+	color: var(--hl-foreground);
 }
 
 .horizon-layout__content {
@@ -18,7 +55,23 @@
 	overflow: hidden;
 }
 
+/* Every edge is drawn once, so two panes meet on a single line: each docked tab group draws its
+   right and bottom borders, which are the lines to its neighbours (or the layout's own right and
+   bottom edges), and the docked layout draws the left and top ones. Two borders side by side
+   would read as a double line at fractional device pixel ratios. */
+.horizon-layout__content--docked {
+	box-sizing: border-box;
+	border-top: 1px solid var(--hl-border);
+	border-left: 1px solid var(--hl-border);
+}
+
+/* A maximised view is shown with no tab group around it: it takes what the tab group gives a docked
+   view, the background of its content and its scrolling, and the frame of the docked layout. */
 .horizon-layout__content--maximized {
+	box-sizing: border-box;
+	border: 1px solid var(--hl-border);
+	overflow: auto;
+	background: var(--hl-card);
 	animation: hl-fade-in 80ms ease;
 }
 
@@ -67,7 +120,6 @@
 	align-items: center;
 	justify-content: center;
 	z-index: 2;
-	touch-action: none;
 	outline: none;
 }
 
@@ -94,7 +146,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 100vmax;
-	background: var(--primary);
+	background: var(--hl-primary);
 	opacity: 0;
 	transition: opacity 100ms ease;
 }
@@ -109,24 +161,24 @@
 	width: calc(100% - 16px);
 }
 
-.horizon-layout-split__resizer-handle--hover::before,
+.horizon-layout-split__resizer-handle:hover::before,
 .horizon-layout-split__resizer-handle--active::before {
 	opacity: 1;
 }
 
 .horizon-layout-split__resizer-handle:focus-visible::before {
 	opacity: 1;
-	background: var(--primary);
+	background: var(--hl-ring);
 }
 
 .horizon-layout-split__ratio {
 	position: absolute;
 	padding: 2px 7px;
 	border-radius: var(--radius-sm);
-	background: var(--raised);
+	background: var(--hl-popover);
 	border: 1px solid var(--border-strong);
 	box-shadow: var(--elevation-sm);
-	color: var(--primary);
+	color: var(--hl-primary);
 	font-size: 0.7rem;
 	font-variant-numeric: tabular-nums;
 	pointer-events: none;
@@ -160,9 +212,9 @@
 	min-height: 0;
 	overflow: hidden;
 	box-sizing: border-box;
-	border: 1px solid var(--border);
-	border-radius: var(--radius-lg);
-	background: var(--surface);
+	border-right: 1px solid var(--hl-border);
+	border-bottom: 1px solid var(--hl-border);
+	background: var(--hl-card);
 }
 
 .horizon-layout-tabgroup__tab-bar {
@@ -172,8 +224,8 @@
 	align-items: stretch;
 	justify-content: space-between;
 	padding-right: 4px;
-	background: var(--background);
-	border-bottom: 1px solid var(--border);
+	background: var(--hl-background);
+	border-bottom: 1px solid var(--hl-border);
 	min-height: 32px;
 	flex-shrink: 0;
 }
@@ -186,7 +238,6 @@
 	overflow-x: auto;
 	overflow-y: hidden;
 	scrollbar-width: none;
-	outline: none;
 }
 
 .horizon-layout-tabgroup__tab {
@@ -199,8 +250,11 @@
 	max-width: 13rem;
 	padding: 0 0.6875rem;
 	background: transparent;
-	border-right: 1px solid var(--border);
-	color: var(--muted);
+	border-right: 1px solid var(--hl-border);
+	color: var(--hl-tab-inactive-color);
+	/* No text selection, so a long press lifts the tab on a touch screen; Safari reads only the
+	   prefixed property. No panning either, which would cancel the drag. */
+	-webkit-user-select: none;
 	user-select: none;
 	touch-action: none;
 	outline: none;
@@ -210,13 +264,13 @@
 }
 
 .horizon-layout-tabgroup__tab:hover {
-	color: var(--fg);
+	color: var(--hl-muted-foreground);
 	background: var(--hover);
 }
 
 .horizon-layout-tabgroup__tab--active {
-	background: var(--surface);
-	color: var(--fg);
+	background: var(--hl-secondary);
+	color: var(--hl-foreground);
 	font-weight: 600;
 }
 
@@ -228,30 +282,15 @@
 	left: 0;
 	right: 0;
 	height: 2px;
-	background: var(--primary);
+	background: var(--hl-primary);
 }
 
-.horizon-layout-tabgroup__tab-active-fill {
-	position: absolute;
-	bottom: -1px;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background: var(--surface);
-	pointer-events: none;
-}
-
-.horizon-layout-tabgroup__tabs:focus-visible .horizon-layout-tabgroup__tab--active {
-	outline: 2px solid var(--primary);
+/* The tab list, out of sight, has the focus: its ring is drawn on the active tab. */
+.horizon-layout-tabgroup__tablist:focus-visible ~ .horizon-layout-tabgroup__tab--active {
+	outline: 2px solid var(--hl-ring);
 	outline-offset: -2px;
-	background: var(--hover);
-	color: var(--fg);
-}
-
-.horizon-layout-tabgroup__tabs:focus-visible
-	.horizon-layout-tabgroup__tab--active
-	.horizon-layout-tabgroup__tab-active-fill {
-	background: var(--hover);
+	background: var(--hl-accent);
+	color: var(--hl-foreground);
 }
 
 .horizon-layout-tabgroup__tab-title {
@@ -287,7 +326,7 @@
 }
 
 .horizon-layout-tabgroup__tab-drop-hint--hover {
-	background: var(--primary);
+	background: var(--hl-primary);
 }
 
 .horizon-layout-tabgroup__tab-drop-zone {
@@ -346,7 +385,7 @@
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background: var(--surface);
+	background: var(--hl-card);
 }
 
 .horizon-layout-tabgroup__drop-zones {
@@ -381,9 +420,9 @@
 	position: absolute;
 	z-index: 2;
 	pointer-events: none;
-	border: 2px solid color-mix(in oklab, var(--primary) 80%, transparent);
-	border-radius: var(--radius-lg);
-	background: color-mix(in oklab, var(--primary) 12%, transparent);
+	border: 2px solid var(--hl-drop-hint-border);
+	border-radius: var(--hl-radius);
+	background: var(--hl-drop-hint-bg);
 	animation: hl-fade-in 40ms ease;
 }
 
@@ -403,20 +442,54 @@
 	inset: 2px 50% 2px 2px;
 }
 
+/* A popout's root fills the window (100vw by 100vh): the browser's default margin on its body
+   would push it past the window's edges and add the window's own scrollbars. */
+body:has(> .horizon-layout__popout) {
+	margin: 0;
+}
+
 .horizon-layout__popout {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
-	background: var(--background);
-	color: var(--fg);
+	background: var(--hl-background);
+	color: var(--hl-foreground);
 	font-size: var(--text-base);
 }
 
+/* A popout shows its view with no tab group around it: like a maximised view, it takes the
+   background of a tab group's content and its scrolling. */
 .horizon-layout__popout .horizon-layout__content {
 	flex: 1;
 	min-height: 0;
-	overflow: hidden;
+	overflow: auto;
+	background: var(--hl-card);
+}
+
+.horizon-layout-floating {
+	box-sizing: border-box;
+	border-radius: var(--hl-radius);
+	box-shadow: var(--hl-floating-shadow);
+	outline: none;
+}
+
+.horizon-layout-floating > .horizon-layout-tabgroup {
+	border: 1px solid var(--border-strong);
+	border-radius: inherit;
+}
+
+.horizon-layout-floating:focus-visible {
+	outline: 2px solid var(--hl-ring);
+	outline-offset: 1px;
+}
+
+.horizon-layout-floating .horizon-layout-tabgroup__tab-bar {
+	cursor: move;
+}
+
+.horizon-layout-floating .horizon-layout-tabgroup__tab {
+	cursor: default;
 }
 
 @keyframes hl-fade-in {

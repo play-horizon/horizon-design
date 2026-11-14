@@ -92,7 +92,7 @@
 		"@atlaskit/pragmatic-drag-and-drop-hitbox": "^3.0.0",
 		"clsx": "^2.1.1",
 		"fuzzysort": "^4.0.2",
-		"horizon-layout": "^1.0.3",
+		"horizon-layout": "2.0.2",
 		"tailwind-merge": "^3.7.0"
 	},
 	"devEngines": {
