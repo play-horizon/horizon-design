@@ -86,7 +86,6 @@
 	"dependencies": {
 		"@ark-ui/svelte": "^5.24.2",
 		"clsx": "^2.1.1",
-		"esm-env": "^1.2.2",
 		"fuzzysort": "^4.0.2",
 		"horizon-layout": "^1.0.3",
 		"tailwind-merge": "^3.7.0"
