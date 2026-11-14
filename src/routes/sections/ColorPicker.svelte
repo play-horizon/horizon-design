@@ -13,6 +13,14 @@ Docs: ColorPicker. Live examples of the ColorPicker component.
 			<!-- A colour picker's values are content (a material's colour), not interface colours. -->
 			<ColorPicker
 				label="Material colour"
+				labels={{
+					trigger: 'Choose a colour',
+					area: 'Saturation and brightness',
+					hue: 'Hue',
+					alpha: 'Opacity',
+					hex: 'Hex',
+					swatch: (color) => `Use ${color}`
+				}}
 				value={parseColor('#737efa')}
 				swatches={[
 					'#ef4444',
