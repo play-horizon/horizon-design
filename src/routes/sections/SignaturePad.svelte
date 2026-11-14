@@ -10,7 +10,11 @@ Docs: SignaturePad. Live examples of the SignaturePad component.
 <section id="signature-pad">
 	<Card>
 		<div>
-			<SignaturePad label="Draw your signature" clearLabel="Clear" />
+			<SignaturePad
+				label="Draw your signature"
+				roleDescription="signature pad"
+				clearLabel="Clear"
+			/>
 		</div>
 	</Card>
 </section>
