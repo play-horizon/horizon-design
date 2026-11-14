@@ -56,7 +56,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		class?: string;
 		/** The control's size. */
 		size?: 'sm' | 'md' | 'lg' | 'xl';
-		/** The checked track's colour: primary, or a neutral tint. */
+		/** The checked track's colour: primary, or neutral (the text colour). */
 		variant?: 'default' | 'secondary';
 		/** The switch's label, translated; without it or `children`, the switch has no name. */
 		label?: string;
@@ -86,10 +86,10 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 >
 	<Switch.Control
 		class={cn(
-			'inline-flex shrink-0 items-center rounded-full border-2 border-transparent bg-border-strong transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background',
+			'inline-flex shrink-0 items-center rounded-full border-2 border-transparent bg-faint transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background',
 			{
 				'data-[state=checked]:bg-primary': variant === 'default',
-				'data-[state=checked]:bg-hover': variant === 'secondary'
+				'data-[state=checked]:bg-fg-2': variant === 'secondary'
 			},
 			sz.control
 		)}
@@ -98,6 +98,10 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 			class={cn(
 				'group pointer-events-none flex items-center justify-center rounded-full bg-paper shadow-sm ring-0 transition-transform duration-150 ease-standard',
 				'data-[state=unchecked]:translate-x-0',
+				// The neutral checked track is the text colour, light in the dark theme, where a white
+				// thumb would hardly show: the thumb takes the page colour, which contrasts with the
+				// track in both themes.
+				variant === 'secondary' && 'data-[state=checked]:bg-background',
 				sz.thumb,
 				sz.checkedTranslate
 			)}
