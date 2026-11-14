@@ -1,6 +1,8 @@
 <!--
 @component
-A circular control that picks a value along an arc.
+A circular control that picks an angle, from 0 to 360, along a ring that fills up to its thumb
+(Ark AngleSlider), with the value written in its centre between `prefix` and `suffix`. `label`
+is its accessible name; the arrow keys move it by `step`.
 -->
 <script lang="ts">
 	import { AngleSlider } from '@ark-ui/svelte';
@@ -14,17 +16,32 @@ A circular control that picks a value along an arc.
 		showValue = true,
 		prefix = '',
 		suffix = '',
-		value = $bindable(0),
+		label,
+		value = $bindable(),
+		onValueChange,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The ring's diameter, in pixels. */
 		size?: number;
+		/** The ring's thickness, in pixels. */
 		thickness?: number;
+		/** How far an arrow key moves the thumb. */
 		step?: number;
+		/** Shows the value in the centre. */
 		showValue?: boolean;
+		/** Text written before the value, such as a currency sign. */
 		prefix?: string;
+		/** Text written after the value, such as "°". */
 		suffix?: string;
+		/** The control's accessible name, such as "Hue", read by assistive technology only. */
+		label: string;
+		/** The value, from 0 to 360 (bindable); when unset, `defaultValue` gives the first one. */
 		value?: number;
+		/** Called with the new value while the thumb moves. */
+		onValueChange?: (details: { value: number }) => void;
+		/** Other props of Ark's `AngleSlider.Root`, such as `defaultValue` and `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -41,10 +58,14 @@ A circular control that picks a value along an arc.
 	data-slot="circular-slider"
 	{step}
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	style="width: {size}px; height: {size}px;"
 	{...rest}
 >
+	<AngleSlider.Label class="sr-only">{label}</AngleSlider.Label>
 	<AngleSlider.Control
 		class="group/circular-slider-control absolute inset-0"
 		data-slot="circular-slider-control"
@@ -52,12 +73,12 @@ A circular control that picks a value along an arc.
 		<AngleSlider.Context>
 			{#snippet render(ctx)}
 				{@const api = ctx()}
-				{@const percent = api.value / 360}
+				{@const turn = api.value / 360}
 				<!-- A conic gradient drawn as a ring by a radial mask, which reads only the alpha of its colours. -->
 				<div
 					aria-hidden="true"
 					class="pointer-events-none absolute inset-0 rounded-full"
-					style:background="conic-gradient(var(--primary) {percent}turn, var(--hover) 0)"
+					style:background="conic-gradient(var(--primary) {turn}turn, var(--hover) 0)"
 					style:mask="radial-gradient(farthest-side, transparent calc(100% - {thickness}px - 0.5px),
 					currentColor calc(100% - {thickness}px))"
 				></div>

@@ -10,7 +10,7 @@ Docs: CircularSlider. Live examples of the CircularSlider component.
 <section id="circular-slider">
 	<Card>
 		<div class="flex items-center justify-center">
-			<CircularSlider size={120} thickness={8} defaultValue={120} suffix="°" />
+			<CircularSlider label="Hue" size={120} thickness={8} defaultValue={120} suffix="°" />
 		</div>
 	</Card>
 </section>
