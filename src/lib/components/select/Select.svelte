@@ -2,7 +2,7 @@
 @component
 A select field with a dropdown list of options (Ark Select); `value` binds the chosen values
 (without it, Ark's `defaultValue` sets the first ones) and `placeholder` shows while none is
-chosen. `label` names the field.
+chosen. `label`, required, names the field.
 -->
 <script lang="ts">
 	import { Select, createListCollection, type SelectValueChangeDetails } from '@ark-ui/svelte';
@@ -29,8 +29,8 @@ chosen. `label` names the field.
 		class?: string;
 		/** The options, in order. */
 		items?: Item[];
-		/** The field's label, which names it. */
-		label?: string;
+		/** The field's visible label, which names it. */
+		label: string;
 		/** The text shown while nothing is selected. */
 		placeholder?: string;
 		/** Classes added to the field's button. */
@@ -58,11 +58,9 @@ chosen. `label` names the field.
 	class={cn('flex flex-col gap-1', className)}
 	{...rest}
 >
-	{#if label}
-		<Select.Label class="text-sm leading-none font-medium" data-slot="select-label">
-			{label}
-		</Select.Label>
-	{/if}
+	<Select.Label class="text-sm leading-none font-medium" data-slot="select-label">
+		{label}
+	</Select.Label>
 	<Select.Control class="isolate">
 		<Select.Trigger
 			class={cn(
