@@ -22,7 +22,9 @@ lists show skeletons instead. With `label`, the text shows beside it and is anno
 		'aria-label': ariaLabel,
 		...rest
 	}: {
+		/** Classes added to the spinner, or to its wrapper when it has a `label`. */
 		class?: string;
+		/** The spinner's size, from `sm` (12 px) to `xl` (24 px). */
 		size?: keyof typeof sizes;
 		/** Text shown beside the spinner and announced. */
 		label?: string;
