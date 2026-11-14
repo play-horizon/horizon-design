@@ -1,7 +1,7 @@
 <!--
 @component
 A panel that floats over the window and can be dragged by its header and resized by its edges
-and corners (Ark FloatingPanel); `closeLabel` names its close button.
+and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its close button.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -27,7 +27,7 @@ and corners (Ark FloatingPanel); `closeLabel` names its close button.
 		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
 		/** The panel's heading, which names it for assistive technology. */
-		title?: string;
+		title: string;
 		/** The panel's body, which scrolls when the panel is smaller than it. */
 		children?: Snippet;
 		/** Classes merged onto the panel. */
@@ -75,14 +75,12 @@ and corners (Ark FloatingPanel); `closeLabel` names its close button.
 					data-slot="floating-panel-header"
 				>
 					<FloatingPanel.DragTrigger class="absolute inset-0 cursor-grab active:cursor-grabbing" />
-					{#if title}
-						<FloatingPanel.Title
-							class="relative z-10 text-sm font-semibold text-fg"
-							data-slot="floating-panel-title"
-						>
-							{title}
-						</FloatingPanel.Title>
-					{/if}
+					<FloatingPanel.Title
+						class="relative z-10 text-sm font-semibold text-fg"
+						data-slot="floating-panel-title"
+					>
+						{title}
+					</FloatingPanel.Title>
 					<FloatingPanel.CloseTrigger
 						class="relative z-10 inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
 						aria-label={closeLabel}
