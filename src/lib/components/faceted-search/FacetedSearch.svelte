@@ -63,7 +63,7 @@ shows while any option is chosen. Every text is passed in, translated.
 		sort = $bindable(sorts[0]?.id),
 		searchLabel,
 		placeholder = '',
-		sortLabel = '',
+		sortLabel,
 		clearLabel,
 		onChange,
 		children,
@@ -83,8 +83,8 @@ shows while any option is chosen. Every text is passed in, translated.
 		searchLabel: string;
 		/** The search field's placeholder, such as "Search games by name". */
 		placeholder?: string;
-		/** The sort control's accessible name, such as "Sort by"; needed with `sorts`. */
-		sortLabel?: string;
+		/** The sort control's accessible name, such as "Sort by"; unused without `sorts`. */
+		sortLabel: string;
 		/** The "Clear filters" button's text. */
 		clearLabel: string;
 		/** Called after each change of the query, a facet or the sort. */
