@@ -22,11 +22,7 @@ Docs: InspectorPanel. Live examples of the InspectorPanel component.
 		style="height: 180px;"
 	>
 		<ScrollArea class="size-full p-3">
-			<InspectorPanel
-				bind:cards={inspectorCards}
-				bind:expandedIds={inspectorExpanded}
-				reorderLabel={(title) => `Drag to reorder ${title}`}
-			>
+			<InspectorPanel bind:cards={inspectorCards} bind:expandedIds={inspectorExpanded}>
 				{#snippet content(card)}
 					{#if card.id === 'transform'}
 						<div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-xs">

@@ -1,317 +1,266 @@
 <!--
 @component
 The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by
-drag or keyboard; `reorderLabel` names each card's handle.
--->
-<script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
-	import MingcuteRightLine from '~icons/mingcute/right-line';
+drag or keyboard.
 
-	type InspectorCard = {
+Each card's header is a button that opens and closes it. On a header, the up and down arrows move
+the focus to the card above or below, Home and End to the first and the last, and Shift+up and
+Shift+down move the card itself. With the pointer, a card is dragged by its handle, which assistive
+technologies don't see (the header's Shift+arrows are their way to reorder), and dropped on the
+upper or lower half of another card to go before or after it.
+-->
+<script module lang="ts">
+	/** A card of the inspector: one component of the selected object. */
+	export type InspectorCard = {
+		/** Unique among the cards. */
 		id: string;
+		/** The card's heading, such as the component's name. */
 		title: string;
+		/** A short summary shown after the title, such as the component's main value. */
 		subtitle?: string;
+		/** The app's own data for the card's body (`content`), such as the component's fields. */
 		[key: string]: unknown;
 	};
+</script>
+
+<script lang="ts">
+	import { tick, type Snippet } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
+	import {
+		draggable,
+		dropTargetForElements,
+		monitorForElements
+	} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+	import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+	import { attachClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge/attach-closest-edge';
+	import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge/extract-closest-edge';
+	import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
+	import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
+	import { cn } from '$lib/utils';
+	import MingcuteRightLine from '~icons/mingcute/right-line';
+	import MingcuteDotsVerticalLine from '~icons/mingcute/dots-vertical-line';
+	import { setTextDragPreview } from '../drag-preview';
 
 	let {
 		class: className = '',
 		cards = $bindable<InspectorCard[]>([]),
 		expandedIds = $bindable<string[]>([]),
 		content,
-		reorderLabel,
 		onCardsChange,
 		onExpandedChange
 	}: {
+		/** Classes added to the column's element. */
 		class?: string;
+		/** The cards, top to bottom. */
 		cards?: InspectorCard[];
+		/** The ids of the open cards. */
 		expandedIds?: string[];
+		/** A card's body, shown while it is open. */
 		content?: Snippet<[InspectorCard]>;
-		/** The drag handle's accessible name for a card, such as `Drag to reorder ${title}`. */
-		reorderLabel: (title: string) => string;
+		/** Called with the cards in their new order after the user moves one. */
 		onCardsChange?: (cards: InspectorCard[]) => void;
+		/** Called with the ids of the open cards after the user opens or closes one. */
 		onExpandedChange?: (expandedIds: string[]) => void;
 	} = $props();
 
-	let containerEl = $state<HTMLElement | null>(null);
-	let cursorId = $state<string | null>(null);
-	let isKeyboardMode = $state(false);
+	const uid = $props.id();
+	/** Tags this panel's drags: its cards take nothing else, and other views ignore them. */
+	const dragType = `${uid}-card`;
 
-	let isDragging = $state(false);
 	let draggingId = $state<string | null>(null);
-	let dragOverIndex = $state<number | null>(null);
-	let ghostPos = $state({ x: 0, y: 0 });
+	/** Where the dragged card would land: above or below the card under the pointer. */
+	let dropTarget = $state.raw<{ id: string; edge: Edge } | null>(null);
 
-	/** Moves the drag ghost to the end of <body>, so no ancestor clips or transforms it. */
-	function portal(node: HTMLElement) {
-		document.body.appendChild(node);
-		return () => node.remove();
+	function headerId(id: string): string {
+		return `${uid}-header-${encodeURIComponent(id)}`;
 	}
 
+	function bodyId(id: string): string {
+		return `${uid}-body-${encodeURIComponent(id)}`;
+	}
+
+	function focusHeader(id: string | undefined) {
+		if (id !== undefined) document.getElementById(headerId(id))?.focus();
+	}
+
+	/** Opens or closes a card; the reported ids leave out those of cards no longer shown. */
 	function toggleExpanded(id: string) {
-		const next = expandedIds.includes(id)
-			? expandedIds.filter((v) => v !== id)
-			: [...expandedIds, id];
+		const shown = expandedIds.filter((v) => cards.some((c) => c.id === v));
+		const next = shown.includes(id) ? shown.filter((v) => v !== id) : [...shown, id];
 		expandedIds = next;
 		onExpandedChange?.(next);
 	}
 
-	function moveCard(id: string, delta: number) {
-		const idx = cards.findIndex((c) => c.id === id);
-		const toIdx = idx + delta;
-		if (toIdx < 0 || toIdx >= cards.length) return;
-		const next = [...cards];
-		[next[idx], next[toIdx]] = [next[toIdx], next[idx]];
+	function setCards(next: InspectorCard[]) {
 		cards = next;
 		onCardsChange?.(next);
 	}
 
-	function handleKeyDown(e: KeyboardEvent) {
-		// If a child element (card content) has focus, only handle Escape to return to the panel
-		if (e.target !== containerEl) {
-			if (e.key === 'Escape') {
-				e.preventDefault();
-				containerEl?.focus();
-			}
+	async function moveCard(index: number, delta: -1 | 1) {
+		const to = index + delta;
+		if (to < 0 || to >= cards.length) return;
+		const next = [...cards];
+		[next[index], next[to]] = [next[to], next[index]];
+		setCards(next);
+		// Reordering moves the header's element, which loses the focus in some browsers.
+		await tick();
+		focusHeader(next[to].id);
+	}
+
+	function handleHeaderKeydown(e: KeyboardEvent, index: number) {
+		const last = cards.length - 1;
+		if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+			e.preventDefault();
+			void moveCard(index, e.key === 'ArrowUp' ? -1 : 1);
 			return;
 		}
-
-		isKeyboardMode = true;
-		const ids = cards.map((c) => c.id);
-		const idx = cursorId ? ids.indexOf(cursorId) : -1;
-
-		if (e.shiftKey && cursorId) {
-			if (e.key === 'ArrowUp') {
-				e.preventDefault();
-				moveCard(cursorId, -1);
-				return;
-			}
-			if (e.key === 'ArrowDown') {
-				e.preventDefault();
-				moveCard(cursorId, 1);
-				return;
-			}
-		}
-
-		if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			cursorId = idx < ids.length - 1 ? ids[idx + 1] : ids[0];
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			cursorId = idx > 0 ? ids[idx - 1] : ids[ids.length - 1];
-		} else if (e.key === 'Enter' || e.key === ' ') {
-			if (!cursorId) return;
-			e.preventDefault();
-			toggleExpanded(cursorId);
-		} else if (e.key === 'Home') {
-			e.preventDefault();
-			cursorId = ids[0] ?? null;
-		} else if (e.key === 'End') {
-			e.preventDefault();
-			cursorId = ids[ids.length - 1] ?? null;
-		} else if (e.key === 'Escape') {
-			cursorId = null;
-			isKeyboardMode = false;
-		}
-	}
-
-	function startDrag(e: PointerEvent, id: string) {
-		e.preventDefault();
-		isDragging = true;
-		draggingId = id;
-		ghostPos = { x: e.clientX + 12, y: e.clientY - 8 };
-		window.addEventListener('pointermove', onDragMove);
-		window.addEventListener('pointerup', onDragEnd);
-		window.addEventListener('pointercancel', onDragEnd);
-	}
-
-	function onDragMove(e: PointerEvent) {
-		ghostPos = { x: e.clientX + 12, y: e.clientY - 8 };
-		if (!containerEl) return;
-		const rows = Array.from(containerEl.querySelectorAll<HTMLElement>('[data-inspector-row]'));
-		let found = rows.length;
-		for (let i = 0; i < rows.length; i++) {
-			const rect = rows[i].getBoundingClientRect();
-			if (e.clientY < rect.top + rect.height / 2) {
-				found = i;
-				break;
-			}
-		}
-		dragOverIndex = found;
-	}
-
-	function onDragEnd() {
-		window.removeEventListener('pointermove', onDragMove);
-		window.removeEventListener('pointerup', onDragEnd);
-		window.removeEventListener('pointercancel', onDragEnd);
-
-		if (draggingId !== null && dragOverIndex !== null) {
-			const fromIndex = cards.findIndex((c) => c.id === draggingId);
-			if (fromIndex !== -1) {
-				const next = [...cards];
-				const [item] = next.splice(fromIndex, 1);
-				const insertAt = dragOverIndex > fromIndex ? dragOverIndex - 1 : dragOverIndex;
-				next.splice(insertAt, 0, item);
-				cards = next;
-				onCardsChange?.(next);
-			}
-		}
-
-		isDragging = false;
-		draggingId = null;
-		dragOverIndex = null;
-	}
-
-	$effect(() => {
-		if (!isDragging) return;
-		document.body.style.cursor = 'grabbing';
-		return () => {
-			document.body.style.cursor = '';
+		const targets: Record<string, number> = {
+			ArrowUp: index > 0 ? index - 1 : last,
+			ArrowDown: index < last ? index + 1 : 0,
+			Home: 0,
+			End: last
 		};
-	});
+		const target = targets[e.key];
+		if (target === undefined) return;
+		e.preventDefault();
+		focusHeader(cards[target]?.id);
+	}
 
-	$effect(() => {
-		const ids = new Set(cards.map((c) => c.id));
+	function isOwnDrag(data: Record<string | symbol, unknown>): boolean {
+		return data.type === dragType;
+	}
 
-		const prunedExpanded = expandedIds.filter((id) => ids.has(id));
-		if (prunedExpanded.length !== expandedIds.length) {
-			expandedIds = prunedExpanded;
-			onExpandedChange?.(prunedExpanded);
-		}
+	/** A card's handle drags the card, shown by its title beside the pointer. */
+	function handleDrag(card: InspectorCard): Attachment<HTMLElement> {
+		return (element) =>
+			draggable({
+				element,
+				getInitialData: () => ({ type: dragType, id: card.id }),
+				onGenerateDragPreview: ({ nativeSetDragImage }) =>
+					setTextDragPreview(nativeSetDragImage, card.title),
+				onDragStart: () => (draggingId = card.id)
+			});
+	}
 
-		if (cursorId && !ids.has(cursorId)) {
-			cursorId = null;
-		}
-	});
+	/** A card takes the dragged card above or below it, whichever half the pointer is over. */
+	function cardDrop(card: InspectorCard): Attachment<HTMLElement> {
+		return (element) =>
+			dropTargetForElements({
+				element,
+				canDrop: ({ source }) => isOwnDrag(source.data),
+				// The gaps between cards keep the last card hovered, so a drop there still lands.
+				getIsSticky: () => true,
+				getData: ({ input, element }) =>
+					attachClosestEdge({ id: card.id }, { input, element, allowedEdges: ['top', 'bottom'] }),
+				onDrag: ({ self, source }) => {
+					const edge = extractClosestEdge(self.data);
+					const next = edge && source.data.id !== card.id ? { id: card.id, edge } : null;
+					if (next?.id !== dropTarget?.id || next?.edge !== dropTarget?.edge) dropTarget = next;
+				},
+				onDragLeave: () => {
+					if (dropTarget?.id === card.id) dropTarget = null;
+				}
+			});
+	}
+
+	/**
+	 * Makes the panel a drop target of its own cards, so a card stays hovered only across the gaps
+	 * between cards (stickiness ends where the panel does), and ends every drag of the panel,
+	 * moving a card dropped on another next to it.
+	 */
+	function panelDrop(element: HTMLElement) {
+		return combine(
+			dropTargetForElements({ element, canDrop: ({ source }) => isOwnDrag(source.data) }),
+			monitorForElements({
+				canMonitor: ({ source }) => isOwnDrag(source.data),
+				onDrop: ({ source, location }) => {
+					draggingId = null;
+					dropTarget = null;
+					// The innermost target: a card, or the panel itself, which moves nothing.
+					const target = location.current.dropTargets[0]?.data;
+					if (typeof target?.id !== 'string') return;
+					const startIndex = cards.findIndex((c) => c.id === source.data.id);
+					const next = reorderWithEdge({
+						list: cards,
+						startIndex,
+						indexOfTarget: cards.findIndex((c) => c.id === target.id),
+						closestEdgeOfTarget: extractClosestEdge(target),
+						axis: 'vertical'
+					});
+					if (next.some((card, i) => card !== cards[i])) setCards(next);
+				}
+			})
+		);
+	}
 </script>
 
-{#if isDragging}
-	<div
-		{@attach portal}
-		style="position:fixed;z-index:9999;left:{ghostPos.x}px;top:{ghostPos.y}px;pointer-events:none"
-		class="max-w-48 truncate rounded-md border border-border bg-background px-2 py-1 text-sm text-fg shadow-lg"
-	>
-		{cards.find((c) => c.id === draggingId)?.title ?? ''}
-	</div>
-{/if}
-
 <div
-	bind:this={containerEl}
-	role="tree"
-	tabindex="0"
+	{@attach panelDrop}
 	data-slot="inspector-panel"
-	class={cn('flex flex-col gap-1 text-sm outline-none', className)}
-	onkeydown={handleKeyDown}
-	onpointerdown={() => {
-		isKeyboardMode = false;
-	}}
-	onfocus={() => {
-		if (containerEl?.matches(':focus-visible')) {
-			isKeyboardMode = true;
-			if (!cursorId) cursorId = cards[0]?.id ?? null;
-		}
-	}}
-	onfocusin={(e) => {
-		if (e.target !== containerEl) {
-			isKeyboardMode = false;
-			cursorId = null;
-		}
-	}}
-	ondragstart={(e) => e.preventDefault()}
+	class={cn('flex flex-col gap-1 text-sm', className)}
 >
 	{#each cards as card, i (card.id)}
 		{@const isExpanded = expandedIds.includes(card.id)}
-		{@const isCursor = cursorId === card.id && isKeyboardMode}
-		{@const isDraggingThis = draggingId === card.id}
-		{@const showDropAbove = isDragging && dragOverIndex === i && draggingId !== card.id}
-		{@const showDropBelow =
-			isDragging &&
-			dragOverIndex === cards.length &&
-			i === cards.length - 1 &&
-			draggingId !== card.id}
 
 		<div
-			role="treeitem"
-			aria-expanded={isExpanded}
-			aria-selected={false}
-			data-inspector-row
-			data-id={card.id}
+			{@attach cardDrop(card)}
+			data-slot="inspector-panel-card"
 			class={cn(
 				'relative flex flex-col rounded-md border border-border transition-opacity duration-150',
-				isDraggingThis && 'opacity-30',
-				isCursor && 'ring-1 ring-primary ring-inset'
+				draggingId === card.id && 'opacity-30'
 			)}
 		>
-			{#if showDropAbove}
+			{#if dropTarget?.id === card.id}
 				<div
-					class="pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary"
-					style="top: -2.5px"
+					class={[
+						'pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary',
+						dropTarget.edge === 'top' ? '-top-0.75' : '-bottom-0.75'
+					]}
+					aria-hidden="true"
 				></div>
 			{/if}
-			{#if showDropBelow}
-				<div
-					class="pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary"
-					style="bottom: -2.5px"
-				></div>
-			{/if}
-			<div
-				role="button"
-				tabindex="0"
-				class="flex cursor-default items-center rounded-sm px-2 py-1.5 transition-colors hover:bg-hover/50"
-				onclick={() => {
-					cursorId = card.id;
-					isKeyboardMode = false;
-					toggleExpanded(card.id);
-				}}
-				onkeydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						e.preventDefault();
-						cursorId = card.id;
-						isKeyboardMode = true;
-						toggleExpanded(card.id);
-					}
-				}}
-			>
+			<div class="flex items-center rounded-sm pr-2 transition-colors hover:bg-hover/50">
 				<button
-					tabindex="-1"
+					type="button"
+					id={headerId(card.id)}
 					aria-expanded={isExpanded}
-					class="flex flex-1 items-center gap-1.5 text-left"
+					aria-controls={bodyId(card.id)}
+					aria-keyshortcuts="Shift+ArrowUp Shift+ArrowDown"
+					class="flex min-w-0 flex-1 cursor-default items-center gap-1.5 rounded-sm px-2 py-1.5 text-left"
+					onclick={() => toggleExpanded(card.id)}
+					onkeydown={(e) => handleHeaderKeydown(e, i)}
 				>
 					<MingcuteRightLine
+						aria-hidden="true"
 						class={cn(
 							'size-3.5 shrink-0 text-muted transition-transform duration-200',
 							isExpanded && 'rotate-90'
 						)}
 					/>
-					<span class="flex-1 leading-none font-medium">{card.title}</span>
+					<span class="flex-1 truncate leading-none font-medium">{card.title}</span>
 					{#if card.subtitle}
 						<span class="text-xs text-muted">{card.subtitle}</span>
 					{/if}
 				</button>
-				<button
-					tabindex="-1"
-					aria-label={reorderLabel(card.title)}
+				<!-- Pointer only: on the keyboard, Shift+arrows on the header move the card. -->
+				<div
+					{@attach handleDrag(card)}
+					aria-hidden="true"
+					data-slot="inspector-panel-handle"
 					class="ml-1 flex shrink-0 cursor-grab items-center rounded text-muted transition-colors hover:text-fg active:cursor-grabbing"
-					onpointerdown={(e) => {
-						e.stopPropagation();
-						startDrag(e, card.id);
-					}}
-					onclick={(e) => e.stopPropagation()}
 				>
-					<span class="grid grid-cols-2 gap-0.75 p-0.5">
-						{#each [0, 1, 2, 3, 4, 5] as dot (dot)}
-							<span class="size-0.75 rounded-full bg-current"></span>
-						{/each}
-					</span>
-				</button>
+					<!-- The icon's two rows of three dots, turned into the usual upright grip. -->
+					<MingcuteDotsVerticalLine class="size-4 rotate-90" />
+				</div>
 			</div>
 
 			<div
+				id={bodyId(card.id)}
 				class={cn(
 					'grid transition-[grid-template-rows] duration-200 ease-out',
 					isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
 				)}
+				inert={!isExpanded}
 			>
 				<div class="overflow-hidden">
 					<div class="border-t border-border px-3 py-2.5">
