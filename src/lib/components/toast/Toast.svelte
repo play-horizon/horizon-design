@@ -19,20 +19,27 @@ button named by `closeLabel`.
 		...rest
 	}: {
 		class?: string;
+		/** The toast's title, translated. */
 		title?: string;
+		/** Its message, translated. */
 		description?: string;
+		/** The tint: info, success, warning or error. */
 		type?: 'info' | 'success' | 'warning' | 'error';
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
+		/** More content under the description, such as an action. */
 		children?: Snippet;
+		/** Other props of Ark's `Toast.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
-	const typeStyles: Record<string, string> = {
-		info: 'border-info-border bg-info-subtle',
-		success: 'border-success-border bg-success-subtle',
-		warning: 'border-warning-border bg-warning-subtle',
-		error: 'border-danger-border bg-danger-subtle'
+	// The tints are translucent: laid as a gradient over the opaque raised fill, so the page behind
+	// never shows through the toast.
+	const typeStyles = {
+		info: 'border-info-border from-info-subtle to-info-subtle',
+		success: 'border-success-border from-success-subtle to-success-subtle',
+		warning: 'border-warning-border from-warning-subtle to-warning-subtle',
+		error: 'border-danger-border from-danger-subtle to-danger-subtle'
 	};
 </script>
 
@@ -40,7 +47,7 @@ button named by `closeLabel`.
 	class={cn(
 		// Ark positions and stacks toasts through these variables.
 		'z-(--z-index,auto) [height:var(--height,auto)] [translate:0_var(--y,0)] [scale:var(--scale,1)] opacity-(--opacity,1) transition-[translate,opacity,scale,height] duration-400 ease-emphasized',
-		'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-xl border bg-raised p-4 shadow-md',
+		'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-xl border bg-raised bg-linear-to-r p-4 shadow-md outline-none focus-visible:ring-2 focus-visible:ring-primary',
 		typeStyles[type],
 		className
 	)}
@@ -64,7 +71,7 @@ button named by `closeLabel`.
 	</div>
 	<Toast.CloseTrigger
 		aria-label={closeLabel}
-		class="absolute top-2 right-2 rounded p-1 text-muted opacity-0 transition-opacity outline-none group-hover:opacity-70 hover:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
+		class="absolute top-2 right-2 rounded p-1 text-muted opacity-0 transition-opacity outline-none group-hover:opacity-70 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
 	>
 		<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
 	</Toast.CloseTrigger>

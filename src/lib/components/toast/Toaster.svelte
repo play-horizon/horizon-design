@@ -1,6 +1,7 @@
 <!--
 @component
-Shows the toasts of a toaster made with `createToaster`, stacked at the window's edge.
+Shows the toasts of a toaster made with `createToaster`, stacked at the window's edge, in a live
+region named by `label`. The toaster's `placement` and `offsets` position the stack.
 -->
 <script lang="ts">
 	import { Toaster } from '@ark-ui/svelte';
@@ -10,20 +11,26 @@ Shows the toasts of a toaster made with `createToaster`, stacked at the window's
 	let {
 		class: className = '',
 		toaster,
+		label,
 		closeLabel,
 		...rest
 	}: {
 		class?: string;
+		/** The toaster whose toasts show, from `createToaster`. */
 		toaster: ReturnType<typeof import('@ark-ui/svelte').createToaster>;
+		/** The toasts region's accessible name, such as "Notifications". */
+		label: string;
 		/** Each toast's close button's accessible name, such as "Close". */
 		closeLabel: string;
+		/** Other props of Ark's `Toaster`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <Toaster
 	{toaster}
-	class={cn('pointer-events-none fixed right-4 bottom-4 z-100 w-full max-w-sm', className)}
+	aria-label={label}
+	class={cn('pointer-events-none w-full max-w-sm', className)}
 	{...rest}
 >
 	{#snippet children(toast)}

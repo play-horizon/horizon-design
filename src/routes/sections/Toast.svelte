@@ -24,7 +24,7 @@ Docs: Toast. Live examples of the Toast component.
 	}
 </script>
 
-<Toaster {toaster} closeLabel="Close" />
+<Toaster {toaster} label="Notifications" closeLabel="Close" />
 
 <section id="toast">
 	<Card>
