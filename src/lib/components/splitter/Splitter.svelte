@@ -1,6 +1,7 @@
 <!--
 @component
-Resizable panels separated by draggable handles (Ark Splitter).
+Resizable panels separated by draggable handles (Ark Splitter): `SplitterPanel`s with a
+`SplitterResizeTrigger` between each two. It renders in the browser only.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -10,12 +11,15 @@ Resizable panels separated by draggable handles (Ark Splitter).
 
 	let {
 		class: className = '',
-		panels = [],
+		panels,
 		children,
 		...rest
 	}: {
+		/** Classes added to the row (or column) of panels. */
 		class?: string;
-		panels?: PanelData[];
+		/** Each panel's id and size limits, in order. */
+		panels: PanelData[];
+		/** The `SplitterPanel`s and `SplitterResizeTrigger`s. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();

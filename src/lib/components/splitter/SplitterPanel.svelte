@@ -13,8 +13,11 @@ One panel of a `Splitter`.
 		children,
 		...rest
 	}: {
+		/** Classes added to the panel. */
 		class?: string;
+		/** The panel's id, as in the `Splitter`'s `panels`. */
 		id: string;
+		/** The panel's content. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();

@@ -19,7 +19,7 @@ Docs: Splitter. Live examples of the Splitter component.
 							Panel A
 						</div>
 					</SplitterPanel>
-					<SplitterResizeTrigger id="a:b" />
+					<SplitterResizeTrigger id="a:b" label="Resize the panels" />
 					<SplitterPanel id="b">
 						<div class="flex h-full items-center justify-center p-4 text-sm text-muted">
 							Panel B
