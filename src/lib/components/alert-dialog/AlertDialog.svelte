@@ -112,7 +112,7 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 						{cancelLabel}
 					</Dialog.CloseTrigger>
 					<Dialog.Context>
-						{#snippet children(dialog)}
+						{#snippet render(dialog)}
 							<button
 								type="button"
 								class={cn(buttonVariants({ variant: 'danger-solid' }), actionClass)}

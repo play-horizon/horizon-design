@@ -60,7 +60,7 @@ buttons to start, pause, resume and reset it, named by `labels`. Only the button
 	{...rest}
 >
 	<Timer.Context>
-		{#snippet api(timer)}
+		{#snippet render(timer)}
 			<div
 				class="flex items-center gap-1 font-mono text-3xl font-bold text-fg tabular-nums"
 				data-slot="timer-time"
