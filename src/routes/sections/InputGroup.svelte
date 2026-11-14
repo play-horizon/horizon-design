@@ -14,11 +14,11 @@ Docs: InputGroup. Live examples of the InputGroup component.
 		<div class="space-y-4">
 			<InputGroup>
 				<InputAddon>https://</InputAddon>
-				<Input placeholder="yoursite.com" />
+				<Input placeholder="yoursite.com" aria-label="Website" />
 			</InputGroup>
 			<InputGroup>
-				<Input placeholder="Search…" />
-				<InputAddon><MingcuteSearchLine class="size-4" /></InputAddon>
+				<Input placeholder="Search…" aria-label="Search" />
+				<InputAddon><MingcuteSearchLine class="size-4" aria-hidden="true" /></InputAddon>
 			</InputGroup>
 		</div>
 	</Card>
