@@ -94,3 +94,5 @@ export * from './components/toggle-group';
 export * from './components/toggle-tooltip';
 export * from './components/tooltip';
 export * from './components/tour';
+export * from './components/virtual-list';
+export * from './components/virtual-tree';

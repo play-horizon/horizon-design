@@ -143,7 +143,9 @@ export const navGroups: NavGroup[] = [
 		kit: 'general',
 		items: [
 			{ id: 'float', label: 'Float' },
-			{ id: 'splitter', label: 'Splitter' }
+			{ id: 'splitter', label: 'Splitter' },
+			{ id: 'virtual-list', label: 'Virtual List' },
+			{ id: 'virtual-tree', label: 'Virtual Tree' }
 		]
 	},
 	{
