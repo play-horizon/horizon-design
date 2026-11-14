@@ -12,7 +12,7 @@
 	--drop-shadow-*: initial;
 	--text-shadow-*: initial;
 
-	--font-sans: 'Encode Sans', system-ui, sans-serif;
+	--font-sans: 'Horizon Sans', system-ui, sans-serif;
 	--font-mono: 'Lilex', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
 	/* App scale: dense interface text, 13px body. */

@@ -103,8 +103,8 @@ the same, and never write a colour literal.
 - **Theme:** dark is the default; `data-theme="light"` on `<html>` (or on any element, for a
   light island) switches to light. `color-scheme` follows.
 - **Type scale:** `text-2xs` (10.5 px) to `text-4xl` (34 px) for apps, 13 px body; `text-display-sm`,
-  `text-display` and `text-display-lg` for marketing headlines. Encode Sans (semi-expanded) and
-  Lilex for code.
+  `text-display` and `text-display-lg` for marketing headlines. Horizon Sans (semi-expanded; see
+  [Fonts](#fonts)) and Lilex for code.
 - **Radius:** `rounded-xs` 2 px, `sm` 4 px, `md` 6 px, `lg` 10 px, `xl` 14 px.
 - **Control heights:** `h-control-xs` 22 px, `sm` 26 px, `md` 30 px, `lg` 40 px.
 - **Elevation:** `shadow-sm`, `shadow-md`, `shadow-lg`, and `inset-shadow-highlight`, the light
@@ -452,10 +452,38 @@ differences, and update the version the header names.
 
 ## Fonts
 
-[Encode Sans](https://fonts.google.com/specimen/Encode+Sans) (variable weight and width) and
-[Lilex](https://github.com/mishamyrt/Lilex) (variable weight) are self-hosted and bundled with the
-stylesheet, each split into a Latin and an extended subset.
+Two variable fonts are self-hosted and bundled with the stylesheet (`src/lib/fonts`, published in
+`dist/fonts`), each split into a Latin and an extended subset:
+
+- **Horizon Sans** (`--font-sans`, variable weight and width) is a subset of
+  [Encode Sans](https://github.com/thundernixon/Encode-Sans), Copyright 2020 The Encode Project
+  Authors, renamed as its licence requires: the SIL Open Font License reserves the name
+  "Encode Sans" for the unmodified font, and a subset is a modified version.
+- **Lilex** (`--font-mono`, variable weight), Copyright 2019 The Lilex Project Authors
+  ([Lilex](https://github.com/mishamyrt/Lilex)), is subset under its own name: its licence reserves
+  no name.
+
+Both are under the SIL Open Font License 1.1, shipped next to them: `OFL-EncodeSans.txt` and
+`OFL-Lilex.txt`.
+
+The Horizon Sans files are the Encode Sans subsets of commit `12ca3cd` with their names changed by
+`scripts/fonts/rename-horizon-sans.py` (family, full name, PostScript name, unique ID and
+typographic family; nothing else). fontTools runs once, outside the project's dependencies, here in
+a throwaway container; the same input gives the same files:
+
+```sh
+mkdir -p /tmp/horizon-sans
+for subset in latin latin-ext; do
+	git show 12ca3cd:src/lib/fonts/EncodeSans-$subset.woff2 > /tmp/horizon-sans/EncodeSans-$subset.woff2
+done
+docker run --rm -v /tmp/horizon-sans:/fonts -v "$PWD/scripts/fonts:/scripts:ro" -w /fonts \
+	python:3.13-slim sh -c 'pip install fonttools==4.68.0 brotli==1.2.1 && for subset in latin latin-ext; do
+		python -I /scripts/rename-horizon-sans.py EncodeSans-$subset.woff2 HorizonSans-$subset.woff2
+	done'
+cp /tmp/horizon-sans/HorizonSans-*.woff2 src/lib/fonts/
+```
 
 ## Licence
 
-MIT.
+MIT, except the fonts in `src/lib/fonts` (`dist/fonts` in the package), which are under the SIL
+Open Font License 1.1 (see [Fonts](#fonts)).

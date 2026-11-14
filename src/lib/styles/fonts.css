@@ -1,10 +1,13 @@
-/* The library's self-hosted fonts: Encode Sans (variable weight and width) for the interface and
+/* The library's self-hosted fonts: Horizon Sans (variable weight and width) for the interface and
    Lilex (variable weight) for code and numbers. Each is split into a Latin and an extended subset;
-   the browser only downloads the subsets whose unicode-range matches characters on the page. */
+   the browser only downloads the subsets whose unicode-range matches characters on the page.
+   Horizon Sans is Encode Sans, subset and renamed as its licence requires: the SIL Open Font
+   License reserves the name "Encode Sans" for the unmodified font (fonts/OFL-EncodeSans.txt). Lilex
+   reserves no name (fonts/OFL-Lilex.txt). */
 
 @font-face {
-	font-family: 'Encode Sans';
-	src: url('../fonts/EncodeSans-latin.woff2') format('woff2-variations');
+	font-family: 'Horizon Sans';
+	src: url('../fonts/HorizonSans-latin.woff2') format('woff2-variations');
 	font-weight: 100 900;
 	font-stretch: 75% 125%;
 	font-display: swap;
@@ -15,8 +18,8 @@
 }
 
 @font-face {
-	font-family: 'Encode Sans';
-	src: url('../fonts/EncodeSans-latin-ext.woff2') format('woff2-variations');
+	font-family: 'Horizon Sans';
+	src: url('../fonts/HorizonSans-latin-ext.woff2') format('woff2-variations');
 	font-weight: 100 900;
 	font-stretch: 75% 125%;
 	font-display: swap;

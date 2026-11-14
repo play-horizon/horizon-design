@@ -5,7 +5,7 @@
 		"svelte"
 	],
 	"homepage": "https://play-horizon.github.io/horizon-design",
-	"license": "MIT",
+	"license": "MIT AND OFL-1.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/play-horizon/horizon-design"
