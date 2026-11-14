@@ -28,10 +28,7 @@ A ring that fills with progress, with an optional value in its centre.
 		[key: string]: unknown;
 	} = $props();
 
-	const radius = $derived((size - strokeWidth) / 2);
-	const circumference = $derived(2 * Math.PI * radius);
 	const progress = $derived(Math.min(Math.max(value / max, 0), 1));
-	const dashOffset = $derived(circumference * (1 - progress));
 	const percentage = $derived(Math.round(progress * 100));
 </script>
 
@@ -46,27 +43,14 @@ A ring that fills with progress, with an optional value in its centre.
 		data-slot="circular-progress"
 		{...rest}
 	>
-		<svg width={size} height={size} viewBox="0 0 {size} {size}" class="-rotate-90">
-			<circle
-				cx={size / 2}
-				cy={size / 2}
-				r={radius}
-				fill="none"
-				stroke-width={strokeWidth}
-				class="stroke-surface"
-			/>
-			<circle
-				cx={size / 2}
-				cy={size / 2}
-				r={radius}
-				fill="none"
-				stroke-width={strokeWidth}
-				stroke-linecap="round"
-				stroke-dasharray={circumference}
-				stroke-dashoffset={dashOffset}
-				class="stroke-primary transition-all duration-300 ease-out"
-			/>
-		</svg>
+		<!-- A conic gradient drawn as a ring by a radial mask, which reads only the alpha of its colours. -->
+		<div
+			aria-hidden="true"
+			class="absolute inset-0 rounded-full"
+			style:background="conic-gradient(var(--primary) {progress}turn, var(--hover) 0)"
+			style:mask="radial-gradient(farthest-side, transparent calc(100% - {strokeWidth}px - 0.5px),
+			currentColor calc(100% - {strokeWidth}px))"
+		></div>
 		<div class="absolute inset-0 flex items-center justify-center">
 			{#if children}
 				{@render children()}

@@ -29,7 +29,6 @@ A circular control that picks a value along an arc.
 	} = $props();
 
 	const ringRadius = $derived(size / 2 - thickness / 2);
-	const ringCircumference = $derived(2 * Math.PI * ringRadius);
 	const thumbSize = $derived(Math.max(thickness + 8, 16));
 </script>
 
@@ -43,7 +42,7 @@ A circular control that picks a value along an arc.
 	{step}
 	{value}
 	onValueChange={(details) => (value = details.value)}
-	style="width: {size}px; height: {size}px; --thickness: {thickness}px;"
+	style="width: {size}px; height: {size}px;"
 	{...rest}
 >
 	<AngleSlider.Control
@@ -54,33 +53,14 @@ A circular control that picks a value along an arc.
 			{#snippet render(ctx)}
 				{@const api = ctx()}
 				{@const percent = api.value / 360}
-				{@const dashLen = percent * ringCircumference}
-				{@const gapLen = ringCircumference - dashLen}
-				<svg
+				<!-- A conic gradient drawn as a ring by a radial mask, which reads only the alpha of its colours. -->
+				<div
 					aria-hidden="true"
-					class="pointer-events-none -rotate-90"
-					height={size}
-					viewBox="0 0 {size} {size}"
-					width={size}
-				>
-					<circle
-						class="stroke-hover"
-						cx={size / 2}
-						cy={size / 2}
-						fill="transparent"
-						r={ringRadius}
-						stroke-width={thickness}
-					/>
-					<circle
-						class="stroke-primary [stroke-linecap:round]"
-						cx={size / 2}
-						cy={size / 2}
-						fill="transparent"
-						r={ringRadius}
-						stroke-dasharray="{dashLen} {gapLen}"
-						stroke-width={thickness}
-					/>
-				</svg>
+					class="pointer-events-none absolute inset-0 rounded-full"
+					style:background="conic-gradient(var(--primary) {percent}turn, var(--hover) 0)"
+					style:mask="radial-gradient(farthest-side, transparent calc(100% - {thickness}px - 0.5px),
+					currentColor calc(100% - {thickness}px))"
+				></div>
 			{/snippet}
 		</AngleSlider.Context>
 
