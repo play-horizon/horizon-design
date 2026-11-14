@@ -12,9 +12,13 @@ Groups buttons into one connected row or column.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the group. */
 		class?: string;
+		/** A row or a column. */
 		orientation?: 'horizontal' | 'vertical';
+		/** The buttons, direct children of the group. */
 		children?: Snippet;
+		/** Other attributes of the group, such as `aria-label`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -30,6 +34,7 @@ Groups buttons into one connected row or column.
 
 <div
 	class={cn(base, orientations[orientation], className)}
+	role="group"
 	data-slot="button-group"
 	data-orientation={orientation}
 	{...rest}
