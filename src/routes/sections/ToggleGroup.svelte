@@ -13,14 +13,15 @@ Docs: ToggleGroup. Live examples of the ToggleGroup component.
 <section id="toggle-group">
 	<Card>
 		<div>
-			{#snippet tgBold()}<MingcuteBoldLine class="size-4" />{/snippet}
-			{#snippet tgItalic()}<MingcuteItalicLine class="size-4" />{/snippet}
-			{#snippet tgUnderline()}<MingcuteUnderlineLine class="size-4" />{/snippet}
+			{#snippet tgBold()}<MingcuteBoldLine class="size-4" aria-hidden="true" />{/snippet}
+			{#snippet tgItalic()}<MingcuteItalicLine class="size-4" aria-hidden="true" />{/snippet}
+			{#snippet tgUnderline()}<MingcuteUnderlineLine class="size-4" aria-hidden="true" />{/snippet}
 			<ToggleGroup
+				aria-label="Text style"
 				items={[
-					{ value: 'bold', content: tgBold },
-					{ value: 'italic', content: tgItalic },
-					{ value: 'underline', content: tgUnderline }
+					{ value: 'bold', label: 'Bold', content: tgBold },
+					{ value: 'italic', label: 'Italic', content: tgItalic },
+					{ value: 'underline', label: 'Underline', content: tgUnderline }
 				]}
 			/>
 		</div>
