@@ -10,6 +10,7 @@
 export type SlideDirection = 'forward' | 'backward';
 
 let activeSlide: ViewTransition | null = null;
+let activeCrossfade: ViewTransition | null = null;
 
 /** Whether the system asks for reduced motion (false where there is no `matchMedia`). */
 export function prefersReducedMotion(): boolean {
@@ -36,10 +37,16 @@ export async function crossfadePage(update: () => void): Promise<void> {
 	}
 	const root = document.documentElement;
 	root.dataset.crossfade = '';
+	const transition = document.startViewTransition(update);
+	activeCrossfade = transition;
 	try {
-		await document.startViewTransition(update).finished;
+		await transition.finished;
 	} finally {
-		delete root.dataset.crossfade;
+		// A newer crossfade may have started meanwhile: leave its freeze in place.
+		if (activeCrossfade === transition) {
+			activeCrossfade = null;
+			delete root.dataset.crossfade;
+		}
 	}
 }
 
@@ -73,11 +80,14 @@ export async function slidePage(
 	root.dataset.slide = direction;
 	const transition = document.startViewTransition(update);
 	activeSlide = transition;
-	transition.finished.finally(() => {
+	const clear = () => {
 		// A newer slide may have started meanwhile: leave its direction in place.
 		if (activeSlide !== transition) return;
 		activeSlide = null;
 		delete root.dataset.slide;
-	});
+	};
+	// `finished` rejects when `update` does; that error reaches the caller through
+	// `updateCallbackDone`, so here it only clears the direction.
+	transition.finished.then(clear, clear);
 	await transition.updateCallbackDone;
 }

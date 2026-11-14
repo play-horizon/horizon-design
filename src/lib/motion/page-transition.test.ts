@@ -41,6 +41,26 @@ describe('slidePage', () => {
 		await vi.waitFor(() => expect(document.documentElement.dataset.slide).toBeUndefined());
 	});
 
+	it('passes a failed update to the caller, with nothing left unhandled', async () => {
+		const fake = fakeViewTransitions();
+		fake.start.mockImplementationOnce((update: () => void | Promise<void>) => {
+			const updateCallbackDone = Promise.resolve().then(update);
+			const ready = updateCallbackDone.then(() => undefined);
+			// Browsers mark `ready` as handled when the update fails (the transition is skipped).
+			ready.catch(() => {});
+			return {
+				updateCallbackDone,
+				finished: updateCallbackDone.then(() => undefined),
+				ready,
+				skipTransition: () => {}
+			};
+		});
+		await expect(
+			slidePage('forward', () => Promise.reject(new Error('navigation cancelled')))
+		).rejects.toThrow('navigation cancelled');
+		await vi.waitFor(() => expect(document.documentElement.dataset.slide).toBeUndefined());
+	});
+
 	it('skips the transition when the system asks for reduced motion', async () => {
 		const fake = fakeViewTransitions();
 		setMedia('(prefers-reduced-motion: reduce)', true);
@@ -52,6 +72,20 @@ describe('slidePage', () => {
 });
 
 describe('crossfadePage', () => {
+	it('keeps the freeze while a newer crossfade still runs', async () => {
+		const first = fakeViewTransitions();
+		const one = crossfadePage(() => {});
+		const finishFirst = first.finish;
+		const second = fakeViewTransitions();
+		const two = crossfadePage(() => {});
+		finishFirst();
+		await one;
+		expect(document.documentElement.dataset.crossfade).toBe('');
+		second.finish();
+		await two;
+		expect(document.documentElement.dataset.crossfade).toBeUndefined();
+	});
+
 	it('freezes other transitions while the crossfade runs', async () => {
 		const fake = fakeViewTransitions();
 		const done = crossfadePage(() => {});
