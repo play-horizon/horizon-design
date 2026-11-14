@@ -4,7 +4,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Collapsible } from '@ark-ui/svelte';
+	import { Collapsible, type CollapsibleOpenChangeDetails } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
 	let {
@@ -12,12 +12,20 @@ Content that a trigger shows and hides (Ark Collapsible).
 		trigger,
 		children,
 		open = $bindable(false),
+		onOpenChange,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The trigger's content; Ark's `data-state` (`open` or `closed`) is on the trigger. */
 		trigger?: Snippet;
+		/** The content shown while open. */
 		children?: Snippet;
+		/** Whether the content is shown (bindable). */
 		open?: boolean;
+		/** Called with the new state when the content is shown or hidden. */
+		onOpenChange?: (details: CollapsibleOpenChangeDetails) => void;
+		/** Other props of Ark's `Collapsible.Root`, such as `disabled` and `lazyMount`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -26,7 +34,10 @@ Content that a trigger shows and hides (Ark Collapsible).
 	class={cn('flex flex-col', className)}
 	data-slot="collapsible"
 	{open}
-	onOpenChange={(details) => (open = details.open)}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
 	{...rest}
 >
 	{#if trigger}
