@@ -10,7 +10,9 @@ A button that closes the `Drawer` it is in.
 		children,
 		...rest
 	}: {
+		/** The button's content, such as its text. */
 		children?: Snippet;
+		/** Other props of Ark's `Drawer.CloseTrigger`, such as `class`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

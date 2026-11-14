@@ -5,7 +5,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Drawer } from '@ark-ui/svelte';
+	import { Drawer, type DrawerOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
@@ -22,26 +22,46 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		frosted = false,
 		class: className = '',
 		open = $bindable(false),
+		onOpenChange,
 		...rest
 	}: {
+		/** The content of the button that opens the drawer; no trigger when unset. */
 		trigger?: Snippet;
+		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
+		/** The drawer's heading, which names it for assistive technology. */
 		title?: string;
+		/** A line under the title, which describes the drawer for assistive technology. */
 		description?: string;
+		/** The drawer's body. */
 		children?: Snippet;
+		/** The footer under the body, such as Save. */
 		footer?: Snippet;
+		/** Whether to show the close button at the top right. */
 		showClose?: boolean;
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Classes merged onto the drawer's panel. */
 		class?: string;
+		/** Whether the drawer is open (bindable). */
 		open?: boolean;
+		/** Called with the new state when the drawer opens or closes. */
+		onOpenChange?: (details: DrawerOpenChangeDetails) => void;
+		/** Other props of Ark's `Drawer.Root`, such as `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
-<Drawer.Root {open} onOpenChange={(details) => (open = details.open)} {...rest}>
+<Drawer.Root
+	{open}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
+	{...rest}
+>
 	{#if trigger}
 		<Drawer.Trigger class={triggerClass || undefined} data-slot="drawer-trigger">
 			{@render trigger()}
@@ -54,7 +74,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		<Drawer.Positioner class="fixed inset-0 z-70 flex justify-end overflow-hidden">
 			<Drawer.Content
 				class={cn(
-					'flex h-full w-full max-w-sm flex-col border-l border-border-strong shadow-lg inset-shadow-highlight data-[state=closed]:animate-sheet-exit-right data-[state=open]:animate-sheet-enter-right',
+					'relative flex h-full w-full max-w-sm flex-col border-l border-border-strong shadow-lg inset-shadow-highlight data-[state=closed]:animate-sheet-exit-right data-[state=open]:animate-sheet-enter-right',
 					frosted ? 'frosted' : 'bg-raised',
 					className
 				)}
@@ -72,14 +92,14 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 				{#if title || description}
 					<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
 						{#if title}
-							<h2 class="text-[1.0625rem] font-bold" data-slot="drawer-title">
+							<Drawer.Title class="text-[1.0625rem] font-bold" data-slot="drawer-title">
 								{title}
-							</h2>
+							</Drawer.Title>
 						{/if}
 						{#if description}
-							<p class="text-sm text-muted" data-slot="drawer-description">
+							<Drawer.Description class="text-sm text-muted" data-slot="drawer-description">
 								{description}
-							</p>
+							</Drawer.Description>
 						{/if}
 					</div>
 				{/if}

@@ -18,7 +18,7 @@ Docs: Drawer. Live examples of the Drawer component.
 			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
-				<MingcuteRightLine class="size-4" />
+				<MingcuteRightLine class="size-4" aria-hidden="true" />
 				Open Drawer
 			{/snippet}
 			<p class="text-sm text-muted">
