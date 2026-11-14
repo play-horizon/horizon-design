@@ -1,14 +1,18 @@
 <!--
 @component
 A modal panel that slides in from one side of the window (Ark Dialog); `closeLabel` names its
-close button; `frosted` for a translucent surface.
+close button; `frosted` for a translucent surface. The trigger is a button holding the `trigger`
+snippet, styled by `triggerClass`; the title and description name and describe the panel. `open`
+binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Dialog } from '@ark-ui/svelte';
+	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
+
+	type Side = 'top' | 'bottom' | 'left' | 'right';
 
 	let {
 		trigger,
@@ -22,27 +26,40 @@ close button; `frosted` for a translucent surface.
 		closeLabel,
 		frosted = false,
 		class: className = '',
-		open = $bindable(false),
+		open = $bindable(),
+		onOpenChange,
 		...rest
 	}: {
+		/** The trigger button's content; without it, the sheet opens only through `open`. */
 		trigger?: Snippet;
+		/** Classes of the trigger button, such as `buttonVariants(...)`. */
 		triggerClass?: string;
+		/** The panel's title, which names it. */
 		title?: string;
+		/** A line under the title, which describes the panel. */
 		description?: string;
+		/** The panel's content, which scrolls. */
 		children?: Snippet;
+		/** Buttons at the bottom of the panel. */
 		footer?: Snippet;
-		side?: 'top' | 'bottom' | 'left' | 'right';
+		/** The side of the window the panel slides in from. */
+		side?: Side;
+		/** Shows the close button in the top corner. */
 		showClose?: boolean;
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Classes added to the panel. */
 		class?: string;
+		/** Whether the panel is open. */
 		open?: boolean;
+		/** Called when the panel opens or closes, after `open` is updated. */
+		onOpenChange?: (details: DialogOpenChangeDetails) => void;
 		[key: string]: unknown;
 	} = $props();
 
-	const sides: Record<string, string> = {
+	const sides: Record<Side, string> = {
 		top: 'inset-x-0 top-0 border-b data-[state=open]:animate-sheet-enter-top data-[state=closed]:animate-sheet-exit-top max-h-[80vh] w-full rounded-b-xl',
 		bottom:
 			'inset-x-0 bottom-0 border-t data-[state=open]:animate-sheet-enter-bottom data-[state=closed]:animate-sheet-exit-bottom max-h-[80vh] w-full rounded-t-xl',
@@ -52,7 +69,14 @@ close button; `frosted` for a translucent surface.
 	};
 </script>
 
-<Dialog.Root {open} onOpenChange={(details) => (open = details.open)} {...rest}>
+<Dialog.Root
+	{open}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
+	{...rest}
+>
 	{#if trigger}
 		<Dialog.Trigger class={triggerClass || undefined} data-slot="sheet-trigger">
 			{@render trigger()}
@@ -82,16 +106,19 @@ close button; `frosted` for a translucent surface.
 					</Dialog.CloseTrigger>
 				{/if}
 				{#if title || description}
-					<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="sheet-header">
+					<div
+						class={cn('flex flex-col space-y-1.5 p-6 pb-0', showClose && 'pr-12')}
+						data-slot="sheet-header"
+					>
 						{#if title}
-							<h2 class="text-[1.0625rem] font-bold" data-slot="sheet-title">
+							<Dialog.Title class="text-[1.0625rem] font-bold" data-slot="sheet-title">
 								{title}
-							</h2>
+							</Dialog.Title>
 						{/if}
 						{#if description}
-							<p class="text-sm text-muted" data-slot="sheet-description">
+							<Dialog.Description class="text-sm text-muted" data-slot="sheet-description">
 								{description}
-							</p>
+							</Dialog.Description>
 						{/if}
 					</div>
 				{/if}

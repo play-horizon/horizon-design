@@ -19,7 +19,7 @@ Docs: Sheet. Live examples of the Sheet component.
 			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
-				<MingcuteDownLine class="size-4" />
+				<MingcuteDownLine class="size-4" aria-hidden="true" />
 				Open Sheet (bottom)
 			{/snippet}
 			<p class="text-sm text-muted">Great for mobile-style action panels.</p>
