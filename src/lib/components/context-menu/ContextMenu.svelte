@@ -1,7 +1,7 @@
 <!--
 @component
-A menu opened by a right click on its content: items, separators and labels (Ark Menu); `frosted`
-for a translucent surface.
+A menu opened by a right click (or a long press) on its content: items, separators and labels
+(Ark Menu); Ark's `onSelect` reports the chosen item's `id`. `frosted` for a translucent surface.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -12,8 +12,11 @@ for a translucent surface.
 	interface ContextMenuItem {
 		/** A stable, unique id, which is also an item's value in the menu. */
 		id: string;
+		/** An item to choose (the default), a line between groups, or a group's title. */
 		type?: 'item' | 'separator' | 'label';
+		/** The text of an item or a title. */
 		label?: string;
+		/** Shows an item that can't be chosen. */
 		disabled?: boolean;
 	}
 
@@ -23,10 +26,13 @@ for a translucent surface.
 		frosted = false,
 		...rest
 	}: {
+		/** The menu's entries, in order. */
 		items?: ContextMenuItem[];
+		/** The content that opens the menu on a right click. */
 		children?: Snippet;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Other props of Ark's `Menu.Root`, such as `onSelect`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -50,11 +56,7 @@ for a translucent surface.
 			>
 				{#each items as item (item.id)}
 					{#if item.type === 'separator'}
-						<div
-							class="-mx-1 my-1 h-px bg-border"
-							role="separator"
-							data-slot="context-menu-separator"
-						></div>
+						<Menu.Separator class="-mx-1 my-1 h-px bg-border" data-slot="context-menu-separator" />
 					{:else if item.type === 'label'}
 						<div
 							class="px-2.5 py-1 text-xs font-semibold text-muted"
