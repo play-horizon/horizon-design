@@ -42,6 +42,7 @@ export * from './components/date-picker';
 export * from './components/dialog';
 export * from './components/drawer';
 export * from './components/editable';
+export * from './components/faceted-search';
 export * from './components/field';
 export * from './components/file-upload';
 export * from './components/float';

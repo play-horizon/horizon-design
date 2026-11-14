@@ -48,6 +48,7 @@ export const navGroups: NavGroup[] = [
 			{ id: 'combobox', label: 'Combobox' },
 			{ id: 'date-picker', label: 'Date Picker' },
 			{ id: 'editable', label: 'Editable' },
+			{ id: 'faceted-search', label: 'Faceted Search' },
 			{ id: 'field', label: 'Field' },
 			{ id: 'file-upload', label: 'File Upload' },
 			{ id: 'hint', label: 'Hint' },
