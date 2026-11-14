@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: ActionBar. Live examples of the ActionBar component.
+-->
 <script lang="ts">
 	import { ActionBar, ActionBarSeparator } from '$lib/components/action-bar';
 	import { Button } from '$lib/components/button';
@@ -8,8 +12,6 @@
 </script>
 
 <section id="action-bar">
-	<p class="section-tag">Actions</p>
-	<h2 class="mb-6 text-2xl font-bold">Action Bar</h2>
 	<Card>
 		<div class="flex min-h-28 items-center justify-center">
 			<ActionBar class="relative bottom-auto left-auto z-0 translate-x-0">

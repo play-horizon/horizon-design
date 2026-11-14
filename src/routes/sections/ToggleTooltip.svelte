@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: ToggleTooltip. Live examples of the ToggleTooltip component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { ToggleTooltip } from '$lib/components/toggle-tooltip';
@@ -8,8 +12,6 @@
 </script>
 
 <section id="toggle-tooltip">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Toggle Tooltip</h2>
 	<Card>
 		<div class="flex gap-1">
 			<ToggleTooltip label="Bold">

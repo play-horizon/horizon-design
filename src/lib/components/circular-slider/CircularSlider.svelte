@@ -1,3 +1,7 @@
+<!--
+@component
+A circular control that picks a value along an arc.
+-->
 <script lang="ts">
 	import { AngleSlider } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
@@ -60,7 +64,7 @@
 					width={size}
 				>
 					<circle
-						class="stroke-muted"
+						class="stroke-hover"
 						cx={size / 2}
 						cy={size / 2}
 						fill="transparent"
@@ -83,14 +87,14 @@
 		<AngleSlider.Thumb
 			class={cn(
 				'absolute inset-0 z-10 flex items-center justify-center outline-none',
-				'focus-visible:[&_span]:ring-ring-focus focus-visible:[&_span]:ring-2 focus-visible:[&_span]:outline-hidden',
-				'active:[&_span]:ring-ring-focus active:[&_span]:scale-110 active:[&_span]:ring-[3px]'
+				'focus-visible:[&_span]:ring-2 focus-visible:[&_span]:ring-primary/30 focus-visible:[&_span]:outline-hidden',
+				'active:[&_span]:scale-110 active:[&_span]:ring-[3px] active:[&_span]:ring-primary/30'
 			)}
 			data-slot="circular-slider-thumb"
 			style="--size: {thumbSize}px;"
 		>
 			<span
-				class="ring-border absolute size-(--size) shrink-0 rounded-full bg-white shadow-xs ring-2 transition-all hover:cursor-grab hover:ring-[3px] active:cursor-grabbing"
+				class="absolute size-(--size) shrink-0 rounded-full bg-paper shadow-sm ring-2 ring-border transition-all hover:cursor-grab hover:ring-[3px] active:cursor-grabbing"
 				style="inset-block-start: calc(50% - {ringRadius}px - {thumbSize /
 					2}px); inset-inline-start: calc(50% - {thumbSize / 2}px);"
 			></span>

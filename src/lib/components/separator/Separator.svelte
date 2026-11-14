@@ -1,3 +1,7 @@
+<!--
+@component
+A horizontal or vertical divider.
+-->
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
@@ -16,7 +20,7 @@
 
 <div
 	class={cn(
-		'bg-border shrink-0',
+		'shrink-0 bg-border',
 		orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
 		className
 	)}

@@ -1,3 +1,7 @@
+<!--
+@component
+A horizontal progress bar with an optional label and value (Ark Progress).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Progress } from '@ark-ui/svelte';
@@ -31,7 +35,7 @@
 		<Progress.Label class="text-sm font-medium" data-slot="progress-label">{label}</Progress.Label>
 	{/if}
 	{@render children?.()}
-	<Progress.Track class="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
-		<Progress.Range class="bg-primary h-full rounded-r-full transition-all" />
+	<Progress.Track class="relative h-2 w-full overflow-hidden rounded-full bg-surface">
+		<Progress.Range class="h-full rounded-r-full bg-primary transition-all" />
 	</Progress.Track>
 </Progress.Root>

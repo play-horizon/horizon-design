@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Kbd. Live examples of the Kbd component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Kbd } from '$lib/components/kbd';
 </script>
 
 <section id="kbd">
-	<p class="section-tag">Typography</p>
-	<h2 class="mb-6 text-2xl font-bold">Kbd</h2>
 	<Card>
 		<div class="flex flex-wrap gap-3">
 			<div class="flex items-center gap-1">

@@ -1,2 +1,4 @@
+/* The docs site's stylesheet: Tailwind, then horizon-design's own, exactly as an app imports
+   them (the library's stylesheet from source here, from the package in an app). */
 @import 'tailwindcss';
 @import './lib/horizon-design.css';

@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: AspectRatio. Live examples of the AspectRatio component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { AspectRatio } from '$lib/components/aspect-ratio';
 </script>
 
 <section id="aspect-ratio">
-	<p class="section-tag">Layout</p>
-	<h2 class="mb-6 text-2xl font-bold">Aspect Ratio</h2>
 	<Card>
 		<div>
 			<AspectRatio ratio={16 / 9} class="overflow-hidden rounded-lg">

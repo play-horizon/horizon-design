@@ -1,3 +1,7 @@
+<!--
+@component
+A tree of files and folders (Ark TreeView), with expandable folders and custom icons.
+-->
 <script lang="ts">
 	import { TreeView, type TreeCollection, type TreeNode } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
@@ -112,26 +116,21 @@
 		onSelectionChange?.({ selectedValue: selectedValue });
 	}
 
-	$effect(() => {
-		const el = containerEl;
-		if (!el) return;
-		el.addEventListener('click', handleClick, true);
-		return () => el.removeEventListener('click', handleClick, true);
-	});
-
-	$effect(() => {
-		function onOutsidePointerDown(e: PointerEvent) {
-			if (!containerEl || containerEl.contains(e.target as Node)) return;
-			selectedValue = [];
-			pivot = null;
-			onSelectionChange?.({ selectedValue: [] });
-		}
-		document.addEventListener('pointerdown', onOutsidePointerDown, true);
-		return () => document.removeEventListener('pointerdown', onOutsidePointerDown, true);
-	});
+	function onOutsidePointerDown(e: PointerEvent) {
+		if (!containerEl || containerEl.contains(e.target as Node)) return;
+		selectedValue = [];
+		pivot = null;
+		onSelectionChange?.({ selectedValue: [] });
+	}
 </script>
 
-<div bind:this={containerEl} class={cn('flex flex-col text-sm', className)}>
+<svelte:document onpointerdowncapture={onOutsidePointerDown} />
+
+<div
+	bind:this={containerEl}
+	onclickcapture={handleClick}
+	class={cn('flex flex-col text-sm', className)}
+>
 	<TreeView.Root
 		{collection}
 		selectionMode="multiple"
@@ -166,27 +165,27 @@
 					<TreeView.Branch class="flex flex-col" data-slot="file-tree-branch">
 						<TreeView.BranchControl
 							style="padding-left: calc(var(--depth) * 1rem)"
-							class="hover:bg-muted flex w-full items-center py-1 pr-2 transition-colors"
+							class="flex w-full items-center py-1 pr-2 transition-colors hover:bg-hover"
 							data-slot="file-tree-branch-control"
 						>
 							<TreeView.BranchTrigger class="flex flex-1 cursor-default items-center gap-1.5">
 								<TreeView.BranchIndicator
-									class="text-muted-foreground shrink-0 transition-transform data-[state=open]:rotate-90"
+									class="shrink-0 text-muted transition-transform data-[state=open]:rotate-90"
 								>
 									<MingcuteRightLine class="size-3.5" />
 								</TreeView.BranchIndicator>
 								{#if icon}
 									{@render icon(node)}
 								{:else if nodeState().expanded}
-									<MingcuteFolderOpenLine class="text-primary size-4 shrink-0" />
+									<MingcuteFolderOpenLine class="size-4 shrink-0 text-primary" />
 								{:else}
-									<MingcuteFolder2Line class="text-primary size-4 shrink-0" />
+									<MingcuteFolder2Line class="size-4 shrink-0 text-primary" />
 								{/if}
 								<span class="truncate">{node.name ?? node.label ?? ''}</span>
 							</TreeView.BranchTrigger>
 						</TreeView.BranchControl>
 						<TreeView.BranchContent
-							class="data-[state=open]:animate-collapsible-open data-[state=closed]:animate-collapsible-close flex flex-col"
+							class="flex flex-col data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open"
 							data-slot="file-tree-branch-content"
 						>
 							{#each node.children as child, j (j)}
@@ -197,13 +196,13 @@
 				{:else}
 					<TreeView.Item
 						style="padding-left: calc(var(--depth) * 1rem)"
-						class="data-selected:bg-accent data-selected:text-accent-foreground hover:bg-muted flex w-full cursor-default items-center gap-2 py-1 pr-2 transition-colors"
+						class="flex w-full cursor-default items-center gap-2 py-1 pr-2 transition-colors hover:bg-hover data-selected:bg-hover data-selected:text-fg"
 						data-slot="file-tree-item"
 					>
 						{#if icon}
 							{@render icon(node)}
 						{:else}
-							<MingcuteFileLine class="text-muted-foreground size-4 shrink-0" />
+							<MingcuteFileLine class="size-4 shrink-0 text-muted" />
 						{/if}
 						<span class="truncate">{node.name ?? node.label ?? ''}</span>
 					</TreeView.Item>

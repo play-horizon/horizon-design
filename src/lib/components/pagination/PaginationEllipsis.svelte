@@ -1,3 +1,7 @@
+<!--
+@component
+The ellipsis between page links of a `Pagination`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Pagination } from '@ark-ui/svelte';
@@ -18,7 +22,7 @@
 
 <Pagination.Ellipsis
 	{index}
-	class={cn('text-muted-foreground flex size-8 items-center justify-center text-sm', className)}
+	class={cn('flex size-8 items-center justify-center text-sm text-muted', className)}
 	data-slot="pagination-ellipsis"
 	{...rest}
 >

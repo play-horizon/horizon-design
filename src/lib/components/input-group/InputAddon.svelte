@@ -1,3 +1,7 @@
+<!--
+@component
+Text or an icon attached to the side of an input inside an `InputGroup`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -15,7 +19,7 @@
 
 <div
 	class={cn(
-		'border-border bg-muted text-muted-foreground flex h-9 shrink-0 items-center border border-r-0 px-3 text-sm first:rounded-l-lg last:rounded-r-lg last:border-r last:border-l-0',
+		'flex h-9 shrink-0 items-center border border-r-0 border-border bg-hover px-3 text-sm text-muted first:rounded-l-lg last:rounded-r-lg last:border-r last:border-l-0',
 		className
 	)}
 	data-slot="input-addon"

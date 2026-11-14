@@ -1,3 +1,7 @@
+<!--
+@component
+A number field with increment and decrement buttons (Ark NumberInput).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { NumberInput } from '@ark-ui/svelte';
@@ -34,19 +38,19 @@
 	{/if}
 	{@render children?.()}
 	<NumberInput.Control
-		class="border-border bg-input focus-visible:border-primary focus-visible:ring-ring flex h-9 w-full overflow-hidden rounded-lg border transition-all focus-visible:ring-2"
+		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
 	>
 		<NumberInput.Input
-			class="placeholder:text-muted-foreground text-foreground min-w-0 flex-1 bg-transparent pl-2 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
+			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50"
 		/>
-		<div class="border-border flex shrink-0 flex-col border-l">
+		<div class="flex shrink-0 flex-col border-l border-border">
 			<NumberInput.IncrementTrigger
-				class="text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex flex-1 items-center justify-center px-1.5 transition-colors outline-none focus-visible:ring-1"
+				class="flex flex-1 items-center justify-center px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
 				<MingcuteUpLine class="size-3" />
 			</NumberInput.IncrementTrigger>
 			<NumberInput.DecrementTrigger
-				class="text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex flex-1 items-center justify-center border-t px-1.5 transition-colors outline-none focus-visible:ring-1"
+				class="flex flex-1 items-center justify-center border-t border-border px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
 				<MingcuteDownLine class="size-3" />
 			</NumberInput.DecrementTrigger>

@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Sidebar. Live examples of the Sidebar component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Sidebar, SidebarItem, SidebarSection } from '$lib/components/sidebar';
@@ -7,8 +11,6 @@
 </script>
 
 <section id="sidebar">
-	<p class="section-tag">Navigation</p>
-	<h2 class="mb-6 text-2xl font-bold">Sidebar</h2>
 	<Card class="overflow-hidden p-0">
 		<div class="h-80">
 			<Sidebar class="h-full">
@@ -16,7 +18,7 @@
 					<span class="text-sm font-semibold">Workspace</span>
 				{/snippet}
 				{#snippet footer()}
-					<p class="text-muted-foreground text-xs">Signed in as Rayan</p>
+					<p class="text-xs text-muted">Signed in as Rayan</p>
 				{/snippet}
 				<SidebarSection label="General">
 					<SidebarItem href="#" active>

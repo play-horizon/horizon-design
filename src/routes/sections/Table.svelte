@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Table. Live examples of the Table component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Table } from '$lib/components/table';
 </script>
 
 <section id="table">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Table</h2>
 	<Card>
 		<div>
 			<Table

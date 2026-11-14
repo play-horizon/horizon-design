@@ -1,3 +1,7 @@
+<!--
+@component
+One page link of a `Pagination`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Pagination } from '@ark-ui/svelte';
@@ -20,7 +24,7 @@
 	{value}
 	type="page"
 	class={cn(
-		'hover:bg-accent hover:text-accent-foreground data-selected:bg-primary data-selected:text-primary-foreground inline-flex size-8 items-center justify-center rounded-lg border border-transparent text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 data-selected:border-transparent',
+		'inline-flex size-8 items-center justify-center rounded-lg border border-transparent text-sm font-medium transition-colors hover:bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-50 data-selected:border-transparent data-selected:bg-primary data-selected:text-on-primary',
 		className
 	)}
 	data-slot="pagination-item"

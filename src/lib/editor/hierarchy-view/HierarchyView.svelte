@@ -1,3 +1,8 @@
+<!--
+@component
+The Editor's hierarchy of a scene's objects: a tree with keyboard navigation, multiple selection,
+renaming, and drag and drop to reparent and reorder.
+-->
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -15,6 +20,7 @@
 		nodeToValue = (n: AnyNode) => (n.id ?? n.name ?? '') as string,
 		nodeToString = (n: AnyNode) => (n.name ?? n.label ?? '') as string,
 		icon,
+		dragLabel,
 		selectedValue = $bindable<string[]>([]),
 		expandedValue = $bindable<string[]>([]),
 		onSelectionChange,
@@ -26,6 +32,8 @@
 		nodeToValue?: (node: AnyNode) => string;
 		nodeToString?: (node: AnyNode) => string;
 		icon?: Snippet<[AnyNode]>;
+		/** The drag ghost's text while several objects are dragged, such as `${count} objects`. */
+		dragLabel: (count: number) => string;
 		selectedValue?: string[];
 		expandedValue?: string[];
 		onSelectionChange?: (details: { selectedValue: string[] }) => void;
@@ -48,7 +56,6 @@
 
 	let renamingValue = $state<string | null>(null);
 	let renameText = $state('');
-	let renameInputEl = $state<HTMLInputElement | null>(null);
 
 	let cursorValue = $state<string | null>(null);
 	let isKeyboardMode = $state(false);
@@ -73,13 +80,10 @@
 		});
 	});
 
+	/** Moves the drag ghost to the end of <body>, so no ancestor clips or transforms it. */
 	function portal(node: HTMLElement) {
 		document.body.appendChild(node);
-		return {
-			destroy() {
-				node.remove();
-			}
-		};
+		return () => node.remove();
 	}
 
 	function getValue(node: AnyNode): string {
@@ -613,51 +617,39 @@
 		};
 	});
 
-	$effect(() => {
-		if (renamingValue && renameInputEl) {
-			renameInputEl.focus();
-			renameInputEl.select();
-		}
-	});
+	/** Focuses the rename field and selects its text when it appears. */
+	function focusRename(input: HTMLInputElement) {
+		input.focus();
+		input.select();
+	}
 
-	$effect(() => {
-		const el = containerEl;
-		if (!el) return;
-		const cancelIfNotDragging = () => {
-			if (!isDragging) cancelPress();
-		};
-		el.addEventListener('click', handleClick, true);
-		el.addEventListener('dblclick', handleDblClick, true);
-		el.addEventListener('pointerdown', handlePointerDown, true);
-		el.addEventListener('pointercancel', cancelIfNotDragging, true);
-		el.addEventListener('pointerup', cancelIfNotDragging, true);
-		return () => {
-			el.removeEventListener('click', handleClick, true);
-			el.removeEventListener('dblclick', handleDblClick, true);
-			el.removeEventListener('pointerdown', handlePointerDown, true);
-			el.removeEventListener('pointercancel', cancelIfNotDragging, true);
-			el.removeEventListener('pointerup', cancelIfNotDragging, true);
-		};
-	});
+	function cancelIfNotDragging() {
+		if (!isDragging) cancelPress();
+	}
 </script>
 
 {#if isDragging}
 	<div
-		use:portal
+		{@attach portal}
 		data-drag-ghost
 		style="position:fixed; z-index:9999; left:{ghostPos.x}px; top:{ghostPos.y}px"
-		class="bg-background pointer-events-none max-w-48 truncate rounded border px-2 py-1 text-sm shadow-lg"
+		class="pointer-events-none max-w-48 truncate rounded border bg-background px-2 py-1 text-sm shadow-lg"
 	>
 		{#if dragValues.length === 1}
 			{findNodeLabel(dragValues[0])}
 		{:else}
-			{dragValues.length} items
+			{dragLabel(dragValues.length)}
 		{/if}
 	</div>
 {/if}
 
 <div
 	bind:this={containerEl}
+	onclickcapture={handleClick}
+	ondblclickcapture={handleDblClick}
+	onpointerdowncapture={handlePointerDown}
+	onpointercancelcapture={cancelIfNotDragging}
+	onpointerupcapture={cancelIfNotDragging}
 	role="tree"
 	tabindex="0"
 	data-slot="hierarchy-view"
@@ -700,21 +692,21 @@
 			data-slot="hierarchy-view-row"
 			style="padding-left: calc({depth - 1} * 1rem)"
 			class={cn(
-				'hover:bg-muted flex w-full cursor-default items-center gap-1.5 py-1 pr-2 transition-colors',
-				isSelected && 'bg-accent text-accent-foreground hover:bg-accent',
-				isCursor && !isSelected && 'bg-muted',
-				isCursor && 'ring-primary ring-1 ring-inset',
-				isJustMoved && !isSelected && 'bg-primary-subtle-bg',
-				isDropInside && 'outline-primary outline -outline-offset-2',
-				isDropBefore && 'border-primary border-t-2',
-				isDropAfter && 'border-primary border-b-2'
+				'flex w-full cursor-default items-center gap-1.5 py-1 pr-2 transition-colors hover:bg-hover',
+				isSelected && 'bg-hover text-fg hover:bg-hover',
+				isCursor && !isSelected && 'bg-hover',
+				isCursor && 'ring-1 ring-primary ring-inset',
+				isJustMoved && !isSelected && 'bg-primary-subtle',
+				isDropInside && 'outline -outline-offset-2 outline-primary',
+				isDropBefore && 'border-t-2 border-primary',
+				isDropAfter && 'border-b-2 border-primary'
 			)}
 		>
 			{#if hasBranch}
 				<button
 					data-part="trigger"
 					tabindex="-1"
-					class="text-muted-foreground flex shrink-0 items-center"
+					class="flex shrink-0 items-center text-muted"
 					onclick={(e) => {
 						e.stopPropagation();
 						toggleExpand(v);
@@ -730,16 +722,16 @@
 			{#if icon}
 				{@render icon(node)}
 			{:else}
-				<MingcuteFileLine class="text-muted-foreground size-4 shrink-0" />
+				<MingcuteFileLine class="size-4 shrink-0 text-muted" />
 			{/if}
 			{#if isRenaming}
 				<input
-					bind:this={renameInputEl}
+					{@attach focusRename}
 					bind:value={renameText}
 					onkeydown={handleRenameKeydown}
 					onblur={commitRename}
 					onclick={(e: MouseEvent) => e.stopPropagation()}
-					class="outline-primary min-w-0 flex-1 rounded bg-transparent px-0.5 outline focus-visible:outline-2"
+					class="min-w-0 flex-1 rounded bg-transparent px-0.5 outline outline-primary focus-visible:outline-2"
 				/>
 			{:else}
 				<span class="truncate">{nodeToString(node)}</span>

@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Dialog. Live examples of the Dialog component.
+-->
 <script lang="ts">
 	import { Button, buttonVariants } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -7,24 +11,23 @@
 </script>
 
 <section id="dialog">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Dialog</h2>
 	<Card>
 		<Dialog
+			closeLabel="Close"
 			title="Confirm Deletion"
 			description="Are you sure you want to proceed? This action cannot be undone."
-			triggerClass={buttonVariants({ variant: 'outline' })}
+			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
 				<MingcuteWindowsLine class="size-4" />
 				Open Dialog
 			{/snippet}
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted">
 				This will permanently delete the item and all associated data from our servers.
 			</p>
 			{#snippet footer()}
-				<DialogClose class={buttonVariants({ variant: 'outline' })}>Cancel</DialogClose>
-				<Button variant="destructive">
+				<DialogClose class={buttonVariants({ variant: 'default' })}>Cancel</DialogClose>
+				<Button variant="danger">
 					<MingcuteDelete2Line class="size-4" />
 					Delete
 				</Button>

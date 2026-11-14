@@ -1,16 +1,18 @@
+<!--
+@component
+Docs: ContextMenu. Live examples of the ContextMenu component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { ContextMenu } from '$lib/components/context-menu';
 </script>
 
 <section id="context-menu">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Context Menu</h2>
 	<Card>
 		<div>
 			{#snippet contextTrigger()}
 				<div
-					class="border-border text-muted-foreground hover:border-primary-border-active flex h-24 items-center justify-center rounded-lg border-2 border-dashed p-4 text-sm transition-colors"
+					class="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-border p-4 text-sm text-muted transition-colors hover:border-primary/50"
 				>
 					Right-click here
 				</div>

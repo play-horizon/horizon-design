@@ -1,3 +1,7 @@
+<!--
+@component
+A list of options to choose one or several from (Ark Listbox).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Listbox, createListCollection } from '@ark-ui/svelte';
@@ -35,15 +39,15 @@
 	{...rest}
 >
 	{#if label}
-		<Listbox.Label class="text-foreground text-sm font-medium">{label}</Listbox.Label>
+		<Listbox.Label class="text-sm font-medium text-fg">{label}</Listbox.Label>
 	{/if}
 	<Listbox.Content
-		class="border-border bg-popover max-h-60 overflow-auto rounded-xl border p-1 shadow-xl backdrop-blur-xl"
+		class="max-h-60 overflow-auto rounded-xl border border-border bg-raised p-1 shadow-lg"
 	>
 		{#each items as item (item.value)}
 			<Listbox.Item
 				{item}
-				class="hover:bg-accent data-highlighted:bg-accent data-[state=checked]:bg-primary-subtle-bg data-[state=checked]:text-primary relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors select-none"
+				class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary"
 				data-slot="listbox-item"
 			>
 				<Listbox.ItemText>
@@ -54,7 +58,7 @@
 					{/if}
 				</Listbox.ItemText>
 				<Listbox.ItemIndicator class="ml-auto">
-					<MingcuteCheckLine class="text-primary size-4" />
+					<MingcuteCheckLine class="size-4 text-primary" />
 				</Listbox.ItemIndicator>
 			</Listbox.Item>
 		{/each}

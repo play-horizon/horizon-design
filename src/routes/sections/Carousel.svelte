@@ -1,30 +1,32 @@
+<!--
+@component
+Docs: Carousel. Live examples of the Carousel component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Carousel } from '$lib/components/carousel';
 </script>
 
 <section id="carousel">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Carousel</h2>
 	<Card>
 		<div>
 			{#snippet carouselSlide1()}
 				<div
-					class="bg-primary-subtle-bg text-primary flex h-40 items-center justify-center rounded-lg text-lg font-semibold"
+					class="flex h-40 items-center justify-center rounded-lg bg-primary-subtle text-lg font-semibold text-primary"
 				>
 					Slide 1
 				</div>
 			{/snippet}
 			{#snippet carouselSlide2()}
 				<div
-					class="bg-success-subtle-bg text-success flex h-40 items-center justify-center rounded-lg text-lg font-semibold"
+					class="flex h-40 items-center justify-center rounded-lg bg-success-subtle text-lg font-semibold text-success"
 				>
 					Slide 2
 				</div>
 			{/snippet}
 			{#snippet carouselSlide3()}
 				<div
-					class="bg-warning-subtle-bg text-warning flex h-40 items-center justify-center rounded-lg text-lg font-semibold"
+					class="flex h-40 items-center justify-center rounded-lg bg-warning-subtle text-lg font-semibold text-warning"
 				>
 					Slide 3
 				</div>

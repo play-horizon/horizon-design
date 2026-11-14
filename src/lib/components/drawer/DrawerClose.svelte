@@ -1,3 +1,7 @@
+<!--
+@component
+A button that closes the `Drawer` it is in.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Drawer } from '@ark-ui/svelte';

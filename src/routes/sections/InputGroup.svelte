@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: InputGroup. Live examples of the InputGroup component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Input } from '$lib/components/input';
@@ -6,8 +10,6 @@
 </script>
 
 <section id="input-group">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Input Group</h2>
 	<Card>
 		<div class="space-y-4">
 			<InputGroup>

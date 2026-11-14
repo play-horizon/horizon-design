@@ -1,3 +1,7 @@
+<!--
+@component
+A short label shown on hover or focus of its trigger (Ark Tooltip).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Tooltip } from '@ark-ui/svelte';
@@ -37,7 +41,7 @@
 		<Tooltip.Positioner>
 			<Tooltip.Content
 				class={cn(
-					'animate-fade-in border-border bg-popover text-popover-foreground z-50 rounded-lg border px-3 py-1.5 text-xs shadow-xl backdrop-blur-xl',
+					'z-50 animate-fade-in rounded-lg border border-border bg-raised px-3 py-1.5 text-xs text-fg shadow-lg',
 					contentClass
 				)}
 				data-slot="tooltip-content"

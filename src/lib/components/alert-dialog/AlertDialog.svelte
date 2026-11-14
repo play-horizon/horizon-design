@@ -1,15 +1,22 @@
+<!--
+@component
+A confirmation dialog for a destructive or irreversible action: a title, a description, Cancel and
+the confirming action, whose labels the app passes translated.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Dialog } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
+	import { buttonVariants } from '../button/button-variants';
 
 	let {
 		trigger,
 		triggerClass = '',
 		title,
 		description,
-		cancelLabel = 'Cancel',
-		actionLabel = 'Confirm',
+		cancelLabel,
+		actionLabel,
+		frosted = false,
 		cancelClass = '',
 		actionClass = '',
 		children,
@@ -19,8 +26,12 @@
 		triggerClass?: string;
 		title?: string;
 		description?: string;
-		cancelLabel?: string;
-		actionLabel?: string;
+		/** The cancel button's text, such as "Cancel". */
+		cancelLabel: string;
+		/** The confirming button's text, which names the action, such as "Delete game". */
+		actionLabel: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		cancelClass?: string;
 		actionClass?: string;
 		children?: Snippet;
@@ -37,52 +48,46 @@
 		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Backdrop
-		class="data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out bg-overlay-bg fixed inset-0 z-60 backdrop-blur-sm"
+		class="fixed inset-0 z-60 bg-scrim data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
 	/>
 	<Dialog.Positioner class="fixed inset-0 z-70 flex items-center justify-center p-4">
 		<Dialog.Content
 			role="alertdialog"
-			class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-card relative w-full max-w-md rounded-xl border shadow-2xl backdrop-blur-xl"
+			class={cn(
+				'relative w-full max-w-md overflow-hidden rounded-xl border border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+				frosted && 'frosted'
+			)}
 			data-slot="alert-dialog-content"
 		>
-			<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="alert-dialog-header">
+			<div class="flex flex-col gap-1 px-4.5 pt-4 pb-3" data-slot="alert-dialog-header">
 				{#if title}
-					<Dialog.Title
-						class="text-lg leading-none font-semibold tracking-tight"
-						data-slot="alert-dialog-title"
-					>
+					<Dialog.Title class="text-[1.0625rem] font-bold" data-slot="alert-dialog-title">
 						{title}
 					</Dialog.Title>
 				{/if}
 				{#if description}
-					<Dialog.Description
-						class="text-muted-foreground text-sm"
-						data-slot="alert-dialog-description"
-					>
+					<Dialog.Description class="text-sm text-muted" data-slot="alert-dialog-description">
 						{description}
 					</Dialog.Description>
 				{/if}
 			</div>
 			{#if children}
-				<div class="p-6 pt-4" data-slot="alert-dialog-body">
+				<div class="px-4.5 pb-4" data-slot="alert-dialog-body">
 					{@render children()}
 				</div>
 			{/if}
-			<div class="flex items-center justify-end gap-2 p-6 pt-4" data-slot="alert-dialog-footer">
+			<div
+				class="flex items-center justify-end gap-2 border-t border-border bg-surface px-4.5 py-3"
+				data-slot="alert-dialog-footer"
+			>
 				<Dialog.CloseTrigger
-					class={cn(
-						'focus-visible:ring-ring text-foreground border-border hover:bg-accent relative inline-flex h-8 shrink-0 items-center justify-center gap-2 rounded-lg border bg-transparent px-3 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-all outline-none focus-visible:ring-[3px]',
-						cancelClass
-					)}
+					class={cn(buttonVariants({ variant: 'default' }), cancelClass)}
 					data-slot="alert-dialog-cancel"
 				>
 					{cancelLabel}
 				</Dialog.CloseTrigger>
 				<Dialog.CloseTrigger
-					class={cn(
-						'focus-visible:ring-ring bg-destructive text-destructive-foreground relative inline-flex h-8 shrink-0 items-center justify-center gap-2 rounded-lg border border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-all outline-none hover:opacity-90 focus-visible:ring-[3px]',
-						actionClass
-					)}
+					class={cn(buttonVariants({ variant: 'danger-solid' }), actionClass)}
 					data-slot="alert-dialog-action"
 				>
 					{actionLabel}

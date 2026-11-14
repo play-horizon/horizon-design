@@ -1,3 +1,7 @@
+<!--
+@component
+Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Tabs } from '@ark-ui/svelte';
@@ -62,8 +66,8 @@
 	<Tabs.List
 		class={cn(
 			'flex w-fit items-center gap-1',
-			variant === 'default' && cn('text-muted-foreground bg-muted rounded-lg p-1', sz.list),
-			variant === 'underline' && 'border-border gap-4 rounded-none border-b bg-transparent p-0',
+			variant === 'default' && cn('rounded-lg bg-hover p-1 text-muted', sz.list),
+			variant === 'underline' && 'gap-4 rounded-none border-b border-border bg-transparent p-0',
 			variant === 'underline' && sz.list
 		)}
 		data-slot="tabs-list"
@@ -71,7 +75,7 @@
 	>
 		{#if variant === 'underline'}
 			<Tabs.Indicator
-				class="bg-primary bottom-0 h-0.5 transition-all duration-200"
+				class="bottom-0 h-0.5 bg-primary transition-all duration-200"
 				data-slot="tabs-indicator"
 			/>
 		{/if}
@@ -79,13 +83,13 @@
 			<Tabs.Trigger
 				value={tab.value}
 				class={cn(
-					'focus-visible:ring-ring inline-flex items-center justify-center font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50',
+					'inline-flex items-center justify-center font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
 					sz.trigger,
 					variant === 'default' &&
-						'data-selected:bg-background data-selected:text-foreground rounded-md data-selected:shadow-sm',
+						'rounded-md data-selected:bg-background data-selected:text-fg data-selected:shadow-sm',
 					variant === 'underline' &&
 						cn(
-							'data-selected:border-primary data-selected:text-foreground rounded-none border-b-2 border-transparent pb-3',
+							'rounded-none border-b-2 border-transparent pb-3 data-selected:border-primary data-selected:text-fg',
 							sz.list
 						)
 				)}
@@ -102,7 +106,7 @@
 	{#each tabs as tab (tab.value)}
 		<Tabs.Content
 			value={tab.value}
-			class="focus-visible:ring-ring mt-2 outline-none focus-visible:rounded-md focus-visible:ring-2"
+			class="mt-2 outline-none focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-primary"
 			data-slot="tabs-content"
 		>
 			{@render tab.content()}

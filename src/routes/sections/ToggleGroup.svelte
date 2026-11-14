@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: ToggleGroup. Live examples of the ToggleGroup component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { ToggleGroup } from '$lib/components/toggle-group';
@@ -7,8 +11,6 @@
 </script>
 
 <section id="toggle-group">
-	<p class="section-tag">Actions</p>
-	<h2 class="mb-6 text-2xl font-bold">Toggle Group</h2>
 	<Card>
 		<div>
 			{#snippet tgBold()}<MingcuteBoldLine class="size-4" />{/snippet}

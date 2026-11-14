@@ -1,3 +1,7 @@
+<!--
+@component
+One panel of a `Splitter`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Splitter } from '@ark-ui/svelte';

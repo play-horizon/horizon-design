@@ -1,3 +1,8 @@
+<!--
+@component
+A month calendar to pick a date or a range, inline (Ark DatePicker without its field); Ark
+`translations` name its controls.
+-->
 <script lang="ts">
 	import { DatePicker } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
@@ -19,19 +24,19 @@
 	const cellClass = cn(
 		'inline-flex items-center justify-center',
 		'h-9 w-full min-w-9',
-		'select-none whitespace-nowrap font-normal text-sm text-foreground leading-none',
+		'select-none whitespace-nowrap font-normal text-sm text-fg leading-none',
 		'rounded-lg border border-transparent',
-		'hover:bg-accent hover:text-accent-foreground',
+		'hover:bg-hover hover:text-fg',
 		'data-today:after:absolute data-today:after:bottom-1 data-today:after:left-1/2 data-today:after:size-1 data-today:after:-translate-x-1/2 data-today:after:rounded-full data-today:after:bg-primary data-today:data-selected:after:bg-background',
-		'outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-ring-focus',
+		'outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/30',
 		'data-disabled:pointer-events-none data-disabled:opacity-64',
 		'data-unavailable:pointer-events-none data-unavailable:line-through data-unavailable:opacity-64',
-		'data-selected:bg-primary! data-selected:text-primary-foreground!'
+		'data-selected:bg-primary! data-selected:text-on-primary!'
 	);
 
 	const navBtnClass = cn(
 		'inline-flex items-center justify-center size-8 rounded-lg border border-border',
-		'bg-transparent hover:bg-accent hover:text-accent-foreground',
+		'bg-transparent hover:bg-hover hover:text-fg',
 		'disabled:opacity-40 transition-colors'
 	);
 </script>
@@ -53,7 +58,7 @@
 				<MingcuteLeftLine class="size-4" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
-				class="hover:bg-accent hover:text-accent-foreground h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors"
+				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
 				data-slot="calendar-view-trigger"
 			>
 				<DatePicker.RangeText data-slot="calendar-range-text" />
@@ -69,7 +74,7 @@
 						<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
 							{#each api().weekDays as weekDay, i (i)}
 								<DatePicker.TableHeader
-									class="text-muted-foreground-dim flex h-(--cell-size) w-full items-center justify-center rounded-lg text-xs font-medium select-none"
+									class="flex h-(--cell-size) w-full items-center justify-center rounded-lg text-xs font-medium text-faint select-none"
 									data-slot="calendar-table-header"
 								>
 									{weekDay.narrow}
@@ -108,7 +113,7 @@
 				<MingcuteLeftLine class="size-4" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
-				class="hover:bg-accent hover:text-accent-foreground h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors"
+				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
 			>
 				<DatePicker.RangeText />
 			</DatePicker.ViewTrigger>
@@ -146,7 +151,7 @@
 				<MingcuteLeftLine class="size-4" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
-				class="hover:bg-accent hover:text-accent-foreground h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors"
+				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
 			>
 				<DatePicker.RangeText />
 			</DatePicker.ViewTrigger>

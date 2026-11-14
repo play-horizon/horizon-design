@@ -1,3 +1,8 @@
+<!--
+@component
+A menu opened by a right click on its content: items, separators and labels (Ark Menu); `frosted`
+for a translucent surface.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';
@@ -14,10 +19,13 @@
 	let {
 		items = [],
 		children,
+		frosted = false,
 		...rest
 	}: {
 		items?: ContextMenuItem[];
 		children?: Snippet;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -33,19 +41,22 @@
 	<Portal>
 		<Menu.Positioner>
 			<Menu.Content
-				class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 min-w-36 overflow-hidden rounded-xl border p-1 shadow-xl backdrop-blur-xl outline-none"
+				class={cn(
+					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong bg-raised p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted && 'frosted'
+				)}
 				data-slot="context-menu-content"
 			>
 				{#each items as item, i (i)}
 					{#if item.type === 'separator'}
 						<div
-							class="bg-border -mx-1 my-1 h-px"
+							class="-mx-1 my-1 h-px bg-border"
 							role="separator"
 							data-slot="context-menu-separator"
 						></div>
 					{:else if item.type === 'label'}
 						<div
-							class="text-muted-foreground px-2.5 py-1 text-xs font-semibold"
+							class="px-2.5 py-1 text-xs font-semibold text-muted"
 							data-slot="context-menu-label"
 						>
 							{item.label}
@@ -55,7 +66,7 @@
 							value={item.value ?? ''}
 							disabled={item.disabled}
 							class={cn(
-								'hover:bg-accent data-highlighted:bg-accent data-highlighted:text-accent-foreground relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors select-none',
+								'relative flex h-7.5 items-center gap-2 rounded-md px-2 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg',
 								{ 'pointer-events-none opacity-50': item.disabled }
 							)}
 							data-slot="context-menu-item"

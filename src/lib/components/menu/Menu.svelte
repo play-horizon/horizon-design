@@ -1,3 +1,7 @@
+<!--
+@component
+A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent surface.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';
@@ -9,6 +13,7 @@
 		triggerClass = '',
 		children,
 		contentClass = '',
+		frosted = false,
 		open = $bindable(false),
 		...rest
 	}: {
@@ -16,6 +21,8 @@
 		triggerClass?: string;
 		children?: Snippet;
 		contentClass?: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		open?: boolean;
 		[key: string]: unknown;
 	} = $props();
@@ -31,7 +38,8 @@
 		<Menu.Positioner>
 			<Menu.Content
 				class={cn(
-					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 min-w-32 overflow-hidden rounded-xl border p-1 shadow-xl backdrop-blur-xl outline-none',
+					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong bg-raised p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted && 'frosted',
 					contentClass
 				)}
 				data-slot="menu-content"

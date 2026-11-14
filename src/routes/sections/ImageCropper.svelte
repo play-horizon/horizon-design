@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: ImageCropper. Live examples of the ImageCropper component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { ImageCropper } from '$lib/components/image-cropper';
 </script>
 
 <section id="image-cropper">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Image Cropper</h2>
 	<Card>
 		<div>
 			<ImageCropper

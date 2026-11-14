@@ -1,3 +1,7 @@
+<!--
+@component
+A horizontal slideshow with previous and next controls and indicators (Ark Carousel).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Carousel } from '@ark-ui/svelte';
@@ -37,13 +41,13 @@
 	</Carousel.ItemGroup>
 	{#if showArrows}
 		<Carousel.PrevTrigger
-			class="bg-background-blur border-border text-foreground hover:bg-background absolute top-1/2 left-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-colors disabled:opacity-50"
+			class="absolute top-1/2 left-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-raised text-fg shadow-sm transition-colors hover:bg-background disabled:opacity-50"
 			data-slot="carousel-prev"
 		>
 			<MingcuteLeftLine class="size-4" />
 		</Carousel.PrevTrigger>
 		<Carousel.NextTrigger
-			class="bg-background-blur border-border text-foreground hover:bg-background absolute top-1/2 right-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-colors disabled:opacity-50"
+			class="absolute top-1/2 right-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-raised text-fg shadow-sm transition-colors hover:bg-background disabled:opacity-50"
 			data-slot="carousel-next"
 		>
 			<MingcuteRightLine class="size-4" />
@@ -58,7 +62,7 @@
 			{#each slides as _, i (i)}
 				<Carousel.Indicator
 					index={i}
-					class="bg-carousel-indicator-inactive data-current:bg-primary size-1.5 rounded-full transition-all data-current:w-4"
+					class="size-1.5 rounded-full bg-faint transition-all data-current:w-4 data-current:bg-primary"
 					data-slot="carousel-indicator"
 				/>
 			{/each}

@@ -1,3 +1,7 @@
+<!--
+@component
+Content that a trigger shows and hides (Ark Collapsible).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Collapsible } from '@ark-ui/svelte';
@@ -27,14 +31,14 @@
 >
 	{#if trigger}
 		<Collapsible.Trigger
-			class="focus-visible:ring-ring flex items-center gap-2 text-sm font-medium outline-none focus-visible:rounded-sm focus-visible:ring-2"
+			class="flex items-center gap-2 text-sm font-medium outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary"
 			data-slot="collapsible-trigger"
 		>
 			{@render trigger()}
 		</Collapsible.Trigger>
 	{/if}
 	<Collapsible.Content
-		class="data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up overflow-hidden"
+		class="overflow-hidden data-[state=closed]:animate-slide-up data-[state=open]:animate-slide-down"
 		data-slot="collapsible-content"
 	>
 		{@render children?.()}

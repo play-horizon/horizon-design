@@ -1,3 +1,7 @@
+<!--
+@component
+Groups buttons into one connected row or column.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';

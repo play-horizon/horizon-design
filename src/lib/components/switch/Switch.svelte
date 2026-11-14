@@ -1,3 +1,7 @@
+<!--
+@component
+An on/off switch with its label (Ark Switch); `checked` binds its state.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Switch } from '@ark-ui/svelte';
@@ -13,23 +17,23 @@
 
 	const sizes: Record<'sm' | 'md' | 'lg' | 'xl', SizeConfig> = {
 		sm: {
-			control: 'h-4 w-7',
-			thumb: 'size-3',
-			checkedTranslate: 'data-[state=checked]:translate-x-3',
+			control: 'h-3.5 w-6',
+			thumb: 'size-2.5',
+			checkedTranslate: 'data-[state=checked]:translate-x-2.5',
 			iconPx: 10,
 			label: 'text-xs'
 		},
 		md: {
-			control: 'h-5 w-9',
-			thumb: 'size-4',
-			checkedTranslate: 'data-[state=checked]:translate-x-4',
+			control: 'h-4.25 w-7.5',
+			thumb: 'size-3.25',
+			checkedTranslate: 'data-[state=checked]:translate-x-3.25',
 			iconPx: 12,
 			label: 'text-sm'
 		},
 		lg: {
-			control: 'h-6 w-11',
-			thumb: 'size-5',
-			checkedTranslate: 'data-[state=checked]:translate-x-5',
+			control: 'h-5 w-9',
+			thumb: 'size-4',
+			checkedTranslate: 'data-[state=checked]:translate-x-4',
 			iconPx: 14,
 			label: 'text-base'
 		},
@@ -79,17 +83,17 @@
 >
 	<Switch.Control
 		class={cn(
-			'focus-visible:ring-ring bg-input inline-flex shrink-0 items-center rounded-full border-2 border-transparent shadow-sm transition-colors outline-none focus-visible:ring-2',
+			'inline-flex shrink-0 items-center rounded-full border-2 border-transparent bg-border-strong transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background',
 			{
 				'data-[state=checked]:bg-primary': variant === 'default',
-				'data-[state=checked]:bg-accent': variant === 'secondary'
+				'data-[state=checked]:bg-hover': variant === 'secondary'
 			},
 			sz.control
 		)}
 	>
 		<Switch.Thumb
 			class={cn(
-				'group bg-switch-thumb pointer-events-none flex items-center justify-center rounded-full shadow-lg ring-0 transition-transform',
+				'group pointer-events-none flex items-center justify-center rounded-full bg-paper shadow-sm ring-0 transition-transform duration-150 ease-standard',
 				'data-[state=unchecked]:translate-x-0',
 				sz.thumb,
 				sz.checkedTranslate
@@ -101,7 +105,7 @@
 						'absolute scale-50 opacity-0 transition-all duration-200 group-data-[state=checked]:scale-100 group-data-[state=checked]:opacity-100',
 						{
 							'data-[state=checked]:bg-primary': variant === 'default',
-							'text-muted-foreground': variant === 'secondary'
+							'text-muted': variant === 'secondary'
 						}
 					)}
 				>
@@ -110,7 +114,7 @@
 			{/if}
 			{#if uncheckedContent}
 				<span
-					class="text-muted-foreground absolute scale-50 opacity-0 transition-all duration-200 group-data-[state=unchecked]:scale-100 group-data-[state=unchecked]:opacity-100"
+					class="absolute scale-50 text-muted opacity-0 transition-all duration-200 group-data-[state=unchecked]:scale-100 group-data-[state=unchecked]:opacity-100"
 				>
 					{@render uncheckedContent()}
 				</span>

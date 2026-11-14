@@ -11,7 +11,7 @@
 				var dark =
 					m === 'dark' ||
 					(m !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-				if (!dark) document.documentElement.classList.add('light');
+				document.documentElement.dataset.theme = dark ? 'dark' : 'light';
 			})();
 		</script>
 		%sveltekit.head%

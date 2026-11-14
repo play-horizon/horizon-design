@@ -1,3 +1,8 @@
+<!--
+@component
+A vertical stack of collapsible sections (Ark Accordion); `AccordionItem` is one section with its
+trigger. `value` binds the open items.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Accordion } from '@ark-ui/svelte';

@@ -1,3 +1,7 @@
+<!--
+@component
+A circular control that picks an angle in degrees (Ark AngleSlider).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { AngleSlider } from '@ark-ui/svelte';
@@ -26,7 +30,7 @@
 	{...rest}
 >
 	<AngleSlider.Control
-		class="border-border bg-muted relative rounded-full border-2"
+		class="relative rounded-full border-2 border-border bg-hover"
 		style="width: {size}px; height: {size}px;"
 	>
 		<AngleSlider.Thumb class="absolute inset-0 cursor-grab active:cursor-grabbing">
@@ -34,14 +38,14 @@
 				class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full"
 			>
 				<div
-					class="bg-primary absolute h-0.5 origin-left rounded-full"
+					class="absolute h-0.5 origin-left rounded-full bg-primary"
 					style="width: calc({size / 2}px - 12px); left: 50%; top: calc(50% - 1px);"
 				></div>
-				<div class="bg-primary relative z-10 size-3 rounded-full"></div>
+				<div class="relative z-10 size-3 rounded-full bg-primary"></div>
 			</div>
 		</AngleSlider.Thumb>
 	</AngleSlider.Control>
-	<AngleSlider.ValueText class="text-foreground font-mono text-sm font-medium tabular-nums">
+	<AngleSlider.ValueText class="font-mono text-sm font-medium text-fg tabular-nums">
 		{Math.round(value)}°
 	</AngleSlider.ValueText>
 	<AngleSlider.HiddenInput />

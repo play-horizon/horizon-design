@@ -1,3 +1,7 @@
+<!--
+@component
+Swaps between two contents with an animation, such as a play and a pause icon (Ark Swap).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Swap } from '@ark-ui/svelte';
@@ -20,13 +24,15 @@
 		unmountOnExit?: boolean;
 		[key: string]: unknown;
 	} = $props();
+
+	const indicatorClass = 'data-[state=open]:animate-swap-in data-[state=closed]:animate-swap-out';
 </script>
 
 <Swap.Root class={cn(className)} data-slot="swap" {swap} {lazyMount} {unmountOnExit} {...rest}>
-	<Swap.Indicator type="on" data-slot="swap-indicator">
+	<Swap.Indicator type="on" class={indicatorClass} data-slot="swap-indicator">
 		{@render on?.()}
 	</Swap.Indicator>
-	<Swap.Indicator type="off" data-slot="swap-indicator">
+	<Swap.Indicator type="off" class={indicatorClass} data-slot="swap-indicator">
 		{@render off?.()}
 	</Swap.Indicator>
 </Swap.Root>

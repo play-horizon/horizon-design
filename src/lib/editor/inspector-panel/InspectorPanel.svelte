@@ -1,3 +1,8 @@
+<!--
+@component
+The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by
+drag or keyboard; `reorderLabel` names each card's handle.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -15,6 +20,7 @@
 		cards = $bindable<InspectorCard[]>([]),
 		expandedIds = $bindable<string[]>([]),
 		content,
+		reorderLabel,
 		onCardsChange,
 		onExpandedChange
 	}: {
@@ -22,6 +28,8 @@
 		cards?: InspectorCard[];
 		expandedIds?: string[];
 		content?: Snippet<[InspectorCard]>;
+		/** The drag handle's accessible name for a card, such as `Drag to reorder ${title}`. */
+		reorderLabel: (title: string) => string;
 		onCardsChange?: (cards: InspectorCard[]) => void;
 		onExpandedChange?: (expandedIds: string[]) => void;
 	} = $props();
@@ -35,13 +43,10 @@
 	let dragOverIndex = $state<number | null>(null);
 	let ghostPos = $state({ x: 0, y: 0 });
 
+	/** Moves the drag ghost to the end of <body>, so no ancestor clips or transforms it. */
 	function portal(node: HTMLElement) {
 		document.body.appendChild(node);
-		return {
-			destroy() {
-				node.remove();
-			}
-		};
+		return () => node.remove();
 	}
 
 	function toggleExpanded(id: string) {
@@ -183,9 +188,9 @@
 
 {#if isDragging}
 	<div
-		use:portal
+		{@attach portal}
 		style="position:fixed;z-index:9999;left:{ghostPos.x}px;top:{ghostPos.y}px;pointer-events:none"
-		class="bg-background border-border text-foreground max-w-48 truncate rounded-md border px-2 py-1 text-sm shadow-lg"
+		class="max-w-48 truncate rounded-md border border-border bg-background px-2 py-1 text-sm text-fg shadow-lg"
 	>
 		{cards.find((c) => c.id === draggingId)?.title ?? ''}
 	</div>
@@ -233,27 +238,27 @@
 			data-inspector-row
 			data-id={card.id}
 			class={cn(
-				'border-border relative flex flex-col rounded-md border transition-opacity duration-150',
+				'relative flex flex-col rounded-md border border-border transition-opacity duration-150',
 				isDraggingThis && 'opacity-30',
-				isCursor && 'ring-primary ring-1 ring-inset'
+				isCursor && 'ring-1 ring-primary ring-inset'
 			)}
 		>
 			{#if showDropAbove}
 				<div
-					class="bg-primary pointer-events-none absolute inset-x-1 h-px rounded-full"
+					class="pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary"
 					style="top: -2.5px"
 				></div>
 			{/if}
 			{#if showDropBelow}
 				<div
-					class="bg-primary pointer-events-none absolute inset-x-1 h-px rounded-full"
+					class="pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary"
 					style="bottom: -2.5px"
 				></div>
 			{/if}
 			<div
 				role="button"
 				tabindex="0"
-				class="hover:bg-muted/50 flex cursor-default items-center rounded-sm px-2 py-1.5 transition-colors"
+				class="flex cursor-default items-center rounded-sm px-2 py-1.5 transition-colors hover:bg-hover/50"
 				onclick={() => {
 					cursorId = card.id;
 					isKeyboardMode = false;
@@ -275,19 +280,19 @@
 				>
 					<MingcuteRightLine
 						class={cn(
-							'text-muted-foreground size-3.5 shrink-0 transition-transform duration-200',
+							'size-3.5 shrink-0 text-muted transition-transform duration-200',
 							isExpanded && 'rotate-90'
 						)}
 					/>
 					<span class="flex-1 leading-none font-medium">{card.title}</span>
 					{#if card.subtitle}
-						<span class="text-muted-foreground text-xs">{card.subtitle}</span>
+						<span class="text-xs text-muted">{card.subtitle}</span>
 					{/if}
 				</button>
 				<button
 					tabindex="-1"
-					aria-label="Drag to reorder {card.title}"
-					class="text-muted-foreground hover:text-foreground ml-1 flex shrink-0 cursor-grab items-center rounded transition-colors active:cursor-grabbing"
+					aria-label={reorderLabel(card.title)}
+					class="ml-1 flex shrink-0 cursor-grab items-center rounded text-muted transition-colors hover:text-fg active:cursor-grabbing"
 					onpointerdown={(e) => {
 						e.stopPropagation();
 						startDrag(e, card.id);
@@ -309,7 +314,7 @@
 				)}
 			>
 				<div class="overflow-hidden">
-					<div class="border-border border-t px-3 py-2.5">
+					<div class="border-t border-border px-3 py-2.5">
 						{#if content}
 							{@render content(card)}
 						{/if}

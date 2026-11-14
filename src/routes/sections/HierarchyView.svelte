@@ -1,6 +1,10 @@
+<!--
+@component
+Docs: HierarchyView. Live examples of the HierarchyView component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
-	import { HierarchyView } from '$lib/components/hierarchy-view';
+	import { HierarchyView } from '$lib/editor/hierarchy-view';
 
 	const hierarchyData = [
 		{
@@ -27,9 +31,7 @@
 </script>
 
 <section id="hierarchy-view">
-	<p class="section-tag">Navigation</p>
-	<h2 class="mb-6 text-2xl font-bold">Hierarchy View</h2>
 	<Card class="h-180">
-		<HierarchyView data={hierarchyData} />
+		<HierarchyView data={hierarchyData} dragLabel={(count) => `${count} objects`} />
 	</Card>
 </section>

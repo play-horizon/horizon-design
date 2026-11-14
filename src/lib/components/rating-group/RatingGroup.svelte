@@ -1,3 +1,7 @@
+<!--
+@component
+A row of stars to give a rating (Ark RatingGroup).
+-->
 <script lang="ts">
 	import { RatingGroup } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
@@ -30,7 +34,7 @@
 				{#each api().items as item (item)}
 					<RatingGroup.Item
 						index={item}
-						class="text-muted-foreground data-highlighted:text-warning transition-colors outline-none"
+						class="text-muted transition-colors outline-none data-highlighted:text-warning"
 					>
 						<MingcuteStarFill class="size-5" />
 					</RatingGroup.Item>

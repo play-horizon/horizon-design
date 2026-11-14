@@ -1,7 +1,8 @@
 /**
  * Vite configuration of the docs site (the SvelteKit app in `src/routes`) and of the component
  * tests: Tailwind, SvelteKit, mingcute icons through unplugin-icons, and vitest running the
- * `*.test.ts` files in jsdom with Svelte's browser build.
+ * `*.test.ts` files in jsdom with Svelte's browser build (`src/test/setup.ts` fills in the browser APIs
+ * jsdom lacks).
  * @module
  */
 import tailwindcss from '@tailwindcss/vite';
@@ -14,6 +15,7 @@ export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' }), svelteTesting()],
 	test: {
 		environment: 'jsdom',
-		include: ['src/**/*.test.ts', 'scripts/**/*.test.ts']
+		include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],
+		setupFiles: ['src/test/setup.ts']
 	}
 });

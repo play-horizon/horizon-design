@@ -1,0 +1,78 @@
+/* Page motion through the View Transitions API, started by the helpers of `motion/`: the theme
+   switch crossfades the whole page, and navigation slides the element marked
+   `data-slide-region` out and its replacement in, in the direction of travel set on <html> as
+   `data-slide="forward|backward"`. Both last --duration-page (0.32 s); with reduced motion the
+   helpers skip the transition and these rules turn every view transition off. */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: var(--duration-page);
+	animation-timing-function: var(--ease-standard);
+	mix-blend-mode: normal;
+}
+
+[data-slide-region] {
+	view-transition-name: hd-slide;
+}
+
+::view-transition-group(hd-slide) {
+	overflow: hidden;
+	animation-duration: var(--duration-page);
+	animation-timing-function: var(--ease-standard);
+}
+
+::view-transition-old(hd-slide),
+::view-transition-new(hd-slide) {
+	animation-duration: var(--duration-page);
+	animation-timing-function: var(--ease-standard);
+	mix-blend-mode: normal;
+}
+
+:root[data-slide='forward']::view-transition-old(hd-slide) {
+	animation-name: hd-slide-out-to-start;
+}
+:root[data-slide='forward']::view-transition-new(hd-slide) {
+	animation-name: hd-slide-in-from-end;
+}
+:root[data-slide='backward']::view-transition-old(hd-slide) {
+	animation-name: hd-slide-out-to-end;
+}
+:root[data-slide='backward']::view-transition-new(hd-slide) {
+	animation-name: hd-slide-in-from-start;
+}
+
+@keyframes hd-slide-out-to-start {
+	to {
+		transform: translateX(-100%);
+	}
+}
+@keyframes hd-slide-in-from-end {
+	from {
+		transform: translateX(100%);
+	}
+}
+@keyframes hd-slide-out-to-end {
+	to {
+		transform: translateX(100%);
+	}
+}
+@keyframes hd-slide-in-from-start {
+	from {
+		transform: translateX(-100%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+
+/* While the theme crossfades, other transitions would animate inside the snapshots: freeze them. */
+:root[data-crossfade] *,
+:root[data-crossfade] ::before,
+:root[data-crossfade] ::after {
+	transition: none !important;
+}

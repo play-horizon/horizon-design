@@ -1,3 +1,7 @@
+<!--
+@component
+Resizable panels separated by draggable handles (Ark Splitter).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Splitter, type SplitterPanelData as PanelData } from '@ark-ui/svelte';

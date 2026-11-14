@@ -1,3 +1,7 @@
+<!--
+@component
+A group of radio buttons to choose one option (Ark RadioGroup).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { RadioGroup } from '@ark-ui/svelte';
@@ -56,13 +60,13 @@
 			>
 				<RadioGroup.ItemControl
 					class={cn(
-						'group focus-visible:ring-ring border-border bg-input data-[state=checked]:border-primary data-[state=checked]:bg-primary relative aspect-square rounded-full border transition-colors outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50',
+						'group relative aspect-square rounded-full border border-border bg-sunken transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50 data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary',
 						sz.control
 					)}
 				>
 					<div
 						class={cn(
-							'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-white transition-transform group-data-[state=checked]:scale-100',
+							'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-paper transition-transform group-data-[state=checked]:scale-100',
 							sz.dot
 						)}
 					></div>

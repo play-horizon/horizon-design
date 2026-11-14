@@ -1,3 +1,7 @@
+<!--
+@component
+The previous-page button of a `Pagination`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Pagination } from '@ark-ui/svelte';
@@ -16,7 +20,7 @@
 
 <Pagination.PrevTrigger
 	class={cn(
-		'hover:bg-accent hover:text-accent-foreground inline-flex size-8 items-center justify-center rounded-lg border border-transparent text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
+		'inline-flex size-8 items-center justify-center rounded-lg border border-transparent text-sm font-medium transition-colors hover:bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-50',
 		className
 	)}
 	data-slot="pagination-prev-trigger"

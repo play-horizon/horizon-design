@@ -1,3 +1,7 @@
+<!--
+@component
+The label of a `MenuGroup`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';
@@ -15,7 +19,7 @@
 </script>
 
 <Menu.ItemGroupLabel
-	class={cn('text-muted-foreground px-2 py-1.5 text-xs font-medium', className)}
+	class={cn('px-2 py-1.5 text-xs font-medium text-muted', className)}
 	data-slot="menu-group-label"
 	{...rest}
 >

@@ -1,3 +1,8 @@
+<!--
+@component
+A non-modal panel anchored to its trigger (Ark Popover), with a title, content and footer;
+`frosted` for a translucent surface.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Popover } from '@ark-ui/svelte';
@@ -12,6 +17,7 @@
 		children,
 		footer,
 		contentClass = '',
+		frosted = false,
 		open = $bindable(false),
 		...rest
 	}: {
@@ -22,6 +28,8 @@
 		children?: Snippet;
 		footer?: Snippet;
 		contentClass?: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		open?: boolean;
 		[key: string]: unknown;
 	} = $props();
@@ -41,7 +49,8 @@
 		<Popover.Positioner>
 			<Popover.Content
 				class={cn(
-					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border text-popover-foreground bg-popover z-50 w-72 rounded-xl border shadow-xl backdrop-blur-xl outline-none',
+					'z-50 w-72 rounded-lg border border-border-strong bg-raised text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted && 'frosted',
 					contentClass
 				)}
 				data-slot="popover-content"
@@ -52,7 +61,7 @@
 							<h4 class="text-sm leading-none font-semibold" data-slot="popover-title">{title}</h4>
 						{/if}
 						{#if description}
-							<p class="text-muted-foreground text-xs" data-slot="popover-description">
+							<p class="text-xs text-muted" data-slot="popover-description">
 								{description}
 							</p>
 						{/if}

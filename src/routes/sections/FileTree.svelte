@@ -1,6 +1,10 @@
+<!--
+@component
+Docs: FileTree. Live examples of the FileTree component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
-	import { FileTree } from '$lib/components/file-tree';
+	import { FileTree } from '$lib/editor/file-tree';
 	import { createTreeCollection } from '@ark-ui/svelte';
 
 	const treeCollection = createTreeCollection({
@@ -32,8 +36,6 @@
 </script>
 
 <section id="file-tree">
-	<p class="section-tag">Navigation</p>
-	<h2 class="mb-6 text-2xl font-bold">File Tree</h2>
 	<Card>
 		<FileTree collection={treeCollection} />
 	</Card>

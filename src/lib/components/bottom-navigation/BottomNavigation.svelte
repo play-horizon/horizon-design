@@ -1,3 +1,7 @@
+<!--
+@component
+A bar of navigation items fixed to the bottom of a narrow screen.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -20,9 +24,11 @@
 	} = $props();
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -- the app passes hrefs it has already resolved -->
+
 <nav
 	class={cn(
-		'border-border bg-background-frosted pb-safe fixed right-0 bottom-0 left-0 z-20 flex items-center justify-around border-t px-2 pt-2 backdrop-blur-xl',
+		'pb-safe fixed right-0 bottom-0 left-0 z-20 flex items-center justify-around border-t border-border bg-raised px-2 pt-2',
 		className
 	)}
 	data-slot="bottom-navigation"
@@ -33,7 +39,7 @@
 			href={item.href}
 			class={cn(
 				'flex flex-1 flex-col items-center justify-center gap-1 py-1 text-xs font-medium transition-colors',
-				item.active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+				item.active ? 'text-primary' : 'text-muted hover:text-fg'
 			)}
 			aria-current={item.active ? 'page' : undefined}
 			data-slot="bottom-navigation-item"

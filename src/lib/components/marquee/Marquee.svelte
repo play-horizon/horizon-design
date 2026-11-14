@@ -1,3 +1,7 @@
+<!--
+@component
+Content that scrolls continuously, pausing on hover (Ark Marquee).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Marquee } from '@ark-ui/svelte';

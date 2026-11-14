@@ -1,11 +1,15 @@
+/* The look of horizon-layout's docking layout in horizon-design: panels on the surface colour,
+   tab bars with the active tab raised and topped by a primary bar, resize handles and drop hints
+   in the primary colour. horizon-layout itself is headless; these rules style its BEM classes. */
+
 .horizon-layout {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 	background: var(--background);
-	font-family: var(--font-sans, system-ui, sans-serif);
-	font-size: 0.8125rem;
-	color: var(--foreground);
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	color: var(--fg);
 }
 
 .horizon-layout__content {
@@ -112,15 +116,16 @@
 
 .horizon-layout-split__resizer-handle:focus-visible::before {
 	opacity: 1;
-	background: var(--ring);
+	background: var(--primary);
 }
 
 .horizon-layout-split__ratio {
 	position: absolute;
 	padding: 2px 7px;
-	border-radius: 0.125rem;
-	background: var(--popover);
-	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	background: var(--raised);
+	border: 1px solid var(--border-strong);
+	box-shadow: var(--elevation-sm);
 	color: var(--primary);
 	font-size: 0.7rem;
 	font-variant-numeric: tabular-nums;
@@ -129,7 +134,6 @@
 	transition: opacity 60ms linear;
 	white-space: nowrap;
 	z-index: 3;
-	backdrop-filter: blur(var(--glass-blur));
 }
 
 .horizon-layout-split__ratio--horizontal {
@@ -157,7 +161,8 @@
 	overflow: hidden;
 	box-sizing: border-box;
 	border: 1px solid var(--border);
-	background: var(--card);
+	border-radius: var(--radius-lg);
+	background: var(--surface);
 }
 
 .horizon-layout-tabgroup__tab-bar {
@@ -189,15 +194,13 @@
 	display: inline-flex;
 	flex: 0 0 auto;
 	align-items: center;
-	gap: 0.35rem;
+	gap: 0.375rem;
 	min-height: 32px;
 	max-width: 13rem;
-	padding: 0 0.65rem;
-	margin-top: 4px;
-	margin-bottom: 4px;
+	padding: 0 0.6875rem;
 	background: transparent;
-	border-radius: var(--radius-md);
-	color: var(--tab-inactive-color);
+	border-right: 1px solid var(--border);
+	color: var(--muted);
 	user-select: none;
 	touch-action: none;
 	outline: none;
@@ -207,22 +210,25 @@
 }
 
 .horizon-layout-tabgroup__tab:hover {
-	color: var(--muted-foreground);
-	background: color-mix(in oklch, var(--muted-foreground) 8%, transparent);
+	color: var(--fg);
+	background: var(--hover);
 }
 
 .horizon-layout-tabgroup__tab--active {
-	background: var(--secondary);
-	color: var(--foreground);
-	font-weight: 500;
+	background: var(--surface);
+	color: var(--fg);
+	font-weight: 600;
 }
 
-.light .horizon-layout-tabgroup__tab--active {
-	background: color-mix(in oklch, var(--border) 40%, transparent);
-}
-
-.light .horizon-layout-tabgroup__tab:hover {
-	background: color-mix(in oklch, var(--border) 18%, transparent);
+/* The active tab's top bar. */
+.horizon-layout-tabgroup__tab--active::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: var(--primary);
 }
 
 .horizon-layout-tabgroup__tab-active-fill {
@@ -231,22 +237,21 @@
 	left: 0;
 	right: 0;
 	height: 1px;
-	background: var(--secondary);
+	background: var(--surface);
 	pointer-events: none;
 }
 
 .horizon-layout-tabgroup__tabs:focus-visible .horizon-layout-tabgroup__tab--active {
-	outline: 2px solid var(--ring);
+	outline: 2px solid var(--primary);
 	outline-offset: -2px;
-	border-radius: 4px;
-	background: var(--accent);
-	color: var(--foreground);
+	background: var(--hover);
+	color: var(--fg);
 }
 
 .horizon-layout-tabgroup__tabs:focus-visible
 	.horizon-layout-tabgroup__tab--active
 	.horizon-layout-tabgroup__tab-active-fill {
-	background: var(--accent);
+	background: var(--hover);
 }
 
 .horizon-layout-tabgroup__tab-title {
@@ -255,8 +260,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-size: 0.74rem;
-	letter-spacing: 0.01em;
+	font-size: var(--text-xs);
 }
 
 .horizon-layout-tabgroup__tab-controls {
@@ -342,7 +346,7 @@
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background: var(--card);
+	background: var(--surface);
 }
 
 .horizon-layout-tabgroup__drop-zones {
@@ -377,9 +381,9 @@
 	position: absolute;
 	z-index: 2;
 	pointer-events: none;
-	border: 2px solid var(--drop-hint-border);
-	border-radius: var(--radius, 0.5rem);
-	background: var(--drop-hint-bg);
+	border: 2px solid color-mix(in oklab, var(--primary) 80%, transparent);
+	border-radius: var(--radius-lg);
+	background: color-mix(in oklab, var(--primary) 12%, transparent);
 	animation: hl-fade-in 40ms ease;
 }
 
@@ -405,8 +409,8 @@
 	display: flex;
 	flex-direction: column;
 	background: var(--background);
-	color: var(--foreground);
-	font-size: 0.8125rem;
+	color: var(--fg);
+	font-size: var(--text-base);
 }
 
 .horizon-layout__popout .horizon-layout__content {

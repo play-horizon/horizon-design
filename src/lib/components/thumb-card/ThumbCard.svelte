@@ -1,3 +1,7 @@
+<!--
+@component
+A card showing a preview (its content) with a label under it.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -17,25 +21,27 @@
 	} = $props();
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -- the app passes hrefs it has already resolved -->
+
 <div
 	class={cn(
-		'group border-border bg-card hover:border-primary-border-hover hover:shadow-primary-shadow relative flex flex-col overflow-hidden rounded-xl border transition-all hover:shadow-lg',
+		'group hover:shadow-primary-shadow relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface transition-all hover:border-primary/40 hover:shadow-lg',
 		className
 	)}
 	data-slot="thumb-card"
 	{...rest}
 >
-	<div class="bg-muted-surface flex min-h-40 items-center justify-center p-6">
+	<div class="flex min-h-40 items-center justify-center bg-surface p-6">
 		{@render children?.()}
 	</div>
 	{#if label}
-		<div class="border-border border-t px-4 py-3">
+		<div class="border-t border-border px-4 py-3">
 			{#if href}
-				<a {href} class="text-foreground hover:text-primary text-sm font-medium transition-colors">
+				<a {href} class="text-sm font-medium text-fg transition-colors hover:text-primary">
 					{label}
 				</a>
 			{:else}
-				<span class="text-foreground text-sm font-medium">{label}</span>
+				<span class="text-sm font-medium text-fg">{label}</span>
 			{/if}
 		</div>
 	{/if}

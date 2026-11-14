@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: CircularProgress. Live examples of the CircularProgress component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { CircularProgress } from '$lib/components/circular-progress';
 </script>
 
 <section id="circular-progress">
-	<p class="section-tag">Feedback</p>
-	<h2 class="mb-6 text-2xl font-bold">Circular Progress</h2>
 	<Card>
 		<div class="flex items-center gap-6">
 			<CircularProgress value={72} size={80} />

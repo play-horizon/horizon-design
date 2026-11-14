@@ -1,3 +1,8 @@
+<!--
+@component
+A card that shows on hover or focus of its trigger (Ark HoverCard), such as the docs card of a
+function; `frosted` for a translucent surface.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { HoverCard } from '@ark-ui/svelte';
@@ -9,12 +14,15 @@
 		triggerClass = '',
 		children,
 		contentClass = '',
+		frosted = false,
 		...rest
 	}: {
 		trigger?: Snippet;
 		triggerClass?: string;
 		children?: Snippet;
 		contentClass?: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -29,7 +37,8 @@
 		<HoverCard.Positioner>
 			<HoverCard.Content
 				class={cn(
-					'data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 w-64 rounded-xl border p-4 shadow-xl backdrop-blur-xl outline-none',
+					'z-50 w-72 rounded-lg border border-border-strong bg-raised px-3 py-2.5 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted && 'frosted',
 					contentClass
 				)}
 				data-slot="hover-card-content"

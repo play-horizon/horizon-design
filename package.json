@@ -39,16 +39,15 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		},
-		"./horizon-design.css": "./dist/horizon-design.css",
-		"./theme.svelte": {
-			"types": "./dist/theme.svelte.d.ts",
-			"svelte": "./dist/theme.svelte.js",
-			"default": "./dist/theme.svelte.js"
+		"./editor": {
+			"types": "./dist/editor/index.d.ts",
+			"svelte": "./dist/editor/index.js"
 		},
 		"./tokens": {
 			"types": "./dist/generated/tokens.d.ts",
 			"default": "./dist/generated/tokens.js"
-		}
+		},
+		"./horizon-design.css": "./dist/horizon-design.css"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"

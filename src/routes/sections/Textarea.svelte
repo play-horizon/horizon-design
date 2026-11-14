@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Textarea. Live examples of the Textarea component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Field } from '$lib/components/field';
@@ -5,8 +9,6 @@
 </script>
 
 <section id="textarea">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Textarea</h2>
 	<Card>
 		<div>
 			<Field label="Message">

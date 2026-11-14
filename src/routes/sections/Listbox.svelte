@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Listbox. Live examples of the Listbox component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Listbox } from '$lib/components/listbox';
@@ -12,8 +16,6 @@
 </script>
 
 <section id="listbox">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Listbox</h2>
 	<Card>
 		<div>
 			<Listbox items={comboboxItems} label="Choose a framework" />

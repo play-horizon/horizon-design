@@ -1,3 +1,7 @@
+<!--
+@component
+A group of items in a `Menu`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';

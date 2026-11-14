@@ -1,3 +1,7 @@
+<!--
+@component
+A row of one-character fields for a code, such as the sign-up code (Ark PinInput).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { PinInput } from '@ark-ui/svelte';
@@ -38,7 +42,7 @@
 		{#each Array(length) as _, i (i)}
 			<PinInput.Input
 				index={i}
-				class="border-border bg-input text-foreground focus-visible:ring-ring focus-visible:border-primary flex size-10 items-center justify-center rounded-lg border text-center text-sm font-medium transition-colors outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
+				class="flex size-10 items-center justify-center rounded-lg border border-border bg-sunken text-center text-sm font-medium text-fg transition-colors outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
 			/>
 		{/each}
 	</PinInput.Control>

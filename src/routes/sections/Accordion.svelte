@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Accordion. Live examples of the Accordion component.
+-->
 <script lang="ts">
 	import { Accordion, AccordionItem } from '$lib/components/accordion';
 	import { Card } from '$lib/components/card';
 </script>
 
 <section id="accordion">
-	<p class="section-tag">Navigation</p>
-	<h2 class="mb-6 text-2xl font-bold">Accordion</h2>
 	<Card>
 		<Accordion>
 			<AccordionItem value="item-1" trigger="What is horizon-design?">
@@ -18,7 +20,7 @@
 			</AccordionItem>
 			<AccordionItem value="item-3" trigger="Does it support dark and light modes?">
 				Yes — dark theme is the default <code>:root</code> style. Light theme activates via the
-				<code>.light</code> class. All colors use OKLCH for perceptual uniformity across both themes.
+				<code>data-theme="light"</code> attribute. All colors are OKLCH tokens, the same in both themes.
 			</AccordionItem>
 			<AccordionItem value="item-4" trigger="Can I customize the components?">
 				Every component accepts a <code>class</code> prop and exposes

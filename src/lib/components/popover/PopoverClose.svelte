@@ -1,3 +1,7 @@
+<!--
+@component
+A button that closes the `Popover` it is in.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Popover } from '@ark-ui/svelte';

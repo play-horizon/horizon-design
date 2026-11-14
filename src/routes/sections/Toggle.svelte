@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Toggle. Live examples of the Toggle component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Toggle } from '$lib/components/toggle';
@@ -7,8 +11,6 @@
 </script>
 
 <section id="toggle">
-	<p class="section-tag">Actions</p>
-	<h2 class="mb-6 text-2xl font-bold">Toggle</h2>
 	<Card>
 		<div>
 			<div class="flex flex-wrap items-center gap-3">

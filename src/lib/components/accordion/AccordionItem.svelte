@@ -1,3 +1,7 @@
+<!--
+@component
+One section of an `Accordion`: its trigger (text or snippet) and its collapsible content.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Accordion } from '@ark-ui/svelte';
@@ -21,12 +25,12 @@
 
 <Accordion.Item
 	{value}
-	class={cn('border-border border-b', className)}
+	class={cn('border-b border-border', className)}
 	data-slot="accordion-item"
 	{...rest}
 >
 	<Accordion.ItemTrigger
-		class="focus-visible:ring-ring flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 [&[data-state=open]>svg]:rotate-180"
+		class="flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary [&[data-state=open]>svg]:rotate-180"
 		data-slot="accordion-trigger"
 	>
 		{#if typeof trigger === 'string'}
@@ -39,7 +43,7 @@
 		</Accordion.ItemIndicator>
 	</Accordion.ItemTrigger>
 	<Accordion.ItemContent
-		class="data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up overflow-hidden text-sm"
+		class="overflow-hidden text-sm data-[state=closed]:animate-slide-up data-[state=open]:animate-slide-down"
 		data-slot="accordion-content"
 	>
 		<div class="pt-0 pb-4">

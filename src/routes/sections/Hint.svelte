@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Hint. Live examples of the Hint component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Hint } from '$lib/components/hint';
@@ -5,8 +9,6 @@
 </script>
 
 <section id="hint">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Hint</h2>
 	<Card>
 		<div>
 			<form class="space-y-2">

@@ -428,10 +428,10 @@ Slideshow with prev/next controls and indicator dots. Each slide is a Snippet.
 </script>
 
 {#snippet slide1()}
-	<div class="flex h-40 items-center justify-center rounded-lg bg-blue-100">Slide 1</div>
+	<div class="bg-blue-100 flex h-40 items-center justify-center rounded-lg">Slide 1</div>
 {/snippet}
 {#snippet slide2()}
-	<div class="flex h-40 items-center justify-center rounded-lg bg-green-100">Slide 2</div>
+	<div class="bg-green-100 flex h-40 items-center justify-center rounded-lg">Slide 2</div>
 {/snippet}
 
 <Carousel slides={[slide1, slide2]} />

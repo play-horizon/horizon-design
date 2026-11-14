@@ -1,3 +1,7 @@
+<!--
+@component
+A ring that fills with progress, with an optional value in its centre.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -49,7 +53,7 @@
 				r={radius}
 				fill="none"
 				stroke-width={strokeWidth}
-				class="stroke-secondary"
+				class="stroke-surface"
 			/>
 			<circle
 				cx={size / 2}
@@ -68,7 +72,7 @@
 				{@render children()}
 			{:else if showLabel}
 				<span
-					class="text-foreground text-xs font-semibold tabular-nums"
+					class="text-xs font-semibold text-fg tabular-nums"
 					data-slot="circular-progress-label"
 				>
 					{percentage}%
@@ -77,6 +81,6 @@
 		</div>
 	</div>
 	{#if label}
-		<span class="text-muted-foreground text-xs">{label}</span>
+		<span class="text-xs text-muted">{label}</span>
 	{/if}
 </div>

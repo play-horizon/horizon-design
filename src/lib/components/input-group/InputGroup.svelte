@@ -1,3 +1,7 @@
+<!--
+@component
+An input with addons attached to its sides.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';

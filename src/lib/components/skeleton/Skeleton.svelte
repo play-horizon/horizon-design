@@ -1,3 +1,7 @@
+<!--
+@component
+A placeholder block that pulses while content loads (pages show skeletons, not spinners).
+-->
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
@@ -11,7 +15,7 @@
 </script>
 
 <div
-	class={cn('bg-muted animate-pulse rounded-md [animation-duration:2s]', className)}
+	class={cn('animate-pulse rounded-md bg-hover [animation-duration:2s]', className)}
 	data-slot="skeleton"
 	{...rest}
 ></div>

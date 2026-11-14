@@ -1,3 +1,7 @@
+<!--
+@component
+A toggle with a tooltip that names it.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Tooltip } from '@ark-ui/svelte';
@@ -21,7 +25,7 @@
 <Tooltip.Root openDelay={0} closeDelay={0} positioning={{ placement: side }} {...rest}>
 	<Tooltip.Trigger
 		class={cn(
-			'text-muted-foreground hover:bg-accent hover:text-accent-foreground data-[state=on]:bg-accent data-[state=on]:text-accent-foreground relative inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent p-2 transition-all',
+			'relative inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent p-2 text-muted transition-all hover:bg-hover hover:text-fg data-[state=on]:bg-hover data-[state=on]:text-fg',
 			className
 		)}
 		data-slot="toggle-tooltip"
@@ -31,7 +35,7 @@
 	{#if label}
 		<Tooltip.Positioner>
 			<Tooltip.Content
-				class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 rounded-md border px-2.5 py-1 text-xs font-medium shadow-md backdrop-blur-xl"
+				class="z-50 rounded-md border border-border bg-raised px-2.5 py-1 text-xs font-medium text-fg shadow-md data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
 			>
 				{label}
 			</Tooltip.Content>

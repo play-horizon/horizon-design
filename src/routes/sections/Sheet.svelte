@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Sheet. Live examples of the Sheet component.
+-->
 <script lang="ts">
 	import { buttonVariants } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -6,20 +10,19 @@
 </script>
 
 <section id="sheet">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Sheet</h2>
 	<Card>
 		<Sheet
+			closeLabel="Close"
 			title="Bottom Sheet"
 			description="Slides up from the bottom of the screen."
 			side="bottom"
-			triggerClass={buttonVariants({ variant: 'outline' })}
+			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
 				<MingcuteDownLine class="size-4" />
 				Open Sheet (bottom)
 			{/snippet}
-			<p class="text-muted-foreground text-sm">Great for mobile-style action panels.</p>
+			<p class="text-sm text-muted">Great for mobile-style action panels.</p>
 		</Sheet>
 	</Card>
 </section>

@@ -1,3 +1,8 @@
+<!--
+@component
+A panel that floats over the window and can be dragged and resized (Ark FloatingPanel);
+`closeLabel` names its close button.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { FloatingPanel } from '@ark-ui/svelte';
@@ -10,6 +15,8 @@
 		triggerClass = '',
 		title,
 		children,
+		closeLabel,
+		frosted = false,
 		class: className = '',
 		...rest
 	}: {
@@ -18,6 +25,10 @@
 		title?: string;
 		children?: Snippet;
 		class?: string;
+		/** The close button's accessible name, such as "Close". */
+		closeLabel: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -30,29 +41,31 @@
 		<FloatingPanel.Positioner class="z-80">
 			<FloatingPanel.Content
 				class={cn(
-					'data-[state=open]:animate-zoom-in border-border bg-card w-80 overflow-hidden rounded-xl border shadow-2xl backdrop-blur-xl',
+					'w-80 overflow-hidden rounded-xl border border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=open]:animate-zoom-in',
+					frosted && 'frosted',
 					className
 				)}
 				data-slot="floating-panel-content"
 			>
 				<FloatingPanel.Header
-					class="border-border relative flex items-center justify-between border-b px-4 py-3"
+					class="relative flex items-center justify-between border-b border-border px-4 py-3"
 					data-slot="floating-panel-header"
 				>
 					<FloatingPanel.DragTrigger class="absolute inset-0 cursor-grab active:cursor-grabbing" />
 					{#if title}
 						<FloatingPanel.Title
-							class="text-foreground relative z-10 text-sm font-semibold"
+							class="relative z-10 text-sm font-semibold text-fg"
 							data-slot="floating-panel-title"
 						>
 							{title}
 						</FloatingPanel.Title>
 					{/if}
 					<FloatingPanel.CloseTrigger
-						class="text-muted-foreground hover:bg-accent hover:text-foreground relative z-10 inline-flex size-6 items-center justify-center rounded-md transition-colors"
+						class="relative z-10 inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
+						aria-label={closeLabel}
 						data-slot="floating-panel-close"
 					>
-						<MingcuteCloseLine class="size-3.5" />
+						<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
 					</FloatingPanel.CloseTrigger>
 				</FloatingPanel.Header>
 				{#if children}

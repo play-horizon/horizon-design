@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Prose. Live examples of the Prose component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Prose } from '$lib/components/prose';
 </script>
 
 <section id="prose">
-	<p class="section-tag">Typography</p>
-	<h2 class="mb-6 text-2xl font-bold">Prose</h2>
 	<Card>
 		<Prose>
 			<h2>Release notes</h2>

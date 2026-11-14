@@ -1,3 +1,7 @@
+<!--
+@component
+A group of `SidebarItem`s, with an optional overline label.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -9,6 +13,7 @@
 		...rest
 	}: {
 		class?: string;
+		/** The group's overline label; none when empty. */
 		label?: string;
 		children?: Snippet;
 		[key: string]: unknown;
@@ -17,7 +22,7 @@
 
 <div class={cn('flex flex-col gap-0.5', className)} data-slot="sidebar-section" {...rest}>
 	{#if label}
-		<p class="text-muted-foreground px-2 py-1 text-xs font-semibold tracking-wider uppercase">
+		<p class="px-2.5 pt-3 pb-1 text-2xs font-bold tracking-overline text-faint uppercase">
 			{label}
 		</p>
 	{/if}

@@ -1,3 +1,8 @@
+<!--
+@component
+An inline message (a banner): a neutral, info, success, warning or error tint, an icon, a title
+and a description.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -24,15 +29,15 @@
 		[key: string]: unknown;
 	} = $props();
 
-	const base = 'flex gap-3 items-start p-4 rounded-lg border backdrop-blur-sm shadow-glass';
+	const base = 'flex gap-3 items-start p-4 rounded-lg border inset-shadow-highlight';
 
 	const variants: Record<string, string> = {
-		default: 'bg-muted border-border',
-		info: 'bg-info-subtle-bg border-info-subtle-border',
-		success: 'bg-success-subtle-bg border-success-subtle-border',
-		warning: 'bg-warning-subtle-bg border-warning-subtle-border',
-		error: 'bg-destructive-subtle-bg border-destructive-subtle-border',
-		destructive: 'bg-destructive-subtle-bg border-destructive-subtle-border'
+		default: 'bg-hover border-border',
+		info: 'bg-info-subtle border-info-border',
+		success: 'bg-success-subtle border-success-border',
+		warning: 'bg-warning-subtle border-warning-border',
+		error: 'bg-danger-subtle border-danger-border',
+		destructive: 'bg-danger-subtle border-danger-border'
 	};
 </script>
 

@@ -1,3 +1,8 @@
+<!--
+@component
+A panel that slides in from the edge of the window (Ark Drawer), with a title, content and footer;
+`closeLabel` names its close button.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Drawer } from '@ark-ui/svelte';
@@ -13,6 +18,8 @@
 		children,
 		footer,
 		showClose = true,
+		closeLabel,
+		frosted = false,
 		class: className = '',
 		open = $bindable(false),
 		...rest
@@ -24,6 +31,10 @@
 		children?: Snippet;
 		footer?: Snippet;
 		showClose?: boolean;
+		/** The close button's accessible name, such as "Close". */
+		closeLabel: string;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
 		class?: string;
 		open?: boolean;
 		[key: string]: unknown;
@@ -38,36 +49,35 @@
 	{/if}
 	<Portal>
 		<Drawer.Backdrop
-			class="data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out bg-overlay-bg fixed inset-0 z-60 backdrop-blur-sm"
+			class="fixed inset-0 z-60 bg-scrim data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
 		/>
 		<Drawer.Positioner class="fixed inset-0 z-70 flex justify-end overflow-hidden">
 			<Drawer.Content
 				class={cn(
-					'data-[state=open]:animate-sheet-enter-right data-[state=closed]:animate-sheet-exit-right border-border bg-card flex h-full w-full max-w-sm flex-col border-l shadow-2xl',
+					'flex h-full w-full max-w-sm flex-col border-l border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=closed]:animate-sheet-exit-right data-[state=open]:animate-sheet-enter-right',
+					frosted && 'frosted',
 					className
 				)}
 				data-slot="drawer-content"
 			>
 				{#if showClose}
 					<Drawer.CloseTrigger
-						class="text-muted-foreground hover:text-foreground hover:bg-accent absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-md transition-colors"
+						class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+						aria-label={closeLabel}
 						data-slot="drawer-close"
 					>
-						<MingcuteCloseLine class="size-4" />
+						<MingcuteCloseLine class="size-4" aria-hidden="true" />
 					</Drawer.CloseTrigger>
 				{/if}
 				{#if title || description}
 					<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
 						{#if title}
-							<h2
-								class="text-lg leading-none font-semibold tracking-tight"
-								data-slot="drawer-title"
-							>
+							<h2 class="text-[1.0625rem] font-bold" data-slot="drawer-title">
 								{title}
 							</h2>
 						{/if}
 						{#if description}
-							<p class="text-muted-foreground text-sm" data-slot="drawer-description">
+							<p class="text-sm text-muted" data-slot="drawer-description">
 								{description}
 							</p>
 						{/if}

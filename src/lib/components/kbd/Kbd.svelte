@@ -1,3 +1,7 @@
+<!--
+@component
+A keyboard key or shortcut, such as `Ctrl K`, drawn as a raised key.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -15,7 +19,7 @@
 
 <kbd
 	class={cn(
-		'border-border bg-muted text-muted-foreground inline-flex items-center justify-center rounded border px-1.5 py-0.5 font-mono text-xs font-medium shadow-sm',
+		'inline-flex items-center rounded-sm border border-b-2 border-border-strong bg-surface px-1.25 py-0.75 font-mono text-2xs leading-none whitespace-nowrap text-muted',
 		className
 	)}
 	data-slot="kbd"

@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Menu. Live examples of the Menu component.
+-->
 <script lang="ts">
 	import { buttonVariants } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -10,10 +14,8 @@
 </script>
 
 <section id="menu">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Menu</h2>
 	<Card>
-		<Menu triggerClass={buttonVariants({ variant: 'outline' })}>
+		<Menu triggerClass={buttonVariants({ variant: 'default' })}>
 			{#snippet trigger()}
 				<MingcuteMore2Line class="size-4" />
 				Open Menu

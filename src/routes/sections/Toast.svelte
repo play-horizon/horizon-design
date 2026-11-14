@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Toast. Live examples of the Toast component.
+-->
 <script lang="ts">
 	import { Button } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -20,35 +24,33 @@
 	}
 </script>
 
-<Toaster {toaster} />
+<Toaster {toaster} closeLabel="Close" />
 
 <section id="toast">
-	<p class="section-tag">Feedback</p>
-	<h2 class="mb-6 text-2xl font-bold">Toast</h2>
 	<Card>
 		<div>
 			<div class="flex flex-wrap gap-3">
-				<Button variant="outline" onclick={() => showToast('info')}>
+				<Button variant="default" onclick={() => showToast('info')}>
 					<MingcuteInformationLine class="size-4" />
 					Info Toast
 				</Button>
 				<Button
-					variant="outline"
-					class="text-success hover:bg-success-subtle-bg border-success-ring"
+					variant="default"
+					class="border-success/40 text-success hover:bg-success-subtle"
 					onclick={() => showToast('success')}
 				>
 					<MingcuteCheckCircleLine class="size-4" />
 					Success Toast
 				</Button>
 				<Button
-					variant="outline"
-					class="text-warning hover:bg-warning-subtle-bg border-warning-ring"
+					variant="default"
+					class="border-warning/40 text-warning hover:bg-warning-subtle"
 					onclick={() => showToast('warning')}
 				>
 					<MingcuteAlertLine class="size-4" />
 					Warning Toast
 				</Button>
-				<Button variant="destructive" onclick={() => showToast('error')}>
+				<Button variant="danger" onclick={() => showToast('error')}>
 					<MingcuteCloseCircleLine class="size-4" />
 					Error Toast
 				</Button>

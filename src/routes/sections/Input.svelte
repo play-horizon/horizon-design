@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Input. Live examples of the Input component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Field } from '$lib/components/field';
@@ -5,8 +9,6 @@
 </script>
 
 <section id="input">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Input</h2>
 	<Card>
 		<div class="space-y-4">
 			<Field label="Username" helperText="Must be 3–20 characters, letters and numbers.">

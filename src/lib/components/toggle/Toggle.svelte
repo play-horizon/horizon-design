@@ -1,3 +1,7 @@
+<!--
+@component
+A button that stays pressed or not (Ark Toggle).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Toggle } from '@ark-ui/svelte';
@@ -28,11 +32,11 @@
 
 <Toggle.Root
 	class={cn(
-		'focus-visible:ring-ring text-muted-foreground inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
+		'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium text-muted transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
 		variant === 'default' &&
-			'hover:bg-muted-surface-active hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground bg-transparent',
+			'bg-transparent hover:bg-active hover:text-fg data-[state=on]:bg-primary data-[state=on]:text-on-primary',
 		variant === 'outline' &&
-			'border-border hover:bg-muted-surface-active hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary-border-active border bg-transparent',
+			'border border-border bg-transparent hover:bg-active hover:text-fg data-[state=on]:border-primary/50 data-[state=on]:bg-primary data-[state=on]:text-on-primary',
 		sizes[size],
 		className
 	)}

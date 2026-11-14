@@ -1,0 +1,9 @@
+/* The frosted surface: a translucent raised fill with a backdrop blur, for overlays only (the
+   `frosted` prop of Dialog, Sheet, Drawer, Popover, Menu, HoverCard, FloatingPanel and
+   CommandPalette). Nothing is blurred by default: a full-surface backdrop-filter costs GPU time
+   next to a running game viewport. */
+
+@utility frosted {
+	background-color: color-mix(in oklab, var(--raised) 82%, transparent);
+	backdrop-filter: blur(16px) saturate(1.4);
+}

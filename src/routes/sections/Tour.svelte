@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Tour. Live examples of the Tour component.
+-->
 <script lang="ts">
 	import { Button } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -5,17 +9,14 @@
 </script>
 
 <section id="tour">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Tour</h2>
 	<Card>
 		<div class="flex flex-col gap-3">
-			<p class="text-muted-foreground text-sm">
-				A guided product tour with spotlight and step navigation.
-			</p>
+			<p class="text-sm text-muted">A guided product tour with spotlight and step navigation.</p>
 			{#snippet tourTrigger(start: () => void)}
 				<Button onclick={start}>Start Tour</Button>
 			{/snippet}
 			<Tour
+				closeLabel="Close"
 				trigger={tourTrigger}
 				steps={[
 					{

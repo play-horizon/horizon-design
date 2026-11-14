@@ -1,6 +1,10 @@
+<!--
+@component
+Docs: HorizonLayout. Live examples of the HorizonLayout component.
+-->
 <script lang="ts">
 	import { Alert } from '$lib/components/alert';
-	import { Avatar, AvatarGroup } from '$lib/components/avatar';
+	import { AvatarStack } from '$lib/components/avatar-stack';
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -19,7 +23,7 @@
 	import MingcuteSettings2Line from '~icons/mingcute/settings-2-line';
 	import MingcuteStarLine from '~icons/mingcute/star-line';
 	import { SvelteMap } from 'svelte/reactivity';
-	import HorizonLayout from '$lib/components/horizon-layout/HorizonLayout.svelte';
+	import HorizonLayout from '$lib/editor/horizon-layout/HorizonLayout.svelte';
 	import type { LayoutConfig, Id, View } from 'horizon-layout';
 
 	let layoutConfig: LayoutConfig = $state({
@@ -51,7 +55,7 @@
 {#snippet layoutMaximizeBtn(activeViewId: Id)}
 	{#if layoutConfig.maximizedView !== activeViewId}
 		<button
-			class="text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex size-6 items-center justify-center rounded-md transition-colors"
+			class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
 			onclick={() => (layoutConfig.maximizedView = activeViewId)}
 			title="Maximize"
 		>
@@ -63,24 +67,19 @@
 {#snippet layoutControlsPanel()}
 	<div class="h-full space-y-5 overflow-auto p-4">
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Variants
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Variants</p>
 			<div class="flex flex-wrap gap-2">
 				<Button size="sm">Default</Button>
-				<Button variant="outline" size="sm">Outline</Button>
-				<Button variant="secondary" size="sm">Secondary</Button>
+				<Button variant="default" size="sm">Outline</Button>
+				<Button variant="default" size="sm">Secondary</Button>
 				<Button variant="ghost" size="sm">Ghost</Button>
-				<Button variant="destructive" size="sm">Destructive</Button>
+				<Button variant="danger" size="sm">Destructive</Button>
 				<Button variant="link" size="sm">Link</Button>
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Sizes
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Sizes</p>
 			<div class="flex flex-wrap items-center gap-2">
-				<Button size="xl">XL</Button>
 				<Button size="lg">LG</Button>
 				<Button size="md">MD</Button>
 				<Button size="sm">SM</Button>
@@ -88,14 +87,14 @@
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
 				Icon buttons
 			</p>
 			<div class="flex flex-wrap items-center gap-2">
 				<Button size="icon-md"><MingcuteStarLine /></Button>
-				<Button variant="outline" size="icon-md"><MingcuteHeartLine /></Button>
+				<Button variant="default" size="icon-md"><MingcuteHeartLine /></Button>
 				<Button variant="ghost" size="icon-md"><MingcuteSettings2Line /></Button>
-				<Button variant="secondary" size="icon-md"><MingcuteDownloadLine /></Button>
+				<Button variant="default" size="icon-md"><MingcuteDownloadLine /></Button>
 			</div>
 		</div>
 	</div>
@@ -104,7 +103,7 @@
 {#snippet layoutInputsPanel()}
 	<div class="h-full space-y-3 overflow-auto p-4">
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
 				Text inputs
 			</p>
 			<div class="space-y-2">
@@ -114,9 +113,7 @@
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Select
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Select</p>
 			<NativeSelect>
 				<option>Svelte</option>
 				<option>React</option>
@@ -125,7 +122,7 @@
 			</NativeSelect>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
 				Toggle controls
 			</p>
 			<div class="flex flex-col gap-2">
@@ -139,43 +136,39 @@
 {#snippet layoutVisualPanel()}
 	<div class="h-full space-y-4 overflow-auto p-4">
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Badges
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Badges</p>
 			<div class="flex flex-wrap gap-1.5">
 				<Badge>Default</Badge>
-				<Badge variant="outline">Outline</Badge>
+				<Badge variant="neutral">Outline</Badge>
 				<Badge variant="success">Success</Badge>
 				<Badge variant="warning">Warning</Badge>
 				<Badge variant="info">Info</Badge>
-				<Badge variant="destructive">Error</Badge>
+				<Badge variant="danger">Error</Badge>
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Avatars
-			</p>
-			<AvatarGroup>
-				{#each ['RK', 'JD', 'AM', 'SL'] as initials (initials)}
-					<Avatar size="sm" fallback={initials} class="ring-card ring-2" />
-				{/each}
-			</AvatarGroup>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Avatars</p>
+			<AvatarStack
+				people={['RK', 'JD', 'AM', 'SL'].map((initials) => ({
+					id: initials,
+					name: initials,
+					initials
+				}))}
+				label="Editing now"
+				overflowText={(n) => `+${n}`}
+			/>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Status
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Status</p>
 			<div class="flex flex-wrap gap-3">
-				<div class="flex items-center gap-1.5 text-xs"><Status status="online" />Online</div>
-				<div class="flex items-center gap-1.5 text-xs"><Status status="away" />Away</div>
-				<div class="flex items-center gap-1.5 text-xs"><Status status="busy" />Busy</div>
-				<div class="flex items-center gap-1.5 text-xs"><Status status="offline" />Offline</div>
+				<div class="flex items-center gap-1.5 text-xs"><Status variant="online" />Online</div>
+				<div class="flex items-center gap-1.5 text-xs"><Status variant="away" />Away</div>
+				<div class="flex items-center gap-1.5 text-xs"><Status variant="busy" />Busy</div>
+				<div class="flex items-center gap-1.5 text-xs"><Status variant="offline" />Offline</div>
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Alerts
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Alerts</p>
 			<div class="space-y-2">
 				<Alert variant="info" title="Heads up" description="A short informational note." />
 				<Alert variant="success" title="Changes saved" />
@@ -187,26 +180,24 @@
 {#snippet layoutFeedbackPanel()}
 	<div class="h-full space-y-4 overflow-auto p-4">
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
-				Progress
-			</p>
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Progress</p>
 			<div class="space-y-2">
 				<div class="flex items-center gap-3">
 					<Progress value={72} class="flex-1" />
-					<span class="text-muted-foreground w-7 text-xs tabular-nums">72%</span>
+					<span class="w-7 text-xs text-muted tabular-nums">72%</span>
 				</div>
 				<div class="flex items-center gap-3">
 					<Progress value={40} class="flex-1" />
-					<span class="text-muted-foreground w-7 text-xs tabular-nums">40%</span>
+					<span class="w-7 text-xs text-muted tabular-nums">40%</span>
 				</div>
 				<div class="flex items-center gap-3">
 					<Progress value={91} class="flex-1" />
-					<span class="text-muted-foreground w-7 text-xs tabular-nums">91%</span>
+					<span class="w-7 text-xs text-muted tabular-nums">91%</span>
 				</div>
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
 				Loading states
 			</p>
 			<div class="flex flex-wrap items-center gap-3">
@@ -217,7 +208,7 @@
 			</div>
 		</div>
 		<div>
-			<p class="text-muted-foreground mb-2.5 text-[11px] font-semibold tracking-widest uppercase">
+			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
 				Circular progress
 			</p>
 			<div class="flex items-center gap-4">
@@ -229,14 +220,13 @@
 {/snippet}
 
 <section id="horizon-layout">
-	<p class="section-tag">Layout</p>
-	<h2 class="mb-2 text-2xl font-bold">Horizon Layout</h2>
-	<p class="text-muted-foreground mb-6 text-sm">
+	<p class="mb-6 text-sm text-muted">
 		Drag tabs between panes, resize splits, and pop views out into separate windows.
 	</p>
 	<Card class="overflow-hidden p-0">
 		<div class="h-120">
 			<HorizonLayout
+				restoreLabel="Restore view"
 				bind:config={layoutConfig}
 				views={layoutViews}
 				tabgroupControls={[layoutMaximizeBtn]}

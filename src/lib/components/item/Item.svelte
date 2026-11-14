@@ -1,3 +1,7 @@
+<!--
+@component
+A row of a list: media, a title, a description and actions.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
@@ -15,7 +19,7 @@
 
 <div
 	class={cn(
-		'hover:bg-accent flex items-center gap-3 rounded-lg px-3 py-2 transition-colors',
+		'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-hover',
 		className
 	)}
 	data-slot="item"

@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Tooltip. Live examples of the Tooltip component.
+-->
 <script lang="ts">
 	import { buttonVariants } from '$lib/components/button';
 	import { Card } from '$lib/components/card';
@@ -6,12 +10,10 @@
 </script>
 
 <section id="tooltip">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Tooltip</h2>
 	<Card>
 		<Tooltip
 			content="Tooltips provide helpful context on hover."
-			triggerClass={buttonVariants({ variant: 'outline' })}
+			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			<MingcuteInformationLine class="size-4" />
 			Hover Tooltip

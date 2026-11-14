@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Skeleton. Live examples of the Skeleton component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Skeleton } from '$lib/components/skeleton';
 </script>
 
 <section id="skeleton">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Skeleton</h2>
 	<Card>
 		<div>
 			<div class="grid gap-6 sm:grid-cols-2">

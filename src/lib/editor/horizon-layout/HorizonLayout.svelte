@@ -1,3 +1,8 @@
+<!--
+@component
+The Editor window's docking layout: horizon-layout styled with horizon-design, with a button that
+restores a maximised view (`restoreLabel`).
+-->
 <script lang="ts">
 	import { HorizonLayout as HL } from 'horizon-layout';
 	import type { LayoutConfig, View, Id, KeyboardControls } from 'horizon-layout';
@@ -5,11 +10,12 @@
 	import MingcuteRestoreLine from '~icons/mingcute/restore-line';
 	import './horizon-layout.css';
 	import type { Snippet } from 'svelte';
-	import Button from '../button/Button.svelte';
+	import Button from '../../components/button/Button.svelte';
 
 	let {
 		config = $bindable(),
 		restoreButton,
+		restoreLabel,
 		...rest
 	}: {
 		/** The layout configuration. Bind this to keep it in sync with user interactions. */
@@ -53,7 +59,10 @@
 		 * the redundant check.
 		 */
 		skipValidation?: boolean;
+		/** Replaces the button that restores a maximised view. */
 		restoreButton?: Snippet<[Id]>;
+		/** The restore button's accessible name, such as "Restore view". */
+		restoreLabel: string;
 	} = $props();
 </script>
 
@@ -62,17 +71,17 @@
 
 	{#if config.maximizedView !== undefined}
 		{#if restoreButton}
-			{restoreButton(config.maximizedView)}
+			{@render restoreButton(config.maximizedView)}
 		{:else}
 			<Button
-				variant="outline"
+				variant="default"
 				size="icon-xs"
 				onclick={() => (config.maximizedView = undefined)}
-				aria-label="Restore view"
+				aria-label={restoreLabel}
 				class="absolute top-1 right-1"
 			>
-				<MingcuteRestoreLine class="size-3" /></Button
-			>
+				<MingcuteRestoreLine aria-hidden="true" />
+			</Button>
 		{/if}
 	{/if}
 </div>

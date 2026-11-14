@@ -1,3 +1,7 @@
+<!--
+@component
+A divider between groups of a `Menu`.
+-->
 <script lang="ts">
 	import { Menu } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
@@ -12,7 +16,7 @@
 </script>
 
 <Menu.Separator
-	class={cn('bg-border -mx-1 my-1 h-px', className)}
+	class={cn('-mx-1 my-1 h-px bg-border', className)}
 	data-slot="menu-separator"
 	{...rest}
 />

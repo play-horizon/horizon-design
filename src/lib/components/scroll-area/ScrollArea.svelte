@@ -1,3 +1,7 @@
+<!--
+@component
+A scrolling region with thin, themed scrollbars (Ark ScrollArea).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ScrollArea } from '@ark-ui/svelte';
@@ -15,24 +19,19 @@
 		[key: string]: unknown;
 	} = $props();
 
-	let contentEl = $state<HTMLElement | null>(null);
 	let hasOverflow = $state(false);
 
-	$effect(() => {
-		if (!contentEl) return;
-		const viewport = contentEl.parentElement as HTMLElement;
-
-		const check = () => {
-			hasOverflow = contentEl!.offsetHeight > viewport.clientHeight;
-		};
-
-		const ro = new ResizeObserver(check);
-		ro.observe(contentEl);
-		ro.observe(viewport);
+	/** Shows the scrollbar only while the content is taller than the viewport. */
+	function observeOverflow(content: HTMLElement) {
+		const viewport = content.parentElement;
+		if (!viewport) return;
+		const check = () => (hasOverflow = content.offsetHeight > viewport.clientHeight);
+		const observer = new ResizeObserver(check);
+		observer.observe(content);
+		observer.observe(viewport);
 		check();
-
-		return () => ro.disconnect();
-	});
+		return () => observer.disconnect();
+	}
 </script>
 
 <ScrollArea.Root
@@ -43,7 +42,7 @@
 	<ScrollArea.Viewport
 		class="size-full scrollbar-none rounded-[inherit] [&::-webkit-scrollbar]:hidden"
 	>
-		<div class={cn('size-full', innerClass)} bind:this={contentEl}>
+		<div class={cn('size-full', innerClass)} {@attach observeOverflow}>
 			{@render children?.()}
 		</div>
 	</ScrollArea.Viewport>
@@ -55,7 +54,7 @@
 		)}
 	>
 		<ScrollArea.Thumb
-			class="bg-border hover:bg-scroll-thumb group-data-scrolling/scrollbar:bg-scroll-thumb-hover group-data-dragging/scrollbar:bg-scroll-thumb-active relative flex-1 rounded-full transition-colors"
+			class="relative flex-1 rounded-full bg-border transition-colors group-data-dragging/scrollbar:bg-muted group-data-scrolling/scrollbar:bg-faint hover:bg-border-strong"
 		/>
 	</ScrollArea.Scrollbar>
 	<ScrollArea.Corner />

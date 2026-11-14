@@ -1,3 +1,7 @@
+<!--
+@component
+A checkbox with its label (Ark Checkbox); `checked` binds true, false or indeterminate.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Checkbox } from '@ark-ui/svelte';
@@ -43,7 +47,7 @@
 >
 	<Checkbox.Control
 		class={cn(
-			'peer focus-visible:ring-ring bg-input border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground shrink-0 border shadow-sm transition-colors outline-none focus-visible:ring-2',
+			'peer shrink-0 border border-border bg-sunken shadow-sm transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-on-primary',
 			sz.control
 		)}
 	>

@@ -1,3 +1,7 @@
+<!--
+@component
+Positions an element at a corner or an edge of its parent, such as a badge on an icon.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';

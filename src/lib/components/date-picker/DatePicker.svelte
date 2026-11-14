@@ -1,3 +1,8 @@
+<!--
+@component
+A date field with a calendar popover (Ark DatePicker); `placeholder` and Ark `translations` are
+passed in.
+-->
 <script lang="ts">
 	import { DatePicker } from '@ark-ui/svelte';
 	import type { DateValue } from '@ark-ui/svelte/date-picker';
@@ -9,22 +14,23 @@
 	let {
 		class: className = '',
 		label = '',
-		placeholder = 'Pick a date',
+		placeholder = '',
 		value = $bindable(undefined),
 		...rest
 	}: {
 		class?: string;
 		label?: string;
+		/** The text shown while no date is chosen. */
 		placeholder?: string;
 		value?: DateValue[];
 		[key: string]: unknown;
 	} = $props();
 
 	const cellClass =
-		'flex size-8 items-center justify-center rounded-lg text-sm transition-colors hover:bg-accent data-today:font-semibold data-selected:bg-primary data-selected:text-primary-foreground data-outside-range:opacity-30 data-disabled:pointer-events-none data-disabled:opacity-30';
+		'flex size-8 items-center justify-center rounded-lg text-sm transition-colors hover:bg-hover data-today:font-semibold data-selected:bg-primary data-selected:text-on-primary data-outside-range:opacity-30 data-disabled:pointer-events-none data-disabled:opacity-30';
 
 	const navBtnClass =
-		'inline-flex items-center justify-center size-7 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors';
+		'inline-flex items-center justify-center size-7 rounded-lg text-muted hover:bg-hover hover:text-fg transition-colors';
 </script>
 
 <DatePicker.Root
@@ -35,22 +41,22 @@
 	{...rest}
 >
 	{#if label}
-		<DatePicker.Label class="text-foreground text-sm font-medium">{label}</DatePicker.Label>
+		<DatePicker.Label class="text-sm font-medium text-fg">{label}</DatePicker.Label>
 	{/if}
 	<DatePicker.Control class="relative flex items-center">
 		<DatePicker.Input
-			class="border-border bg-input text-foreground focus-visible:ring-ring focus-visible:border-primary placeholder:text-muted-foreground flex h-8 w-full rounded-lg border px-3 py-1 pr-9 text-sm shadow-sm outline-none focus-visible:ring-2"
+			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 pr-9 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
 			{placeholder}
 		/>
 		<DatePicker.Trigger
-			class="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 transition-colors"
+			class="absolute top-1/2 right-2 -translate-y-1/2 text-muted transition-colors hover:text-fg"
 		>
 			<MingcuteCalendarLine class="size-4" />
 		</DatePicker.Trigger>
 	</DatePicker.Control>
 	<DatePicker.Positioner>
 		<DatePicker.Content
-			class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover z-50 w-fit rounded-xl border p-3 shadow-xl backdrop-blur-xl outline-none"
+			class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
 			data-slot="date-picker-content"
 		>
 			<DatePicker.View view="day">
@@ -59,7 +65,7 @@
 						<MingcuteLeftLine class="size-4" />
 					</DatePicker.PrevTrigger>
 					<DatePicker.ViewTrigger
-						class="text-foreground hover:text-primary text-sm font-medium transition-colors"
+						class="text-sm font-medium text-fg transition-colors hover:text-primary"
 					>
 						<DatePicker.RangeText />
 					</DatePicker.ViewTrigger>
@@ -74,7 +80,7 @@
 								<DatePicker.TableRow>
 									{#each api().weekDays as weekDay, i (i)}
 										<DatePicker.TableHeader
-											class="text-muted-foreground h-8 w-8 pb-2 text-center text-xs font-medium"
+											class="h-8 w-8 pb-2 text-center text-xs font-medium text-muted"
 										>
 											{weekDay.short}
 										</DatePicker.TableHeader>
@@ -105,7 +111,7 @@
 						<MingcuteLeftLine class="size-4" />
 					</DatePicker.PrevTrigger>
 					<DatePicker.ViewTrigger
-						class="text-foreground hover:text-primary text-sm font-medium transition-colors"
+						class="text-sm font-medium text-fg transition-colors hover:text-primary"
 					>
 						<DatePicker.RangeText />
 					</DatePicker.ViewTrigger>
@@ -140,7 +146,7 @@
 						<MingcuteLeftLine class="size-4" />
 					</DatePicker.PrevTrigger>
 					<DatePicker.ViewTrigger
-						class="text-foreground hover:text-primary text-sm font-medium transition-colors"
+						class="text-sm font-medium text-fg transition-colors hover:text-primary"
 					>
 						<DatePicker.RangeText />
 					</DatePicker.ViewTrigger>

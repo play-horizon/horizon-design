@@ -1,3 +1,7 @@
+<!--
+@component
+One item of a `Marquee`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';

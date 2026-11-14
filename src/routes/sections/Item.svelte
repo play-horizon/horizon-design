@@ -1,3 +1,7 @@
+<!--
+@component
+Docs: Item. Live examples of the Item component.
+-->
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Item } from '$lib/components/item';
@@ -7,20 +11,18 @@
 </script>
 
 <section id="item">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Item</h2>
 	<Card>
 		<div class="flex flex-col gap-0.5">
 			<Item>
-				<MingcuteUser1Line class="text-muted-foreground size-4" />
+				<MingcuteUser1Line class="size-4 text-muted" />
 				<span class="text-sm">Profile</span>
 			</Item>
 			<Item>
-				<MingcuteSettings1Line class="text-muted-foreground size-4" />
+				<MingcuteSettings1Line class="size-4 text-muted" />
 				<span class="text-sm">Settings</span>
 			</Item>
 			<Item>
-				<MingcuteNotificationLine class="text-muted-foreground size-4" />
+				<MingcuteNotificationLine class="size-4 text-muted" />
 				<span class="text-sm">Notifications</span>
 			</Item>
 		</div>
