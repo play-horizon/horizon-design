@@ -47,7 +47,8 @@ library's own `slidePage`, as the apps use it).
 		return new Promise((done) => {
 			slidePage(to > from ? 'forward' : 'backward', async () => {
 				done();
-				await navigation.complete;
+				// A failed or cancelled navigation is SvelteKit's to report; the slide just ends.
+				await navigation.complete.catch(() => {});
 			});
 		});
 	});

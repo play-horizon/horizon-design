@@ -63,7 +63,8 @@ export async function crossfadePage(update: () => void): Promise<void> {
  *   return new Promise((resolve) => {
  *     slidePage(direction, async () => {
  *       resolve();
- *       await navigation.complete;
+ *       // A failed or cancelled navigation is SvelteKit's to report; the slide just ends.
+ *       await navigation.complete.catch(() => {});
  *     });
  *   });
  * });
