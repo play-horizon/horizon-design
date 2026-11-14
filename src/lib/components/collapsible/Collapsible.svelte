@@ -11,7 +11,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 		class: className = '',
 		trigger,
 		children,
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		...rest
 	}: {
@@ -21,7 +21,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 		trigger?: Snippet;
 		/** The content shown while open. */
 		children?: Snippet;
-		/** Whether the content is shown (bindable). */
+		/** Whether the content is shown (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the content is shown or hidden. */
 		onOpenChange?: (details: CollapsibleOpenChangeDetails) => void;

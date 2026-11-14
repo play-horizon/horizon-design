@@ -21,7 +21,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		closeLabel,
 		frosted = false,
 		class: className = '',
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		...rest
 	}: {
@@ -45,7 +45,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		frosted?: boolean;
 		/** Classes merged onto the drawer's panel. */
 		class?: string;
-		/** Whether the drawer is open (bindable). */
+		/** Whether the drawer is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the drawer opens or closes. */
 		onOpenChange?: (details: DrawerOpenChangeDetails) => void;

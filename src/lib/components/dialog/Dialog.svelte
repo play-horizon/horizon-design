@@ -21,7 +21,7 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 		closeLabel,
 		frosted = false,
 		class: className = '',
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		...rest
 	}: {
@@ -45,7 +45,7 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 		frosted?: boolean;
 		/** Classes merged onto the dialog's surface. */
 		class?: string;
-		/** Whether the dialog is open (bindable). */
+		/** Whether the dialog is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the dialog opens or closes. */
 		onOpenChange?: (details: DialogOpenChangeDetails) => void;

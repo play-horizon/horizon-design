@@ -22,7 +22,7 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 		frosted = false,
 		cancelClass = '',
 		actionClass = '',
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		children,
 		...rest
@@ -47,7 +47,7 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 		cancelClass?: string;
 		/** Classes merged onto the confirming button. */
 		actionClass?: string;
-		/** Whether the dialog is open (bindable). */
+		/** Whether the dialog is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the dialog opens or closes. */
 		onOpenChange?: (details: DialogOpenChangeDetails) => void;

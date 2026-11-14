@@ -18,7 +18,7 @@ and corners (Ark FloatingPanel); `closeLabel` names its close button.
 		closeLabel,
 		frosted = false,
 		class: className = '',
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		...rest
 	}: {
@@ -36,7 +36,7 @@ and corners (Ark FloatingPanel); `closeLabel` names its close button.
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
-		/** Whether the panel is open (bindable). */
+		/** Whether the panel is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the panel opens or closes. */
 		onOpenChange?: (details: FloatingPanelOpenChangeDetails) => void;

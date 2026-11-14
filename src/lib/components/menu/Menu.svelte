@@ -14,7 +14,7 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 		children,
 		contentClass = '',
 		frosted = false,
-		open = $bindable(false),
+		open = $bindable(),
 		onOpenChange,
 		...rest
 	}: {
@@ -28,7 +28,7 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 		contentClass?: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
-		/** Whether the menu is open (bindable). */
+		/** Whether the menu is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called with the new state when the menu opens or closes. */
 		onOpenChange?: (details: MenuOpenChangeDetails) => void;
