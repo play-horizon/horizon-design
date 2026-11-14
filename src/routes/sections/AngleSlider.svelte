@@ -10,7 +10,7 @@ Docs: AngleSlider. Live examples of the AngleSlider component.
 <section id="angle-slider">
 	<Card>
 		<div class="flex justify-center">
-			<AngleSlider label="Rotation" defaultValue={45} />
+			<AngleSlider label="Rotation" valueText={(angle) => `${angle}°`} defaultValue={45} />
 		</div>
 	</Card>
 </section>

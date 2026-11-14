@@ -1,7 +1,8 @@
 <!--
 @component
-A circular control that picks an angle in degrees (Ark AngleSlider), from 0 to 360, with the
-angle written under it. `label` is its accessible name; the arrow keys turn it by `step`.
+A circular control that picks an angle in degrees (Ark AngleSlider), from 0 to 359, with 0 at the
+top and angles growing clockwise, and the angle written under it as `valueText` formats it.
+`label` is its accessible name and `valueText` its spoken value; the arrow keys turn it by `step`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -12,6 +13,7 @@ angle written under it. `label` is its accessible name; the arrow keys turn it b
 		class: className = '',
 		size = 120,
 		label,
+		valueText,
 		step = 1,
 		value = $bindable(),
 		onValueChange,
@@ -24,9 +26,14 @@ angle written under it. `label` is its accessible name; the arrow keys turn it b
 		size?: number;
 		/** The control's accessible name, such as "Rotation", read by assistive technology only. */
 		label: string;
+		/**
+		 * Formats an angle for display and for assistive technology, such as 45 as "45°"; the app
+		 * gives it so the unit goes through its translations.
+		 */
+		valueText: (value: number) => string;
 		/** How many degrees an arrow key turns the dial. */
 		step?: number;
-		/** The angle in degrees (bindable); when unset, `defaultValue` gives the first one. */
+		/** The angle in degrees, 0 to 359 (bindable); when unset, `defaultValue` gives the first one. */
 		value?: number;
 		/** Called with the new angle while the dial turns. */
 		onValueChange?: (details: { value: number }) => void;
@@ -49,26 +56,34 @@ angle written under it. `label` is its accessible name; the arrow keys turn it b
 	{...rest}
 >
 	<AngleSlider.Label class="sr-only">{label}</AngleSlider.Label>
-	<AngleSlider.Control
-		class="relative rounded-full border-2 border-border bg-hover"
-		style="width: {size}px; height: {size}px;"
-	>
-		<AngleSlider.Thumb class="absolute inset-0 cursor-grab rounded-full active:cursor-grabbing">
-			<div
-				class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full"
-			>
-				<div
-					class="absolute h-0.5 origin-left rounded-full bg-primary"
-					style="width: calc({size / 2}px - 12px); left: 50%; top: calc(50% - 1px);"
-				></div>
-				<div class="relative z-10 size-3 rounded-full bg-primary"></div>
-			</div>
-		</AngleSlider.Thumb>
-	</AngleSlider.Control>
 	<AngleSlider.Context>
 		{#snippet render(slider)}
+			{@const text = valueText(slider().value)}
+			<AngleSlider.Control
+				class="relative rounded-full border-2 border-border bg-hover"
+				style="width: {size}px; height: {size}px;"
+			>
+				<!-- Zag announces a maximum of 360, but clamps the angle to 359. -->
+				<AngleSlider.Thumb
+					class="absolute inset-0 cursor-grab rounded-full active:cursor-grabbing"
+					aria-valuemax={359}
+					aria-valuetext={text}
+				>
+					<div
+						class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full"
+					>
+						<!-- Drawn pointing up, at angle 0: the thumb rotates by the angle around the centre. -->
+						<div
+							class="absolute w-0.5 rounded-full bg-primary"
+							data-slot="angle-slider-needle"
+							style="height: calc({size / 2}px - 12px); bottom: 50%; left: calc(50% - 1px);"
+						></div>
+						<div class="relative z-10 size-3 rounded-full bg-primary"></div>
+					</div>
+				</AngleSlider.Thumb>
+			</AngleSlider.Control>
 			<AngleSlider.ValueText class="font-mono text-sm font-medium text-fg tabular-nums">
-				{Math.round(slider().value)}°
+				{text}
 			</AngleSlider.ValueText>
 		{/snippet}
 	</AngleSlider.Context>
