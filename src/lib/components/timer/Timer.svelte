@@ -1,7 +1,8 @@
 <!--
 @component
-A countdown or a stopwatch (Ark Timer): the time as hours, minutes and seconds, and icon buttons
-to start, pause, resume and reset it, named by `labels`. Only the buttons that apply show.
+A countdown or a stopwatch (Ark Timer): the time as hours, minutes and seconds, led by the days
+from one day on (`01:02:00:00`: digits and colons only, so nothing needs translating), and icon
+buttons to start, pause, resume and reset it, named by `labels`. Only the buttons that apply show.
 -->
 <script lang="ts" module>
 	/** The accessible names of the timer's buttons. */
@@ -60,7 +61,14 @@ to start, pause, resume and reset it, named by `labels`. Only the buttons that a
 >
 	<Timer.Context>
 		{#snippet api(timer)}
-			<div class="flex items-center gap-1 font-mono text-3xl font-bold text-fg tabular-nums">
+			<div
+				class="flex items-center gap-1 font-mono text-3xl font-bold text-fg tabular-nums"
+				data-slot="timer-time"
+			>
+				{#if timer().time.days > 0}
+					<span class="rounded-lg bg-hover px-3 py-2">{timer().formattedTime.days}</span>
+					<span class="text-muted">:</span>
+				{/if}
 				<span class="rounded-lg bg-hover px-3 py-2">{timer().formattedTime.hours}</span>
 				<span class="text-muted">:</span>
 				<span class="rounded-lg bg-hover px-3 py-2">{timer().formattedTime.minutes}</span>
