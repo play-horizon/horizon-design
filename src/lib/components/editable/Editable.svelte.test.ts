@@ -1,6 +1,7 @@
 /**
  * Tests of `Editable`: its parts take the accessible names passed in `translations` rather than
- * Ark's English defaults, and the bound value follows the typing alongside `onValueChange`.
+ * Ark's English defaults (the field its `label` when it has one), and the bound value follows the
+ * typing alongside `onValueChange`.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -17,6 +18,21 @@ describe('Editable', () => {
 		expect(preview?.getAttribute('aria-label')).toBe('Edit display name');
 		expect(preview?.textContent).toBe('Sam');
 		expect(input?.getAttribute('aria-label')).toBe('Display name');
+	});
+
+	it('names the field (hidden until edited) by its label, or by its translation', () => {
+		// The name of a hidden field isn't computed by the testing library: read its references.
+		const nameOf = (input: HTMLInputElement | null) => {
+			const labelId = input?.getAttribute('aria-labelledby');
+			const label = labelId ? document.getElementById(labelId) : null;
+			return label?.textContent?.trim() ?? input?.getAttribute('aria-label');
+		};
+		const labelled = render(Editable, { translations, label: 'Name', defaultValue: 'Sam' });
+		expect(nameOf(labelled.container.querySelector('input'))).toBe('Name');
+		labelled.unmount();
+
+		const unlabelled = render(Editable, { translations, defaultValue: 'Sam' });
+		expect(nameOf(unlabelled.container.querySelector('input'))).toBe('Display name');
 	});
 
 	it('updates the bound value and calls onValueChange', async () => {

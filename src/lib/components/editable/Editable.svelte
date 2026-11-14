@@ -1,7 +1,7 @@
 <!--
 @component
 Text that turns into a field when edited, then back (Ark Editable); `translations` name the text
-and the field for assistive technology.
+and, without a visible `label`, the field for assistive technology (a `label` names the field).
 -->
 <script lang="ts">
 	import { Editable, type EditableValueChangeDetails } from '@ark-ui/svelte';
@@ -19,11 +19,12 @@ and the field for assistive technology.
 	}: {
 		/** Classes merged onto the root. */
 		class?: string;
-		/** The visible label above the text. */
+		/** The visible label above the text, which also names the field. */
 		label?: string;
 		/**
-		 * The accessible names Ark gives its parts: `input` the field's while editing (such as
-		 * "Display name"), `edit` the text's before it is edited (such as "Edit display name").
+		 * The accessible names Ark gives its parts: `input` the field's while editing, when there is
+		 * no `label` (such as "Display name"), `edit` the text's before it is edited (such as "Edit
+		 * display name").
 		 */
 		translations: { input: string; edit: string };
 		/** The first value, when `value` is unset. */
