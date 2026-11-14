@@ -113,6 +113,7 @@ export const navGroups: NavGroup[] = [
 			{ id: 'bottom-navigation', label: 'Bottom Navigation' },
 			{ id: 'breadcrumb', label: 'Breadcrumb' },
 			{ id: 'collapsible', label: 'Collapsible' },
+			{ id: 'command-palette', label: 'Command Palette' },
 			{ id: 'link-overlay', label: 'Link Overlay' },
 			{ id: 'pagination', label: 'Pagination' },
 			{ id: 'sidebar', label: 'Sidebar' },

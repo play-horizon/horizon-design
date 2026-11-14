@@ -34,6 +34,7 @@ export * from './components/clipboard';
 export * from './components/collapsible';
 export * from './components/color-picker';
 export * from './components/combobox';
+export * from './components/command-palette';
 export * from './components/context-menu';
 export * from './components/data-list';
 export * from './components/date-picker';
