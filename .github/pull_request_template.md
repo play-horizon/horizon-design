@@ -4,6 +4,7 @@
 
 ## How it was tested
 
-- [ ] `pnpm check`
 - [ ] `pnpm lint`
-- [ ] Checked the showcase in the dark and light themes (`pnpm dev`)
+- [ ] `pnpm check`
+- [ ] `pnpm test`
+- [ ] Checked the docs pages in the dark and light themes (`pnpm dev`)
