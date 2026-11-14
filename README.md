@@ -33,9 +33,12 @@ library into its server build, since its packages have no `exports` map that Nod
 would accept (`vite.config.ts`):
 
 ```ts
-ssr: {
-	noExternal: ['@atlaskit/pragmatic-drag-and-drop', '@atlaskit/pragmatic-drag-and-drop-hitbox'];
-}
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' })],
+	ssr: {
+		noExternal: ['@atlaskit/pragmatic-drag-and-drop', '@atlaskit/pragmatic-drag-and-drop-hitbox']
+	}
+});
 ```
 
 Import the stylesheet after Tailwind, in the app's root CSS:
@@ -186,7 +189,7 @@ gives those names translated. It is required by `Calendar`, `Carousel`, `Clipboa
 `itemLabel`), `PinInput` (`inputLabel`) and `RatingGroup` (`ratingValueText`, `roleDescription`),
 each with the keys it shows; `Calendar`, `Carousel` and `DatePicker` add the roles their parts are
 announced as (`tableRoleDescription`; `roleDescription` and `slideRoleDescription`;
-`contentRoleDescription`). The other Ark components take props of their own instead: `Tour`'s
+`contentRoleDescription` and `tableRoleDescription`). The other Ark components take props of their own instead: `Tour`'s
 `closeLabel` and `progressText`, `Marquee`'s `label` and `roleDescription`, `SignaturePad`'s
 `label`, `roleDescription` and `clearLabel`, `FileUpload`'s `prompt`, `VirtualTree`'s `label` and `rename.label`, `FileTree`'s `label`, `HierarchyView`'s `label` and `renameLabel` and the
 `closeLabel` of `Toaster`, `ToastItem` and `FloatingPanel` replace the names Ark gives in English,
