@@ -1,6 +1,6 @@
 /**
- * Tests of `Tour`: its progress line comes from `progressText`, and each action button is named
- * by its label.
+ * Tests of `Tour`: its progress line comes from `progressText`, each action button is named by
+ * its label, and the tour's own props (such as `onStatusChange`) reach the tour.
  * @module
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -42,6 +42,13 @@ beforeEach(() => {
 	return () => vi.unstubAllGlobals();
 });
 
+const trigger = createRawSnippet((start: () => () => void) => ({
+	render: () => '<button>Start tour</button>',
+	setup: (node) => {
+		node.addEventListener('click', () => start()());
+	}
+}));
+
 describe('Tour', () => {
 	it('shows the translated progress and names the actions by their labels', async () => {
 		const { getByRole, findByRole, findByText } = render(Tour, {
@@ -49,12 +56,7 @@ describe('Tour', () => {
 			closeLabel: 'Close',
 			progressText: ({ current, total }: { current: number; total: number }) =>
 				`Step ${current + 1} / ${total}`,
-			trigger: createRawSnippet((start: () => () => void) => ({
-				render: () => '<button>Start tour</button>',
-				setup: (node) => {
-					node.addEventListener('click', () => start()());
-				}
-			}))
+			trigger
 		});
 		await fireEvent.click(getByRole('button', { name: 'Start tour' }));
 
@@ -63,5 +65,22 @@ describe('Tour', () => {
 		expect(await findByText('Step 2 / 2')).toBeTruthy();
 		expect(getByRole('button', { name: 'Finish' })).toBeTruthy();
 		expect(getByRole('button', { name: 'Close' })).toBeTruthy();
+	});
+
+	it('calls onStatusChange when the tour starts and when it is dismissed', async () => {
+		const onStatusChange = vi.fn();
+		const { getByRole, findByRole } = render(Tour, {
+			steps,
+			closeLabel: 'Close',
+			progressText: () => '',
+			trigger,
+			onStatusChange
+		});
+		await fireEvent.click(getByRole('button', { name: 'Start tour' }));
+		await fireEvent.click(await findByRole('button', { name: 'Close' }));
+		expect(onStatusChange.mock.calls.map(([details]) => details.status)).toEqual([
+			'started',
+			'dismissed'
+		]);
 	});
 });

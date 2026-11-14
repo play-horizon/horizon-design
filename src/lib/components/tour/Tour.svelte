@@ -3,11 +3,13 @@
 A guided tour of the interface, step by step (Ark Tour): each step's title, description, progress
 and action buttons, over a scrim with the step's target spotlit. The app passes the steps and
 their action labels translated, `closeLabel` for the close button and `progressText` for the
-progress line; each action button is named by its label.
+progress line; each action button is named by its label. Every other prop of Ark's `useTour`
+(`onStatusChange`, `onStepChange`, `closeOnInteractOutside`, `keyboardNavigation`…) configures the
+tour.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Tour, Portal, useTour, type TourStepDetails } from '@ark-ui/svelte';
+	import { Tour, Portal, useTour, type TourStepDetails, type UseTourProps } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
@@ -22,8 +24,8 @@ progress line; each action button is named by its label.
 		progressText,
 		lazyMount = true,
 		unmountOnExit = true,
-		...rest
-	}: {
+		...tourProps
+	}: Omit<UseTourProps, 'steps' | 'translations'> & {
 		/** The steps, in order, with their texts and action labels translated. */
 		steps?: TourStepDetails[];
 		/** What starts the tour, such as a button; it receives the function that starts it. */
@@ -40,18 +42,20 @@ progress line; each action button is named by its label.
 		lazyMount?: boolean;
 		/** Removes the tour from the page once it closes. */
 		unmountOnExit?: boolean;
-		/** Other props of Ark's `Tour.Root`. */
-		[key: string]: unknown;
 	} = $props();
 
-	const tour = useTour(() => ({ steps, translations: { close: closeLabel, progressText } }));
+	const tour = useTour(() => ({
+		...tourProps,
+		steps,
+		translations: { close: closeLabel, progressText }
+	}));
 
 	function handleStart() {
 		tour().start();
 	}
 </script>
 
-<Tour.Root {lazyMount} {tour} {unmountOnExit} {...rest}>
+<Tour.Root {lazyMount} {tour} {unmountOnExit}>
 	{#if trigger}
 		{@render trigger(handleStart)}
 	{/if}
