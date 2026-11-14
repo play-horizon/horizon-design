@@ -7,7 +7,9 @@ The trail of pages leading to the current one, each a link but the last; `label`
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 
 	interface BreadcrumbItemConfig {
+		/** The page's name. */
 		label: string;
+		/** The page's link, already resolved by the app; the current page, last, has none. */
 		href?: string;
 	}
 
@@ -17,10 +19,13 @@ The trail of pages leading to the current one, each a link but the last; `label`
 		class: className = '',
 		...rest
 	}: {
+		/** The pages from the first to the current one, which comes last. */
 		items?: BreadcrumbItemConfig[];
 		/** The trail's accessible name, such as "Breadcrumb". */
 		label: string;
+		/** Classes merged onto the trail. */
 		class?: string;
+		/** Other attributes of the trail. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -36,14 +41,18 @@ The trail of pages leading to the current one, each a link but the last; `label`
 						{item.label}
 					</a>
 				{:else}
-					<span class="font-medium text-fg" aria-current="page" data-slot="breadcrumb-page">
+					<span
+						class="font-medium text-fg"
+						aria-current={i === items.length - 1 ? 'page' : undefined}
+						data-slot="breadcrumb-page"
+					>
 						{item.label}
 					</span>
 				{/if}
 			</li>
 			{#if i < items.length - 1}
 				<li class="flex items-center" aria-hidden="true" data-slot="breadcrumb-separator">
-					<MingcuteRightLine class="size-3" />
+					<MingcuteRightLine class="size-3" aria-hidden="true" />
 				</li>
 			{/if}
 		{/each}
