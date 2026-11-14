@@ -1,7 +1,8 @@
 <!--
 @component
 Content that scrolls continuously, pausing while it is hovered or focused (Ark Marquee); `label`
-names the region for assistive technology. Under reduced motion it stays still. Each piece of the
+names the region for assistive technology and `roleDescription` is the role it is announced as.
+Under reduced motion it stays still. Each piece of the
 content is a `MarqueeItem`, which Ark spaces by `spacing`.
 -->
 <script lang="ts">
@@ -12,6 +13,7 @@ content is a `MarqueeItem`, which Ark spaces by `spacing`.
 	let {
 		class: className = '',
 		label,
+		roleDescription,
 		children,
 		...rest
 	}: {
@@ -19,6 +21,8 @@ content is a `MarqueeItem`, which Ark spaces by `spacing`.
 		class?: string;
 		/** The region's accessible name, such as "Featured games". */
 		label: string;
+		/** The role the region is announced as, such as "marquee". */
+		roleDescription: string;
 		/** The `MarqueeItem`s; Ark repeats them so the loop has no gap. */
 		children?: Snippet;
 		/** Other props of Ark's `Marquee.Root`, such as `speed`, `side`, `spacing` or `autoFill`. */
@@ -32,6 +36,7 @@ content is a `MarqueeItem`, which Ark spaces by `spacing`.
 	class={cn('group', className)}
 	data-slot="marquee"
 	translations={{ root: label }}
+	aria-roledescription={roleDescription}
 	pauseOnInteraction
 	{...rest}
 >

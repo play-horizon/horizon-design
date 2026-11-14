@@ -11,7 +11,7 @@ Docs: Marquee. Live examples of the Marquee component.
 <section id="marquee">
 	<Card>
 		<div>
-			<Marquee label="Technologies" class="py-2">
+			<Marquee label="Technologies" roleDescription="marquee" class="py-2">
 				{#each ['Svelte', 'TypeScript', 'Tailwind', 'Ark UI', 'Zag.js', 'OKLCH', 'Vite', 'SvelteKit'] as name (name)}
 					<MarqueeItem class="px-3">
 						<Badge variant="neutral" class="whitespace-nowrap">{name}</Badge>
