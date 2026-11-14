@@ -1,10 +1,10 @@
 <!--
 @component
 A month calendar to pick a date or a range, inline (Ark DatePicker without its field); Ark
-`translations` name its controls.
+`translations`, required, name its controls.
 -->
 <script lang="ts">
-	import { DatePicker } from '@ark-ui/svelte';
+	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
@@ -13,11 +13,29 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 		class: className = '',
 		lazyMount = true,
 		unmountOnExit = true,
+		translations,
 		...rest
 	}: {
+		/** Classes merged onto the calendar. */
 		class?: string;
+		/** Renders the calendar's views only once they are first shown. */
 		lazyMount?: boolean;
+		/** Removes a view when another replaces it. */
 		unmountOnExit?: boolean;
+		/**
+		 * The accessible names Ark gives the controls: each day (`dayCell(state)`, from its
+		 * formatted `valueText`), the previous and next buttons and the view switch (`viewTrigger`).
+		 */
+		translations: Required<
+			Pick<
+				NonNullable<DatePickerRootProps['translations']>,
+				'dayCell' | 'prevTrigger' | 'nextTrigger' | 'viewTrigger'
+			>
+		>;
+		/**
+		 * Other props of Ark's `DatePicker.Root`: `value` and `onValueChange`, `selectionMode`
+		 * (`single`, `multiple` or `range`), `locale`.
+		 */
 		[key: string]: unknown;
 	} = $props();
 
@@ -47,6 +65,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 	inline
 	{lazyMount}
 	{unmountOnExit}
+	{translations}
 	{...rest}
 >
 	<DatePicker.View view="day" class="flex flex-col gap-1" data-slot="calendar-view">
@@ -55,7 +74,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 			data-slot="calendar-view-control"
 		>
 			<DatePicker.PrevTrigger class={navBtnClass} data-slot="calendar-prev-trigger">
-				<MingcuteLeftLine class="size-4" />
+				<MingcuteLeftLine class="size-4" aria-hidden="true" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
 				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
@@ -64,7 +83,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 				<DatePicker.RangeText data-slot="calendar-range-text" />
 			</DatePicker.ViewTrigger>
 			<DatePicker.NextTrigger class={navBtnClass} data-slot="calendar-next-trigger">
-				<MingcuteRightLine class="size-4" />
+				<MingcuteRightLine class="size-4" aria-hidden="true" />
 			</DatePicker.NextTrigger>
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
@@ -72,7 +91,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 				<DatePicker.Table class="group w-full min-w-60 border-collapse" data-slot="calendar-table">
 					<DatePicker.TableHead data-slot="calendar-table-head">
 						<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
-							{#each api().weekDays as weekDay, i (i)}
+							{#each api().weekDays as weekDay (weekDay.long)}
 								<DatePicker.TableHeader
 									class="flex h-(--cell-size) w-full items-center justify-center rounded-lg text-xs font-medium text-faint"
 									data-slot="calendar-table-header"
@@ -83,7 +102,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 						</DatePicker.TableRow>
 					</DatePicker.TableHead>
 					<DatePicker.TableBody data-slot="calendar-table-body">
-						{#each api().weeks as week, i (i)}
+						{#each api().weeks as week (week[0].toString())}
 							<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
 								{#each week as day (day.toString())}
 									<DatePicker.TableCell
@@ -110,7 +129,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 	<DatePicker.View view="month" class="flex flex-col gap-1" data-slot="calendar-month-view">
 		<DatePicker.ViewControl class="relative flex h-auto w-full items-center gap-1.5">
 			<DatePicker.PrevTrigger class={navBtnClass}>
-				<MingcuteLeftLine class="size-4" />
+				<MingcuteLeftLine class="size-4" aria-hidden="true" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
 				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
@@ -118,14 +137,14 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 				<DatePicker.RangeText />
 			</DatePicker.ViewTrigger>
 			<DatePicker.NextTrigger class={navBtnClass}>
-				<MingcuteRightLine class="size-4" />
+				<MingcuteRightLine class="size-4" aria-hidden="true" />
 			</DatePicker.NextTrigger>
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
 			{#snippet render(api)}
 				<DatePicker.Table class="group w-full min-w-60 border-collapse">
 					<DatePicker.TableBody>
-						{#each api().getMonthsGrid() as months, i (i)}
+						{#each api().getMonthsGrid() as months (months[0].value)}
 							<DatePicker.TableRow class="mt-1 flex w-full">
 								{#each months as month (month.value)}
 									<DatePicker.TableCell
@@ -148,7 +167,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 	<DatePicker.View view="year" class="flex flex-col gap-1" data-slot="calendar-year-view">
 		<DatePicker.ViewControl class="relative flex h-auto w-full items-center gap-1.5">
 			<DatePicker.PrevTrigger class={navBtnClass}>
-				<MingcuteLeftLine class="size-4" />
+				<MingcuteLeftLine class="size-4" aria-hidden="true" />
 			</DatePicker.PrevTrigger>
 			<DatePicker.ViewTrigger
 				class="h-8 flex-1 rounded-lg px-2 text-sm font-medium transition-colors hover:bg-hover hover:text-fg"
@@ -156,14 +175,14 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 				<DatePicker.RangeText />
 			</DatePicker.ViewTrigger>
 			<DatePicker.NextTrigger class={navBtnClass}>
-				<MingcuteRightLine class="size-4" />
+				<MingcuteRightLine class="size-4" aria-hidden="true" />
 			</DatePicker.NextTrigger>
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
 			{#snippet render(api)}
 				<DatePicker.Table class="group w-full min-w-60 border-collapse">
 					<DatePicker.TableBody>
-						{#each api().getYearsGrid() as years, i (i)}
+						{#each api().getYearsGrid() as years (years[0].value)}
 							<DatePicker.TableRow class="mt-1 flex w-full">
 								{#each years as year (year.value)}
 									<DatePicker.TableCell

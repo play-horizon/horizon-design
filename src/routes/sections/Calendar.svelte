@@ -10,7 +10,14 @@ Docs: Calendar. Live examples of the Calendar component.
 <section id="calendar">
 	<Card>
 		<div>
-			<Calendar />
+			<Calendar
+				translations={{
+					dayCell: (day) => (day.selected ? `${day.valueText}, chosen` : day.valueText),
+					prevTrigger: (view) => `Previous ${view}`,
+					nextTrigger: (view) => `Next ${view}`,
+					viewTrigger: (_view, nextView) => `Show the ${nextView ?? 'day'} view`
+				}}
+			/>
 		</div>
 	</Card>
 </section>
