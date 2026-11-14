@@ -18,17 +18,17 @@ Docs: Popover. Live examples of the Popover component.
 			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
-				<MingcuteLayout4Line class="size-4" />
+				<MingcuteLayout4Line class="size-4" aria-hidden="true" />
 				Open Popover
 			{/snippet}
 			<div class="grid gap-2 py-2">
 				<div class="grid grid-cols-3 items-center gap-4">
-					<span class="text-sm text-muted">Width</span>
-					<Input class="col-span-2 h-8" value="100px" />
+					<label for="popover-width" class="text-sm text-muted">Width</label>
+					<Input id="popover-width" class="col-span-2 h-8" value="100px" />
 				</div>
-				<div class="grid gap-4">
-					<span class="text-sm text-muted">Height</span>
-					<Input class="col-span-2 h-8" value="auto" />
+				<div class="grid grid-cols-3 items-center gap-4">
+					<label for="popover-height" class="text-sm text-muted">Height</label>
+					<Input id="popover-height" class="col-span-2 h-8" value="auto" />
 				</div>
 			</div>
 		</Popover>
