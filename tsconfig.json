@@ -4,11 +4,6 @@
 	"compilerOptions": {
 		"types": ["$app/types", "unplugin-icons/types/svelte"],
 		"rewriteRelativeImportExtensions": true,
-		"allowJs": true,
-		"checkJs": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true
 	}
