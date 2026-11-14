@@ -1,26 +1,36 @@
 <!--
 @component
-Page links with previous and next (Ark Pagination); Ark `translations` name its controls.
+Page links with previous and next (Ark Pagination). `page` binds the current page; without it,
+Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (`rootLabel`,
+`prevTriggerLabel`, `nextTriggerLabel`, `itemLabel`).
 -->
 <script lang="ts">
-	import { Pagination } from '@ark-ui/svelte';
+	import { Pagination, type PaginationPageChangeDetails } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 
 	let {
 		class: className = '',
-		count = 100,
+		count,
 		pageSize = 10,
 		siblingCount = 1,
-		page = $bindable(1),
+		page = $bindable(),
+		onPageChange,
 		...rest
 	}: {
+		/** Classes added to the row of links. */
 		class?: string;
-		count?: number;
+		/** How many items there are in all, across every page. */
+		count: number;
+		/** How many items one page holds. */
 		pageSize?: number;
+		/** How many page links show on each side of the current one. */
 		siblingCount?: number;
+		/** The current page, from 1. */
 		page?: number;
+		/** Called on every change of page, after `page` is updated. */
+		onPageChange?: (details: PaginationPageChangeDetails) => void;
 		[key: string]: unknown;
 	} = $props();
 
@@ -33,7 +43,10 @@ Page links with previous and next (Ark Pagination); Ark `translations` name its 
 	{pageSize}
 	{siblingCount}
 	{page}
-	onPageChange={(details) => (page = details.page)}
+	onPageChange={(details) => {
+		page = details.page;
+		onPageChange?.(details);
+	}}
 	class={cn('flex items-center gap-1', className)}
 	data-slot="pagination"
 	{...rest}
@@ -41,17 +54,17 @@ Page links with previous and next (Ark Pagination); Ark `translations` name its 
 	<Pagination.Context>
 		{#snippet render(api)}
 			<Pagination.PrevTrigger class={cn(buttonClass, 'text-muted')}>
-				<MingcuteLeftLine class="size-4" />
+				<MingcuteLeftLine class="size-4" aria-hidden="true" />
 			</Pagination.PrevTrigger>
 
-			{#each api().pages as page, pageIndex (pageIndex)}
-				{#if page.type === 'page'}
-					<Pagination.Item value={page.value} type={page.type} class={buttonClass}>
-						{page.value}
+			{#each api().pages as item, index (item.type === 'page' ? item.value : `ellipsis-${index}`)}
+				{#if item.type === 'page'}
+					<Pagination.Item value={item.value} type={item.type} class={buttonClass}>
+						{item.value}
 					</Pagination.Item>
 				{:else}
 					<Pagination.Ellipsis
-						index={pageIndex}
+						{index}
 						class="flex size-8 items-center justify-center text-sm text-muted"
 					>
 						&#8230;
@@ -60,7 +73,7 @@ Page links with previous and next (Ark Pagination); Ark `translations` name its 
 			{/each}
 
 			<Pagination.NextTrigger class={cn(buttonClass, 'text-muted')}>
-				<MingcuteRightLine class="size-4" />
+				<MingcuteRightLine class="size-4" aria-hidden="true" />
 			</Pagination.NextTrigger>
 		{/snippet}
 	</Pagination.Context>

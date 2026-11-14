@@ -13,8 +13,11 @@ One page link of a `Pagination`.
 		value,
 		...rest
 	}: {
+		/** Classes added to the link. */
 		class?: string;
+		/** The link's content, usually the page number. */
 		children?: Snippet;
+		/** The page the link leads to, from 1. */
 		value: number;
 		[key: string]: unknown;
 	} = $props();

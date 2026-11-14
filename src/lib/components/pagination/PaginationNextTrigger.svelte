@@ -12,7 +12,9 @@ The next-page button of a `Pagination`.
 		children,
 		...rest
 	}: {
+		/** Classes added to the button. */
 		class?: string;
+		/** The button's content, such as an arrow icon (with `aria-hidden`). */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();

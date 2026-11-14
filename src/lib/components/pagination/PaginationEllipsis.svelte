@@ -13,8 +13,11 @@ The ellipsis between page links of a `Pagination`.
 		index,
 		...rest
 	}: {
+		/** Classes added to the ellipsis. */
 		class?: string;
+		/** What shows instead of the default `…`. */
 		children?: Snippet;
+		/** The ellipsis's position in the context's `pages`. */
 		index: number;
 		[key: string]: unknown;
 	} = $props();

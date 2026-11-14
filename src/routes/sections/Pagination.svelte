@@ -10,7 +10,17 @@ Docs: Pagination. Live examples of the Pagination component.
 <section id="pagination">
 	<Card>
 		<div>
-			<Pagination count={100} pageSize={10} />
+			<Pagination
+				count={100}
+				pageSize={10}
+				translations={{
+					rootLabel: 'Pages',
+					prevTriggerLabel: 'Previous page',
+					nextTriggerLabel: 'Next page',
+					itemLabel: ({ page, totalPages }: { page: number; totalPages: number }) =>
+						`Page ${page} of ${totalPages}`
+				}}
+			/>
 		</div>
 	</Card>
 </section>
