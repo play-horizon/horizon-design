@@ -10,7 +10,9 @@ A divider between groups of a `Menu`.
 		class: className = '',
 		...rest
 	}: {
+		/** Classes merged onto the divider. */
 		class?: string;
+		/** Other props of Ark's `Menu.Separator`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

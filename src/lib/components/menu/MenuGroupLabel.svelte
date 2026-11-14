@@ -12,8 +12,11 @@ The label of a `MenuGroup`.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the label. */
 		class?: string;
+		/** The label's text. */
 		children?: Snippet;
+		/** Other props of Ark's `Menu.ItemGroupLabel`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

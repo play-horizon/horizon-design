@@ -17,27 +17,27 @@ Docs: Menu. Live examples of the Menu component.
 	<Card>
 		<Menu triggerClass={buttonVariants({ variant: 'default' })}>
 			{#snippet trigger()}
-				<MingcuteMore2Line class="size-4" />
+				<MingcuteMore2Line class="size-4" aria-hidden="true" />
 				Open Menu
 			{/snippet}
 			<MenuGroup>
 				<MenuGroupLabel>Account</MenuGroupLabel>
 				<MenuItem value="profile">
-					<MingcuteUser2Line class="size-4" />
+					<MingcuteUser2Line class="size-4" aria-hidden="true" />
 					Profile
 				</MenuItem>
 				<MenuItem value="settings">
-					<MingcuteSettings3Line class="size-4" />
+					<MingcuteSettings3Line class="size-4" aria-hidden="true" />
 					Settings
 				</MenuItem>
 				<MenuItem value="billing">
-					<MingcuteCardPayLine class="size-4" />
+					<MingcuteCardPayLine class="size-4" aria-hidden="true" />
 					Billing
 				</MenuItem>
 			</MenuGroup>
 			<MenuSeparator />
 			<MenuItem value="logout">
-				<MingcuteExitDoorLine class="size-4" />
+				<MingcuteExitDoorLine class="size-4" aria-hidden="true" />
 				Log out
 			</MenuItem>
 		</Menu>

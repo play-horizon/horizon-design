@@ -13,9 +13,13 @@ One item of a `Menu`.
 		value,
 		...rest
 	}: {
+		/** Classes merged onto the item. */
 		class?: string;
+		/** The item's content, such as an icon and its label. */
 		children?: Snippet;
+		/** The item's id, which the menu's `onSelect` reports. */
 		value: string;
+		/** Other props of Ark's `Menu.Item`, such as `disabled` or `onSelect`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

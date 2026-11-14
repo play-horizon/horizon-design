@@ -4,7 +4,7 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Menu } from '@ark-ui/svelte';
+	import { Menu, type MenuOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 
@@ -15,20 +15,36 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 		contentClass = '',
 		frosted = false,
 		open = $bindable(false),
+		onOpenChange,
 		...rest
 	}: {
+		/** The content of the button that opens the menu; no trigger when unset. */
 		trigger?: Snippet;
+		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
+		/** The menu's items: `MenuItem`, `MenuGroup` and `MenuSeparator`. */
 		children?: Snippet;
+		/** Classes merged onto the menu's surface. */
 		contentClass?: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Whether the menu is open (bindable). */
 		open?: boolean;
+		/** Called with the new state when the menu opens or closes. */
+		onOpenChange?: (details: MenuOpenChangeDetails) => void;
+		/** Other props of Ark's `Menu.Root`, such as `onSelect` or `positioning`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
-<Menu.Root {open} onOpenChange={(details) => (open = details.open)} {...rest}>
+<Menu.Root
+	{open}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
+	{...rest}
+>
 	{#if trigger}
 		<Menu.Trigger class={triggerClass || undefined} data-slot="menu-trigger">
 			{@render trigger()}
