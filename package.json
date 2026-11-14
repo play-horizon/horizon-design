@@ -11,13 +11,15 @@
 		"url": "https://github.com/play-horizon/horizon-design"
 	},
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build && npm run prepack",
+		"tokens": "node scripts/tokens/generate.ts",
+		"dev": "node scripts/tokens/generate.ts && vite dev",
+		"build": "node scripts/tokens/generate.ts && vite build && npm run prepack",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
-		"prepack": "svelte-kit sync && svelte-package && publint",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"prepare": "node scripts/tokens/generate.ts && (svelte-kit sync || echo '')",
+		"prepack": "node scripts/tokens/generate.ts && svelte-kit sync && svelte-package && publint",
+		"check": "node scripts/tokens/generate.ts && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test": "node scripts/tokens/generate.ts && vitest run",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
@@ -42,6 +44,10 @@
 			"types": "./dist/theme.svelte.d.ts",
 			"svelte": "./dist/theme.svelte.js",
 			"default": "./dist/theme.svelte.js"
+		},
+		"./tokens": {
+			"types": "./dist/generated/tokens.d.ts",
+			"default": "./dist/generated/tokens.js"
 		}
 	},
 	"peerDependencies": {
@@ -56,11 +62,15 @@
 		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@tailwindcss/vite": "^4.3.3",
+		"@testing-library/svelte": "^5.4.2",
+		"@testing-library/user-event": "^14.6.10",
 		"@types/node": "^25.9.9",
+		"colorjs.io": "^0.7.1",
 		"eslint": "^10.12.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.23.0",
 		"globals": "^17.13.0",
+		"jsdom": "^31.0.0",
 		"prettier": "^3.9.9",
 		"prettier-plugin-svelte": "^4.1.1",
 		"prettier-plugin-tailwindcss": "^0.8.1",
@@ -71,7 +81,8 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.71.0",
 		"unplugin-icons": "^23.0.1",
-		"vite": "^8.3.2"
+		"vite": "^8.3.2",
+		"vitest": "^5.1.0"
 	},
 	"dependencies": {
 		"@ark-ui/svelte": "^5.24.2",

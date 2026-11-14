@@ -2479,6 +2479,28 @@ Override any token in your CSS:
 
 ---
 
+## Token values as data
+
+`horizon-design/tokens` exports every colour token of each theme in both forms:
+`tokenValues[theme][token]` is `{ oklch, hex }`, where `oklch` is the value the theme CSS uses
+(`oklch(0.202 0.029 268.7)`) and `hex` the same colour as lowercase sRGB hex (`#111624`, or
+`#rrggbbaa` for translucent tokens). It is for the colours needed before any CSS loads (Electron's
+`BrowserWindow` `backgroundColor`, a page's `<meta name="theme-color">`), and is plain TypeScript
+with no Svelte, so an Electron main process can import it.
+
+```ts
+import { tokenValues } from 'horizon-design/tokens';
+
+new BrowserWindow({ backgroundColor: tokenValues[theme].background.hex });
+```
+
+The values are generated when the library is built (`scripts/tokens/generate.ts`, from the single
+source `scripts/tokens/tokens.ts`), converted with CSS Color 4's conversion (colorjs.io). Every
+token lies inside sRGB (the generator refuses one that doesn't), so the CSS and its hex show the
+same colour.
+
+---
+
 ## Fonts
 
 Both fonts are self-hosted and bundled with the library CSS.

@@ -22,3 +22,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Token outputs, generated when the library is built (scripts/tokens/generate.ts)
+/src/lib/generated

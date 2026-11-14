@@ -36,6 +36,12 @@ jobs:
       - name: Lint & check formatting
         run: pnpm run lint
 
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
+
   release:
     name: Release & Publish
     runs-on: ubuntu-latest
