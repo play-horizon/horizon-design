@@ -20,7 +20,7 @@ Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 			triggerClass={buttonVariants({ variant: 'default' })}
 		>
 			{#snippet trigger()}
-				<MingcuteWindowsLine class="size-4" />
+				<MingcuteWindowsLine class="size-4" aria-hidden="true" />
 				Open Dialog
 			{/snippet}
 			<p class="text-sm text-muted">
@@ -29,7 +29,7 @@ Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 			{#snippet footer()}
 				<DialogClose class={buttonVariants({ variant: 'default' })}>Cancel</DialogClose>
 				<Button variant="danger">
-					<MingcuteDelete2Line class="size-4" />
+					<MingcuteDelete2Line class="size-4" aria-hidden="true" />
 					Delete
 				</Button>
 			{/snippet}

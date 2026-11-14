@@ -14,10 +14,13 @@ A button that closes the `Dialog` it is in: the children, or an icon named by `l
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the button, such as `buttonVariants(…)`. */
 		class?: string;
 		/** The button's accessible name, such as "Close"; needed when it has no text of its own. */
 		label?: string;
+		/** The button's content; a close icon at the dialog's top right when unset. */
 		children?: Snippet;
+		/** Other props of Ark's `Dialog.CloseTrigger`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

@@ -5,7 +5,7 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Dialog } from '@ark-ui/svelte';
+	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
@@ -22,33 +22,49 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 		frosted = false,
 		class: className = '',
 		open = $bindable(false),
+		onOpenChange,
 		...rest
 	}: {
+		/** The content of the button that opens the dialog; no trigger when unset. */
 		trigger?: Snippet;
+		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
+		/** The dialog's heading, which names it for assistive technology. */
 		title?: string;
+		/** A line under the title, which describes the dialog for assistive technology. */
 		description?: string;
+		/** The dialog's body. */
 		children?: Snippet;
+		/** The footer under the body, such as Cancel and a confirm button. */
 		footer?: Snippet;
+		/** Whether to show the close button at the top right. */
 		showClose?: boolean;
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Classes merged onto the dialog's surface. */
 		class?: string;
+		/** Whether the dialog is open (bindable). */
 		open?: boolean;
+		/** Called with the new state when the dialog opens or closes. */
+		onOpenChange?: (details: DialogOpenChangeDetails) => void;
+		/** Other props of Ark's `Dialog.Root`, such as `role="alertdialog"` or `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
-<Dialog.Root {open} onOpenChange={(details) => (open = details.open)} {...rest}>
+<Dialog.Root
+	{open}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
+	{...rest}
+>
 	{#if trigger}
-		<Dialog.Trigger data-slot="dialog-trigger">
-			{#snippet asChild(getProps)}
-				<div {...getProps()} class={triggerClass || 'contents'}>
-					{@render trigger()}
-				</div>
-			{/snippet}
+		<Dialog.Trigger class={triggerClass || undefined} data-slot="dialog-trigger">
+			{@render trigger()}
 		</Dialog.Trigger>
 	{/if}
 	<Portal>
