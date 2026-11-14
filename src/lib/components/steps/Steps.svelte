@@ -8,8 +8,13 @@ the app passes (Ark Steps).
 	import { Steps } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
+	/** One step of the flow. */
 	interface StepConfig {
+		/** The step's stable, unique id. */
+		id: string;
+		/** Its title, translated, shown next to its number. */
 		title: string;
+		/** What the step shows while it is the current one. */
 		content: Snippet;
 	}
 
@@ -22,14 +27,18 @@ the app passes (Ark Steps).
 		class: className = '',
 		...rest
 	}: {
+		/** The steps, in order. */
 		steps?: StepConfig[];
+		/** The current step's index (bindable); `steps.length` once every step is done. */
 		step?: number;
+		/** What shows once every step is done. */
 		completedContent?: Snippet;
 		/** The back button's text, such as "Back". */
 		prevLabel: string;
 		/** The next button's text, such as "Next". */
 		nextLabel: string;
 		class?: string;
+		/** Other props of Ark's `Steps.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -44,8 +53,8 @@ the app passes (Ark Steps).
 	{...rest}
 >
 	<Steps.List class="flex w-full items-center gap-2" data-slot="steps-list">
-		{#each steps as s, i (i)}
-			<Steps.Item index={i} class="flex items-center gap-2" data-slot="steps-item">
+		{#each steps as s, i (s.id)}
+			<Steps.Item index={i} class="flex items-center gap-2 not-last:flex-1" data-slot="steps-item">
 				<Steps.Trigger
 					class="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-fg data-[state=complete]:text-fg data-[state=current]:text-fg"
 					data-slot="steps-trigger"
@@ -56,7 +65,7 @@ the app passes (Ark Steps).
 					>
 						{i + 1}
 					</Steps.Indicator>
-					<span class="hidden sm:inline">{s.title}</span>
+					<span class="max-sm:sr-only">{s.title}</span>
 				</Steps.Trigger>
 				{#if i < steps.length - 1}
 					<Steps.Separator
@@ -68,7 +77,7 @@ the app passes (Ark Steps).
 		{/each}
 	</Steps.List>
 
-	{#each steps as s, i (i)}
+	{#each steps as s, i (s.id)}
 		<Steps.Content index={i} data-slot="steps-content">
 			{@render s.content()}
 		</Steps.Content>

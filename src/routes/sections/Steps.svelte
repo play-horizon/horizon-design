@@ -30,9 +30,9 @@ Docs: Steps. Live examples of the Steps component.
 				prevLabel="Back"
 				nextLabel="Next"
 				steps={[
-					{ title: 'Account', content: stepsAccount },
-					{ title: 'Profile', content: stepsProfile },
-					{ title: 'Review', content: stepsReview }
+					{ id: 'account', title: 'Account', content: stepsAccount },
+					{ id: 'profile', title: 'Profile', content: stepsProfile },
+					{ id: 'review', title: 'Review', content: stepsReview }
 				]}
 			/>
 		</div>
