@@ -1,6 +1,7 @@
 <!--
 @component
-The browser's own select, styled like the other fields; `value` binds the chosen option.
+The browser's own select, styled like the other fields; `value` binds the chosen option. Name it
+with a `<label for>` or an `aria-label`, both passed to the `<select>`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -13,9 +14,11 @@ The browser's own select, styled like the other fields; `value` binds the chosen
 		children,
 		...rest
 	}: {
+		/** Classes added to the `<select>`. */
 		class?: string;
 		/** The chosen option's value. */
 		value?: string;
+		/** The `<option>` and `<optgroup>` elements. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
@@ -35,5 +38,6 @@ The browser's own select, styled like the other fields; `value` binds the chosen
 	</select>
 	<MingcuteDownLine
 		class="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted"
+		aria-hidden="true"
 	/>
 </div>

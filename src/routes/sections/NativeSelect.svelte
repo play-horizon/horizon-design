@@ -10,7 +10,7 @@ Docs: NativeSelect. Live examples of the NativeSelect component.
 <section id="native-select">
 	<Card>
 		<div>
-			<NativeSelect>
+			<NativeSelect aria-label="Framework">
 				<option value="">Choose framework…</option>
 				<option value="svelte">Svelte</option>
 				<option value="react">React</option>
