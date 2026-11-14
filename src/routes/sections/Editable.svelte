@@ -10,7 +10,11 @@ Docs: Editable. Live examples of the Editable component.
 <section id="editable">
 	<Card>
 		<div>
-			<Editable label="Display Name" defaultValue="Click me to edit" />
+			<Editable
+				label="Display Name"
+				defaultValue="Click me to edit"
+				translations={{ input: 'Display name', edit: 'Edit display name' }}
+			/>
 		</div>
 	</Card>
 </section>
