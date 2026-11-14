@@ -8,17 +8,26 @@ A button that closes the `Popover` it is in.
 
 	let {
 		class: className = '',
+		label,
 		children,
 		...rest
 	}: {
 		/** Classes of the button. */
 		class?: string;
-		/** The button's content; an icon-only one also takes an `aria-label`. */
+		/** The button's accessible name, such as "Close"; the same as its text when it has one. */
+		label: string;
+		/** The button's content: its text or an icon. */
 		children?: Snippet;
+		/** Other props of Ark's `Popover.CloseTrigger`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
-<Popover.CloseTrigger class={className || undefined} data-slot="popover-close" {...rest}>
+<Popover.CloseTrigger
+	class={className || undefined}
+	aria-label={label}
+	data-slot="popover-close"
+	{...rest}
+>
 	{@render children?.()}
 </Popover.CloseTrigger>
