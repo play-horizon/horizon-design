@@ -1,7 +1,8 @@
 <!--
 @component
-A panel that slides in from the edge of the window (Ark Drawer), with a title, content and footer;
-`closeLabel` names its close button.
+A panel that slides in from the end edge of the window (Ark Drawer), with a title, content and
+footer; `title` names it and `closeLabel` names its close button. It is swiped toward that edge to
+dismiss it.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -30,7 +31,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
 		/** The drawer's heading, which names it for assistive technology. */
-		title?: string;
+		title: string;
 		/** A line under the title, which describes the drawer for assistive technology. */
 		description?: string;
 		/** The drawer's body. */
@@ -55,6 +56,7 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 </script>
 
 <Drawer.Root
+	swipeDirection="end"
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -89,20 +91,16 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 						<MingcuteCloseLine class="size-4" aria-hidden="true" />
 					</Drawer.CloseTrigger>
 				{/if}
-				{#if title || description}
-					<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
-						{#if title}
-							<Drawer.Title class="text-[1.0625rem] font-bold" data-slot="drawer-title">
-								{title}
-							</Drawer.Title>
-						{/if}
-						{#if description}
-							<Drawer.Description class="text-sm text-muted" data-slot="drawer-description">
-								{description}
-							</Drawer.Description>
-						{/if}
-					</div>
-				{/if}
+				<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
+					<Drawer.Title class="text-[1.0625rem] font-bold" data-slot="drawer-title">
+						{title}
+					</Drawer.Title>
+					{#if description}
+						<Drawer.Description class="text-sm text-muted" data-slot="drawer-description">
+							{description}
+						</Drawer.Description>
+					{/if}
+				</div>
 				{#if children}
 					<div class="flex-1 overflow-auto p-6" data-slot="drawer-body">
 						{@render children()}
