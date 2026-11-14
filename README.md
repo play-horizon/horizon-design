@@ -241,9 +241,11 @@ export default defineConfig({
 ```
 
 ```jsonc
-// tsconfig.json: the types of the `~icons/*` imports
+// tsconfig.json: the types of the `~icons/*` imports. A SvelteKit app keeps `$app/types`, which
+// its `$app/tsconfig` sets and `types` replaces.
 {
-	"compilerOptions": { "types": ["unplugin-icons/types/svelte"] }
+	"extends": "$app/tsconfig",
+	"compilerOptions": { "types": ["$app/types", "unplugin-icons/types/svelte"] }
 }
 ```
 
