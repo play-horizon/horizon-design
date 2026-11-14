@@ -16,19 +16,22 @@ far end, such as an unread count.
 		children,
 		...rest
 	}: {
+		/** Classes added to the link or button. */
 		class?: string;
 		/** Marks the entry as the current page. */
 		active?: boolean;
+		/** Where the entry leads; without it, the entry is a button (pass its `onclick`). */
 		href?: string;
 		/** Content at the far end of the entry, such as a count. */
 		end?: Snippet;
+		/** The entry's icon (with `aria-hidden`) and text. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
 
 	const itemClass = $derived(
 		cn(
-			'flex h-8.5 w-full shrink-0 items-center gap-2.5 rounded-lg px-2.5 text-left text-base transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary [&_svg]:size-4 [&_svg]:shrink-0',
+			'flex h-8.5 w-full shrink-0 items-center gap-2.5 overflow-hidden rounded-lg px-2.5 whitespace-nowrap text-left text-base transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary [&_svg]:size-4 [&_svg]:shrink-0',
 			active
 				? 'bg-primary-subtle text-primary font-semibold'
 				: 'text-fg-2 hover:bg-hover hover:text-fg',

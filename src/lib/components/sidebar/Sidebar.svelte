@@ -2,7 +2,8 @@
 @component
 An app's navigation sidebar: a sunken column with an optional header (the brand), the
 navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (the account).
-`collapsed` narrows it to icons.
+`collapsed` narrows it to the items' icons: their text and the sections' labels are clipped or
+visually hidden, and still read by assistive technology.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -16,11 +17,15 @@ navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (t
 		children,
 		...rest
 	}: {
+		/** Classes added to the `<aside>`. */
 		class?: string;
 		/** Narrows the sidebar to its icons. */
 		collapsed?: boolean;
+		/** The top of the sidebar, such as the brand. */
 		header?: Snippet;
+		/** The bottom of the sidebar, such as the account. */
 		footer?: Snippet;
+		/** The navigation: `SidebarSection`s and `SidebarItem`s. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
@@ -28,7 +33,7 @@ navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (t
 
 <aside
 	class={cn(
-		'flex h-full flex-col border-r border-border bg-sunken transition-[width] duration-300',
+		'group/sidebar flex h-full flex-col overflow-hidden border-r border-border bg-sunken transition-[width] duration-300',
 		collapsed ? 'w-14' : 'w-56',
 		className
 	)}
@@ -41,7 +46,10 @@ navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (t
 			{@render header()}
 		</div>
 	{/if}
-	<nav class="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-3" data-slot="sidebar-content">
+	<nav
+		class="flex flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2.5 pb-3"
+		data-slot="sidebar-content"
+	>
 		{@render children?.()}
 	</nav>
 	{#if footer}
