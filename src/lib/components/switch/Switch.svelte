@@ -11,7 +11,6 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		control: string;
 		thumb: string;
 		checkedTranslate: string;
-		iconPx: number;
 		label: string;
 	};
 
@@ -20,28 +19,24 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 			control: 'h-3.5 w-6',
 			thumb: 'size-2.5',
 			checkedTranslate: 'data-[state=checked]:translate-x-2.5',
-			iconPx: 10,
 			label: 'text-xs'
 		},
 		md: {
 			control: 'h-4.25 w-7.5',
 			thumb: 'size-3.25',
 			checkedTranslate: 'data-[state=checked]:translate-x-3.25',
-			iconPx: 12,
 			label: 'text-sm'
 		},
 		lg: {
 			control: 'h-5 w-9',
 			thumb: 'size-4',
 			checkedTranslate: 'data-[state=checked]:translate-x-4',
-			iconPx: 14,
 			label: 'text-base'
 		},
 		xl: {
 			control: 'h-7 w-13',
 			thumb: 'size-6',
 			checkedTranslate: 'data-[state=checked]:translate-x-6',
-			iconPx: 16,
 			label: 'text-lg'
 		}
 	};
@@ -59,12 +54,19 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 	}: {
 		class?: string;
 		size?: 'sm' | 'md' | 'lg' | 'xl';
+		/** The checked track's colour: primary, or a neutral tint. */
 		variant?: 'default' | 'secondary';
+		/** The switch's label, translated; without it or `children`, the switch has no name. */
 		label?: string;
+		/** Whether the switch is on (bindable); unset, it starts at Ark's `defaultChecked`. */
 		checked?: boolean;
+		/** An icon on the thumb while the switch is on. */
 		checkedContent?: Snippet;
+		/** An icon on the thumb while the switch is off. */
 		uncheckedContent?: Snippet;
+		/** A richer label, in place of `label`. */
 		children?: Snippet;
+		/** Other props of Ark's `Switch.Root`, such as `defaultChecked`, `disabled` or `onCheckedChange`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -77,8 +79,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		className
 	)}
 	data-slot="switch"
-	{checked}
-	onCheckedChange={(details) => (checked = details.checked)}
+	bind:checked
 	{...rest}
 >
 	<Switch.Control
@@ -104,7 +105,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 					class={cn(
 						'absolute scale-50 opacity-0 transition-all duration-200 group-data-[state=checked]:scale-100 group-data-[state=checked]:opacity-100',
 						{
-							'data-[state=checked]:bg-primary': variant === 'default',
+							'text-primary': variant === 'default',
 							'text-muted': variant === 'secondary'
 						}
 					)}
@@ -130,5 +131,5 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 			{/if}
 		</Switch.Label>
 	{/if}
-	<Switch.HiddenInput />
+	<Switch.HiddenInput role="switch" />
 </Switch.Root>
