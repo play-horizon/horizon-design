@@ -2,7 +2,8 @@
 @component
 A text field that filters a list of options to choose from (Ark Combobox): typing keeps the
 options whose label contains the text, ignoring case and accents, and `emptyText` shows when none
-does. Ark `translations` name the open button (`triggerLabel`).
+does. `label`, required, names the field, and Ark `translations` name the open button
+(`triggerLabel`).
 -->
 <script lang="ts">
 	import {
@@ -29,8 +30,8 @@ does. Ark `translations` name the open button (`triggerLabel`).
 	}: {
 		/** The options: the text shown and the value chosen, unique. */
 		items?: Array<{ label: string; value: string }>;
-		/** The field's visible label, such as "Framework". */
-		label?: string;
+		/** The field's visible label, which names it, such as "Framework". */
+		label: string;
 		/** The field's placeholder, such as "Search…". */
 		placeholder?: string;
 		/** Shown when no option matches, such as "No results found." */
@@ -71,11 +72,9 @@ does. Ark `translations` name the open button (`triggerLabel`).
 	data-slot="combobox"
 	{...rest}
 >
-	{#if label}
-		<Combobox.Label class="mb-1 block text-sm font-medium text-fg" data-slot="combobox-label">
-			{label}
-		</Combobox.Label>
-	{/if}
+	<Combobox.Label class="mb-1 block text-sm font-medium text-fg" data-slot="combobox-label">
+		{label}
+	</Combobox.Label>
 	<Combobox.Control class="relative">
 		<Combobox.Input
 			{placeholder}
