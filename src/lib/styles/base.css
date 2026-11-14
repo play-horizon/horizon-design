@@ -33,6 +33,11 @@
 		user-select: text;
 	}
 
+	/* A light or dark island takes its theme's text colour: inherited text would keep the page's. */
+	[data-theme] {
+		color: var(--fg);
+	}
+
 	/* Lilex has no width axis: monospace text keeps its normal width. */
 	code,
 	kbd,
