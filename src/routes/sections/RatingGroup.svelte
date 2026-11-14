@@ -15,7 +15,8 @@ Docs: RatingGroup. Live examples of the RatingGroup component.
 				count={5}
 				defaultValue={3}
 				translations={{
-					ratingValueText: (index: number) => (index === 1 ? '1 star' : `${index} stars`)
+					ratingValueText: (index: number) => (index === 1 ? '1 star' : `${index} stars`),
+					roleDescription: 'rating'
 				}}
 			/>
 		</div>
