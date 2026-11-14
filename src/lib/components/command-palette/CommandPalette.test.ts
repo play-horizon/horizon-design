@@ -195,12 +195,19 @@ describe('CommandPalette', () => {
 
 	it('announces the empty text in a live region', async () => {
 		const { input, getAllByRole } = await setup();
-		// Ark adds its own live regions, which the palette leaves silent.
+		// Ark adds its own live regions while the list is open.
 		const status = () => getAllByRole('status').find((region) => !region.dataset.liveAnnouncer);
 		expect(status()?.textContent?.trim()).toBe('');
 		await fireEvent.input(input, { target: { value: 'zzz' } });
 		expect(status()?.textContent?.trim()).toBe('No command matches.');
+	});
+
+	it('keeps Ark’s announcements of the commands found silent', async () => {
+		const { input, getAllByRole } = await setup();
+		await fireEvent.input(input, { target: { value: 'p' } });
 		const arkRegions = getAllByRole('status').filter((region) => region.dataset.liveAnnouncer);
+		expect(arkRegions.length).toBeGreaterThan(0);
+		// Past Ark's announcement delay (1 s).
 		await new Promise((resolve) => setTimeout(resolve, 1200));
 		expect(arkRegions.map((region) => region.textContent)).toEqual(arkRegions.map(() => ''));
 	});
