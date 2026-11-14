@@ -12,6 +12,7 @@ Docs: Checkbox. Live examples of the Checkbox component.
 		<div class="space-y-2">
 			<Checkbox defaultChecked label="Accept terms and conditions" />
 			<Checkbox label="Subscribe to newsletter" />
+			<Checkbox checked="indeterminate" label="Some games selected" />
 			<Checkbox disabled label="Disabled option" />
 		</div>
 	</Card>
