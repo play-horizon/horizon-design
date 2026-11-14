@@ -11,8 +11,11 @@ A floating bar of actions at the bottom of the window, for the current selection
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the bar. */
 		class?: string;
+		/** The actions: buttons, with `ActionBarSeparator`s between groups. */
 		children?: Snippet;
+		/** Other attributes of the bar. */
 		[key: string]: unknown;
 	} = $props();
 </script>

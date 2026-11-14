@@ -16,14 +16,14 @@ Docs: ActionBar. Live examples of the ActionBar component.
 		<div class="flex min-h-28 items-center justify-center">
 			<ActionBar class="relative bottom-auto left-auto z-0 translate-x-0">
 				<Button variant="ghost" size="icon-sm" aria-label="Archive">
-					<MingcuteArchiveLine class="size-4" />
+					<MingcuteArchiveLine class="size-4" aria-hidden="true" />
 				</Button>
 				<Button variant="ghost" size="icon-sm" aria-label="Copy">
-					<MingcuteCopy2Line class="size-4" />
+					<MingcuteCopy2Line class="size-4" aria-hidden="true" />
 				</Button>
 				<ActionBarSeparator />
 				<Button variant="ghost" size="icon-sm" aria-label="Delete">
-					<MingcuteDelete2Line class="size-4" />
+					<MingcuteDelete2Line class="size-4" aria-hidden="true" />
 				</Button>
 			</ActionBar>
 		</div>
