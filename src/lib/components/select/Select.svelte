@@ -1,14 +1,18 @@
 <!--
 @component
-A select field with a dropdown list of options (Ark Select); `value` binds the chosen values and
-`placeholder` shows while none is chosen.
+A select field with a dropdown list of options (Ark Select); `value` binds the chosen values
+(without it, Ark's `defaultValue` sets the first ones) and `placeholder` shows while none is
+chosen. `label` names the field.
 -->
 <script lang="ts">
-	import { Select, createListCollection } from '@ark-ui/svelte';
+	import { Select, createListCollection, type SelectValueChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 	import { cn } from '$lib/utils';
+
+	/** One option: its text, its value, and whether it can be chosen. */
+	type Item = { label: string; value: string; disabled?: boolean };
 
 	let {
 		class: className = '',
@@ -17,17 +21,26 @@ A select field with a dropdown list of options (Ark Select); `value` binds the c
 		placeholder = '',
 		triggerClass = '',
 		contentClass = '',
-		value = $bindable([]),
+		value = $bindable(),
+		onValueChange,
 		...rest
 	}: {
+		/** Classes added to the root, around the label and the field. */
 		class?: string;
-		items?: Array<{ label: string; value: string; disabled?: boolean }>;
+		/** The options, in order. */
+		items?: Item[];
+		/** The field's label, which names it. */
 		label?: string;
 		/** The text shown while nothing is selected. */
 		placeholder?: string;
+		/** Classes added to the field's button. */
 		triggerClass?: string;
+		/** Classes added to the dropdown list. */
 		contentClass?: string;
+		/** The chosen options' values (one, unless Ark's `multiple` is set). */
 		value?: string[];
+		/** Called on every change of the value, after `value` is updated. */
+		onValueChange?: (details: SelectValueChangeDetails<Item>) => void;
 		[key: string]: unknown;
 	} = $props();
 
@@ -37,7 +50,10 @@ A select field with a dropdown list of options (Ark Select); `value` binds the c
 <Select.Root
 	{collection}
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	class={cn('flex flex-col gap-1', className)}
 	{...rest}
 >
@@ -56,7 +72,7 @@ A select field with a dropdown list of options (Ark Select); `value` binds the c
 		>
 			<Select.ValueText {placeholder} />
 			<Select.Indicator>
-				<MingcuteDownLine class="size-4 opacity-50" />
+				<MingcuteDownLine class="size-4 opacity-50" aria-hidden="true" />
 			</Select.Indicator>
 		</Select.Trigger>
 	</Select.Control>
@@ -77,7 +93,7 @@ A select field with a dropdown list of options (Ark Select); `value` binds the c
 					>
 						<span class="absolute right-2 flex size-3.5 items-center justify-center">
 							<Select.ItemIndicator>
-								<MingcuteCheckLine class="size-4" />
+								<MingcuteCheckLine class="size-4" aria-hidden="true" />
 							</Select.ItemIndicator>
 						</span>
 						<Select.ItemText>{item.label}</Select.ItemText>
