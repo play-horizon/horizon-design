@@ -17,6 +17,7 @@ export * from './components/alert-dialog';
 export * from './components/angle-slider';
 export * from './components/announcement';
 export * from './components/aspect-ratio';
+export * from './components/asset-card';
 export * from './components/avatar';
 export * from './components/avatar-stack';
 export * from './components/badge';

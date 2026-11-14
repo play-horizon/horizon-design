@@ -74,6 +74,7 @@ export const navGroups: NavGroup[] = [
 		items: [
 			{ id: 'announcement', label: 'Announcement' },
 			{ id: 'aspect-ratio', label: 'Aspect Ratio' },
+			{ id: 'asset-card', label: 'Asset Card' },
 			{ id: 'avatar', label: 'Avatar' },
 			{ id: 'avatar-stack', label: 'Avatar Stack' },
 			{ id: 'badge', label: 'Badge' },
