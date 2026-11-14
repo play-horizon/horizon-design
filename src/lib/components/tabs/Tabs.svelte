@@ -7,9 +7,13 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 	import { Tabs } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
+	/** One tab and its panel. */
 	interface TabConfig {
+		/** The tab's stable, unique value. */
 		value: string;
+		/** The tab's label: text, translated, or a snippet. */
 		label: string | Snippet;
+		/** The panel shown while the tab is selected. */
 		content: Snippet;
 	}
 
@@ -39,12 +43,17 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 		class: className = '',
 		...rest
 	}: {
+		/** The tabs, in order. */
 		tabs?: TabConfig[];
+		/** A segmented tab list, or tabs underlined by a sliding indicator. */
 		variant?: 'default' | 'underline';
 		size?: 'sm' | 'md' | 'lg';
+		/** The tab selected at first, when `value` isn't bound. */
 		defaultValue?: string;
+		/** The selected tab's value (bindable). */
 		value?: string;
 		class?: string;
+		/** Other props of Ark's `Tabs.Root`, such as `onValueChange`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -59,25 +68,22 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 	class={cn('flex flex-col gap-2', className)}
 	data-slot="tabs"
 	{defaultValue}
-	{value}
-	onValueChange={(details) => (value = details.value)}
+	bind:value
 	{...rest}
 >
 	<Tabs.List
 		class={cn(
 			'flex w-fit items-center gap-1',
 			variant === 'default' && cn('rounded-lg bg-hover p-1 text-muted', sz.list),
-			variant === 'underline' && 'gap-4 rounded-none border-b border-border bg-transparent p-0',
+			variant === 'underline' &&
+				'relative gap-4 rounded-none border-b border-border bg-transparent p-0 text-muted',
 			variant === 'underline' && sz.list
 		)}
 		data-slot="tabs-list"
 		data-variant={variant}
 	>
 		{#if variant === 'underline'}
-			<Tabs.Indicator
-				class="bottom-0 h-0.5 bg-primary transition-all duration-200"
-				data-slot="tabs-indicator"
-			/>
+			<Tabs.Indicator class="bottom-0 h-0.5 w-(--width) bg-primary" data-slot="tabs-indicator" />
 		{/if}
 		{#each tabs as tab (tab.value)}
 			<Tabs.Trigger
@@ -87,11 +93,7 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 					sz.trigger,
 					variant === 'default' &&
 						'rounded-md data-selected:bg-background data-selected:text-fg data-selected:shadow-sm',
-					variant === 'underline' &&
-						cn(
-							'rounded-none border-b-2 border-transparent pb-3 data-selected:border-primary data-selected:text-fg',
-							sz.list
-						)
+					variant === 'underline' && cn('rounded-none pb-3 data-selected:text-fg', sz.list)
 				)}
 				data-slot="tabs-trigger"
 			>
