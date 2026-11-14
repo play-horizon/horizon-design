@@ -10,7 +10,14 @@ Docs: RatingGroup. Live examples of the RatingGroup component.
 <section id="rating-group">
 	<Card>
 		<div>
-			<RatingGroup count={5} defaultValue={3} />
+			<RatingGroup
+				label="Your rating"
+				count={5}
+				defaultValue={3}
+				translations={{
+					ratingValueText: (index: number) => (index === 1 ? '1 star' : `${index} stars`)
+				}}
+			/>
 		</div>
 	</Card>
 </section>
