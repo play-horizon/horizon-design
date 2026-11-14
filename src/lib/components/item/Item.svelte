@@ -1,6 +1,6 @@
 <!--
 @component
-A row of a list: media, a title, a description and actions.
+A row of a list, laying out what it is given (media, a title, a description, actions) in a line.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -11,8 +11,11 @@ A row of a list: media, a title, a description and actions.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the row. */
 		class?: string;
+		/** The row's content, such as an icon and a label. */
 		children?: Snippet;
+		/** Other attributes of the row, such as `role="listitem"`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

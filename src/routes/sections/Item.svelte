@@ -14,15 +14,15 @@ Docs: Item. Live examples of the Item component.
 	<Card>
 		<div class="flex flex-col gap-0.5">
 			<Item>
-				<MingcuteUser1Line class="size-4 text-muted" />
+				<MingcuteUser1Line class="size-4 text-muted" aria-hidden="true" />
 				<span class="text-sm">Profile</span>
 			</Item>
 			<Item>
-				<MingcuteSettings1Line class="size-4 text-muted" />
+				<MingcuteSettings1Line class="size-4 text-muted" aria-hidden="true" />
 				<span class="text-sm">Settings</span>
 			</Item>
 			<Item>
-				<MingcuteNotificationLine class="size-4 text-muted" />
+				<MingcuteNotificationLine class="size-4 text-muted" aria-hidden="true" />
 				<span class="text-sm">Notifications</span>
 			</Item>
 		</div>
