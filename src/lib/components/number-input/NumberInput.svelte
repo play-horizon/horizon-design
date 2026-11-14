@@ -1,10 +1,12 @@
 <!--
 @component
-A number field with increment and decrement buttons (Ark NumberInput).
+A number field with increment and decrement buttons (Ark NumberInput). `value` binds the text of
+the field; without it, Ark's `defaultValue` sets the first value. Ark's `translations`
+(`incrementLabel`, `decrementLabel`) name the two buttons.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { NumberInput } from '@ark-ui/svelte';
+	import { NumberInput, type NumberInputValueChangeDetails } from '@ark-ui/svelte';
 	import MingcuteUpLine from '~icons/mingcute/up-line';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 	import { cn } from '$lib/utils';
@@ -13,13 +15,20 @@ A number field with increment and decrement buttons (Ark NumberInput).
 		class: className = '',
 		label,
 		children,
-		value = $bindable(''),
+		value = $bindable(),
+		onValueChange,
 		...rest
 	}: {
+		/** Classes added to the root, around the label and the field. */
 		class?: string;
+		/** The field's label, tied to the input. */
 		label?: string;
+		/** Content between the label and the field, such as a hint. */
 		children?: Snippet;
+		/** The field's text, such as `"5"`. */
 		value?: string;
+		/** Called on every change of the value, after `value` is updated. */
+		onValueChange?: (details: NumberInputValueChangeDetails) => void;
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -28,7 +37,10 @@ A number field with increment and decrement buttons (Ark NumberInput).
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
 	{#if label}
@@ -38,7 +50,7 @@ A number field with increment and decrement buttons (Ark NumberInput).
 	{/if}
 	{@render children?.()}
 	<NumberInput.Control
-		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all has-[input:focus-visible]:border-primary has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-primary/20"
 	>
 		<NumberInput.Input
 			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50"
@@ -47,12 +59,12 @@ A number field with increment and decrement buttons (Ark NumberInput).
 			<NumberInput.IncrementTrigger
 				class="flex flex-1 items-center justify-center px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
-				<MingcuteUpLine class="size-3" />
+				<MingcuteUpLine class="size-3" aria-hidden="true" />
 			</NumberInput.IncrementTrigger>
 			<NumberInput.DecrementTrigger
 				class="flex flex-1 items-center justify-center border-t border-border px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
-				<MingcuteDownLine class="size-3" />
+				<MingcuteDownLine class="size-3" aria-hidden="true" />
 			</NumberInput.DecrementTrigger>
 		</div>
 	</NumberInput.Control>

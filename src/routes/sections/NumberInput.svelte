@@ -11,7 +11,13 @@ Docs: NumberInput. Live examples of the NumberInput component.
 	<Card>
 		<div>
 			<div class="max-w-xs">
-				<NumberInput min={0} max={100} defaultValue={5} label="Quantity" />
+				<NumberInput
+					min={0}
+					max={100}
+					defaultValue="5"
+					label="Quantity"
+					translations={{ incrementLabel: 'Increase', decrementLabel: 'Decrease' }}
+				/>
 			</div>
 		</div>
 	</Card>
