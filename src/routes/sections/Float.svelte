@@ -15,8 +15,8 @@ Docs: Float. Live examples of the Float component.
 			<p class="mb-4 text-sm text-muted">A fixed-position container for floating action buttons.</p>
 			<div class="relative min-h-20 overflow-hidden rounded-xl border border-border bg-sunken">
 				<Float class="absolute z-0" position="bottom-right">
-					<Button size="icon-md" class="rounded-full shadow-lg">
-						<MingcuteAddLine />
+					<Button size="icon-md" class="rounded-full shadow-lg" aria-label="New game">
+						<MingcuteAddLine aria-hidden="true" />
 					</Button>
 				</Float>
 			</div>
