@@ -29,6 +29,7 @@ bar for assistive technology; without one, the bar is named by its value.
 		value: number;
 		/** The value of a finished task. */
 		max?: number;
+		/** Other props of Ark's `Progress.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

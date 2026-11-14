@@ -21,6 +21,7 @@ Resizable panels separated by draggable handles (Ark Splitter): `SplitterPanel`s
 		panels: PanelData[];
 		/** The `SplitterPanel`s and `SplitterResizeTrigger`s. */
 		children?: Snippet;
+		/** Other props of Ark's `Splitter.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

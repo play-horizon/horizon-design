@@ -41,6 +41,7 @@ first one. Name the group with an `aria-label`.
 		value?: string | null;
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: SegmentGroupValueChangeDetails) => void;
+		/** Other props of Ark's `SegmentGroup.Root`. */
 		[key: string]: unknown;
 	} = $props();
 

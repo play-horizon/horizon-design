@@ -20,6 +20,7 @@ Swaps between two contents with an animation, such as a play and a pause icon (A
 		on?: Snippet;
 		/** What shows while `swap` is off. */
 		off?: Snippet;
+		/** Classes merged onto Ark's `Swap.Root`. */
 		class?: string;
 		/** Which content shows: `on` when true, `off` when false. */
 		swap?: boolean;

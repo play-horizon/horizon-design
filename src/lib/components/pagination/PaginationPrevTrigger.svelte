@@ -16,6 +16,7 @@ The previous-page button of a `Pagination`.
 		class?: string;
 		/** The button's content, such as an arrow icon (with `aria-hidden`). */
 		children?: Snippet;
+		/** Other props of Ark's `Pagination.PrevTrigger`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

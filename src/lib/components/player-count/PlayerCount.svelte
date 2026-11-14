@@ -27,6 +27,7 @@ dot, for a game nobody is playing.
 		live?: boolean;
 		/** Classes added to the outer element. */
 		class?: string;
+		/** Other attributes, passed on to the `<span>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

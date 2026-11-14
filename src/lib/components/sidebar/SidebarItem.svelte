@@ -26,6 +26,7 @@ far end, such as an unread count.
 		end?: Snippet;
 		/** The entry's icon (with `aria-hidden`) and text. */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<a>`. */
 		[key: string]: unknown;
 	} = $props();
 

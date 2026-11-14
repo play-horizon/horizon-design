@@ -27,6 +27,7 @@ visually hidden, and still read by assistive technology.
 		footer?: Snippet;
 		/** The navigation: `SidebarSection`s and `SidebarItem`s. */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<aside>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

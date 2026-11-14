@@ -24,6 +24,7 @@ it the dot is decorative, for when the status is written next to it.
 		variant?: keyof typeof variants;
 		/** The status's accessible name, such as "Online". */
 		label?: string;
+		/** Classes merged onto the `<span>`. */
 		class?: string;
 		/** Other attributes of the dot's `<span>`. */
 		[key: string]: unknown;

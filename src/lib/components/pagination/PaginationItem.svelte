@@ -19,6 +19,7 @@ One page link of a `Pagination`.
 		children?: Snippet;
 		/** The page the link leads to, from 1. */
 		value: number;
+		/** Other props of Ark's `Pagination.Item`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

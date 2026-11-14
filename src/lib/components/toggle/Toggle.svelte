@@ -16,11 +16,13 @@ takes its accessible name through `aria-label`.
 		pressed = $bindable(false),
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Toggle.Root`. */
 		class?: string;
 		/** The toggle's content: an icon, a label, or both. */
 		children?: Snippet;
 		/** Borderless, or outlined. */
 		variant?: 'default' | 'outline';
+		/** The control's size. */
 		size?: 'sm' | 'md' | 'lg';
 		/** Whether it is pressed (bindable). */
 		pressed?: boolean;

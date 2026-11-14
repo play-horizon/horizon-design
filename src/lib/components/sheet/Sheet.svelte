@@ -52,10 +52,11 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 		frosted?: boolean;
 		/** Classes added to the panel. */
 		class?: string;
-		/** Whether the panel is open. */
+		/** Whether the panel is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called when the panel opens or closes, after `open` is updated. */
 		onOpenChange?: (details: DialogOpenChangeDetails) => void;
+		/** Other props of Ark's `Dialog.Root`. */
 		[key: string]: unknown;
 	} = $props();
 

@@ -52,7 +52,9 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Switch.Root`. */
 		class?: string;
+		/** The control's size. */
 		size?: 'sm' | 'md' | 'lg' | 'xl';
 		/** The checked track's colour: primary, or a neutral tint. */
 		variant?: 'default' | 'secondary';

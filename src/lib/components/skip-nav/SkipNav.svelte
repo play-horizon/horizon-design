@@ -18,6 +18,7 @@ A link, shown on keyboard focus, that skips to the page's main content.
 		class?: string;
 		/** The link's text, such as "Skip to content". */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<a>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

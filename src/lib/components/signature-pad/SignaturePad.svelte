@@ -24,6 +24,7 @@ Ark's `name` submits the drawn paths as JSON.
 		clearLabel: string;
 		/** Content after the clear button, such as a hint. */
 		children?: Snippet;
+		/** Other props of Ark's `SignaturePad.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

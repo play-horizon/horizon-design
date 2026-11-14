@@ -18,6 +18,7 @@ tooltip's text and the toggle's accessible name, and `pressed` binds its state.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Tooltip.Trigger`. */
 		class?: string;
 		/** The toggle's name, translated, such as "Bold": its tooltip and its accessible name. */
 		label: string;

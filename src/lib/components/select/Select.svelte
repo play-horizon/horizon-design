@@ -41,6 +41,7 @@ chosen. `label` names the field.
 		value?: string[];
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: SelectValueChangeDetails<Item>) => void;
+		/** Other props of Ark's `Select.Root`. */
 		[key: string]: unknown;
 	} = $props();
 

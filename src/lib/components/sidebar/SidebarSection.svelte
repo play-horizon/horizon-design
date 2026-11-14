@@ -19,6 +19,7 @@ A group of `SidebarItem`s, with an optional overline label that names the group.
 		label?: string;
 		/** The group's `SidebarItem`s. */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<div>`. */
 		[key: string]: unknown;
 	} = $props();
 

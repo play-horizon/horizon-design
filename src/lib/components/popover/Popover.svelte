@@ -40,10 +40,11 @@ is open; without it, Ark's `defaultOpen` sets the first state.
 		contentClass?: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
-		/** Whether the panel is open. */
+		/** Whether the panel is open (bindable); unset, Ark's `defaultOpen` gives the first state. */
 		open?: boolean;
 		/** Called when the panel opens or closes, after `open` is updated. */
 		onOpenChange?: (details: PopoverOpenChangeDetails) => void;
+		/** Other props of Ark's `Popover.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

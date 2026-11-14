@@ -11,6 +11,7 @@ A placeholder block that pulses while content loads (pages show skeletons, not s
 	}: {
 		/** Classes that size and shape the block, such as `h-4 w-2/3` or `size-12 rounded-full`. */
 		class?: string;
+		/** Other attributes, passed on to the `<div>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

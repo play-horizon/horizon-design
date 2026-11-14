@@ -18,6 +18,7 @@ button named by `closeLabel`.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Toast.Root`. */
 		class?: string;
 		/** The toast's title, translated. */
 		title?: string;

@@ -18,6 +18,7 @@ A horizontal or vertical divider. Decorative by default, hidden from assistive t
 		orientation?: 'horizontal' | 'vertical';
 		/** Whether it only decorates; false when it separates content assistive technology should know apart. */
 		decorative?: boolean;
+		/** Other attributes, passed on to the `<div>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

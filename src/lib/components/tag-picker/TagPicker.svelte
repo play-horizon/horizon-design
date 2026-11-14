@@ -40,6 +40,7 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 		disabled?: boolean;
 		/** Called with the chosen ids after each change. */
 		onChange?: (value: string[]) => void;
+		/** Classes merged onto the `<div>`. */
 		class?: string;
 	} = $props();
 

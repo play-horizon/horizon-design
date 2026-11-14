@@ -15,6 +15,7 @@ region named by `label`. The toaster's `placement` and `offsets` position the st
 		closeLabel,
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Toaster`. */
 		class?: string;
 		/** The toaster whose toasts show, from `createToaster`. */
 		toaster: ReturnType<typeof import('@ark-ui/svelte').createToaster>;

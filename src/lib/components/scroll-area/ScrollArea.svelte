@@ -20,6 +20,7 @@ content is taller than the region.
 		innerClass?: string;
 		/** The content that scrolls. */
 		children?: Snippet;
+		/** Other props of Ark's `ScrollArea.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

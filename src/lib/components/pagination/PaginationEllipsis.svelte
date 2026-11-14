@@ -19,6 +19,7 @@ The ellipsis between page links of a `Pagination`.
 		children?: Snippet;
 		/** The ellipsis's position in the context's `pages`. */
 		index: number;
+		/** Other props of Ark's `Pagination.Ellipsis`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

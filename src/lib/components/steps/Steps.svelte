@@ -37,6 +37,7 @@ the app passes (Ark Steps).
 		prevLabel: string;
 		/** The next button's text, such as "Next". */
 		nextLabel: string;
+		/** Classes merged onto Ark's `Steps.Root`. */
 		class?: string;
 		/** Other props of Ark's `Steps.Root`. */
 		[key: string]: unknown;

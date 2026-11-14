@@ -20,6 +20,7 @@ with a `<label for>` or an `aria-label`, both passed to the `<select>`.
 		value?: string;
 		/** The `<option>` and `<optgroup>` elements. */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<select>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

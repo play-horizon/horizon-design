@@ -19,6 +19,7 @@ One panel of a `Splitter`.
 		id: string;
 		/** The panel's content. */
 		children?: Snippet;
+		/** Other props of Ark's `Splitter.Panel`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

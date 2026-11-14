@@ -30,6 +30,7 @@ lists show skeletons instead. With `label`, the text shows beside it and is anno
 		label?: string;
 		/** Announced when there is no visible label. */
 		'aria-label'?: string;
+		/** Other attributes, passed on to the `<span>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

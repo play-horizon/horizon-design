@@ -32,7 +32,9 @@ name each mode for assistive technology and tooltips; the app passes them transl
 	}: {
 		/** The names of the group and of each mode, translated. */
 		labels: ThemeSwitchLabels;
+		/** The control's size. */
 		size?: 'sm' | 'md';
+		/** Classes merged onto the `<div>`. */
 		class?: string;
 	} = $props();
 

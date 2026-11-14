@@ -47,11 +47,13 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 		tabs?: TabConfig[];
 		/** A segmented tab list, or tabs underlined by a sliding indicator. */
 		variant?: 'default' | 'underline';
+		/** The control's size. */
 		size?: 'sm' | 'md' | 'lg';
 		/** The tab selected at first, when `value` isn't bound. */
 		defaultValue?: string;
 		/** The selected tab's value (bindable). */
 		value?: string;
+		/** Classes merged onto Ark's `Tabs.Root`. */
 		class?: string;
 		/** Other props of Ark's `Tabs.Root`, such as `onValueChange`. */
 		[key: string]: unknown;

@@ -27,6 +27,7 @@ whose content is only an icon through its `label`.
 	}: {
 		/** The toggles, in order. */
 		items?: ToggleItem[];
+		/** Classes merged onto Ark's `ToggleGroup.Root`. */
 		class?: string;
 		/** The pressed items' values (bindable). */
 		value?: string[];

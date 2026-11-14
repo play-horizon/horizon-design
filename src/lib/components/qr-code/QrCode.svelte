@@ -21,6 +21,7 @@ QrCode). `label` names the image for assistive technology.
 		class?: string;
 		/** The code's width and height, in pixels. */
 		size?: number;
+		/** Other props of Ark's `QrCode.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

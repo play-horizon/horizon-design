@@ -40,11 +40,13 @@ vote, with the reason said next to the buttons.
 		upCount: string;
 		/** The number of down votes, formatted for display. */
 		downCount: string;
+		/** The buttons' accessible names, translated. */
 		labels: VoteLabels;
 		/** Refuses votes, for an account that may not vote; the counts still show. */
 		disabled?: boolean;
 		/** Called with the new vote when the account votes or takes its vote back. */
 		onVote?: (vote: Vote) => void;
+		/** Classes merged onto the `<div>`. */
 		class?: string;
 	} = $props();
 

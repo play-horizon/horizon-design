@@ -13,6 +13,7 @@ A card showing a preview (its content) with a label under it.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the `<div>`. */
 		class?: string;
 		/** The text under the preview, translated; no label row when empty. */
 		label?: string;

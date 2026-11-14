@@ -44,6 +44,7 @@ A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or
 		value?: string | null;
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: RadioGroupValueChangeDetails) => void;
+		/** Other props of Ark's `RadioGroup.Root`. */
 		[key: string]: unknown;
 	} = $props();
 

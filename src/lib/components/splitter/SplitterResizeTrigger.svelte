@@ -18,6 +18,7 @@ The draggable handle between two `SplitterPanel`s; arrow keys move it too. `labe
 		id: `${string}:${string}`;
 		/** The handle's accessible name, such as "Resize the sidebar". */
 		label: string;
+		/** Other props of Ark's `Splitter.ResizeTrigger`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

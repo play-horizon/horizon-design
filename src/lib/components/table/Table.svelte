@@ -35,6 +35,7 @@ A data table from columns and rows.
 		rows?: Row[];
 		/** A stable, unique key of a row, such as its id. */
 		rowKey: (row: Row) => string;
+		/** Classes merged onto the `<table>`. */
 		class?: string;
 		/** Other attributes of the `<table>`. */
 		[key: string]: unknown;

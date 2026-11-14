@@ -16,6 +16,7 @@ dividers, links and inline code. Its text is selectable, unlike the rest of the 
 		class?: string;
 		/** The text, as HTML elements. */
 		children?: Snippet;
+		/** Other attributes, passed on to the `<div>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

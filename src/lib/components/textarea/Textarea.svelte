@@ -12,6 +12,7 @@ with a soft ring. Inside an Ark `Field`, it takes the field's label, description
 		value = $bindable(),
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Field.Textarea`. */
 		class?: string;
 		/** The text (bindable). */
 		value?: string;

@@ -35,6 +35,7 @@ to start, pause, resume and reset it, named by `labels`. Only the buttons that a
 		labels,
 		...rest
 	}: {
+		/** Classes merged onto Ark's `Timer.Root`. */
 		class?: string;
 		/** Counts down from `startMs` instead of up. */
 		countdown?: boolean;

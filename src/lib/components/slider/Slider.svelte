@@ -30,6 +30,7 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 		value?: number[];
 		/** Called on every change of the values, after `value` is updated. */
 		onValueChange?: (details: SliderValueChangeDetails) => void;
+		/** Other props of Ark's `Slider.Root`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
