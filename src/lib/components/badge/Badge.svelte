@@ -32,10 +32,15 @@ modes); `size` its height (md 20 px, sm 17 px).
 		children,
 		...rest
 	}: {
+		/** The colour. */
 		variant?: keyof typeof variants;
+		/** The height: `md` 20 px, `sm` 17 px. */
 		size?: keyof typeof sizes;
+		/** Classes merged onto the badge. */
 		class?: string;
+		/** The badge's text, with an optional icon. */
 		children?: Snippet;
+		/** Other attributes of the badge. */
 		[key: string]: unknown;
 	} = $props();
 </script>
