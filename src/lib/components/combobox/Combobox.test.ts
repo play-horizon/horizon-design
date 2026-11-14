@@ -60,6 +60,12 @@ describe('Combobox', () => {
 		expect(await announcements()).toEqual([]);
 	});
 
+	it('announces nothing for a message translations leaves undefined', async () => {
+		const { input } = setup({ triggerLabel: 'Show modes', resultsCount: undefined });
+		await type(input, 'ra');
+		expect(await announcements()).toEqual([]);
+	});
+
 	it('announces the options found in the messages translations gives', async () => {
 		const { input } = setup({
 			triggerLabel: 'Show modes',

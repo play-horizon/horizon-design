@@ -56,8 +56,14 @@ own to fall back on here.
 		[key: string]: unknown;
 	} = $props();
 
-	// Ark's announcements default to English: silent unless `translations` gives them.
-	const silentAnnouncements = { resultsCount: () => '', noResults: '', loading: '' };
+	// Ark's announcements default to English: each stays silent unless `translations` gives it
+	// (Ark takes an undefined message as its own English one).
+	const arkTranslations = $derived({
+		triggerLabel: translations.triggerLabel,
+		resultsCount: translations.resultsCount ?? (() => ''),
+		noResults: translations.noResults ?? '',
+		loading: translations.loading ?? ''
+	});
 
 	const filters = useFilter({ sensitivity: 'base' });
 	let query = $state('');
@@ -75,7 +81,7 @@ own to fall back on here.
 <Combobox.Root
 	{collection}
 	onInputValueChange={changeInput}
-	translations={{ ...silentAnnouncements, ...translations }}
+	translations={arkTranslations}
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="combobox"
 	{...rest}
