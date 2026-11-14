@@ -23,7 +23,7 @@ One item of a `Menu`.
 <Menu.Item
 	{value}
 	class={cn(
-		'relative flex h-7.5 cursor-default items-center gap-2 rounded-md px-2 text-sm transition-colors outline-none select-none hover:bg-hover hover:text-fg data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-hover data-highlighted:text-fg [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+		'relative flex h-7.5 cursor-default items-center gap-2 rounded-md px-2 text-sm transition-colors outline-none hover:bg-hover hover:text-fg data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-hover data-highlighted:text-fg [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
 		className
 	)}
 	data-slot="menu-item"

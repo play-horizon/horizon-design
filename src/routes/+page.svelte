@@ -56,8 +56,8 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 <h1 class="text-3xl font-bold">Tokens and motion</h1>
 <p class="mt-2 max-w-2xl text-fg-2">
 	One OKLCH palette, mapped onto semantic tokens per theme. Components use only these tokens, so
-	both themes stay consistent; the hex beside each is what <code>horizon-design/tokens</code>
-	exports for colours needed before any CSS loads.
+	both themes stay consistent. <code>horizon-design/tokens</code> exports each one as data, for colours
+	needed before any CSS loads: its hex, shown beside it, and its OKLCH value, shown when the hex is hovered.
 </p>
 
 <h2 class="mt-10 mb-3 text-xl font-bold">Colour tokens</h2>
@@ -77,8 +77,9 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 							style:background="var(--{token})"
 						></span>
 						<span class="font-mono">{token}</span>
-						<span class="ml-auto font-mono text-muted" title={tokenValues[name][token].oklch}
-							>{tokenValues[name][token].hex}</span
+						<span
+							class="ml-auto font-mono text-muted select-text"
+							title={tokenValues[name][token].oklch}>{tokenValues[name][token].hex}</span
 						>
 					</div>
 				{/each}

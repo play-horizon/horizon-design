@@ -18,6 +18,6 @@ its live examples.
 <p class="section-tag">{data.group}</p>
 <h1 class="text-3xl font-bold">{data.label}</h1>
 <p class="mt-1 mb-6 text-sm text-muted">
-	<code class="font-mono">{importLine}</code>
+	<code class="font-mono select-text">{importLine}</code>
 </p>
 <data.component />

@@ -201,7 +201,7 @@ drag or keyboard; `reorderLabel` names each card's handle.
 	role="tree"
 	tabindex="0"
 	data-slot="inspector-panel"
-	class={cn('flex flex-col gap-1 text-sm outline-none select-none', className)}
+	class={cn('flex flex-col gap-1 text-sm outline-none', className)}
 	onkeydown={handleKeyDown}
 	onpointerdown={() => {
 		isKeyboardMode = false;

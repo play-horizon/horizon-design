@@ -72,7 +72,7 @@ A select field with a dropdown list of options (Ark Select); `value` binds the c
 				{#each items as item (item.value)}
 					<Select.Item
 						{item}
-						class="relative flex w-full cursor-default items-center rounded-lg px-2 py-1.5 text-sm transition-colors outline-none select-none hover:bg-hover hover:text-fg data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-hover data-highlighted:text-fg"
+						class="relative flex w-full cursor-default items-center rounded-lg px-2 py-1.5 text-sm transition-colors outline-none hover:bg-hover hover:text-fg data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-hover data-highlighted:text-fg"
 						data-slot="select-item"
 					>
 						<span class="absolute right-2 flex size-3.5 items-center justify-center">

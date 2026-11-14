@@ -24,7 +24,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 	const cellClass = cn(
 		'inline-flex items-center justify-center',
 		'h-9 w-full min-w-9',
-		'select-none whitespace-nowrap font-normal text-sm text-fg leading-none',
+		'whitespace-nowrap font-normal text-sm text-fg leading-none',
 		'rounded-lg border border-transparent',
 		'hover:bg-hover hover:text-fg',
 		'data-today:after:absolute data-today:after:bottom-1 data-today:after:left-1/2 data-today:after:size-1 data-today:after:-translate-x-1/2 data-today:after:rounded-full data-today:after:bg-primary data-today:data-selected:after:bg-background',
@@ -74,7 +74,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 						<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
 							{#each api().weekDays as weekDay, i (i)}
 								<DatePicker.TableHeader
-									class="flex h-(--cell-size) w-full items-center justify-center rounded-lg text-xs font-medium text-faint select-none"
+									class="flex h-(--cell-size) w-full items-center justify-center rounded-lg text-xs font-medium text-faint"
 									data-slot="calendar-table-header"
 								>
 									{weekDay.narrow}
@@ -87,7 +87,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 							<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
 								{#each week as day (day.toString())}
 									<DatePicker.TableCell
-										class="relative h-(--cell-size) w-full text-center select-none [&:first-child[aria-selected=true]_div]:rounded-l-lg [&:last-child[aria-selected=true]_div]:rounded-r-lg"
+										class="relative h-(--cell-size) w-full text-center [&:first-child[aria-selected=true]_div]:rounded-l-lg [&:last-child[aria-selected=true]_div]:rounded-r-lg"
 										data-slot="calendar-table-cell"
 										value={day}
 									>
@@ -129,7 +129,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 							<DatePicker.TableRow class="mt-1 flex w-full">
 								{#each months as month (month.value)}
 									<DatePicker.TableCell
-										class="relative h-(--cell-size) w-full text-center select-none"
+										class="relative h-(--cell-size) w-full text-center"
 										value={month.value}
 									>
 										<DatePicker.TableCellTrigger class={cn(cellClass, 'w-16')}>
@@ -167,7 +167,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 							<DatePicker.TableRow class="mt-1 flex w-full">
 								{#each years as year (year.value)}
 									<DatePicker.TableCell
-										class="relative h-(--cell-size) w-full text-center select-none"
+										class="relative h-(--cell-size) w-full text-center"
 										value={year.value}
 									>
 										<DatePicker.TableCellTrigger class={cn(cellClass, 'w-16')}>

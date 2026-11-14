@@ -63,7 +63,7 @@ A text field that filters a list of options to choose from (Ark Combobox).
 				{#each items as item (item.value)}
 					<Combobox.Item
 						{item}
-						class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg data-[state=checked]:bg-hover"
+						class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg data-[state=checked]:bg-hover"
 						data-slot="combobox-item"
 					>
 						<Combobox.ItemText>{item.label}</Combobox.ItemText>

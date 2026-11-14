@@ -47,7 +47,7 @@ A list of options to choose one or several from (Ark Listbox).
 		{#each items as item (item.value)}
 			<Listbox.Item
 				{item}
-				class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary"
+				class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary"
 				data-slot="listbox-item"
 			>
 				<Listbox.ItemText>

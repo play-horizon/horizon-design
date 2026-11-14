@@ -67,7 +67,7 @@ for a translucent surface.
 							value={item.id}
 							disabled={item.disabled}
 							class={cn(
-								'relative flex h-7.5 items-center gap-2 rounded-md px-2 text-sm transition-colors select-none hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg',
+								'relative flex h-7.5 items-center gap-2 rounded-md px-2 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg',
 								{ 'pointer-events-none opacity-50': item.disabled }
 							)}
 							data-slot="context-menu-item"
