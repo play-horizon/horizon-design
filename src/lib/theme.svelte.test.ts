@@ -1,6 +1,7 @@
 /**
  * Tests of the theme controller: the theme applied to `<html>`, the OS theme followed while the
- * mode is system, the mode saved, and the context-menu block being opt-in.
+ * mode is system, the mode saved, the context-menu block being opt-in, and a repeated `init`
+ * replacing the listeners of the call before.
  * @module
  */
 import { afterEach, describe, expect, it } from 'vitest';
@@ -60,5 +61,22 @@ describe('theme', () => {
 		const after = new MouseEvent('contextmenu', { cancelable: true });
 		window.dispatchEvent(after);
 		expect(after.defaultPrevented).toBe(false);
+	});
+
+	it('replaces the listeners of an earlier init, whose stop leaves the new ones alone', () => {
+		const first = theme.init({ blockContextMenu: true });
+		stop = theme.init({ blockContextMenu: true });
+		first();
+		const event = new MouseEvent('contextmenu', { cancelable: true });
+		window.dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(true);
+	});
+
+	it('lifts the block of an earlier init that asked for it', () => {
+		theme.init({ blockContextMenu: true });
+		stop = theme.init();
+		const event = new MouseEvent('contextmenu', { cancelable: true });
+		window.dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
 	});
 });

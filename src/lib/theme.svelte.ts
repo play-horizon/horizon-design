@@ -56,48 +56,58 @@ function applyTheme(resolved: Theme): void {
 	document.documentElement.dataset.theme = resolved;
 }
 
-function preventDefault(event: Event): void {
-	event.preventDefault();
-}
-
 /** The theme state; use the shared `theme` instance. */
 class ThemeController {
-	/** The chosen mode. Change it with `set`, which saves it and crossfades the page. */
-	mode = $state<ThemeMode>(storedMode());
+	#mode = $state<ThemeMode>(storedMode());
 
 	// Server rendering has no OS theme: dark, the default theme, stands in for it.
 	#systemDark = new MediaQuery(SYSTEM_DARK_QUERY, true);
 
+	#stopInit: (() => void) | undefined;
+
+	/** The chosen mode (reactive). Change it with `set`, which saves it and crossfades the page. */
+	get mode(): ThemeMode {
+		return this.#mode;
+	}
+
 	/** The theme in effect: the mode, or the OS theme while the mode is system (reactive). */
 	get resolved(): Theme {
-		if (this.mode !== 'system') return this.mode;
+		if (this.#mode !== 'system') return this.#mode;
 		return this.#systemDark.current ? 'dark' : 'light';
 	}
 
 	/**
 	 * Applies the theme to `<html>` and keeps it in step with the OS while the mode is system.
-	 * Call once, in the browser, from the root layout. Returns a function that removes the
-	 * listeners it added.
+	 * Call it in the browser, from the root layout. Returns a function that removes the listeners
+	 * it added. Calling it again replaces the previous call's listeners, so the page is never
+	 * listened to twice and the latest `blockContextMenu` applies.
 	 */
 	init({ blockContextMenu = false }: ThemeInitOptions = {}): () => void {
+		this.#stopInit?.();
 		applyTheme(this.resolved);
 		const systemDark = matchMedia(SYSTEM_DARK_QUERY);
 		const followSystem = () => {
-			if (this.mode === 'system') applyTheme(systemDark.matches ? 'dark' : 'light');
+			if (this.#mode === 'system') applyTheme(systemDark.matches ? 'dark' : 'light');
 		};
+		// Its own function on each call: a listener added twice is added once, so a shared one
+		// would be removed by an earlier call's stop.
+		const blockMenu = (event: Event) => event.preventDefault();
 		systemDark.addEventListener('change', followSystem);
-		if (blockContextMenu) window.addEventListener('contextmenu', preventDefault);
-		return () => {
+		if (blockContextMenu) window.addEventListener('contextmenu', blockMenu);
+		const stop = () => {
 			systemDark.removeEventListener('change', followSystem);
-			window.removeEventListener('contextmenu', preventDefault);
+			window.removeEventListener('contextmenu', blockMenu);
+			if (this.#stopInit === stop) this.#stopInit = undefined;
 		};
+		this.#stopInit = stop;
+		return stop;
 	}
 
 	/** Saves the mode and crossfades the page into the theme it resolves to. */
 	set(mode: ThemeMode): Promise<void> {
 		saveMode(mode);
 		return crossfadePage(() => {
-			this.mode = mode;
+			this.#mode = mode;
 			// Update the components that show the mode inside the new snapshot.
 			flushSync();
 			applyTheme(this.resolved);
