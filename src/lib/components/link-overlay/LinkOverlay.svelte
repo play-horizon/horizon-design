@@ -1,6 +1,6 @@
 <!--
 @component
-The link of a `LinkBox`, stretched over the whole box.
+The link of a `LinkBox`, stretched over the whole box: a click anywhere in the box follows it.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -8,13 +8,17 @@ The link of a `LinkBox`, stretched over the whole box.
 
 	let {
 		class: className = '',
-		href = '#',
+		href,
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the link. */
 		class?: string;
-		href?: string;
+		/** Where the link leads, already resolved by the app. */
+		href: string;
+		/** The link's text, which names it. */
 		children?: Snippet;
+		/** Other attributes of the `<a>`, such as `target`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

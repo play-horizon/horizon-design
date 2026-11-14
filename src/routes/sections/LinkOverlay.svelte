@@ -18,7 +18,7 @@ Docs: LinkOverlay. Live examples of the LinkOverlay component.
 					</h3>
 					<p class="mt-1 text-sm text-muted">The entire card area follows the primary link.</p>
 				</div>
-				<MingcuteArrowRightUpLine class="size-4 text-muted" />
+				<MingcuteArrowRightUpLine class="size-4 text-muted" aria-hidden="true" />
 			</div>
 		</LinkBox>
 	</Card>
