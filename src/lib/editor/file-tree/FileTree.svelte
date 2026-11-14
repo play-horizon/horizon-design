@@ -1,213 +1,122 @@
 <!--
 @component
-A tree of files and folders (Ark TreeView), with expandable folders and custom icons.
+A tree of files and folders, with expandable folders and custom icons: a `VirtualTree`, so only
+the rows in view are rendered. The rows are read through the collection: its branches (nodes with
+children or a `childrenCount`) are the folders, and its `nodeToString` names each row.
+
+Only files are selected: a click selects one, Ctrl/Cmd+click adds or removes one, Shift+click
+selects the range from the first selected file; on the keyboard, the arrows move between rows and
+open and close folders, typing a name moves to it, Enter or Space selects the file, and
+Shift+arrows extend the selection. A click, Enter or Space on a folder opens or closes it and
+leaves the selection as it is.
 -->
 <script lang="ts">
-	import { TreeView, type TreeCollection, type TreeNode } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import type { TreeCollection, TreeNode } from '@ark-ui/svelte';
 	import type { Snippet } from 'svelte';
-	import MingcuteRightLine from '~icons/mingcute/right-line';
 	import MingcuteFolder2Line from '~icons/mingcute/folder-2-line';
 	import MingcuteFolderOpenLine from '~icons/mingcute/folder-open-line';
 	import MingcuteFileLine from '~icons/mingcute/file-line';
-
-	type AnyNode = TreeNode & { children?: AnyNode[]; name?: string; label?: string };
+	import VirtualTree from '../../components/virtual-tree/VirtualTree.svelte';
 
 	let {
 		class: className = '',
 		collection,
+		label,
 		icon,
 		selectedValue = $bindable<string[]>([]),
 		expandedValue = $bindable<string[]>([]),
-		focusedValue = $bindable<string | undefined>(undefined),
+		focusedValue = $bindable<string | null>(null),
 		onSelectionChange,
 		onExpandedChange,
-		onFocusChange,
-		ref: rootRef
+		onFocusChange
 	}: {
+		/** Classes added to the tree's element. */
 		class?: string;
+		/** The files and folders, from `createTreeCollection` or `createFileTreeCollection`. */
 		collection: TreeCollection<TreeNode>;
-		icon?: Snippet<[AnyNode]>;
+		/** The tree's accessible name, such as "Project files". */
+		label: string;
+		/** Replaces a node's icon (a folder or a file icon by default). */
+		icon?: Snippet<[TreeNode]>;
+		/** The values of the selected files. */
 		selectedValue?: string[];
+		/** The values of the open folders. */
 		expandedValue?: string[];
-		focusedValue?: string;
+		/** The value of the row that has the keyboard focus. */
+		focusedValue?: string | null;
+		/** Called when the selection changes. */
 		onSelectionChange?: (details: { selectedValue: string[] }) => void;
+		/** Called when a folder opens or closes. */
 		onExpandedChange?: (details: { expandedValue: string[] }) => void;
+		/** Called when the keyboard focus moves to another row. */
 		onFocusChange?: (details: { focusedValue: string | null }) => void;
-		ref?: Element;
 	} = $props();
 
-	let pivot = $state<string | null>(null);
-	let containerEl = $state<HTMLElement | null>(null);
+	let tree = $state<VirtualTree<TreeNode>>();
 
-	function getVisibleLeafValues(): string[] {
-		const result: string[] = [];
-		function traverse(nodes: AnyNode[]) {
-			for (const node of nodes) {
-				const value = collection.getNodeValue(node as TreeNode);
-				const isBranch = !!(node.children && node.children.length > 0);
-				if (!isBranch) {
-					result.push(value);
-				} else if (expandedValue.includes(value)) {
-					traverse(node.children!);
-				}
-			}
-		}
-		traverse((collection.rootNode as AnyNode).children ?? []);
-		return result;
+	function isFile(value: string): boolean {
+		const node = collection.findNode(value);
+		return node !== undefined && !collection.isBranchNode(node);
 	}
 
-	function handleClick(e: MouseEvent) {
-		const target = e.target as Element;
-		if (target.closest('[data-part="branch-trigger"]')) return;
-
-		// Only leaf items are selectable in FileTree
-		const itemEl = target.closest('[data-part="item"]');
-		if (!itemEl) return;
-
-		const value = itemEl.getAttribute('data-value');
-		if (!value) return;
-
-		e.stopPropagation();
-
-		const isSelected = selectedValue.includes(value);
-
-		if (isSelected) {
-			const next = selectedValue.filter((v) => v !== value);
-			selectedValue = next;
-			if (next.length === 0) pivot = null;
-			onSelectionChange?.({ selectedValue: next });
-			return;
-		}
-
-		// Shift+click: range select
-		if (e.shiftKey && pivot) {
-			const visible = getVisibleLeafValues();
-			const pivotIdx = visible.indexOf(pivot);
-			const currIdx = visible.indexOf(value);
-			if (pivotIdx !== -1 && currIdx !== -1) {
-				const [start, end] = pivotIdx < currIdx ? [pivotIdx, currIdx] : [currIdx, pivotIdx];
-				const range = visible.slice(start, end + 1);
-				if (e.ctrlKey || e.metaKey) {
-					// Ctrl+Shift: add range to existing selection
-					const next = [...new Set([...selectedValue, ...range])];
-					selectedValue = next;
-					onSelectionChange?.({ selectedValue: next });
-				} else {
-					selectedValue = range;
-					onSelectionChange?.({ selectedValue: range });
-				}
-				return;
-			}
-		}
-
-		// Ctrl+click: add to selection
-		if (e.ctrlKey || e.metaKey) {
-			const next = [...selectedValue, value];
-			selectedValue = next;
-			pivot = value;
-			onSelectionChange?.({ selectedValue: next });
-			return;
-		}
-
-		// Plain click: select only this
-		selectedValue = [value];
-		pivot = value;
-		onSelectionChange?.({ selectedValue: selectedValue });
+	/** Takes the selection the tree computes, without its folders. */
+	function selectFiles(next: string[]) {
+		const files = next.filter(isFile);
+		// A selection of folders only is a click on a folder: it opens or closes, nothing more.
+		if (files.length === 0 && next.length > 0) return;
+		selectedValue = files;
+		onSelectionChange?.({ selectedValue: files });
 	}
 
-	function onOutsidePointerDown(e: PointerEvent) {
-		if (!containerEl || containerEl.contains(e.target as Node)) return;
-		selectedValue = [];
-		pivot = null;
-		onSelectionChange?.({ selectedValue: [] });
+	/**
+	 * Shift+up and Shift+down, handled here rather than by the tree, which adds or removes one row
+	 * at a time and so, with the folders left out, can't shrink the selection back across one. The
+	 * focus moves to the row above or below, and the selection becomes the files from the anchor
+	 * (the first selected file, or the row the move starts from) to that row.
+	 */
+	function onKeyDown(event: KeyboardEvent, node: TreeNode) {
+		if (!event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) return;
+		if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+		event.preventDefault();
+		const from = collection.getNodeValue(node);
+		const visible = (tree?.visibleValues() ?? []).filter(
+			(v) => v === from || !collection.getNodeDisabled(collection.findNode(v))
+		);
+		const index = visible.indexOf(from);
+		const to = visible[event.key === 'ArrowUp' ? index - 1 : index + 1];
+		if (to === undefined) return;
+		const anchor = visible.includes(selectedValue[0]) ? selectedValue[0] : from;
+		const [start, end] = [visible.indexOf(anchor), visible.indexOf(to)].sort((a, b) => a - b);
+		const range = visible.slice(start, end + 1);
+		selectFiles([anchor, ...range.filter((v) => v !== anchor)]);
+		tree?.focus(to);
 	}
 </script>
 
-<svelte:document onpointerdowncapture={onOutsidePointerDown} />
-
-<div
-	bind:this={containerEl}
-	onclickcapture={handleClick}
-	class={cn('flex flex-col text-sm', className)}
+<VirtualTree
+	bind:this={tree}
+	{collection}
+	{label}
+	bind:selectedValue={() => selectedValue, selectFiles}
+	bind:expandedValue
+	bind:focusedValue
+	multiple
+	expandOnClick
+	{onKeyDown}
+	{onExpandedChange}
+	{onFocusChange}
+	class={className}
 >
-	<TreeView.Root
-		{collection}
-		selectionMode="multiple"
-		{selectedValue}
-		{expandedValue}
-		{focusedValue}
-		onFocusChange={(details) => {
-			focusedValue = details.focusedValue ?? undefined;
-			onFocusChange?.(details);
-		}}
-		onExpandedChange={(details) => {
-			expandedValue = details.expandedValue;
-			onExpandedChange?.(details);
-		}}
-		class="flex flex-col"
-		data-slot="file-tree"
-		ref={rootRef}
-	>
-		<TreeView.Tree class="flex flex-col">
-			{#each collection.rootNode.children ?? [] as node, i (collection.getNodeValue(node))}
-				{@render renderNode(node as AnyNode, [i])}
-			{/each}
-		</TreeView.Tree>
-	</TreeView.Root>
-</div>
-
-{#snippet renderNode(node: AnyNode, indexPath: number[])}
-	<TreeView.NodeProvider {node} {indexPath}>
-		<TreeView.NodeContext>
-			{#snippet render(nodeState)}
-				{#if node.children && node.children.length > 0}
-					<TreeView.Branch class="flex flex-col" data-slot="file-tree-branch">
-						<TreeView.BranchControl
-							style="padding-left: calc(var(--depth) * 1rem)"
-							class="flex w-full items-center py-1 pr-2 transition-colors hover:bg-hover"
-							data-slot="file-tree-branch-control"
-						>
-							<TreeView.BranchTrigger class="flex flex-1 cursor-default items-center gap-1.5">
-								<TreeView.BranchIndicator
-									class="shrink-0 text-muted transition-transform data-[state=open]:rotate-90"
-								>
-									<MingcuteRightLine class="size-3.5" />
-								</TreeView.BranchIndicator>
-								{#if icon}
-									{@render icon(node)}
-								{:else if nodeState().expanded}
-									<MingcuteFolderOpenLine class="size-4 shrink-0 text-primary" />
-								{:else}
-									<MingcuteFolder2Line class="size-4 shrink-0 text-primary" />
-								{/if}
-								<span class="truncate">{node.name ?? node.label ?? ''}</span>
-							</TreeView.BranchTrigger>
-						</TreeView.BranchControl>
-						<TreeView.BranchContent
-							class="flex flex-col data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open"
-							data-slot="file-tree-branch-content"
-						>
-							{#each node.children as child, j (collection.getNodeValue(child as TreeNode))}
-								{@render renderNode(child as AnyNode, [...indexPath, j])}
-							{/each}
-						</TreeView.BranchContent>
-					</TreeView.Branch>
-				{:else}
-					<TreeView.Item
-						style="padding-left: calc(var(--depth) * 1rem)"
-						class="flex w-full cursor-default items-center gap-2 py-1 pr-2 transition-colors hover:bg-hover data-selected:bg-hover data-selected:text-fg"
-						data-slot="file-tree-item"
-					>
-						{#if icon}
-							{@render icon(node)}
-						{:else}
-							<MingcuteFileLine class="size-4 shrink-0 text-muted" />
-						{/if}
-						<span class="truncate">{node.name ?? node.label ?? ''}</span>
-					</TreeView.Item>
-				{/if}
-			{/snippet}
-		</TreeView.NodeContext>
-	</TreeView.NodeProvider>
-{/snippet}
+	{#snippet row(node, state)}
+		{#if icon}
+			{@render icon(node)}
+		{:else if !state.isBranch}
+			<MingcuteFileLine class="size-4 shrink-0 text-muted" aria-hidden="true" />
+		{:else if state.expanded}
+			<MingcuteFolderOpenLine class="size-4 shrink-0 text-primary" aria-hidden="true" />
+		{:else}
+			<MingcuteFolder2Line class="size-4 shrink-0 text-primary" aria-hidden="true" />
+		{/if}
+		<span class="truncate">{collection.stringifyNode(node)}</span>
+	{/snippet}
+</VirtualTree>

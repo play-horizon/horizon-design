@@ -37,6 +37,6 @@ Docs: FileTree. Live examples of the FileTree component.
 
 <section id="file-tree">
 	<Card>
-		<FileTree collection={treeCollection} />
+		<FileTree collection={treeCollection} label="Project files" />
 	</Card>
 </section>
