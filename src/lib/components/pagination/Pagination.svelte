@@ -3,8 +3,14 @@
 Page links with previous and next (Ark Pagination). `page` binds the current page; without it,
 Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (`rootLabel`,
 `prevTriggerLabel`, `nextTriggerLabel`, `itemLabel`).
+
+`children` replaces the built-in controls with the app's own, composed from the parts:
+`PaginationPrevTrigger`, `PaginationNextTrigger`, `PaginationItem` (one page link),
+`PaginationEllipsis`, and `PaginationContext`, whose `render` snippet reads the state (`page`,
+`totalPages`, `pages`) to draw them.
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import {
 		Pagination,
 		type PaginationRootProps,
@@ -13,6 +19,10 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 	import { cn } from '$lib/utils';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
+	import PaginationEllipsis from './PaginationEllipsis.svelte';
+	import PaginationItem from './PaginationItem.svelte';
+	import PaginationNextTrigger from './PaginationNextTrigger.svelte';
+	import PaginationPrevTrigger from './PaginationPrevTrigger.svelte';
 
 	let {
 		class: className = '',
@@ -22,6 +32,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 		page = $bindable(),
 		onPageChange,
 		translations,
+		children,
 		...rest
 	}: {
 		/** Classes added to the row of links. */
@@ -44,12 +55,11 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 			>
 		> &
 			NonNullable<PaginationRootProps['translations']>;
+		/** Controls composed from the parts, in place of the built-in ones. */
+		children?: Snippet;
 		/** Other props of Ark's `Pagination.Root`. */
 		[key: string]: unknown;
 	} = $props();
-
-	const buttonClass =
-		'inline-flex items-center justify-center size-8 rounded-lg text-sm font-medium transition-colors border border-transparent hover:bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-50 data-selected:bg-primary data-selected:text-on-primary data-selected:border-transparent';
 </script>
 
 <Pagination.Root
@@ -66,30 +76,27 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 	data-slot="pagination"
 	{...rest}
 >
-	<Pagination.Context>
-		{#snippet render(api)}
-			<Pagination.PrevTrigger class={cn(buttonClass, 'text-muted')}>
-				<MingcuteLeftLine class="size-4" aria-hidden="true" />
-			</Pagination.PrevTrigger>
+	{#if children}
+		{@render children()}
+	{:else}
+		<Pagination.Context>
+			{#snippet render(api)}
+				<PaginationPrevTrigger class="text-muted">
+					<MingcuteLeftLine class="size-4" aria-hidden="true" />
+				</PaginationPrevTrigger>
 
-			{#each api().pages as item, index (item.type === 'page' ? item.value : `ellipsis-${index}`)}
-				{#if item.type === 'page'}
-					<Pagination.Item value={item.value} type={item.type} class={buttonClass}>
-						{item.value}
-					</Pagination.Item>
-				{:else}
-					<Pagination.Ellipsis
-						{index}
-						class="flex size-8 items-center justify-center text-sm text-muted"
-					>
-						&#8230;
-					</Pagination.Ellipsis>
-				{/if}
-			{/each}
+				{#each api().pages as item, index (item.type === 'page' ? item.value : `ellipsis-${index}`)}
+					{#if item.type === 'page'}
+						<PaginationItem value={item.value}>{item.value}</PaginationItem>
+					{:else}
+						<PaginationEllipsis {index} />
+					{/if}
+				{/each}
 
-			<Pagination.NextTrigger class={cn(buttonClass, 'text-muted')}>
-				<MingcuteRightLine class="size-4" aria-hidden="true" />
-			</Pagination.NextTrigger>
-		{/snippet}
-	</Pagination.Context>
+				<PaginationNextTrigger class="text-muted">
+					<MingcuteRightLine class="size-4" aria-hidden="true" />
+				</PaginationNextTrigger>
+			{/snippet}
+		</Pagination.Context>
+	{/if}
 </Pagination.Root>

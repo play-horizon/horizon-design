@@ -1,11 +1,13 @@
 /**
- * Tests of `Pagination`: the page links and their names, Ark's `defaultPage`, and an
- * `onPageChange` of the app running without breaking the bound `page`.
+ * Tests of `Pagination`: the page links and their names, Ark's `defaultPage`, an `onPageChange`
+ * of the app running without breaking the bound `page`, and `children` composed from the parts in
+ * place of the built-in controls.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 import Pagination from './Pagination.svelte';
+import PaginationFixture from './Pagination.test.svelte';
 
 const translations = {
 	rootLabel: 'Pages',
@@ -58,5 +60,17 @@ describe('Pagination', () => {
 		await fireEvent.click(getByRole('button', { name: 'Next page' }));
 		expect(onPageChange).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
 		expect(bound).toBe(2);
+	});
+
+	it('composes the parts given as children in place of the built-in controls', async () => {
+		const { getByRole, getAllByRole, getByTestId } = render(PaginationFixture);
+		expect(getByRole('navigation', { name: 'Pages' })).toBeTruthy();
+		expect(getAllByRole('button').map((button) => button.getAttribute('aria-label'))).toEqual([
+			'Previous page',
+			'Next page'
+		]);
+		expect(getByTestId('position').textContent).toBe('1 of 3');
+		await fireEvent.click(getByRole('button', { name: 'Next page' }));
+		expect(getByTestId('position').textContent).toBe('2 of 3');
 	});
 });
