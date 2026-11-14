@@ -14,7 +14,7 @@ license. Bug reports, accessibility fixes, docs and new components are welcome.
 
 ## Setup
 
-Requirements: Node.js 22 and pnpm 10 (the versions CI uses).
+Requirements: Node.js 24 and pnpm 12 (the versions CI uses, from `.node-version` and `packageManager`).
 
 ```sh
 git clone https://github.com/play-horizon/horizon-design.git

@@ -79,5 +79,13 @@
 		"esm-env": "^1.2.2",
 		"horizon-layout": "^1.0.3",
 		"tailwind-merge": "^3.7.0"
-	}
+	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "^24",
+			"onFail": "error"
+		}
+	},
+	"packageManager": "pnpm@12.17.0"
 }
