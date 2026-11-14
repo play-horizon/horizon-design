@@ -1,6 +1,7 @@
 <!--
 @component
-A button that stays pressed or not (Ark Toggle).
+A button that stays pressed or not (Ark Toggle); `pressed` binds its state. An icon-only toggle
+takes its accessible name through `aria-label`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -16,10 +17,14 @@ A button that stays pressed or not (Ark Toggle).
 		...rest
 	}: {
 		class?: string;
+		/** The toggle's content: an icon, a label, or both. */
 		children?: Snippet;
+		/** Borderless, or outlined. */
 		variant?: 'default' | 'outline';
 		size?: 'sm' | 'md' | 'lg';
+		/** Whether it is pressed (bindable). */
 		pressed?: boolean;
+		/** Other props of Ark's `Toggle.Root`, such as `aria-label`, `disabled` or `onPressedChange`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -41,8 +46,7 @@ A button that stays pressed or not (Ark Toggle).
 		className
 	)}
 	data-slot="toggle"
-	{pressed}
-	onPressedChange={(details) => (pressed = details)}
+	bind:pressed
 	{...rest}
 >
 	{@render children?.()}

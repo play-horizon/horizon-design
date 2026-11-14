@@ -14,14 +14,14 @@ Docs: Toggle. Live examples of the Toggle component.
 	<Card>
 		<div>
 			<div class="flex flex-wrap items-center gap-3">
-				<Toggle>
-					<MingcuteBoldLine class="size-4" />
+				<Toggle aria-label="Bold">
+					<MingcuteBoldLine class="size-4" aria-hidden="true" />
 				</Toggle>
-				<Toggle>
-					<MingcuteItalicLine class="size-4" />
+				<Toggle aria-label="Italic">
+					<MingcuteItalicLine class="size-4" aria-hidden="true" />
 				</Toggle>
 				<Toggle variant="outline">
-					<MingcuteUnderlineLine class="size-4" />
+					<MingcuteUnderlineLine class="size-4" aria-hidden="true" />
 					<span>Underline</span>
 				</Toggle>
 				<Toggle variant="outline" size="sm">Small</Toggle>
