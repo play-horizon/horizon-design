@@ -1,20 +1,21 @@
 <!--
 @component
-The docs site's shell: the header (logo, name, theme switch), the sidebar with every component
-page, and the page itself, which slides in the direction of travel when the page changes (the
+The docs site's shell: a skip link to the page, the header (logo, name, theme switch), the sidebar
+with every component page, and the page itself, which slides in the direction of travel when the page changes (the
 library's own `slidePage`, as the apps use it).
 -->
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { resolve } from '$app/paths';
+	import { asset, resolve } from '$app/paths';
 	import { onNavigate } from '$app/navigation';
 	import { theme } from '$lib/theme.svelte';
 	import { slidePage } from '$lib/motion/page-transition';
 	import { Sidebar, SidebarItem, SidebarSection } from '$lib/components/sidebar';
 	import { ThemeSwitch } from '$lib/components/theme-switch';
 	import { Input } from '$lib/components/input';
+	import { SkipNav } from '$lib/components/skip-nav';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
 	import { navGroups, pageOrder } from './nav';
 	import pkg from '../../package.json';
@@ -52,10 +53,12 @@ library's own `slidePage`, as the apps use it).
 	});
 </script>
 
+<SkipNav>Skip to content</SkipNav>
+
 <div class="flex h-screen flex-col overflow-hidden">
 	<header class="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-sunken px-4">
 		<a href={resolve('/')} class="flex items-center gap-2.5 font-bold">
-			<img src="{resolve('/')}favicon.svg" alt="" class="size-6.5 rounded-md" />
+			<img src={asset('/favicon.svg')} alt="" class="size-6.5 rounded-md" />
 			<span class="text-md">horizon-design</span>
 		</a>
 		<span class="font-mono text-xs text-faint">v{pkg.version}</span>
@@ -69,7 +72,7 @@ library's own `slidePage`, as the apps use it).
 		<Sidebar class="w-56 shrink-0">
 			<div class="pt-3 pb-1">
 				<Input bind:value={search} placeholder="Search components" aria-label="Search components">
-					{#snippet start()}<MingcuteSearchLine />{/snippet}
+					{#snippet start()}<MingcuteSearchLine aria-hidden="true" />{/snippet}
 				</Input>
 			</div>
 			<SidebarSection label="Foundations">

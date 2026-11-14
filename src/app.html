@@ -7,7 +7,12 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<script>
 			(function () {
-				var m = localStorage.getItem('horizon-theme');
+				var m = null;
+				try {
+					m = localStorage.getItem('horizon-theme');
+				} catch {
+					// Storage disabled: follow the OS, as the theme controller does.
+				}
 				var dark =
 					m === 'dark' ||
 					(m !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
