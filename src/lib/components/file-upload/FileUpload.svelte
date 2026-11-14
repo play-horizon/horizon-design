@@ -1,7 +1,7 @@
 <!--
 @component
 A dropzone that takes files by drop or by browsing (Ark FileUpload); `prompt` and `hint` are its
-texts.
+texts, and `prompt` names it for assistive technology.
 -->
 <script lang="ts">
 	import { FileUpload } from '@ark-ui/svelte';
@@ -18,15 +18,21 @@ texts.
 		maxFileSize,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The visible label above the dropzone. */
 		label?: string;
-		/** The dropzone's main text, such as "Drop files here or click to browse". */
+		/** The dropzone's main text and accessible name, such as "Drop files here or click to browse". */
 		prompt: string;
 		/** A second line under the prompt, such as the accepted formats. */
 		hint?: string;
+		/** The accepted file types, as in the file input's `accept` (`image/png,image/webp`). */
 		accept?: string;
+		/** How many files can be chosen at once. */
 		maxFiles?: number;
+		/** The largest accepted file, in bytes. */
 		maxFileSize?: number;
+		/** Other props of Ark's `FileUpload.Root`, such as `onFileAccept`, `onFileReject` or `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -37,6 +43,7 @@ texts.
 	{accept}
 	{maxFiles}
 	{maxFileSize}
+	translations={{ dropzone: prompt }}
 	{...rest}
 >
 	{#if label}
@@ -45,10 +52,10 @@ texts.
 		</FileUpload.Label>
 	{/if}
 	<FileUpload.Dropzone
-		class="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-surface p-8 text-center transition-colors outline-none hover:bg-hover data-dragging:border-primary data-dragging:bg-primary-subtle"
+		class="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-surface p-8 text-center transition-colors outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-primary data-dragging:border-primary data-dragging:bg-primary-subtle"
 		data-slot="file-upload-dropzone"
 	>
-		<MingcuteFileUploadLine class="size-8 text-muted" />
+		<MingcuteFileUploadLine class="size-8 text-muted" aria-hidden="true" />
 		<div>
 			<p class="text-sm font-medium text-fg">{prompt}</p>
 			{#if hint}
