@@ -17,6 +17,7 @@ Docs: Tour. Live examples of the Tour component.
 			{/snippet}
 			<Tour
 				closeLabel="Close"
+				progressText={({ current, total }) => `${current + 1} of ${total}`}
 				trigger={tourTrigger}
 				steps={[
 					{

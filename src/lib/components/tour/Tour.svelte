@@ -1,6 +1,9 @@
 <!--
 @component
-A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its close button.
+A guided tour of the interface, step by step (Ark Tour): each step's title, description, progress
+and action buttons, over a scrim with the step's target spotlit. The app passes the steps and
+their action labels translated, `closeLabel` for the close button and `progressText` for the
+progress line; each action button is named by its label.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -16,22 +19,32 @@ A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its 
 		showProgress = true,
 		showClose = true,
 		closeLabel,
+		progressText,
 		lazyMount = true,
 		unmountOnExit = true,
 		...rest
 	}: {
+		/** The steps, in order, with their texts and action labels translated. */
 		steps?: TourStepDetails[];
-		trigger?: Snippet<[() => void]>;
+		/** What starts the tour, such as a button; it receives the function that starts it. */
+		trigger?: Snippet<[start: () => void]>;
+		/** Shows the progress line, such as "2 of 3". */
 		showProgress?: boolean;
+		/** Shows the close button. */
 		showClose?: boolean;
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
+		/** The progress line, translated, from the current step's index (from 0) and the count. */
+		progressText: (details: Tour.ProgressTextDetails) => string;
+		/** Renders the tour only once it first opens. */
 		lazyMount?: boolean;
+		/** Removes the tour from the page once it closes. */
 		unmountOnExit?: boolean;
+		/** Other props of Ark's `Tour.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
-	const tour = useTour(() => ({ steps }));
+	const tour = useTour(() => ({ steps, translations: { close: closeLabel, progressText } }));
 
 	function handleStart() {
 		tour().start();
@@ -44,7 +57,7 @@ A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its 
 	{/if}
 	<Portal>
 		<Tour.Backdrop
-			class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 fixed inset-0 z-90 bg-scrim"
+			class="fixed inset-0 z-90 bg-scrim data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
 			data-slot="tour-overlay"
 		/>
 		<Tour.Positioner
@@ -57,9 +70,7 @@ A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its 
 					'flex flex-col gap-4',
 					'rounded-lg border bg-background shadow-lg',
 					'focus:ring-0 focus:outline-none',
-					'data-[state=closed]:animate-out data-[state=open]:animate-in',
-					'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-					'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95'
+					'data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in'
 				)}
 				data-slot="tour-content"
 			>
@@ -101,6 +112,7 @@ A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its 
 									{#each api.step?.actions ?? [] as action (action.label)}
 										<Tour.ActionTrigger
 											{action}
+											aria-label={action.label}
 											class={cn(
 												'inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors',
 												action.action === 'dismiss' || action.action === 'prev'
@@ -110,11 +122,11 @@ A guided tour of the interface, step by step (Ark Tour); `closeLabel` names its 
 											data-slot="tour-action-trigger"
 										>
 											{#if action.action === 'prev'}
-												<MingcuteLeftLine class="size-3.5" />
+												<MingcuteLeftLine class="size-3.5" aria-hidden="true" />
 											{/if}
 											{action.label}
 											{#if action.action === 'next'}
-												<MingcuteRightLine class="size-3.5" />
+												<MingcuteRightLine class="size-3.5" aria-hidden="true" />
 											{/if}
 										</Tour.ActionTrigger>
 									{/each}
