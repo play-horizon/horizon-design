@@ -1,6 +1,8 @@
 <!--
 @component
-A pad to draw a signature or a sketch (Ark SignaturePad).
+A pad to draw a signature or a sketch (Ark SignaturePad), with a clear button once something is
+drawn. `label` shows above the pad and names it; `clearLabel` names the clear button. In a form,
+Ark's `name` submits the drawn paths as JSON.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -9,24 +11,30 @@ A pad to draw a signature or a sketch (Ark SignaturePad).
 
 	let {
 		class: className = '',
-		label = '',
+		label,
 		clearLabel,
 		children,
 		...rest
 	}: {
+		/** Classes added to the root, around the label, the pad and the button. */
 		class?: string;
-		label?: string;
+		/** The pad's label, such as "Signature". */
+		label: string;
 		/** The clear button's text, such as "Clear". */
 		clearLabel: string;
+		/** Content after the clear button, such as a hint. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
 </script>
 
-<SignaturePad.Root class={cn('flex flex-col gap-2', className)} data-slot="signature-pad" {...rest}>
-	{#if label}
-		<SignaturePad.Label class="text-sm font-medium text-fg">{label}</SignaturePad.Label>
-	{/if}
+<SignaturePad.Root
+	class={cn('flex flex-col gap-2', className)}
+	data-slot="signature-pad"
+	translations={{ control: label, clearTrigger: clearLabel }}
+	{...rest}
+>
+	<SignaturePad.Label class="text-sm font-medium text-fg">{label}</SignaturePad.Label>
 	<SignaturePad.Control
 		class="relative h-40 w-full cursor-crosshair overflow-hidden rounded-xl border border-border bg-surface"
 	>
