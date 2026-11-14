@@ -28,4 +28,13 @@ describe('AssetCard', () => {
 		await fireEvent.click(card);
 		expect(onclick).toHaveBeenCalledOnce();
 	});
+
+	it('is a toggle that says when it is not chosen', () => {
+		const { getByRole } = render(AssetCard, {
+			name: 'Ice floor',
+			kind: 'Texture',
+			onclick: vi.fn()
+		});
+		expect(getByRole('button', { name: 'Ice floor' }).getAttribute('aria-pressed')).toBe('false');
+	});
 });

@@ -72,7 +72,7 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 			<button
 				type="button"
 				class={cn(stretched, 'truncate text-left text-sm font-semibold text-fg')}
-				aria-pressed={onclick && selected ? true : undefined}
+				aria-pressed={onclick ? selected : undefined}
 				{onclick}
 			>
 				{name}
