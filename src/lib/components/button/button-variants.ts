@@ -3,6 +3,7 @@
  * being one (a link styled as a button: `<a class={buttonVariants({ variant: 'primary' })}>`).
  * @module
  */
+import type { ClassValue } from 'clsx';
 import { cn } from '$lib/utils';
 
 const base =
@@ -57,7 +58,7 @@ export function buttonVariants({
 	/** Fully rounded ends. */
 	pill?: boolean;
 	/** Classes merged last, so they win over the button's own. */
-	className?: string;
+	className?: ClassValue | null;
 } = {}): string {
 	return cn(base, variants[variant], sizes[size], pill && 'rounded-full', className);
 }

@@ -7,6 +7,7 @@ buttons, which need an `aria-label`). `loading` shows a spinner, disables it and
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 	import Spinner from '../spinner/Spinner.svelte';
 	import { buttonVariants, type ButtonSize, type ButtonVariant } from './button-variants';
 
@@ -29,8 +30,8 @@ buttons, which need an `aria-label`). `loading` shows a spinner, disables it and
 		loading?: boolean;
 		/** Fully rounded ends. */
 		pill?: boolean;
-		/** Classes merged onto the button. */
-		class?: string;
+		/** Classes merged onto the button: a string, or an array or object as Svelte's `class` takes. */
+		class?: ClassValue | null;
 		/** Turns the button off. */
 		disabled?: boolean;
 		/** The button's type in a form; `button` by default, so it never submits by accident. */
