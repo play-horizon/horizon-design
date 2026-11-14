@@ -1,7 +1,8 @@
 /* horizon-design's stylesheet, imported once by each app after Tailwind
    (`@import 'tailwindcss'; @import 'horizon-design/horizon-design.css';`): the fonts, the theme
    tokens (generated from scripts/tokens/tokens.ts), the rest of the Tailwind theme, base styles,
-   page motion and the frosted overlay utility. Components are scanned for their classes. */
+   page motion and the frosted overlay utility. Components and their script helpers (`.ts` here,
+   `.js` once packaged) are scanned for their classes. */
 
 @import './styles/fonts.css';
 @import './styles/scale.css';
@@ -10,4 +11,4 @@
 @import './styles/motion.css';
 @import './styles/frosted.css';
 
-@source './**/*.svelte';
+@source './**/*.{svelte,js,ts}';
