@@ -20,12 +20,19 @@ and a description.
 		class: className = '',
 		...rest
 	}: {
+		/** The tint and its icon; `destructive` is the same as `error`. */
 		variant?: 'default' | 'info' | 'success' | 'warning' | 'error' | 'destructive';
+		/** The message's title. */
 		title?: string;
+		/** The message's text, under the title. */
 		description?: string;
+		/** Replaces the variant's icon. */
 		icon?: Snippet;
+		/** More content under the description, such as an action. */
 		children?: Snippet;
+		/** Classes merged onto the alert. */
 		class?: string;
+		/** Other attributes of the alert. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -39,11 +46,16 @@ and a description.
 		error: 'bg-danger-subtle border-danger-border',
 		destructive: 'bg-danger-subtle border-danger-border'
 	};
+
+	/** Warnings and errors interrupt assistive technology (`alert`); the others wait their turn. */
+	const urgent = $derived(
+		variant === 'warning' || variant === 'error' || variant === 'destructive'
+	);
 </script>
 
 <div
 	class={cn(base, variants[variant], className)}
-	role="alert"
+	role={urgent ? 'alert' : 'status'}
 	data-slot="alert"
 	data-variant={variant}
 	{...rest}
@@ -54,26 +66,26 @@ and a description.
 		</div>
 	{:else if variant === 'info'}
 		<div class="mt-0.5 shrink-0" data-slot="alert-icon">
-			<MingcuteInformationLine class="size-4" />
+			<MingcuteInformationLine class="size-4" aria-hidden="true" />
 		</div>
 	{:else if variant === 'success'}
 		<div class="mt-0.5 shrink-0" data-slot="alert-icon">
-			<MingcuteCheckCircleLine class="size-4" />
+			<MingcuteCheckCircleLine class="size-4" aria-hidden="true" />
 		</div>
 	{:else if variant === 'warning'}
 		<div class="mt-0.5 shrink-0" data-slot="alert-icon">
-			<MingcuteAlertLine class="size-4" />
+			<MingcuteAlertLine class="size-4" aria-hidden="true" />
 		</div>
 	{:else if variant === 'error' || variant === 'destructive'}
 		<div class="mt-0.5 shrink-0" data-slot="alert-icon">
-			<MingcuteCloseCircleLine class="size-4" />
+			<MingcuteCloseCircleLine class="size-4" aria-hidden="true" />
 		</div>
 	{/if}
 	<div class="flex flex-col gap-0.5">
 		{#if title}
-			<h5 class="mb-1 leading-none font-semibold tracking-tight" data-slot="alert-title">
+			<p class="mb-1 leading-none font-semibold tracking-tight" data-slot="alert-title">
 				{title}
-			</h5>
+			</p>
 		{/if}
 		{#if description}
 			<p class="text-sm opacity-90" data-slot="alert-description">{description}</p>
