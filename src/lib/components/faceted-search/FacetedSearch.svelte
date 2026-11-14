@@ -41,7 +41,7 @@ shows while any option is chosen. Every text is passed in, translated.
 		query: string;
 		/** The chosen option ids of each facet, by facet id. */
 		selected: Record<string, string[]>;
-		/** The chosen sort's id; unset while none is chosen. */
+		/** The chosen sort's id; unset when there is no sort. */
 		sort: string | undefined;
 	}
 </script>
@@ -58,9 +58,9 @@ shows while any option is chosen. Every text is passed in, translated.
 	let {
 		query = $bindable(''),
 		selected = $bindable({}),
-		sort = $bindable(),
 		facets,
 		sorts = [],
+		sort = $bindable(sorts[0]?.id),
 		searchLabel,
 		placeholder = '',
 		sortLabel = '',
@@ -73,12 +73,12 @@ shows while any option is chosen. Every text is passed in, translated.
 		query?: string;
 		/** The chosen option ids of each facet, by facet id. */
 		selected?: Record<string, string[]>;
-		/** The chosen sort's id. */
-		sort?: string;
 		/** The facets, in the order shown. */
 		facets: readonly Facet[];
 		/** The ways to order the results; no sort control when empty. */
 		sorts?: readonly SortOption[];
+		/** The chosen sort's id (bindable); unset, the first of `sorts`. */
+		sort?: string;
 		/** The search field's accessible name, such as "Search games". */
 		searchLabel: string;
 		/** The search field's placeholder, such as "Search games by name". */

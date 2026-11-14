@@ -1,6 +1,7 @@
 /**
  * Tests of `FacetedSearch`: choosing facet options, searching, sorting and clearing, each
- * reported through `onChange`, and focus kept when the clear button goes.
+ * reported through `onChange`, the first sort chosen by default, and focus kept when the clear
+ * button goes.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -63,5 +64,24 @@ describe('FacetedSearch', () => {
 			target: { value: 'newest' }
 		});
 		expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ sort: 'newest' }));
+	});
+
+	it('starts on the first sort when none is given', async () => {
+		const onChange = vi.fn();
+		const { getByRole } = render(FacetedSearch, {
+			facets,
+			sorts,
+			searchLabel: 'Search games',
+			sortLabel: 'Sort by',
+			clearLabel: 'Clear filters',
+			onChange
+		});
+		expect((getByRole('combobox', { name: 'Sort by' }) as HTMLSelectElement).value).toBe('players');
+		await fireEvent.input(getByRole('searchbox', { name: 'Search games' }), {
+			target: { value: 'sky' }
+		});
+		expect(onChange).toHaveBeenLastCalledWith(
+			expect.objectContaining({ query: 'sky', sort: 'players' })
+		);
 	});
 });
