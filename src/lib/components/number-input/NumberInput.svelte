@@ -1,8 +1,9 @@
 <!--
 @component
 A number field with increment and decrement buttons (Ark NumberInput). `value` binds the text of
-the field; without it, Ark's `defaultValue` sets the first value. Ark's `translations`
-(`incrementLabel`, `decrementLabel`) name the two buttons.
+the field; without it, Ark's `defaultValue` sets the first value. `translations` names the two
+buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced role
+(`roleDescription`).
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -34,18 +35,24 @@ the field; without it, Ark's `defaultValue` sets the first value. Ark's `transla
 		value?: string;
 		/** Called on every change of the value, after `value` is updated. */
 		onValueChange?: (details: NumberInputValueChangeDetails) => void;
-		/** Names of the step buttons (`incrementLabel`, `decrementLabel`), and optionally `valueText`, the value as announced. */
+		/**
+		 * Names of the step buttons (`incrementLabel`, `decrementLabel`), the role the field is
+		 * announced as (`roleDescription`, such as "number field"), and optionally `valueText`, the
+		 * value as announced.
+		 */
 		translations: Required<
 			Pick<NonNullable<NumberInputRootProps['translations']>, 'incrementLabel' | 'decrementLabel'>
 		> &
-			NonNullable<NumberInputRootProps['translations']>;
+			NonNullable<NumberInputRootProps['translations']> & { roleDescription: string };
 		/** Other props of Ark's `NumberInput.Root`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const { roleDescription, ...arkTranslations } = $derived(translations);
 </script>
 
 <NumberInput.Root
-	{translations}
+	translations={arkTranslations}
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"
 	{value}
@@ -65,6 +72,7 @@ the field; without it, Ark's `defaultValue` sets the first value. Ark's `transla
 		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all has-[input:focus-visible]:border-primary has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-primary/20"
 	>
 		<NumberInput.Input
+			aria-roledescription={roleDescription}
 			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50"
 		/>
 		<div class="flex shrink-0 flex-col border-l border-border">

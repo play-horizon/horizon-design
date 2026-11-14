@@ -16,7 +16,11 @@ Docs: NumberInput. Live examples of the NumberInput component.
 					max={100}
 					defaultValue="5"
 					label="Quantity"
-					translations={{ incrementLabel: 'Increase', decrementLabel: 'Decrease' }}
+					translations={{
+						incrementLabel: 'Increase',
+						decrementLabel: 'Decrease',
+						roleDescription: 'number field'
+					}}
 				/>
 			</div>
 		</div>
