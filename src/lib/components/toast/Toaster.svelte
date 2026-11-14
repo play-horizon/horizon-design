@@ -26,6 +26,13 @@ region named by `label`. The toaster's `placement` and `offsets` position the st
 		/** Other props of Ark's `Toaster`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const types = ['info', 'success', 'warning', 'error', 'loading'] as const;
+
+	// Ark's toast type is any string: a type the toast has no tint for shows as info.
+	function tintOf(type: string | undefined): (typeof types)[number] {
+		return types.find((known) => known === type) ?? 'info';
+	}
 </script>
 
 <Toaster
@@ -39,7 +46,7 @@ region named by `label`. The toaster's `placement` and `offsets` position the st
 			{closeLabel}
 			title={toast().title as string | undefined}
 			description={toast().description as string | undefined}
-			type={(toast().type as 'info' | 'success' | 'warning' | 'error') ?? 'info'}
+			type={tintOf(toast().type)}
 		/>
 	{/snippet}
 </Toaster>

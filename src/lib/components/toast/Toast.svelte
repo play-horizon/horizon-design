@@ -1,13 +1,14 @@
 <!--
 @component
-One toast message: an info, success, warning or error tint, a title, a description and a close
-button named by `closeLabel`.
+One toast message: an info, success, warning or error tint (or, while loading, a neutral one with
+a spinner), a title, a description and a close button named by `closeLabel`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Toast } from '@ark-ui/svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import { cn } from '$lib/utils';
+	import Spinner from '../spinner/Spinner.svelte';
 
 	let {
 		class: className = '',
@@ -24,8 +25,8 @@ button named by `closeLabel`.
 		title?: string;
 		/** Its message, translated. */
 		description?: string;
-		/** The tint: info, success, warning or error. */
-		type?: 'info' | 'success' | 'warning' | 'error';
+		/** The tint: info, success, warning or error; loading shows a spinner, for work in progress. */
+		type?: 'info' | 'success' | 'warning' | 'error' | 'loading';
 		/** The close button's accessible name, such as "Close". */
 		closeLabel: string;
 		/** More content under the description, such as an action. */
@@ -40,7 +41,8 @@ button named by `closeLabel`.
 		info: 'border-info-border from-info-subtle to-info-subtle',
 		success: 'border-success-border from-success-subtle to-success-subtle',
 		warning: 'border-warning-border from-warning-subtle to-warning-subtle',
-		error: 'border-danger-border from-danger-subtle to-danger-subtle'
+		error: 'border-danger-border from-danger-subtle to-danger-subtle',
+		loading: 'border-border'
 	};
 </script>
 
@@ -55,6 +57,9 @@ button named by `closeLabel`.
 	data-slot="toast"
 	{...rest}
 >
+	{#if type === 'loading'}
+		<Spinner class="mt-px shrink-0 text-muted" />
+	{/if}
 	<div class="flex flex-1 flex-col gap-1">
 		{#if title}
 			<Toast.Title class="text-sm leading-none font-semibold tracking-tight">
