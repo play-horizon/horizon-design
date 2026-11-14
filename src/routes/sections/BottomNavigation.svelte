@@ -17,10 +17,11 @@ Docs: BottomNavigation. Live examples of the BottomNavigation component.
 				<div class="flex h-10 items-center justify-center bg-sunken">
 					<span class="text-xs text-muted">App content area</span>
 				</div>
-				{#snippet bnHome()}<MingcuteHome4Line class="size-5" />{/snippet}
-				{#snippet bnSearch()}<MingcuteSearchLine class="size-5" />{/snippet}
-				{#snippet bnProfile()}<MingcuteUser1Line class="size-5" />{/snippet}
+				{#snippet bnHome()}<MingcuteHome4Line class="size-5" aria-hidden="true" />{/snippet}
+				{#snippet bnSearch()}<MingcuteSearchLine class="size-5" aria-hidden="true" />{/snippet}
+				{#snippet bnProfile()}<MingcuteUser1Line class="size-5" aria-hidden="true" />{/snippet}
 				<BottomNavigation
+					label="Main"
 					class="relative top-auto right-auto bottom-auto left-auto z-0"
 					items={[
 						{ label: 'Home', href: '#', icon: bnHome, active: true },
