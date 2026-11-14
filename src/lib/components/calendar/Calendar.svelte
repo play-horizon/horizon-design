@@ -1,43 +1,43 @@
 <!--
 @component
-A month calendar to pick a date or a range, inline (Ark DatePicker without its field); Ark
-`translations`, required, name its controls.
+A month calendar to pick a date or a range, inline (Ark DatePicker without its field);
+`translations`, required, name its controls and give the role the table of each view is announced
+as.
 -->
 <script lang="ts">
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
+	import type { DatePickerDateView } from '@ark-ui/svelte/date-picker';
 	import { cn } from '$lib/utils';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 
 	let {
 		class: className = '',
-		lazyMount = true,
-		unmountOnExit = true,
 		translations,
 		...rest
 	}: {
 		/** Classes merged onto the calendar. */
 		class?: string;
-		/** Renders the calendar's views only once they are first shown. */
-		lazyMount?: boolean;
-		/** Removes a view when another replaces it. */
-		unmountOnExit?: boolean;
 		/**
 		 * The accessible names Ark gives the controls: each day (`dayCell(state)`, from its
-		 * formatted `valueText`), the previous and next buttons and the view switch (`viewTrigger`).
+		 * formatted `valueText`), the previous and next buttons and the view switch (`viewTrigger`);
+		 * and the role the table of each view is announced as (`tableRoleDescription(view)`, such as
+		 * "calendar month" for `day`).
 		 */
 		translations: Required<
 			Pick<
 				NonNullable<DatePickerRootProps['translations']>,
 				'dayCell' | 'prevTrigger' | 'nextTrigger' | 'viewTrigger'
 			>
-		>;
+		> & { tableRoleDescription: (view: DatePickerDateView) => string };
 		/**
 		 * Other props of Ark's `DatePicker.Root`: `value` and `onValueChange`, `selectionMode`
 		 * (`single`, `multiple` or `range`), `locale`.
 		 */
 		[key: string]: unknown;
 	} = $props();
+
+	const { tableRoleDescription, ...arkTranslations } = $derived(translations);
 
 	const cellClass = cn(
 		'inline-flex items-center justify-center',
@@ -63,9 +63,7 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 	class={cn('[--cell-size:--spacing(9)]', 'w-fit', className)}
 	data-slot="calendar"
 	inline
-	{lazyMount}
-	{unmountOnExit}
-	{translations}
+	translations={arkTranslations}
 	{...rest}
 >
 	<DatePicker.View view="day" class="flex flex-col gap-1" data-slot="calendar-view">
@@ -88,7 +86,11 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
 			{#snippet render(api)}
-				<DatePicker.Table class="group w-full min-w-60 border-collapse" data-slot="calendar-table">
+				<DatePicker.Table
+					class="group w-full min-w-60 border-collapse"
+					aria-roledescription={tableRoleDescription('day')}
+					data-slot="calendar-table"
+				>
 					<DatePicker.TableHead data-slot="calendar-table-head">
 						<DatePicker.TableRow class="mt-1 flex w-full" data-slot="calendar-table-row">
 							{#each api().weekDays as weekDay (weekDay.long)}
@@ -142,7 +144,10 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
 			{#snippet render(api)}
-				<DatePicker.Table class="group w-full min-w-60 border-collapse">
+				<DatePicker.Table
+					class="group w-full min-w-60 border-collapse"
+					aria-roledescription={tableRoleDescription('month')}
+				>
 					<DatePicker.TableBody>
 						{#each api().getMonthsGrid() as months (months[0].value)}
 							<DatePicker.TableRow class="mt-1 flex w-full">
@@ -180,7 +185,10 @@ A month calendar to pick a date or a range, inline (Ark DatePicker without its f
 		</DatePicker.ViewControl>
 		<DatePicker.Context>
 			{#snippet render(api)}
-				<DatePicker.Table class="group w-full min-w-60 border-collapse">
+				<DatePicker.Table
+					class="group w-full min-w-60 border-collapse"
+					aria-roledescription={tableRoleDescription('year')}
+				>
 					<DatePicker.TableBody>
 						{#each api().getYearsGrid() as years (years[0].value)}
 							<DatePicker.TableRow class="mt-1 flex w-full">

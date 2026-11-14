@@ -5,6 +5,16 @@ Docs: Calendar. Live examples of the Calendar component.
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Calendar } from '$lib/components/calendar';
+
+	/** What the previous and next buttons move by in each view. */
+	const periods = { day: 'month', month: 'year', year: 'decade' } as const;
+
+	/** The role each view's table is announced as. */
+	const tables = {
+		day: 'calendar month',
+		month: 'calendar year',
+		year: 'calendar decade'
+	} as const;
 </script>
 
 <section id="calendar">
@@ -13,9 +23,10 @@ Docs: Calendar. Live examples of the Calendar component.
 			<Calendar
 				translations={{
 					dayCell: (day) => (day.selected ? `${day.valueText}, chosen` : day.valueText),
-					prevTrigger: (view) => `Previous ${view}`,
-					nextTrigger: (view) => `Next ${view}`,
-					viewTrigger: (_view, nextView) => `Show the ${nextView ?? 'day'} view`
+					prevTrigger: (view) => `Previous ${periods[view]}`,
+					nextTrigger: (view) => `Next ${periods[view]}`,
+					viewTrigger: (_view, nextView) => `Show the ${nextView ?? 'day'} view`,
+					tableRoleDescription: (view) => tables[view]
 				}}
 			/>
 		</div>
