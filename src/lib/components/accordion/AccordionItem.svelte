@@ -15,10 +15,15 @@ One section of an `Accordion`: its trigger (text or snippet) and its collapsible
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the section. */
 		class?: string;
+		/** The section's id among the accordion's items, the value `Accordion`'s `value` holds. */
 		value: string;
+		/** The trigger's content: its text, or a snippet. */
 		trigger?: string | Snippet;
+		/** The content shown while the section is open. */
 		children?: Snippet;
+		/** Other props of Ark's `Accordion.Item`, such as `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -30,7 +35,7 @@ One section of an `Accordion`: its trigger (text or snippet) and its collapsible
 	{...rest}
 >
 	<Accordion.ItemTrigger
-		class="flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary [&[data-state=open]>svg]:rotate-180"
+		class="flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary"
 		data-slot="accordion-trigger"
 	>
 		{#if typeof trigger === 'string'}
@@ -38,8 +43,10 @@ One section of an `Accordion`: its trigger (text or snippet) and its collapsible
 		{:else if trigger}
 			{@render trigger()}
 		{/if}
-		<Accordion.ItemIndicator>
-			<MingcuteDownLine class="size-4 shrink-0 transition-transform duration-200" />
+		<Accordion.ItemIndicator
+			class="shrink-0 transition-transform duration-200 data-[state=open]:rotate-180"
+		>
+			<MingcuteDownLine class="size-4" aria-hidden="true" />
 		</Accordion.ItemIndicator>
 	</Accordion.ItemTrigger>
 	<Accordion.ItemContent
