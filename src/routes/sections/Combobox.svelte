@@ -23,6 +23,7 @@ Docs: Combobox. Live examples of the Combobox component.
 				label="Framework"
 				placeholder="Search frameworks…"
 				emptyText="No results found."
+				translations={{ triggerLabel: 'Show frameworks' }}
 			/>
 		</div>
 	</Card>

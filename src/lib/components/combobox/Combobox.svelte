@@ -1,9 +1,17 @@
 <!--
 @component
-A text field that filters a list of options to choose from (Ark Combobox).
+A text field that filters a list of options to choose from (Ark Combobox): typing keeps the
+options whose label contains the text, ignoring case and accents, and `emptyText` shows when none
+does. Ark `translations` name the open button (`triggerLabel`).
 -->
 <script lang="ts">
-	import { Combobox, createListCollection } from '@ark-ui/svelte';
+	import {
+		Combobox,
+		createListCollection,
+		useFilter,
+		type ComboboxInputValueChangeDetails,
+		type ComboboxRootProps
+	} from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteSelectorVerticalLine from '~icons/mingcute/selector-vertical-line';
@@ -14,24 +22,51 @@ A text field that filters a list of options to choose from (Ark Combobox).
 		label,
 		placeholder = '',
 		emptyText,
+		onInputValueChange,
+		translations,
 		class: className = '',
 		...rest
 	}: {
+		/** The options: the text shown and the value chosen, unique. */
 		items?: Array<{ label: string; value: string }>;
+		/** The field's visible label, such as "Framework". */
 		label?: string;
 		/** The field's placeholder, such as "Search…". */
 		placeholder?: string;
 		/** Shown when no option matches, such as "No results found." */
 		emptyText: string;
+		/** Called with the field's text when it changes. */
+		onInputValueChange?: (details: ComboboxInputValueChangeDetails) => void;
+		/** `triggerLabel` names the button that opens the options. */
+		translations: Required<
+			Pick<
+				NonNullable<ComboboxRootProps<{ label: string; value: string }>['translations']>,
+				'triggerLabel'
+			>
+		>;
+		/** Classes merged onto the root. */
 		class?: string;
+		/** Other props of Ark's `Combobox.Root`, such as `value`, `onValueChange` and `multiple`. */
 		[key: string]: unknown;
 	} = $props();
 
-	const collection = $derived(createListCollection({ items }));
+	const filters = useFilter({ sensitivity: 'base' });
+	let query = $state('');
+	const matches = $derived(items.filter((item) => filters().contains(item.label, query)));
+	const collection = $derived(createListCollection({ items: matches }));
+
+	function changeInput(details: ComboboxInputValueChangeDetails) {
+		// Choosing an option writes its label into the field: only typing filters, so the list
+		// opens whole again after a choice.
+		query = details.reason === 'input-change' ? details.inputValue : '';
+		onInputValueChange?.(details);
+	}
 </script>
 
 <Combobox.Root
 	{collection}
+	onInputValueChange={changeInput}
+	{translations}
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="combobox"
 	{...rest}
@@ -48,7 +83,7 @@ A text field that filters a list of options to choose from (Ark Combobox).
 			data-slot="combobox-input"
 		/>
 		<Combobox.Trigger class="absolute top-1/2 right-2 -translate-y-1/2 text-muted">
-			<MingcuteSelectorVerticalLine class="size-4" />
+			<MingcuteSelectorVerticalLine class="size-4" aria-hidden="true" />
 		</Combobox.Trigger>
 	</Combobox.Control>
 	<Portal>
@@ -60,7 +95,7 @@ A text field that filters a list of options to choose from (Ark Combobox).
 				<Combobox.Empty class="px-2.5 py-4 text-center text-sm text-muted">
 					{emptyText}
 				</Combobox.Empty>
-				{#each items as item (item.value)}
+				{#each matches as item (item.value)}
 					<Combobox.Item
 						{item}
 						class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg data-[state=checked]:bg-hover"
@@ -68,7 +103,7 @@ A text field that filters a list of options to choose from (Ark Combobox).
 					>
 						<Combobox.ItemText>{item.label}</Combobox.ItemText>
 						<Combobox.ItemIndicator class="ml-auto">
-							<MingcuteCheckLine class="size-4" />
+							<MingcuteCheckLine class="size-4" aria-hidden="true" />
 						</Combobox.ItemIndicator>
 					</Combobox.Item>
 				{/each}
