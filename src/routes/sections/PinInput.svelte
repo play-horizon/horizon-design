@@ -10,7 +10,13 @@ Docs: PinInput. Live examples of the PinInput component.
 <section id="pin-input">
 	<Card>
 		<div class="space-y-3">
-			<PinInput length={5} label="Verification Code" />
+			<PinInput
+				count={5}
+				label="Verification code"
+				translations={{
+					inputLabel: (index: number, length: number) => `Digit ${index + 1} of ${length}`
+				}}
+			/>
 			<p class="text-xs text-muted">Enter the 5-digit code sent to your email.</p>
 		</div>
 	</Card>
