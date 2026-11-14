@@ -29,7 +29,7 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 	}: {
 		/** The element that opens the dialog, such as a Delete button's content. */
 		trigger?: Snippet;
-		/** Classes of the trigger's wrapper, such as `buttonVariants(…)`; `contents` when empty. */
+		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
 		/** The question the dialog asks, such as "Delete this game?". */
 		title?: string;
@@ -68,12 +68,8 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 	{...rest}
 >
 	{#if trigger}
-		<Dialog.Trigger data-slot="alert-dialog-trigger">
-			{#snippet asChild(getProps)}
-				<div {...getProps()} class={triggerClass || 'contents'}>
-					{@render trigger()}
-				</div>
-			{/snippet}
+		<Dialog.Trigger class={triggerClass || undefined} data-slot="alert-dialog-trigger">
+			{@render trigger()}
 		</Dialog.Trigger>
 	{/if}
 	<Portal>

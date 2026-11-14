@@ -8,7 +8,7 @@ import { createRawSnippet } from 'svelte';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import AlertDialog from './AlertDialog.svelte';
 
-const trigger = createRawSnippet(() => ({ render: () => '<button type="button">Delete</button>' }));
+const trigger = createRawSnippet(() => ({ render: () => '<span>Delete</span>' }));
 
 function open(onAction = vi.fn(), onOpenChange = vi.fn()) {
 	const view = render(AlertDialog, {
