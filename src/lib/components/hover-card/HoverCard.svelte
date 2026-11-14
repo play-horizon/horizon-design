@@ -17,12 +17,17 @@ function; `frosted` for a translucent surface.
 		frosted = false,
 		...rest
 	}: {
+		/** The content of the button that shows the card on hover or focus; no trigger when unset. */
 		trigger?: Snippet;
+		/** Classes of the trigger button. */
 		triggerClass?: string;
+		/** The card's content. */
 		children?: Snippet;
+		/** Classes merged onto the card. */
 		contentClass?: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
+		/** Other props of Ark's `HoverCard.Root`, such as `openDelay` or `positioning`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

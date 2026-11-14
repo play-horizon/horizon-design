@@ -9,8 +9,11 @@ name each mode for assistive technology and tooltips; the app passes them transl
 	export interface ThemeSwitchLabels {
 		/** The group's name, such as "Theme". */
 		group: string;
+		/** The system mode's name, such as "System". */
 		system: string;
+		/** The dark mode's name, such as "Dark". */
 		dark: string;
+		/** The light mode's name, such as "Light". */
 		light: string;
 	}
 </script>
@@ -27,6 +30,7 @@ name each mode for assistive technology and tooltips; the app passes them transl
 		size = 'md',
 		class: className = ''
 	}: {
+		/** The names of the group and of each mode, translated. */
 		labels: ThemeSwitchLabels;
 		size?: 'sm' | 'md';
 		class?: string;

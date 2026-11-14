@@ -6,13 +6,18 @@ A data table from columns and rows.
 	import type { Snippet } from 'svelte';
 	import { cn } from '$lib/utils';
 
+	/** One column of the table. */
 	interface Column {
+		/** The key of each row's value in this column, unique among the columns. */
 		key: string;
+		/** The column's header, translated. */
 		label: string;
 	}
 
+	/** A cell: text, or a snippet for richer content. */
 	type CellValue = string | Snippet;
 
+	/** One row: its cells by column key. */
 	interface Row {
 		[key: string]: CellValue;
 	}
@@ -24,11 +29,14 @@ A data table from columns and rows.
 		class: className = '',
 		...rest
 	}: {
+		/** The columns, in order. */
 		columns?: Column[];
+		/** The rows, in order. */
 		rows?: Row[];
 		/** A stable, unique key of a row, such as its id. */
 		rowKey: (row: Row) => string;
 		class?: string;
+		/** Other attributes of the `<table>`. */
 		[key: string]: unknown;
 	} = $props();
 

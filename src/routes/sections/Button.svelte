@@ -42,10 +42,16 @@ loading and disabled states.
 	</Card>
 	<Card title="Icon buttons" description="An icon-only button needs an aria-label.">
 		<div class="flex flex-wrap items-center gap-2">
-			<Button size="icon-xs" variant="ghost" aria-label="Search"><MingcuteSearchLine /></Button>
-			<Button size="icon-sm" aria-label="More"><MingcuteMore1Line /></Button>
-			<Button size="icon-md" variant="tint" aria-label="Add"><MingcuteAddLine /></Button>
-			<Button size="icon-lg" variant="primary" aria-label="Play"><MingcutePlayFill /></Button>
+			<Button size="icon-xs" variant="ghost" aria-label="Search"
+				><MingcuteSearchLine aria-hidden="true" /></Button
+			>
+			<Button size="icon-sm" aria-label="More"><MingcuteMore1Line aria-hidden="true" /></Button>
+			<Button size="icon-md" variant="tint" aria-label="Add"
+				><MingcuteAddLine aria-hidden="true" /></Button
+			>
+			<Button size="icon-lg" variant="primary" aria-label="Play"
+				><MingcutePlayFill aria-hidden="true" /></Button
+			>
 		</div>
 	</Card>
 	<Card title="States and links">

@@ -38,6 +38,7 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 		thumbnail?: string;
 		/** The square icon's URL, shown by the `feature` variant. */
 		icon?: string;
+		/** `default` for lists, `feature` for the larger Continue playing card. */
 		variant?: 'default' | 'feature';
 		/** Drawn at the art's top left, such as a `PlayerCount`. */
 		overlay?: Snippet;
@@ -47,6 +48,7 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 		meta?: Snippet;
 		/** A control on the card, such as Play (the `feature` variant). */
 		action?: Snippet;
+		/** Classes merged onto the card. */
 		class?: string;
 	} = $props();
 

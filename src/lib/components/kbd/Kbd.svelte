@@ -11,8 +11,11 @@ A keyboard key or shortcut, such as `Ctrl K`, drawn as a raised key.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the key. */
 		class?: string;
+		/** The key's name, such as `Ctrl` or `K`. */
 		children?: Snippet;
+		/** Other attributes of the `<kbd>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

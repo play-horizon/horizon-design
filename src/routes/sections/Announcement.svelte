@@ -12,7 +12,7 @@ Docs: Announcement. Live examples of the Announcement component.
 	<Card>
 		<div>
 			<Announcement>
-				<MingcuteLightningLine class="size-3.5" />
+				<MingcuteLightningLine class="size-3.5" aria-hidden="true" />
 				New: 78 components available
 			</Announcement>
 		</div>

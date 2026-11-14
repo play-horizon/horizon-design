@@ -18,6 +18,7 @@ and each avatar's image is named after its person.
 		src?: string;
 		/** The initials shown without an image. */
 		initials: string;
+		/** The disc's colour; picked from the initials when unset. */
 		tone?: AvatarTone;
 	}
 </script>
@@ -34,14 +35,17 @@ and each avatar's image is named after its person.
 		overflowText,
 		class: className = ''
 	}: {
+		/** The people, in the order they are shown. */
 		people: readonly StackPerson[];
 		/** How many avatars are shown before the overflow chip. */
 		max?: number;
+		/** The avatars' size. */
 		size?: 'xs' | 'sm' | 'md';
 		/** The group's accessible name, such as "Editing now". */
 		label: string;
 		/** The overflow chip's text for the number of people not shown, such as `+3`. */
 		overflowText: (hidden: number) => string;
+		/** Classes merged onto the row. */
 		class?: string;
 	} = $props();
 

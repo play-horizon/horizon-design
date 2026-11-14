@@ -15,11 +15,17 @@ optional footer.
 		footer,
 		...rest
 	}: {
+		/** Classes merged onto the card. */
 		class?: string;
+		/** The card's title, at its top. */
 		title?: string;
+		/** A line under the title. */
 		description?: string;
+		/** The card's content. */
 		children?: Snippet;
+		/** A row at the bottom, such as the card's buttons. */
 		footer?: Snippet;
+		/** Other attributes of the card. */
 		[key: string]: unknown;
 	} = $props();
 </script>

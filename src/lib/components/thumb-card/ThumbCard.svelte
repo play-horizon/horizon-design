@@ -14,9 +14,13 @@ A card showing a preview (its content) with a label under it.
 		...rest
 	}: {
 		class?: string;
+		/** The text under the preview, translated; no label row when empty. */
 		label?: string;
+		/** Where the label links to, already resolved; plain text when empty. */
 		href?: string;
+		/** The preview. */
 		children?: Snippet;
+		/** Other attributes of the card's `<div>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

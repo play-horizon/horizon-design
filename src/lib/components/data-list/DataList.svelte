@@ -7,7 +7,9 @@ A list of label and value pairs, such as the details of a game.
 	import { cn } from '$lib/utils';
 
 	interface DataListItem {
+		/** The label, unique in the list. */
 		label: string;
+		/** The value: text, or a snippet such as a badge. */
 		value: string | Snippet;
 	}
 
@@ -16,8 +18,11 @@ A list of label and value pairs, such as the details of a game.
 		class: className = '',
 		...rest
 	}: {
+		/** The pairs, in order. */
 		items?: DataListItem[];
+		/** Classes merged onto the list. */
 		class?: string;
+		/** Other attributes of the list. */
 		[key: string]: unknown;
 	} = $props();
 

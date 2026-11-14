@@ -11,8 +11,11 @@ A small pill that announces something new, with an optional icon and a tag.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the pill. */
 		class?: string;
+		/** The announcement: its text, with an optional icon and tag. */
 		children?: Snippet;
+		/** Other attributes of the pill. */
 		[key: string]: unknown;
 	} = $props();
 </script>

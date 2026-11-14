@@ -26,7 +26,7 @@ Docs: Card. Live examples of the Card component.
 			<div class="space-y-3">
 				<div class="text-3xl font-bold text-primary">42,890</div>
 				<div class="flex items-center gap-1.5 text-xs text-success">
-					<MingcuteArrowUpLine class="size-3.5" />
+					<MingcuteArrowUpLine class="size-3.5" aria-hidden="true" />
 					<span>+12.5% from last month</span>
 				</div>
 				<Progress value={72} />

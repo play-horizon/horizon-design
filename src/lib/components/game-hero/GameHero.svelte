@@ -29,6 +29,7 @@ the square icon, the name, a `byline` (the creator) and the game's `tags` over i
 		tags?: Snippet;
 		/** Drawn at the banner's top left, such as a Back button. */
 		top?: Snippet;
+		/** Classes merged onto the header. */
 		class?: string;
 	} = $props();
 </script>

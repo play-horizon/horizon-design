@@ -21,9 +21,11 @@ dot, for a game nobody is playing.
 		count: string;
 		/** What the count counts, such as "playing now". */
 		label: string;
+		/** `inline` for a page, `overlay` for a pill over game art. */
 		variant?: 'inline' | 'overlay';
 		/** False when nobody is playing: the dot turns idle. */
 		live?: boolean;
+		/** Classes added to the outer element. */
 		class?: string;
 		[key: string]: unknown;
 	} = $props();

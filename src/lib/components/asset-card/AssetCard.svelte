@@ -40,6 +40,7 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 		actions?: Snippet;
 		/** Marks the card as the chosen one in a picker. */
 		selected?: boolean;
+		/** Classes merged onto the card. */
 		class?: string;
 	} = $props();
 

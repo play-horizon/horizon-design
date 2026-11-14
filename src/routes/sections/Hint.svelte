@@ -19,8 +19,13 @@ Docs: Hint. Live examples of the Hint component.
 					class="sr-only"
 					tabindex="-1"
 				/>
-				<Input placeholder="Password" type="password" autocomplete="new-password" />
-				<Hint>Must be at least 8 characters with a number.</Hint>
+				<Input
+					type="password"
+					autocomplete="new-password"
+					aria-label="Password"
+					aria-describedby="hint-password"
+				/>
+				<Hint id="hint-password">Must be at least 8 characters with a number.</Hint>
 			</form>
 		</div>
 	</Card>

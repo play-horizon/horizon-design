@@ -12,8 +12,11 @@ A link, shown on keyboard focus, that skips to the page's main content.
 		children,
 		...rest
 	}: {
+		/** The `#id` of the main content, which the link skips to. */
 		href?: string;
+		/** Classes added to the link. */
 		class?: string;
+		/** The link's text, such as "Skip to content". */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();

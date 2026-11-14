@@ -1,6 +1,7 @@
 <!--
 @component
-A short help text under a field.
+A short help text under a field. Give it an `id` and point the field's `aria-describedby` at it,
+so assistive technology reads it with the field; inside a `Field`, use its `helperText` instead.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -11,8 +12,11 @@ A short help text under a field.
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the paragraph. */
 		class?: string;
+		/** The help text. */
 		children?: Snippet;
+		/** Other attributes of the paragraph, such as its `id`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

@@ -50,10 +50,13 @@ export function buttonVariants({
 	pill = false,
 	className = ''
 }: {
+	/** The look. */
 	variant?: ButtonVariant;
+	/** The height, or a square `icon-*` size. */
 	size?: ButtonSize;
 	/** Fully rounded ends. */
 	pill?: boolean;
+	/** Classes merged last, so they win over the button's own. */
 	className?: string;
 } = {}): string {
 	return cn(base, variants[variant], sizes[size], pill && 'rounded-full', className);

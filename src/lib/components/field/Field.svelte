@@ -16,11 +16,17 @@ assistive technology (Ark Field).
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The label, tied to the control. */
 		label?: string | Snippet;
+		/** A help text under the control, which describes it. */
 		helperText?: string | Snippet;
+		/** The error message, shown while the field is `invalid`. */
 		errorText?: string | Snippet;
+		/** The control: an `Input`, a `Textarea` or another field of the library. */
 		children?: Snippet;
+		/** Other props of Ark's `Field.Root`, such as `invalid`, `required` or `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 

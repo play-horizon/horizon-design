@@ -2,8 +2,9 @@
 @component
 A person's avatar: their image, or their initials on a coloured disc while it loads or when there
 is none. With `alt` (the person's name) it is one image of that name for assistive technology;
-without, it is decorative, for when the name is written next to it. The disc's colour is one of five avatar tones: `tone`, or one picked from the initials
-so the same person always gets the same colour.
+without, it is decorative, for when the name is written next to it. The disc's colour is one of
+five avatar tones: `tone`, or one picked from the initials so the same person always gets the
+same colour.
 -->
 <script lang="ts">
 	import { Avatar } from '@ark-ui/svelte';
@@ -35,6 +36,7 @@ so the same person always gets the same colour.
 		size = 'md',
 		...rest
 	}: {
+		/** Classes merged onto the avatar. */
 		class?: string;
 		/** The image's URL. */
 		src?: string;
@@ -44,7 +46,9 @@ so the same person always gets the same colour.
 		fallback?: string;
 		/** The disc's colour; picked from the initials when unset. */
 		tone?: AvatarTone;
+		/** The diameter, from `xs` (18 px) to `xl` (64 px). */
 		size?: keyof typeof sizes;
+		/** Other props of Ark's `Avatar.Root`, such as `title`. */
 		[key: string]: unknown;
 	} = $props();
 </script>

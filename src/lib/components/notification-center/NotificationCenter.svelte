@@ -17,6 +17,7 @@ text translated and every time formatted.
 		body?: string;
 		/** When it arrived, formatted ("2 hours ago"). */
 		time: string;
+		/** Whether the user has yet to read it: bold text, a tint and a dot. */
 		unread: boolean;
 		/** The image's URL, such as the game's icon. */
 		image?: string;
@@ -49,11 +50,13 @@ text translated and every time formatted.
 		emptyText: string;
 		/** The "mark all as read" button's text; the button shows while one is unread. */
 		markAllLabel: string;
+		/** Called by "mark all as read"; without it, the button doesn't show. */
 		onMarkAllRead?: () => void;
 		/** Announced for an unread notification, such as "Unread". */
 		unreadLabel: string;
 		/** A notification's buttons. */
 		actions?: Snippet<[NotificationEntry]>;
+		/** Classes added to the centre's `<section>`. */
 		class?: string;
 	} = $props();
 

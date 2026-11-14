@@ -36,6 +36,7 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 		max?: number;
 		/** The group's accessible name, such as "Tags". */
 		label: string;
+		/** Disables every chip. */
 		disabled?: boolean;
 		/** Called with the chosen ids after each change. */
 		onChange?: (value: string[]) => void;
