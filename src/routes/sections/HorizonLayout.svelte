@@ -212,8 +212,8 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 				Circular progress
 			</p>
 			<div class="flex items-center gap-4">
-				<CircularProgress value={65} />
-				<CircularProgress value={30} />
+				<CircularProgress value={65} label="Upload" valueText="65%" />
+				<CircularProgress value={30} label="Build" valueText="30%" />
 			</div>
 		</div>
 	</div>
