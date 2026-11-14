@@ -105,6 +105,7 @@ export const navGroups: NavGroup[] = [
 		items: [
 			{ id: 'alert', label: 'Alert' },
 			{ id: 'circular-progress', label: 'Circular Progress' },
+			{ id: 'notification-center', label: 'Notification Center' },
 			{ id: 'progress', label: 'Progress' },
 			{ id: 'skeleton', label: 'Skeleton' },
 			{ id: 'spinner', label: 'Spinner' },

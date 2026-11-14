@@ -61,6 +61,7 @@ export * from './components/listbox';
 export * from './components/marquee';
 export * from './components/menu';
 export * from './components/native-select';
+export * from './components/notification-center';
 export * from './components/number-input';
 export * from './components/pagination';
 export * from './components/pin-input';
