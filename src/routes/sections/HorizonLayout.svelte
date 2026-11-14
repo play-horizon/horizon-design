@@ -57,9 +57,10 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 		<button
 			class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
 			onclick={() => (layoutConfig.maximizedView = activeViewId)}
+			aria-label="Maximize"
 			title="Maximize"
 		>
-			<MingcuteFullscreenLine class="size-3.5" />
+			<MingcuteFullscreenLine class="size-3.5" aria-hidden="true" />
 		</button>
 	{/if}
 {/snippet}
@@ -91,10 +92,16 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 				Icon buttons
 			</p>
 			<div class="flex flex-wrap items-center gap-2">
-				<Button size="icon-md"><MingcuteStarLine /></Button>
-				<Button variant="default" size="icon-md"><MingcuteHeartLine /></Button>
-				<Button variant="ghost" size="icon-md"><MingcuteSettings2Line /></Button>
-				<Button variant="default" size="icon-md"><MingcuteDownloadLine /></Button>
+				<Button size="icon-md" aria-label="Star"><MingcuteStarLine aria-hidden="true" /></Button>
+				<Button variant="default" size="icon-md" aria-label="Like">
+					<MingcuteHeartLine aria-hidden="true" />
+				</Button>
+				<Button variant="ghost" size="icon-md" aria-label="Settings">
+					<MingcuteSettings2Line aria-hidden="true" />
+				</Button>
+				<Button variant="default" size="icon-md" aria-label="Download">
+					<MingcuteDownloadLine aria-hidden="true" />
+				</Button>
 			</div>
 		</div>
 	</div>
