@@ -10,7 +10,11 @@ Docs: Clipboard. Live examples of the Clipboard component.
 <section id="clipboard">
 	<Card>
 		<div class="space-y-4">
-			<Clipboard value="npm install horizon-design" label="Install command" />
+			<Clipboard
+				value="npm install horizon-design"
+				label="Install command"
+				translations={{ triggerLabel: (copied) => (copied ? 'Copied' : 'Copy') }}
+			/>
 		</div>
 	</Card>
 </section>

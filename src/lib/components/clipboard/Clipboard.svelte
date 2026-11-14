@@ -1,10 +1,10 @@
 <!--
 @component
-Copies a value to the clipboard, showing it with a copy button that confirms the copy (Ark
-Clipboard).
+Copies a value to the clipboard, showing it, selectable, with a copy button that confirms the
+copy (Ark Clipboard); Ark `translations` name the button (`triggerLabel`).
 -->
 <script lang="ts">
-	import { Clipboard } from '@ark-ui/svelte';
+	import { Clipboard, type ClipboardRootProps } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 	import MingcuteCopy2Line from '~icons/mingcute/copy-2-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
@@ -12,18 +12,26 @@ Clipboard).
 	let {
 		value,
 		label,
+		translations,
 		class: className = '',
 		...rest
 	}: {
+		/** The text copied, and shown. */
 		value: string;
+		/** The visible label above the value, such as "Invite link". */
 		label?: string;
+		/** `triggerLabel(copied)` names the copy button, before and after the copy. */
+		translations: Required<NonNullable<ClipboardRootProps['translations']>>;
+		/** Classes merged onto the root. */
 		class?: string;
+		/** Other props of Ark's `Clipboard.Root`, such as `onStatusChange` and `timeout`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <Clipboard.Root
 	{value}
+	{translations}
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="clipboard"
 	{...rest}
@@ -45,9 +53,9 @@ Clipboard).
 			data-slot="clipboard-trigger"
 		>
 			<Clipboard.Indicator>
-				<MingcuteCopy2Line class="size-4" />
+				<MingcuteCopy2Line class="size-4" aria-hidden="true" />
 				{#snippet copied()}
-					<MingcuteCheckLine class="size-4 text-success" />
+					<MingcuteCheckLine class="size-4 text-success" aria-hidden="true" />
 				{/snippet}
 			</Clipboard.Indicator>
 		</Clipboard.Trigger>
