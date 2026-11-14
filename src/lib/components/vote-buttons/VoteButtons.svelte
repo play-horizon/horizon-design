@@ -13,7 +13,7 @@ vote, with the reason said next to the buttons.
 	export interface VoteLabels {
 		/** The group's name, such as "Vote". */
 		group: string;
-		/** The up button's name, such as "Vote up". */
+		/** The up button's name, such as "Vote up"; the count follows it. */
 		up: string;
 		/** The down button's name, such as "Vote down". */
 		down: string;
@@ -69,7 +69,6 @@ vote, with the reason said next to the buttons.
 		<button
 			type="button"
 			aria-pressed={vote === choice}
-			aria-label={choice === 'up' ? labels.up : labels.down}
 			{disabled}
 			class={cn(
 				'inline-flex h-6 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted tabular-nums transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
@@ -78,6 +77,7 @@ vote, with the reason said next to the buttons.
 			onclick={() => press(choice)}
 		>
 			<Icon class="size-3.5" aria-hidden="true" />
+			<span class="sr-only">{choice === 'up' ? labels.up : labels.down}</span>
 			<span>{choice === 'up' ? upCount : downCount}</span>
 		</button>
 	{/each}
