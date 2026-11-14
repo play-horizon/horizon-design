@@ -3,27 +3,27 @@
 Docs: HorizonLayout. Live examples of the HorizonLayout component.
 -->
 <script lang="ts">
-	import { Alert } from '$lib/components/alert';
-	import { AvatarStack } from '$lib/components/avatar-stack';
-	import { Badge } from '$lib/components/badge';
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { CircularProgress } from '$lib/components/circular-progress';
-	import { Input } from '$lib/components/input';
-	import { NativeSelect } from '$lib/components/native-select';
-	import { Progress } from '$lib/components/progress';
-	import { Skeleton } from '$lib/components/skeleton';
-	import { Spinner } from '$lib/components/spinner';
-	import { Status } from '$lib/components/status';
-	import { Switch } from '$lib/components/switch';
-	import { Textarea } from '$lib/components/textarea';
+	import { Alert } from '#lib/components/alert/index.js';
+	import { AvatarStack } from '#lib/components/avatar-stack/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { CircularProgress } from '#lib/components/circular-progress/index.js';
+	import { Input } from '#lib/components/input/index.js';
+	import { NativeSelect } from '#lib/components/native-select/index.js';
+	import { Progress } from '#lib/components/progress/index.js';
+	import { Skeleton } from '#lib/components/skeleton/index.js';
+	import { Spinner } from '#lib/components/spinner/index.js';
+	import { Status } from '#lib/components/status/index.js';
+	import { Switch } from '#lib/components/switch/index.js';
+	import { Textarea } from '#lib/components/textarea/index.js';
 	import MingcuteDownloadLine from '~icons/mingcute/download-line';
 	import MingcuteFullscreenLine from '~icons/mingcute/fullscreen-line';
 	import MingcuteHeartLine from '~icons/mingcute/heart-line';
 	import MingcuteSettings2Line from '~icons/mingcute/settings-2-line';
 	import MingcuteStarLine from '~icons/mingcute/star-line';
 	import { SvelteMap } from 'svelte/reactivity';
-	import HorizonLayout from '$lib/editor/horizon-layout/HorizonLayout.svelte';
+	import HorizonLayout from '#lib/editor/horizon-layout/HorizonLayout.svelte';
 	import type { LayoutConfig, Id, View } from 'horizon-layout';
 
 	let layoutConfig: LayoutConfig = $state({

@@ -38,7 +38,7 @@ object, the focus moves to the branch.
 	import type { Instruction, ItemMode } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item';
 	import { attachInstruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item/attach-instruction';
 	import { extractInstruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item/extract-instruction';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteFileLine from '~icons/mingcute/file-line';
 	import VirtualTree from '../../components/virtual-tree/VirtualTree.svelte';
 	import { setTextDragPreview } from '../drag-preview';

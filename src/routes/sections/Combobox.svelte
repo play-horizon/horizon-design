@@ -3,8 +3,8 @@
 Docs: Combobox. Live examples of the Combobox component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Combobox } from '$lib/components/combobox';
+	import { Card } from '#lib/components/card/index.js';
+	import { Combobox } from '#lib/components/combobox/index.js';
 
 	const comboboxItems = [
 		{ label: 'Svelte', value: 'svelte' },

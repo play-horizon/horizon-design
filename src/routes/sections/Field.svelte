@@ -3,10 +3,10 @@
 Docs: Field. Live examples of the Field component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Field } from '$lib/components/field';
-	import { Input } from '$lib/components/input';
-	import { Textarea } from '$lib/components/textarea';
+	import { Card } from '#lib/components/card/index.js';
+	import { Field } from '#lib/components/field/index.js';
+	import { Input } from '#lib/components/input/index.js';
+	import { Textarea } from '#lib/components/textarea/index.js';
 </script>
 
 <section id="field">

@@ -7,7 +7,7 @@ and `clearLabel` names the clear button. In a form, Ark's `name` submits the dra
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { SignaturePad } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

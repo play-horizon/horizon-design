@@ -3,12 +3,12 @@
 Docs: Card. Live examples of the Card component.
 -->
 <script lang="ts">
-	import { Avatar } from '$lib/components/avatar';
-	import { Badge } from '$lib/components/badge';
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Progress } from '$lib/components/progress';
-	import { Status } from '$lib/components/status';
+	import { Avatar } from '#lib/components/avatar/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Progress } from '#lib/components/progress/index.js';
+	import { Status } from '#lib/components/status/index.js';
 	import MingcuteArrowUpLine from '~icons/mingcute/arrow-up-line';
 </script>
 

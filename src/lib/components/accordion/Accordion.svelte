@@ -6,7 +6,7 @@ trigger. `value` binds the open items.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Accordion, type AccordionValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

@@ -3,8 +3,8 @@
 Docs: CircularSlider. Live examples of the CircularSlider component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { CircularSlider } from '$lib/components/circular-slider';
+	import { Card } from '#lib/components/card/index.js';
+	import { CircularSlider } from '#lib/components/circular-slider/index.js';
 </script>
 
 <section id="circular-slider">

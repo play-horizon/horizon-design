@@ -4,15 +4,15 @@
  * @module
  */
 import { asset } from '$app/paths';
-import type { StackPerson } from '$lib/components/avatar-stack';
+import type { StackPerson } from '#lib/components/avatar-stack/index.js';
 
 /** Example game art, each a 16:9 SVG. */
 export const art = {
-	skyline: asset('/examples/skyline.svg'),
-	frost: asset('/examples/frost.svg'),
-	neon: asset('/examples/neon.svg'),
-	woods: asset('/examples/woods.svg'),
-	icon: asset('/examples/icon.svg')
+	skyline: asset('examples/skyline.svg'),
+	frost: asset('examples/frost.svg'),
+	neon: asset('examples/neon.svg'),
+	woods: asset('examples/woods.svg'),
+	icon: asset('examples/icon.svg')
 };
 
 /** Example people. */

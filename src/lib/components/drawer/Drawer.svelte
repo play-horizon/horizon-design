@@ -8,7 +8,7 @@ dismiss it.
 	import type { Snippet } from 'svelte';
 	import { Drawer, type DrawerOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {

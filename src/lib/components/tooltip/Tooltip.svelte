@@ -11,7 +11,7 @@ that element. The tooltip describes its trigger; an icon-only trigger still need
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { Tooltip } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		children,

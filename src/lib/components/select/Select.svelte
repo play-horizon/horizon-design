@@ -9,7 +9,7 @@ chosen. `label`, required, names the field.
 	import { Portal } from '@ark-ui/svelte/portal';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One option: its text, its value, and whether it can be chosen. */
 	type Item = { label: string; value: string; disabled?: boolean };

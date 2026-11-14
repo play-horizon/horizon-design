@@ -16,7 +16,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 		type PaginationRootProps,
 		type PaginationPageChangeDetails
 	} from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 	import PaginationEllipsis from './PaginationEllipsis.svelte';

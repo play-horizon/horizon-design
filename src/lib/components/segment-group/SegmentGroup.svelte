@@ -7,7 +7,7 @@ first one. Name the group with an `aria-label`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { SegmentGroup, type SegmentGroupValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One segment: its value and its label (text or a snippet). */
 	interface SegmentItem {

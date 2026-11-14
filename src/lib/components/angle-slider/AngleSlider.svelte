@@ -7,7 +7,7 @@ top and angles growing clockwise, and the angle written under it as `valueText` 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { AngleSlider } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

@@ -3,9 +3,9 @@
 Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 -->
 <script lang="ts">
-	import { Button, buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Dialog, DialogClose } from '$lib/components/dialog';
+	import { Button, buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Dialog, DialogClose } from '#lib/components/dialog/index.js';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
 	import MingcuteWindowsLine from '~icons/mingcute/windows-line';
 	import { art } from '../examples';

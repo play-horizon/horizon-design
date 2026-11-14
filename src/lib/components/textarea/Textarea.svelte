@@ -5,7 +5,7 @@ with a soft ring. Inside an Ark `Field`, it takes the field's label, description
 -->
 <script lang="ts">
 	import { Field } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

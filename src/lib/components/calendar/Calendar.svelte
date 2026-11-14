@@ -7,7 +7,7 @@ as.
 <script lang="ts">
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
 	import type { DatePickerDateView } from '@ark-ui/svelte/date-picker';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 

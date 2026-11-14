@@ -4,7 +4,7 @@ Keeps its content at a fixed width-to-height ratio.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		ratio = 1,

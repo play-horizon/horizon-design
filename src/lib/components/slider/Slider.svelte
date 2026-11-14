@@ -7,7 +7,7 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Slider, type SliderValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

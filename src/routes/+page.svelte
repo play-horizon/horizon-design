@@ -4,10 +4,10 @@ The docs site's foundations page: every colour token side by side in both themes
 the type scale, radius, elevation, and the page motion (theme crossfade, navigation slide).
 -->
 <script lang="ts">
-	import { tokenValues, type ColorToken } from '$lib/generated/tokens';
-	import { theme } from '$lib/theme.svelte';
-	import { slidePage } from '$lib/motion/page-transition';
-	import { Button } from '$lib/components/button';
+	import { tokenValues, type ColorToken } from '#lib/generated/tokens.js';
+	import { theme } from '#lib/theme.svelte.js';
+	import { slidePage } from '#lib/motion/page-transition.js';
+	import { Button } from '#lib/components/button/index.js';
 
 	const tokens = Object.keys(tokenValues.dark) as ColorToken[];
 	const themes = ['dark', 'light'] as const;

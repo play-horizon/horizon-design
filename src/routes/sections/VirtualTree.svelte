@@ -4,9 +4,9 @@ Docs: VirtualTree. A scene's hierarchy with thousands of objects, multiple selec
 and the keyboard of a tree view.
 -->
 <script lang="ts">
-	import { VirtualTree, createTreeCollection } from '$lib/components/virtual-tree';
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
+	import { VirtualTree, createTreeCollection } from '#lib/components/virtual-tree/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
 
 	interface SceneObject {
 		id: string;

@@ -3,9 +3,9 @@
 Docs: ActionBar. Live examples of the ActionBar component.
 -->
 <script lang="ts">
-	import { ActionBar, ActionBarSeparator } from '$lib/components/action-bar';
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
+	import { ActionBar, ActionBarSeparator } from '#lib/components/action-bar/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import MingcuteArchiveLine from '~icons/mingcute/archive-line';
 	import MingcuteCopy2Line from '~icons/mingcute/copy-2-line';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';

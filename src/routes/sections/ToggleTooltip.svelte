@@ -3,8 +3,8 @@
 Docs: ToggleTooltip. Live examples of the ToggleTooltip component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ToggleTooltip } from '$lib/components/toggle-tooltip';
+	import { Card } from '#lib/components/card/index.js';
+	import { ToggleTooltip } from '#lib/components/toggle-tooltip/index.js';
 	import MingcuteBoldLine from '~icons/mingcute/bold-line';
 	import MingcuteItalicLine from '~icons/mingcute/italic-line';
 	import MingcuteStrikethroughLine from '~icons/mingcute/strikethrough-line';

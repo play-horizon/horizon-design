@@ -3,9 +3,9 @@
 Docs: AlertDialog. Live examples of the AlertDialog component.
 -->
 <script lang="ts">
-	import { AlertDialog } from '$lib/components/alert-dialog';
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
+	import { AlertDialog } from '#lib/components/alert-dialog/index.js';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
 
 	let deleted = $state(false);

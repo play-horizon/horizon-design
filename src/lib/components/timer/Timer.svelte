@@ -23,7 +23,7 @@ buttons to start, pause, resume and reset it, named by `labels`. Only the button
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
 	import MingcutePauseFill from '~icons/mingcute/pause-fill';
 	import MingcuteRefresh2Line from '~icons/mingcute/refresh-2-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	const btnClass =
 		'border-border hover:bg-hover inline-flex size-8 items-center justify-center rounded-lg border transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary';

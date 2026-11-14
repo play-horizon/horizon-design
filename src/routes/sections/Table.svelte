@@ -3,8 +3,8 @@
 Docs: Table. Live examples of the Table component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Table } from '$lib/components/table';
+	import { Card } from '#lib/components/card/index.js';
+	import { Table } from '#lib/components/table/index.js';
 </script>
 
 <section id="table">

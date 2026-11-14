@@ -5,7 +5,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Collapsible, type CollapsibleOpenChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

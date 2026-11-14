@@ -4,8 +4,8 @@ Docs: Button. Every variant and size, icon-only buttons, a link styled as a butt
 loading and disabled states.
 -->
 <script lang="ts">
-	import { Button, buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
+	import { Button, buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import MingcuteAddLine from '~icons/mingcute/add-line';
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';

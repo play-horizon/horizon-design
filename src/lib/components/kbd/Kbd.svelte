@@ -4,7 +4,7 @@ A keyboard key or shortcut, such as `Ctrl K`, drawn as a raised key.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

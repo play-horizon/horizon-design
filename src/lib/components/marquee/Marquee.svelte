@@ -8,7 +8,7 @@ content is a `MarqueeItem`, which Ark spaces by `spacing`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Marquee } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

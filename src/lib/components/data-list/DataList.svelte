@@ -4,7 +4,7 @@ A list of label and value pairs, such as the details of a game.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	interface DataListItem {
 		/** The label, unique in the list. */

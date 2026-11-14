@@ -16,7 +16,7 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 
 	let {

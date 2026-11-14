@@ -3,8 +3,8 @@
 Docs: Checkbox. Live examples of the Checkbox component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Checkbox } from '$lib/components/checkbox';
+	import { Card } from '#lib/components/card/index.js';
+	import { Checkbox } from '#lib/components/checkbox/index.js';
 </script>
 
 <section id="checkbox">

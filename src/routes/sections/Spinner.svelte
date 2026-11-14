@@ -3,9 +3,9 @@
 Docs: Spinner. Live examples of the Spinner component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Separator } from '$lib/components/separator';
-	import { Spinner } from '$lib/components/spinner';
+	import { Card } from '#lib/components/card/index.js';
+	import { Separator } from '#lib/components/separator/index.js';
+	import { Spinner } from '#lib/components/spinner/index.js';
 </script>
 
 <section id="spinner">

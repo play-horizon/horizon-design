@@ -7,7 +7,7 @@ announced as.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Carousel, type CarouselRootProps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 

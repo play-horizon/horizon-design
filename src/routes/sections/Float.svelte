@@ -3,9 +3,9 @@
 Docs: Float. Live examples of the Float component.
 -->
 <script lang="ts">
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Float } from '$lib/components/float';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Float } from '#lib/components/float/index.js';
 	import MingcuteAddLine from '~icons/mingcute/add-line';
 </script>
 

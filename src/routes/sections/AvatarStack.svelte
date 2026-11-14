@@ -3,8 +3,8 @@
 Docs: AvatarStack. Who is editing a game, with an overflow chip.
 -->
 <script lang="ts">
-	import { AvatarStack } from '$lib/components/avatar-stack';
-	import { Card } from '$lib/components/card';
+	import { AvatarStack } from '#lib/components/avatar-stack/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import { people } from '../examples';
 </script>
 

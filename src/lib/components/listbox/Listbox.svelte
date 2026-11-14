@@ -16,7 +16,7 @@ binds the chosen options.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Listbox, createListCollection, type ListboxValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 
 	let {

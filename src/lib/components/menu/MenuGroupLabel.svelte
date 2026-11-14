@@ -5,7 +5,7 @@ The label of a `MenuGroup`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

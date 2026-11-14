@@ -5,7 +5,7 @@ with, when `title` is set, a title bar showing the title between three window do
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

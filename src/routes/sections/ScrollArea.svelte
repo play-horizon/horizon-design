@@ -3,8 +3,8 @@
 Docs: ScrollArea. Live examples of the ScrollArea component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ScrollArea } from '$lib/components/scroll-area';
+	import { Card } from '#lib/components/card/index.js';
+	import { ScrollArea } from '#lib/components/scroll-area/index.js';
 
 	const scrollItems = Array.from({ length: 20 }, (_, i) => ({
 		id: i + 1,

@@ -5,7 +5,7 @@ A button that closes the `Dialog` it is in: the children, or an icon named by `l
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Dialog } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {

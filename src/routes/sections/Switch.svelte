@@ -3,8 +3,8 @@
 Docs: Switch. Live examples of the Switch component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Switch } from '$lib/components/switch';
+	import { Card } from '#lib/components/card/index.js';
+	import { Switch } from '#lib/components/switch/index.js';
 	import MingcuteCheckFill from '~icons/mingcute/check-fill';
 	import MingcuteCloseFill from '~icons/mingcute/close-fill';
 </script>

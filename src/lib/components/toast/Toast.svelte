@@ -7,7 +7,7 @@ a spinner), a title, a description and a close button named by `closeLabel`.
 	import type { Snippet } from 'svelte';
 	import { Toast } from '@ark-ui/svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import Spinner from '../spinner/Spinner.svelte';
 
 	let {

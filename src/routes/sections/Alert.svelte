@@ -3,8 +3,8 @@
 Docs: Alert. Live examples of the Alert component.
 -->
 <script lang="ts">
-	import { Alert } from '$lib/components/alert';
-	import { Card } from '$lib/components/card';
+	import { Alert } from '#lib/components/alert/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="alert">

@@ -10,7 +10,7 @@ tour.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Tour, Portal, useTour, type TourStepDetails, type UseTourProps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';

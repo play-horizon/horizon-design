@@ -6,7 +6,7 @@ takes its accessible name through `aria-label`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Toggle } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

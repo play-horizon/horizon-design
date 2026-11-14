@@ -3,8 +3,8 @@
 Docs: ColorPicker. Live examples of the ColorPicker component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ColorPicker, parseColor } from '$lib/components/color-picker';
+	import { Card } from '#lib/components/card/index.js';
+	import { ColorPicker, parseColor } from '#lib/components/color-picker/index.js';
 </script>
 
 <section id="color-picker">

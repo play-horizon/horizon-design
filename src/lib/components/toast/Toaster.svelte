@@ -6,7 +6,7 @@ region named by `label`. The toaster's `placement` and `offsets` position the st
 <script lang="ts">
 	import { Toaster } from '@ark-ui/svelte';
 	import Toast from './Toast.svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

@@ -3,9 +3,9 @@
 Docs: Drawer. Live examples of the Drawer component.
 -->
 <script lang="ts">
-	import { Button, buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Drawer, DrawerClose } from '$lib/components/drawer';
+	import { Button, buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Drawer, DrawerClose } from '#lib/components/drawer/index.js';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 </script>
 

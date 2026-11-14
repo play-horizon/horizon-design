@@ -6,7 +6,7 @@ content is taller than the region.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ScrollArea } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

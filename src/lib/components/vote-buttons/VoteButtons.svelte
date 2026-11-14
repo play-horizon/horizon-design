@@ -21,7 +21,7 @@ vote, with the reason said next to the buttons.
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteThumbUp2Line from '~icons/mingcute/thumb-up-2-line';
 	import MingcuteThumbDown2Line from '~icons/mingcute/thumb-down-2-line';
 

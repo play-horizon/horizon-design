@@ -16,7 +16,7 @@ own to fall back on here.
 		type ComboboxRootProps
 	} from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteSelectorVerticalLine from '~icons/mingcute/selector-vertical-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 

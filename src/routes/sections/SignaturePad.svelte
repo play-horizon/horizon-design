@@ -3,8 +3,8 @@
 Docs: SignaturePad. Live examples of the SignaturePad component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { SignaturePad } from '$lib/components/signature-pad';
+	import { Card } from '#lib/components/card/index.js';
+	import { SignaturePad } from '#lib/components/signature-pad/index.js';
 </script>
 
 <section id="signature-pad">

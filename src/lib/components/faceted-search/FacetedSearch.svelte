@@ -48,7 +48,7 @@ shows while any option is chosen. Every text is passed in, translated.
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
 	import Input from '../input/Input.svelte';
 	import Checkbox from '../checkbox/Checkbox.svelte';

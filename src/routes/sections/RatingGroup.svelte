@@ -3,8 +3,8 @@
 Docs: RatingGroup. Live examples of the RatingGroup component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { RatingGroup } from '$lib/components/rating-group';
+	import { Card } from '#lib/components/card/index.js';
+	import { RatingGroup } from '#lib/components/rating-group/index.js';
 </script>
 
 <section id="rating-group">

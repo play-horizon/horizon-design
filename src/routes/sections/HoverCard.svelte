@@ -3,11 +3,11 @@
 Docs: HoverCard. Live examples of the HoverCard component.
 -->
 <script lang="ts">
-	import { Avatar } from '$lib/components/avatar';
-	import { Badge } from '$lib/components/badge';
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { HoverCard } from '$lib/components/hover-card';
+	import { Avatar } from '#lib/components/avatar/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { HoverCard } from '#lib/components/hover-card/index.js';
 </script>
 
 <section id="hover-card">

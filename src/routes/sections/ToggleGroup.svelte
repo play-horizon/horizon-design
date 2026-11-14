@@ -3,8 +3,8 @@
 Docs: ToggleGroup. Live examples of the ToggleGroup component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ToggleGroup } from '$lib/components/toggle-group';
+	import { Card } from '#lib/components/card/index.js';
+	import { ToggleGroup } from '#lib/components/toggle-group/index.js';
 	import MingcuteBoldLine from '~icons/mingcute/bold-line';
 	import MingcuteItalicLine from '~icons/mingcute/italic-line';
 	import MingcuteUnderlineLine from '~icons/mingcute/underline-line';

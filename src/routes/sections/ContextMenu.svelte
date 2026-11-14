@@ -3,8 +3,8 @@
 Docs: ContextMenu. Live examples of the ContextMenu component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ContextMenu } from '$lib/components/context-menu';
+	import { Card } from '#lib/components/card/index.js';
+	import { ContextMenu } from '#lib/components/context-menu/index.js';
 </script>
 
 <section id="context-menu">

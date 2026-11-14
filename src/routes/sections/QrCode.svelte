@@ -3,8 +3,8 @@
 Docs: QrCode. Live examples of the QrCode component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { QrCode } from '$lib/components/qr-code';
+	import { Card } from '#lib/components/card/index.js';
+	import { QrCode } from '#lib/components/qr-code/index.js';
 </script>
 
 <section id="qr-code">

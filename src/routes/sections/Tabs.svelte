@@ -3,8 +3,8 @@
 Docs: Tabs. Live examples of the Tabs component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Tabs } from '$lib/components/tabs';
+	import { Card } from '#lib/components/card/index.js';
+	import { Tabs } from '#lib/components/tabs/index.js';
 </script>
 
 <section id="tabs">

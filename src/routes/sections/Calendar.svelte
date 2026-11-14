@@ -3,8 +3,8 @@
 Docs: Calendar. Live examples of the Calendar component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Calendar } from '$lib/components/calendar';
+	import { Card } from '#lib/components/card/index.js';
+	import { Calendar } from '#lib/components/calendar/index.js';
 
 	/** What the previous and next buttons move by in each view. */
 	const periods = { day: 'month', month: 'year', year: 'decade' } as const;

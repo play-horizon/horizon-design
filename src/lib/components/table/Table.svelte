@@ -4,7 +4,7 @@ A data table from columns and rows.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One column of the table. */
 	interface Column {

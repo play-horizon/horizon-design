@@ -6,7 +6,7 @@ modes); `size` its height (md 20 px, sm 17 px).
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	const variants = {
 		neutral: 'bg-surface border-border text-fg-2',

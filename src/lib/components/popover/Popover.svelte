@@ -9,7 +9,7 @@ is open; without it, Ark's `defaultOpen` sets the first state.
 	import type { Snippet } from 'svelte';
 	import { Popover, type PopoverOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		trigger,

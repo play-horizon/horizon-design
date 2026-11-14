@@ -36,7 +36,7 @@ upper or lower half of another card to go before or after it.
 	import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge/extract-closest-edge';
 	import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
 	import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 	import MingcuteDotsVerticalLine from '~icons/mingcute/dots-vertical-line';
 	import { setTextDragPreview } from '../drag-preview';

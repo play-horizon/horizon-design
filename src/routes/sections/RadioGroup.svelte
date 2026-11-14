@@ -3,9 +3,9 @@
 Docs: RadioGroup. Live examples of the RadioGroup component.
 -->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
-	import { RadioGroup } from '$lib/components/radio-group';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { RadioGroup } from '#lib/components/radio-group/index.js';
 </script>
 
 <section id="radio-group">

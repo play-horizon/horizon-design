@@ -3,8 +3,8 @@
 Docs: Frame. Live examples of the Frame component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Frame } from '$lib/components/frame';
+	import { Card } from '#lib/components/card/index.js';
+	import { Frame } from '#lib/components/frame/index.js';
 </script>
 
 <section id="frame">

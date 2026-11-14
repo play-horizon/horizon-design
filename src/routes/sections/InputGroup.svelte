@@ -3,9 +3,9 @@
 Docs: InputGroup. Live examples of the InputGroup component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Input } from '$lib/components/input';
-	import { InputGroup, InputAddon } from '$lib/components/input-group';
+	import { Card } from '#lib/components/card/index.js';
+	import { Input } from '#lib/components/input/index.js';
+	import { InputGroup, InputAddon } from '#lib/components/input-group/index.js';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
 </script>
 

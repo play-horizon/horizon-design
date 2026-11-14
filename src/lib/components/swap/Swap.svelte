@@ -5,7 +5,7 @@ Swaps between two contents with an animation, such as a play and a pause icon (A
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Swap } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		on,

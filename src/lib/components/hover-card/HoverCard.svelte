@@ -7,7 +7,7 @@ function; `frosted` for a translucent surface.
 	import type { Snippet } from 'svelte';
 	import { HoverCard } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		trigger,

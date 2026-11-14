@@ -3,8 +3,8 @@
 Docs: Status. Live examples of the Status component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Status } from '$lib/components/status';
+	import { Card } from '#lib/components/card/index.js';
+	import { Status } from '#lib/components/status/index.js';
 </script>
 
 <section id="status">

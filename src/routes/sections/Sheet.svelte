@@ -3,9 +3,9 @@
 Docs: Sheet. Live examples of the Sheet component.
 -->
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Sheet } from '$lib/components/sheet';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Sheet } from '#lib/components/sheet/index.js';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 </script>
 

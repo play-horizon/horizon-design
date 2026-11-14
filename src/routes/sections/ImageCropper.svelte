@@ -3,8 +3,8 @@
 Docs: ImageCropper. Live examples of the ImageCropper component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ImageCropper } from '$lib/components/image-cropper';
+	import { Card } from '#lib/components/card/index.js';
+	import { ImageCropper } from '#lib/components/image-cropper/index.js';
 	import { art } from '../examples';
 
 	const translations = {

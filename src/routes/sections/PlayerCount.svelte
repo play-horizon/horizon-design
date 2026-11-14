@@ -3,8 +3,8 @@
 Docs: PlayerCount. Inline on a game page, and as a pill over game art.
 -->
 <script lang="ts">
-	import { PlayerCount } from '$lib/components/player-count';
-	import { Card } from '$lib/components/card';
+	import { PlayerCount } from '#lib/components/player-count/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import { art } from '../examples';
 </script>
 

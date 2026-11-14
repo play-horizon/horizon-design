@@ -3,8 +3,8 @@
 Docs: Badge. Live examples of the Badge component.
 -->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="badge">

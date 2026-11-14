@@ -5,7 +5,7 @@ One panel of a `Splitter`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Splitter } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

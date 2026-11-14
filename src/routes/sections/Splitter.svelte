@@ -3,8 +3,12 @@
 Docs: Splitter. Live examples of the Splitter component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Splitter, SplitterPanel, SplitterResizeTrigger } from '$lib/components/splitter';
+	import { Card } from '#lib/components/card/index.js';
+	import {
+		Splitter,
+		SplitterPanel,
+		SplitterResizeTrigger
+	} from '#lib/components/splitter/index.js';
 
 	const splitterPanels = [{ id: 'a' }, { id: 'b' }];
 </script>

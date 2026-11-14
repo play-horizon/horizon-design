@@ -6,7 +6,7 @@ Resizable panels separated by draggable handles (Ark Splitter): `SplitterPanel`s
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Splitter, type SplitterPanelData as PanelData } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

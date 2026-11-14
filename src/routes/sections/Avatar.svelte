@@ -3,8 +3,8 @@
 Docs: Avatar. Sizes, the five fallback tones, and an image.
 -->
 <script lang="ts">
-	import { Avatar } from '$lib/components/avatar';
-	import { Card } from '$lib/components/card';
+	import { Avatar } from '#lib/components/avatar/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import { art } from '../examples';
 
 	const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;

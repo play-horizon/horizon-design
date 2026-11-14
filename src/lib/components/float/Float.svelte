@@ -5,7 +5,7 @@ action buttons; several children stack in a column, aligned to that side.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	type Position = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'bottom-center';
 

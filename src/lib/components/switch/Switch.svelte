@@ -5,7 +5,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Switch } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	type SizeConfig = {
 		control: string;

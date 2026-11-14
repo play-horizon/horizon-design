@@ -3,8 +3,8 @@
 Docs: InspectorPanel. Live examples of the InspectorPanel component.
 -->
 <script lang="ts">
-	import { ScrollArea } from '$lib/components/scroll-area';
-	import { InspectorPanel } from '$lib/editor/inspector-panel';
+	import { ScrollArea } from '#lib/components/scroll-area/index.js';
+	import { InspectorPanel } from '#lib/editor/inspector-panel/index.js';
 
 	let inspectorCards = $state([
 		{ id: 'transform', title: 'Transform', subtitle: '(3, 0, 0)' },

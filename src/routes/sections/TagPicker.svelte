@@ -3,8 +3,8 @@
 Docs: TagPicker. The game tag list, up to three tags.
 -->
 <script lang="ts">
-	import { TagPicker } from '$lib/components/tag-picker';
-	import { Card } from '$lib/components/card';
+	import { TagPicker } from '#lib/components/tag-picker/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import { gameTags } from '../examples';
 
 	let tags = $state(['obby', 'platformer']);

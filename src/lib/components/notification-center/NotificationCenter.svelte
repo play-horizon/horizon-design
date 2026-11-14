@@ -28,7 +28,7 @@ text translated and every time formatted.
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteNotificationLine from '~icons/mingcute/notification-line';
 	import Button from '../button/Button.svelte';
 

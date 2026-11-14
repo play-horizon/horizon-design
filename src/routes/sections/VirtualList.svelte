@@ -3,8 +3,8 @@
 Docs: VirtualList. Ten thousand rows, of which only those in view are rendered.
 -->
 <script lang="ts">
-	import { VirtualList } from '$lib/components/virtual-list';
-	import { Card } from '$lib/components/card';
+	import { VirtualList } from '#lib/components/virtual-list/index.js';
+	import { Card } from '#lib/components/card/index.js';
 
 	const rows = Array.from({ length: 10_000 }, (_, i) => ({
 		id: `row-${i}`,

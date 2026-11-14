@@ -4,7 +4,7 @@
  * @module
  */
 import type { ClassValue } from 'clsx';
-import { cn } from '$lib/utils';
+import { cn } from '#lib/utils.js';
 
 const base =
 	'inline-flex shrink-0 items-center justify-center whitespace-nowrap border font-medium outline-none transition-[background-color,border-color,color,opacity,transform] duration-150 active:scale-98 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0';

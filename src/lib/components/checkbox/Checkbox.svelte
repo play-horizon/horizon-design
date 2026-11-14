@@ -8,7 +8,7 @@ as a check or a dash.
 	import { Checkbox, type CheckboxCheckedChangeDetails } from '@ark-ui/svelte';
 	import MingcuteCheckFill from '~icons/mingcute/check-fill';
 	import MingcuteSubtractFill from '~icons/mingcute/subtract-fill';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	type SizeConfig = { control: string; icon: number; label: string };
 

@@ -3,8 +3,8 @@
 Docs: AssetCard. Store listings with Add to my assets, and a card without a thumbnail.
 -->
 <script lang="ts">
-	import { AssetCard } from '$lib/components/asset-card';
-	import { Button } from '$lib/components/button';
+	import { AssetCard } from '#lib/components/asset-card/index.js';
+	import { Button } from '#lib/components/button/index.js';
 	import MingcuteAddLine from '~icons/mingcute/add-line';
 	import MingcuteMusic2Line from '~icons/mingcute/music-2-line';
 	import MingcuteThumbUp2Line from '~icons/mingcute/thumb-up-2-line';

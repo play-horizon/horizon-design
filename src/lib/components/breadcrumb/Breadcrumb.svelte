@@ -3,7 +3,7 @@
 The trail of pages leading to the current one, each a link but the last; `label` names the trail.
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 
 	interface BreadcrumbItemConfig {

@@ -12,7 +12,7 @@ there is one.
 		type ColorPickerValueChangeDetails
 	} from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

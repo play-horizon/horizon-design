@@ -3,9 +3,9 @@
 Docs: Toast. Live examples of the Toast component.
 -->
 <script lang="ts">
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Toaster, createToaster } from '$lib/components/toast';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Toaster, createToaster } from '#lib/components/toast/index.js';
 	import MingcuteAlertLine from '~icons/mingcute/alert-line';
 	import MingcuteCheckCircleLine from '~icons/mingcute/check-circle-line';
 	import MingcuteCloseCircleLine from '~icons/mingcute/close-circle-line';

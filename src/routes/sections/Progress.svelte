@@ -3,8 +3,8 @@
 Docs: Progress. Live examples of the Progress component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Progress } from '$lib/components/progress';
+	import { Card } from '#lib/components/card/index.js';
+	import { Progress } from '#lib/components/progress/index.js';
 </script>
 
 <section id="progress">

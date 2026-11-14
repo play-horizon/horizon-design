@@ -6,7 +6,7 @@ the app passes (Ark Steps).
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Steps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One step of the flow. */
 	interface StepConfig {

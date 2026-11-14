@@ -24,7 +24,7 @@ and each avatar's image is named after its person.
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import Avatar from '../avatar/Avatar.svelte';
 
 	let {

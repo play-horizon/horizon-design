@@ -5,7 +5,7 @@ thumbnails; Ark `translations` name and describe it for assistive technology.
 -->
 <script lang="ts">
 	import { ImageCropper, type ImageCropperRootProps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		src,

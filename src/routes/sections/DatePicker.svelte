@@ -3,8 +3,8 @@
 Docs: DatePicker. Live examples of the DatePicker component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { DatePicker } from '$lib/components/date-picker';
+	import { Card } from '#lib/components/card/index.js';
+	import { DatePicker } from '#lib/components/date-picker/index.js';
 
 	/** What the previous and next buttons move by in each view. */
 	const periods = { day: 'month', month: 'year', year: 'decade' } as const;

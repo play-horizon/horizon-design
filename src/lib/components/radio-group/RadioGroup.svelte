@@ -7,7 +7,7 @@ A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { RadioGroup, type RadioGroupValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One option: its value, its label (text or a snippet) and whether it can be chosen. */
 	type Item = { value: string; label: string | Snippet; disabled?: boolean };

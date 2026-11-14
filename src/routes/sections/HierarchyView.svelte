@@ -3,8 +3,8 @@
 Docs: HierarchyView. Live examples of the HierarchyView component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { HierarchyView } from '$lib/editor/hierarchy-view';
+	import { Card } from '#lib/components/card/index.js';
+	import { HierarchyView } from '#lib/editor/hierarchy-view/index.js';
 
 	const hierarchyData = [
 		{

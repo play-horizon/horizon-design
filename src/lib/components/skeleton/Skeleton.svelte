@@ -3,7 +3,7 @@
 A placeholder block that pulses while content loads (pages show skeletons, not spinners).
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

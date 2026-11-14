@@ -3,10 +3,10 @@
 Docs: Popover. Live examples of the Popover component.
 -->
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Input } from '$lib/components/input';
-	import { Popover } from '$lib/components/popover';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Input } from '#lib/components/input/index.js';
+	import { Popover } from '#lib/components/popover/index.js';
 	import MingcuteLayout4Line from '~icons/mingcute/layout-4-line';
 </script>
 

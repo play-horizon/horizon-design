@@ -4,9 +4,12 @@ Docs: NotificationCenter. An invitation with Accept and Decline, a publish statu
 state.
 -->
 <script lang="ts">
-	import { NotificationCenter, type NotificationEntry } from '$lib/components/notification-center';
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
+	import {
+		NotificationCenter,
+		type NotificationEntry
+	} from '#lib/components/notification-center/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import { art } from '../examples';
 
 	let items = $state<NotificationEntry[]>([

@@ -3,9 +3,9 @@
 Docs: Input. Live examples of the Input component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Field } from '$lib/components/field';
-	import { Input } from '$lib/components/input';
+	import { Card } from '#lib/components/card/index.js';
+	import { Field } from '#lib/components/field/index.js';
+	import { Input } from '#lib/components/input/index.js';
 </script>
 
 <section id="input">

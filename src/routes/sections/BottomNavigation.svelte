@@ -3,8 +3,8 @@
 Docs: BottomNavigation. Live examples of the BottomNavigation component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { BottomNavigation } from '$lib/components/bottom-navigation';
+	import { Card } from '#lib/components/card/index.js';
+	import { BottomNavigation } from '#lib/components/bottom-navigation/index.js';
 	import MingcuteHome4Line from '~icons/mingcute/home-4-line';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
 	import MingcuteUser1Line from '~icons/mingcute/user-1-line';

@@ -4,7 +4,7 @@ A floating bar of actions at the bottom of the window, for the current selection
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

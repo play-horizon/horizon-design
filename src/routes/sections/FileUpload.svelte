@@ -3,8 +3,8 @@
 Docs: FileUpload. Live examples of the FileUpload component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { FileUpload } from '$lib/components/file-upload';
+	import { Card } from '#lib/components/card/index.js';
+	import { FileUpload } from '#lib/components/file-upload/index.js';
 </script>
 
 <section id="file-upload">

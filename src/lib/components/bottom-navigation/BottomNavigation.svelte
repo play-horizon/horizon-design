@@ -5,7 +5,7 @@ A bar of navigation items fixed to the bottom of a narrow screen, above the devi
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	interface NavItem {
 		/** The item's text, unique in the bar. */

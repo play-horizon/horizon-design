@@ -8,7 +8,7 @@ same colour.
 -->
 <script lang="ts">
 	import { Avatar } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import { toneOf, type AvatarTone } from './tone';
 
 	const sizes = {

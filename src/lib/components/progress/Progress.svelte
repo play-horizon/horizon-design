@@ -6,7 +6,7 @@ bar for assistive technology; without one, the bar is named by its value.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Progress } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

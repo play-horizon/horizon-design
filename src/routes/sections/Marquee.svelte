@@ -3,9 +3,9 @@
 Docs: Marquee. Live examples of the Marquee component.
 -->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
-	import { Marquee, MarqueeItem } from '$lib/components/marquee';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Marquee, MarqueeItem } from '#lib/components/marquee/index.js';
 </script>
 
 <section id="marquee">

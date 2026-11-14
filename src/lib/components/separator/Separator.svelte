@@ -4,7 +4,7 @@ A horizontal or vertical divider. Decorative by default, hidden from assistive t
 `decorative` false, it is announced as a separator.
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

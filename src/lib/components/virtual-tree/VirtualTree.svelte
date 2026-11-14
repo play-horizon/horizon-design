@@ -33,7 +33,7 @@ node is renamed (`row` leaves the name out then: `state.renaming`).
 		type TreeViewRenameCompleteDetails,
 		type TreeViewSelectionChangeDetails
 	} from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteRightFill from '~icons/mingcute/right-fill';
 	import VirtualList from '../virtual-list/VirtualList.svelte';
 

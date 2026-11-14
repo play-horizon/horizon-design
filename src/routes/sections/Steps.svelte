@@ -3,8 +3,8 @@
 Docs: Steps. Live examples of the Steps component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Steps } from '$lib/components/steps';
+	import { Card } from '#lib/components/card/index.js';
+	import { Steps } from '#lib/components/steps/index.js';
 
 	let stepsStep = $state(0);
 </script>

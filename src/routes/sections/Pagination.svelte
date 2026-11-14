@@ -4,13 +4,13 @@ Docs: Pagination. Live examples of the Pagination component: its built-in page l
 compact control composed from its parts.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
+	import { Card } from '#lib/components/card/index.js';
 	import {
 		Pagination,
 		PaginationContext,
 		PaginationNextTrigger,
 		PaginationPrevTrigger
-	} from '$lib/components/pagination';
+	} from '#lib/components/pagination/index.js';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 

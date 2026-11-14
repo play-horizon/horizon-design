@@ -7,12 +7,18 @@
  */
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import sveltekitConfig from './sveltekit.config.js';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { defineConfig } from 'vitest/config';
 import Icons from 'unplugin-icons/vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' }), svelteTesting()],
+	plugins: [
+		tailwindcss(),
+		sveltekit(sveltekitConfig),
+		Icons({ compiler: 'svelte' }),
+		svelteTesting()
+	],
 	// pragmatic-drag-and-drop has no `exports` map, so Node's ESM loader refuses its directory
 	// imports when the prerender leaves it external: bundle it into the server build instead.
 	ssr: {

@@ -3,8 +3,8 @@
 Docs: Listbox. Live examples of the Listbox component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Listbox } from '$lib/components/listbox';
+	import { Card } from '#lib/components/card/index.js';
+	import { Listbox } from '#lib/components/listbox/index.js';
 
 	const comboboxItems = [
 		{ label: 'Svelte', value: 'svelte' },

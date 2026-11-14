@@ -7,7 +7,7 @@ whose content is only an icon through its `label`.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ToggleGroup } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One toggle of the group. */
 	interface ToggleItem {

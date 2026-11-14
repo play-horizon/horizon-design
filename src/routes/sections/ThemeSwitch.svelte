@@ -3,8 +3,8 @@
 Docs: ThemeSwitch. Live examples of the ThemeSwitch component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ThemeSwitch } from '$lib/components/theme-switch';
+	import { Card } from '#lib/components/card/index.js';
+	import { ThemeSwitch } from '#lib/components/theme-switch/index.js';
 
 	const labels = { group: 'Theme', system: 'System', dark: 'Dark', light: 'Light' };
 </script>

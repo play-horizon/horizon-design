@@ -3,8 +3,8 @@
 Docs: SkipNav. Live examples of the SkipNav component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { SkipNav } from '$lib/components/skip-nav';
+	import { Card } from '#lib/components/card/index.js';
+	import { SkipNav } from '#lib/components/skip-nav/index.js';
 </script>
 
 <section id="skip-nav">

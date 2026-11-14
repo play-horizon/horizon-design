@@ -3,8 +3,8 @@
 Docs: LinkOverlay. Live examples of the LinkOverlay component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { LinkBox, LinkOverlay } from '$lib/components/link-overlay';
+	import { Card } from '#lib/components/card/index.js';
+	import { LinkBox, LinkOverlay } from '#lib/components/link-overlay/index.js';
 	import MingcuteArrowRightUpLine from '~icons/mingcute/arrow-right-up-line';
 </script>
 

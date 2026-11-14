@@ -11,7 +11,7 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 		type PinInputRootProps,
 		type PinInputValueChangeDetails
 	} from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

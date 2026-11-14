@@ -3,10 +3,10 @@
 Docs: GameHero. A game page's banner with its icon, name, creator and tags.
 -->
 <script lang="ts">
-	import { GameHero } from '$lib/components/game-hero';
-	import { Avatar } from '$lib/components/avatar';
-	import { Badge } from '$lib/components/badge';
-	import { Button } from '$lib/components/button';
+	import { GameHero } from '#lib/components/game-hero/index.js';
+	import { Avatar } from '#lib/components/avatar/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Button } from '#lib/components/button/index.js';
 	import MingcuteArrowLeftLine from '~icons/mingcute/arrow-left-line';
 	import { art } from '../examples';
 </script>

@@ -12,7 +12,7 @@ focus back where it was before the palette opened.
 <script lang="ts">
 	import { Dialog } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import PaletteSearch from './PaletteSearch.svelte';
 	import type { Command } from './filter';
 

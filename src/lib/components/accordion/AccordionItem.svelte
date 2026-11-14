@@ -6,7 +6,7 @@ One section of an `Accordion`: its trigger (text or snippet) and its collapsible
 	import type { Snippet } from 'svelte';
 	import { Accordion } from '@ark-ui/svelte';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

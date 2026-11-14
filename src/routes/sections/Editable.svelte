@@ -3,8 +3,8 @@
 Docs: Editable. Live examples of the Editable component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Editable } from '$lib/components/editable';
+	import { Card } from '#lib/components/card/index.js';
+	import { Editable } from '#lib/components/editable/index.js';
 </script>
 
 <section id="editable">

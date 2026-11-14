@@ -5,7 +5,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 import ThemeSwitch from './ThemeSwitch.svelte';
-import { theme } from '$lib/theme.svelte';
+import { theme } from '#lib/theme.svelte.js';
 
 const labels = { group: 'Theme', system: 'System', dark: 'Dark', light: 'Light' };
 

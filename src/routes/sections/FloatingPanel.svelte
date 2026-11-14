@@ -3,8 +3,8 @@
 Docs: FloatingPanel. Live examples of the FloatingPanel component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { FloatingPanel } from '$lib/components/floating-panel';
+	import { Card } from '#lib/components/card/index.js';
+	import { FloatingPanel } from '#lib/components/floating-panel/index.js';
 </script>
 
 <section id="floating-panel">

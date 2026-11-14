@@ -3,8 +3,8 @@
 Docs: AspectRatio. Live examples of the AspectRatio component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { AspectRatio } from '$lib/components/aspect-ratio';
+	import { Card } from '#lib/components/card/index.js';
+	import { AspectRatio } from '#lib/components/aspect-ratio/index.js';
 	import { art } from '../examples';
 </script>
 

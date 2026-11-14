@@ -3,8 +3,8 @@
 Docs: Timer. Live examples of the Timer component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Timer } from '$lib/components/timer';
+	import { Card } from '#lib/components/card/index.js';
+	import { Timer } from '#lib/components/timer/index.js';
 
 	const labels = { start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset' };
 </script>

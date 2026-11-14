@@ -14,7 +14,7 @@ buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced rol
 	} from '@ark-ui/svelte';
 	import MingcuteUpLine from '~icons/mingcute/up-line';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

@@ -12,7 +12,7 @@ as) are passed in.
 		DateValue
 	} from '@ark-ui/svelte/date-picker';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCalendarLine from '~icons/mingcute/calendar-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';

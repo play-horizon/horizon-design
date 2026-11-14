@@ -10,7 +10,7 @@ each star (`ratingValueText`, "3 stars") and gives the role a star is announced 
 		type RatingGroupRootProps,
 		type RatingGroupValueChangeDetails
 	} from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteStarFill from '~icons/mingcute/star-fill';
 
 	let {

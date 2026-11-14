@@ -3,8 +3,8 @@
 Docs: CircularProgress. Live examples of the CircularProgress component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { CircularProgress } from '$lib/components/circular-progress';
+	import { Card } from '#lib/components/card/index.js';
+	import { CircularProgress } from '#lib/components/circular-progress/index.js';
 </script>
 
 <section id="circular-progress">

@@ -4,7 +4,7 @@ The link of a `LinkBox`, stretched over the whole box: a click anywhere in the b
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

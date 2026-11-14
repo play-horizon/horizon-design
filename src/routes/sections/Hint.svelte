@@ -3,9 +3,9 @@
 Docs: Hint. Live examples of the Hint component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Hint } from '$lib/components/hint';
-	import { Input } from '$lib/components/input';
+	import { Card } from '#lib/components/card/index.js';
+	import { Hint } from '#lib/components/hint/index.js';
+	import { Input } from '#lib/components/input/index.js';
 </script>
 
 <section id="hint">

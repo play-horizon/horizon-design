@@ -4,7 +4,7 @@ The draggable handle between two `SplitterPanel`s; arrow keys move it too. `labe
 -->
 <script lang="ts">
 	import { Splitter } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

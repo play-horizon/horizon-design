@@ -4,7 +4,7 @@ A row of a list, laying out what it is given (media, a title, a description, act
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

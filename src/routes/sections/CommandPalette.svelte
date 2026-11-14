@@ -3,10 +3,10 @@
 Docs: CommandPalette. Every command with its shortcut, searchable; Ctrl+Shift+P opens it here too.
 -->
 <script lang="ts">
-	import { CommandPalette, type Command } from '$lib/components/command-palette';
-	import { Button } from '$lib/components/button';
-	import { Kbd } from '$lib/components/kbd';
-	import { Card } from '$lib/components/card';
+	import { CommandPalette, type Command } from '#lib/components/command-palette/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Kbd } from '#lib/components/kbd/index.js';
+	import { Card } from '#lib/components/card/index.js';
 
 	let open = $state(false);
 	let ran = $state('');

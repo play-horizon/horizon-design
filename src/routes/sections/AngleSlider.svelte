@@ -3,8 +3,8 @@
 Docs: AngleSlider. Live examples of the AngleSlider component.
 -->
 <script lang="ts">
-	import { AngleSlider } from '$lib/components/angle-slider';
-	import { Card } from '$lib/components/card';
+	import { AngleSlider } from '#lib/components/angle-slider/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="angle-slider">

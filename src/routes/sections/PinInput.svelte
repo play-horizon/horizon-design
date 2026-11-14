@@ -3,8 +3,8 @@
 Docs: PinInput. Live examples of the PinInput component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { PinInput } from '$lib/components/pin-input';
+	import { Card } from '#lib/components/card/index.js';
+	import { PinInput } from '#lib/components/pin-input/index.js';
 </script>
 
 <section id="pin-input">

@@ -3,8 +3,8 @@
 Docs: Slider. One value, and a range with two thumbs.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Slider } from '$lib/components/slider';
+	import { Card } from '#lib/components/card/index.js';
+	import { Slider } from '#lib/components/slider/index.js';
 </script>
 
 <section id="slider">

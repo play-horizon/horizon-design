@@ -3,9 +3,9 @@
 Docs: Tour. Live examples of the Tour component.
 -->
 <script lang="ts">
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Tour } from '$lib/components/tour';
+	import { Button } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Tour } from '#lib/components/tour/index.js';
 </script>
 
 <section id="tour">

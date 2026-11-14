@@ -4,8 +4,8 @@ Docs: Breadcrumb. Live examples of the Breadcrumb component.
 -->
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Breadcrumb } from '$lib/components/breadcrumb';
-	import { Card } from '$lib/components/card';
+	import { Breadcrumb } from '#lib/components/breadcrumb/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="breadcrumb">

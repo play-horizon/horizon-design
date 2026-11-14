@@ -3,9 +3,15 @@
 Docs: Menu. Live examples of the Menu component.
 -->
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Menu, MenuGroup, MenuGroupLabel, MenuItem, MenuSeparator } from '$lib/components/menu';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import {
+		Menu,
+		MenuGroup,
+		MenuGroupLabel,
+		MenuItem,
+		MenuSeparator
+	} from '#lib/components/menu/index.js';
 	import MingcuteCardPayLine from '~icons/mingcute/card-pay-line';
 	import MingcuteExitDoorLine from '~icons/mingcute/exit-door-line';
 	import MingcuteMore2Line from '~icons/mingcute/more-2-line';

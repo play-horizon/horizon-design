@@ -5,7 +5,7 @@ and a description.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteInformationLine from '~icons/mingcute/information-line';
 	import MingcuteCheckCircleLine from '~icons/mingcute/check-circle-line';
 	import MingcuteAlertLine from '~icons/mingcute/alert-line';

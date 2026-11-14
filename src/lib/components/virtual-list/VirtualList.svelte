@@ -14,7 +14,7 @@ row of a keyboard-driven list.
 <script lang="ts" generics="T">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import { visibleRange } from './range';
 
 	let {

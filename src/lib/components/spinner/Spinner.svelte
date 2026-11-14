@@ -5,7 +5,7 @@ lists show skeletons instead. With `label`, the text shows beside it and is anno
 `aria-label`, it is announced without text; with neither, it is decorative.
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteLoading3Fill from '~icons/mingcute/loading-3-fill';
 
 	const sizes = {

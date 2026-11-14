@@ -3,8 +3,8 @@
 Docs: NativeSelect. Live examples of the NativeSelect component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { NativeSelect } from '$lib/components/native-select';
+	import { Card } from '#lib/components/card/index.js';
+	import { NativeSelect } from '#lib/components/native-select/index.js';
 </script>
 
 <section id="native-select">

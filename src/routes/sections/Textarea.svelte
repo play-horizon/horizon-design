@@ -3,9 +3,9 @@
 Docs: Textarea. Live examples of the Textarea component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Field } from '$lib/components/field';
-	import { Textarea } from '$lib/components/textarea';
+	import { Card } from '#lib/components/card/index.js';
+	import { Field } from '#lib/components/field/index.js';
+	import { Textarea } from '#lib/components/textarea/index.js';
 </script>
 
 <section id="textarea">

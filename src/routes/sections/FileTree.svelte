@@ -3,8 +3,8 @@
 Docs: FileTree. Live examples of the FileTree component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { FileTree } from '$lib/editor/file-tree';
+	import { Card } from '#lib/components/card/index.js';
+	import { FileTree } from '#lib/editor/file-tree/index.js';
 	import { createTreeCollection } from '@ark-ui/svelte';
 
 	const treeCollection = createTreeCollection({

@@ -3,8 +3,8 @@
 Docs: Prose. Live examples of the Prose component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Prose } from '$lib/components/prose';
+	import { Card } from '#lib/components/card/index.js';
+	import { Prose } from '#lib/components/prose/index.js';
 </script>
 
 <section id="prose">

@@ -6,7 +6,7 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 	import type { Snippet } from 'svelte';
 	import { Menu, type MenuOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		trigger,

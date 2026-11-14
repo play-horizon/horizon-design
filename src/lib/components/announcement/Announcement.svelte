@@ -4,7 +4,7 @@ A small pill that announces something new, with an optional icon and a tag.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

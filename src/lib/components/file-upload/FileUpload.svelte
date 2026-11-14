@@ -5,7 +5,7 @@ texts, and `prompt` names it for assistive technology.
 -->
 <script lang="ts">
 	import { FileUpload } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteFileUploadLine from '~icons/mingcute/file-upload-line';
 
 	let {

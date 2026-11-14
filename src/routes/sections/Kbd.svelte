@@ -3,8 +3,8 @@
 Docs: Kbd. Live examples of the Kbd component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Kbd } from '$lib/components/kbd';
+	import { Card } from '#lib/components/card/index.js';
+	import { Kbd } from '#lib/components/kbd/index.js';
 </script>
 
 <section id="kbd">

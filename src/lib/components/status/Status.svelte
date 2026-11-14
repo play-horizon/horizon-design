@@ -5,7 +5,7 @@ soft ring in its colour. `label` names the status for assistive technology, tran
 it the dot is decorative, for when the status is written next to it.
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	const variants = {
 		online: 'bg-success ring-success/18 ring-3',

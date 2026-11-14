@@ -3,8 +3,8 @@
 Docs: Clipboard. Live examples of the Clipboard component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Clipboard } from '$lib/components/clipboard';
+	import { Card } from '#lib/components/card/index.js';
+	import { Clipboard } from '#lib/components/clipboard/index.js';
 </script>
 
 <section id="clipboard">

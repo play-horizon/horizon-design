@@ -3,8 +3,8 @@
 Docs: Accordion. Live examples of the Accordion component.
 -->
 <script lang="ts">
-	import { Accordion, AccordionItem } from '$lib/components/accordion';
-	import { Card } from '$lib/components/card';
+	import { Accordion, AccordionItem } from '#lib/components/accordion/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="accordion">

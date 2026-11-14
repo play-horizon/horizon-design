@@ -3,9 +3,9 @@
 Docs: DataList. Live examples of the DataList component.
 -->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
-	import { DataList } from '$lib/components/data-list';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { DataList } from '#lib/components/data-list/index.js';
 </script>
 
 <section id="data-list">

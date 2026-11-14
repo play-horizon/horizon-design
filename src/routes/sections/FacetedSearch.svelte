@@ -3,8 +3,8 @@
 Docs: FacetedSearch. Games filtered by tag and sorted, the results drawn by the page.
 -->
 <script lang="ts">
-	import { FacetedSearch } from '$lib/components/faceted-search';
-	import { GameCard } from '$lib/components/game-card';
+	import { FacetedSearch } from '#lib/components/faceted-search/index.js';
+	import { GameCard } from '#lib/components/game-card/index.js';
 	import { art, gameTags } from '../examples';
 
 	let query = $state('');

@@ -3,8 +3,8 @@
 Docs: Swap. Live examples of the Swap component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Swap } from '$lib/components/swap';
+	import { Card } from '#lib/components/card/index.js';
+	import { Swap } from '#lib/components/swap/index.js';
 	import MingcuteMoonLine from '~icons/mingcute/moon-line';
 	import MingcutePauseLine from '~icons/mingcute/pause-line';
 	import MingcutePlayLine from '~icons/mingcute/play-line';

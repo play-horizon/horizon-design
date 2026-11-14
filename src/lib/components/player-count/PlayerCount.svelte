@@ -7,7 +7,7 @@ i18n layer (`9,870`, `4.2k`) and the label translated (`playing now`). `live` fa
 dot, for a game nobody is playing.
 -->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		count,

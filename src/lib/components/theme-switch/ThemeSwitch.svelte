@@ -19,11 +19,11 @@ name each mode for assistive technology and tooltips; the app passes them transl
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteComputerLine from '~icons/mingcute/computer-line';
 	import MingcuteMoonLine from '~icons/mingcute/moon-line';
 	import MingcuteSunLine from '~icons/mingcute/sun-line';
-	import { theme, type ThemeMode } from '$lib/theme.svelte';
+	import { theme, type ThemeMode } from '#lib/theme.svelte.js';
 
 	let {
 		labels,

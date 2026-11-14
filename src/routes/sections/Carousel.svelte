@@ -3,8 +3,8 @@
 Docs: Carousel. Live examples of the Carousel component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Carousel } from '$lib/components/carousel';
+	import { Card } from '#lib/components/card/index.js';
+	import { Carousel } from '#lib/components/carousel/index.js';
 </script>
 
 <section id="carousel">

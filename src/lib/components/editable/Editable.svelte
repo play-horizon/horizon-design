@@ -5,7 +5,7 @@ and the field for assistive technology.
 -->
 <script lang="ts">
 	import { Editable, type EditableValueChangeDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

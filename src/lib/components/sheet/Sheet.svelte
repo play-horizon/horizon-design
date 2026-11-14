@@ -9,7 +9,7 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 	import type { Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	type Side = 'top' | 'bottom' | 'left' | 'right';

@@ -3,8 +3,8 @@
 Docs: ThumbCard. Live examples of the ThumbCard component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ThumbCard } from '$lib/components/thumb-card';
+	import { Card } from '#lib/components/card/index.js';
+	import { ThumbCard } from '#lib/components/thumb-card/index.js';
 	import MingcuteLayout6Line from '~icons/mingcute/layout-6-line';
 </script>
 

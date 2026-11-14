@@ -3,8 +3,8 @@
 Docs: SegmentGroup. Live examples of the SegmentGroup component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { SegmentGroup } from '$lib/components/segment-group';
+	import { Card } from '#lib/components/card/index.js';
+	import { SegmentGroup } from '#lib/components/segment-group/index.js';
 </script>
 
 <section id="segment-group">

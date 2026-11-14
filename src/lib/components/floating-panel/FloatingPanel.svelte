@@ -7,7 +7,7 @@ and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its clo
 	import type { Snippet } from 'svelte';
 	import { FloatingPanel, type FloatingPanelOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {

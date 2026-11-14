@@ -3,9 +3,9 @@
 Docs: Tooltip. A tooltip on its own trigger button, and one on an icon button of the app's.
 -->
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Tooltip } from '$lib/components/tooltip';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Tooltip } from '#lib/components/tooltip/index.js';
 	import MingcuteInformationLine from '~icons/mingcute/information-line';
 	import MingcuteSettings3Line from '~icons/mingcute/settings-3-line';
 </script>

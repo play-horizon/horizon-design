@@ -5,7 +5,7 @@ copy (Ark Clipboard); Ark `translations` name the button (`triggerLabel`).
 -->
 <script lang="ts">
 	import { Clipboard, type ClipboardRootProps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCopy2Line from '~icons/mingcute/copy-2-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
 

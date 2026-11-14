@@ -3,8 +3,8 @@
 Docs: Sidebar. A sidebar with its header and footer, and the same navigation collapsed to icons.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Sidebar, SidebarItem, SidebarSection } from '$lib/components/sidebar';
+	import { Card } from '#lib/components/card/index.js';
+	import { Sidebar, SidebarItem, SidebarSection } from '#lib/components/sidebar/index.js';
 	import MingcuteChartLineLine from '~icons/mingcute/chart-line-line';
 	import MingcuteHome4Line from '~icons/mingcute/home-4-line';
 	import MingcuteSettings3Line from '~icons/mingcute/settings-3-line';

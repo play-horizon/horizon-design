@@ -4,11 +4,11 @@ Docs: GameCard. A row of cards with live counts and tags, editing avatars, and t
 Continue playing card with its Play action.
 -->
 <script lang="ts">
-	import { GameCard } from '$lib/components/game-card';
-	import { PlayerCount } from '$lib/components/player-count';
-	import { AvatarStack } from '$lib/components/avatar-stack';
-	import { Button } from '$lib/components/button';
-	import { Badge } from '$lib/components/badge';
+	import { GameCard } from '#lib/components/game-card/index.js';
+	import { PlayerCount } from '#lib/components/player-count/index.js';
+	import { AvatarStack } from '#lib/components/avatar-stack/index.js';
+	import { Button } from '#lib/components/button/index.js';
+	import { Badge } from '#lib/components/badge/index.js';
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
 	import { art, people } from '../examples';
 

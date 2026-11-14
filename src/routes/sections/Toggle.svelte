@@ -3,8 +3,8 @@
 Docs: Toggle. Live examples of the Toggle component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Toggle } from '$lib/components/toggle';
+	import { Card } from '#lib/components/card/index.js';
+	import { Toggle } from '#lib/components/toggle/index.js';
 	import MingcuteBoldLine from '~icons/mingcute/bold-line';
 	import MingcuteItalicLine from '~icons/mingcute/italic-line';
 	import MingcuteUnderlineLine from '~icons/mingcute/underline-line';

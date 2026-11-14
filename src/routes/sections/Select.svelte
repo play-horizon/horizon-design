@@ -3,8 +3,8 @@
 Docs: Select. Live examples of the Select component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Select } from '$lib/components/select';
+	import { Card } from '#lib/components/card/index.js';
+	import { Select } from '#lib/components/select/index.js';
 
 	const selectItems = [
 		{ label: 'Svelte', value: 'svelte' },

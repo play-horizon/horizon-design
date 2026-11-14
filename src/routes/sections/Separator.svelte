@@ -3,8 +3,8 @@
 Docs: Separator. Live examples of the Separator component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Separator } from '$lib/components/separator';
+	import { Card } from '#lib/components/card/index.js';
+	import { Separator } from '#lib/components/separator/index.js';
 </script>
 
 <section id="separator">

@@ -7,7 +7,7 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import Badge from '../badge/Badge.svelte';
 
 	let {

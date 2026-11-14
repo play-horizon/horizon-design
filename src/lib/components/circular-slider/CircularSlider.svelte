@@ -7,7 +7,7 @@ it. `label` is its accessible name and `valueText` its spoken value; the arrow k
 -->
 <script lang="ts">
 	import { AngleSlider } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

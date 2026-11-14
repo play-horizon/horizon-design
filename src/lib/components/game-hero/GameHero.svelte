@@ -6,7 +6,7 @@ the square icon, the name, a `byline` (the creator) and the game's `tags` over i
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		name,

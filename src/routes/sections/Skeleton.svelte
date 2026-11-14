@@ -3,8 +3,8 @@
 Docs: Skeleton. Live examples of the Skeleton component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Skeleton } from '$lib/components/skeleton';
+	import { Card } from '#lib/components/card/index.js';
+	import { Skeleton } from '#lib/components/skeleton/index.js';
 </script>
 
 <section id="skeleton">

@@ -8,7 +8,7 @@ opens, so Enter never confirms by accident; the confirming button calls `onActio
 	import type { Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import { buttonVariants } from '../button/button-variants';
 
 	let {

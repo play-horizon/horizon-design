@@ -10,12 +10,12 @@ library's own `slidePage`, as the apps use it).
 	import { page } from '$app/state';
 	import { asset, resolve } from '$app/paths';
 	import { onNavigate } from '$app/navigation';
-	import { theme } from '$lib/theme.svelte';
-	import { slidePage } from '$lib/motion/page-transition';
-	import { Sidebar, SidebarItem, SidebarSection } from '$lib/components/sidebar';
-	import { ThemeSwitch } from '$lib/components/theme-switch';
-	import { Input } from '$lib/components/input';
-	import { SkipNav } from '$lib/components/skip-nav';
+	import { theme } from '#lib/theme.svelte.js';
+	import { slidePage } from '#lib/motion/page-transition.js';
+	import { Sidebar, SidebarItem, SidebarSection } from '#lib/components/sidebar/index.js';
+	import { ThemeSwitch } from '#lib/components/theme-switch/index.js';
+	import { Input } from '#lib/components/input/index.js';
+	import { SkipNav } from '#lib/components/skip-nav/index.js';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
 	import { navGroups, pageOrder } from './nav';
 	import pkg from '../../package.json';
@@ -59,7 +59,7 @@ library's own `slidePage`, as the apps use it).
 <div class="flex h-screen flex-col overflow-hidden">
 	<header class="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-sunken px-4">
 		<a href={resolve('/')} class="flex items-center gap-2.5 font-bold">
-			<img src={asset('/favicon.svg')} alt="" class="size-6.5 rounded-md" />
+			<img src={asset('favicon.svg')} alt="" class="size-6.5 rounded-md" />
 			<span class="text-md">horizon-design</span>
 		</a>
 		<span class="font-mono text-xs text-faint">v{pkg.version}</span>

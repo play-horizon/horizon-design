@@ -4,7 +4,7 @@ A divider between groups of a `Menu`.
 -->
 <script lang="ts">
 	import { Menu } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',

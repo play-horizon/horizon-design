@@ -4,8 +4,8 @@ Docs: VoteButtons. A vote that can be taken back, and the disabled state for an 
 not vote yet.
 -->
 <script lang="ts">
-	import { VoteButtons, type Vote } from '$lib/components/vote-buttons';
-	import { Card } from '$lib/components/card';
+	import { VoteButtons, type Vote } from '#lib/components/vote-buttons/index.js';
+	import { Card } from '#lib/components/card/index.js';
 
 	let vote = $state<Vote>('up');
 	const labels = { group: 'Vote', up: 'Vote up', down: 'Vote down' };

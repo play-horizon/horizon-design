@@ -3,8 +3,8 @@
 Docs: Collapsible. Live examples of the Collapsible component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Collapsible } from '$lib/components/collapsible';
+	import { Card } from '#lib/components/card/index.js';
+	import { Collapsible } from '#lib/components/collapsible/index.js';
 	import MingcuteFolder2Line from '~icons/mingcute/folder-2-line';
 	import MingcuteGitBranchLine from '~icons/mingcute/git-branch-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';

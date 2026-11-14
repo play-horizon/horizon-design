@@ -5,7 +5,7 @@ Tabs and their panels (Ark Tabs): a segmented or an underlined tab list.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Tabs } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	/** One tab and its panel. */
 	interface TabConfig {

@@ -5,7 +5,7 @@ with a `<label for>` or an `aria-label`, both passed to the `<select>`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 
 	let {

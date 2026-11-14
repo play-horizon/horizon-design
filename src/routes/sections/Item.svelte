@@ -3,8 +3,8 @@
 Docs: Item. Live examples of the Item component.
 -->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Item } from '$lib/components/item';
+	import { Card } from '#lib/components/card/index.js';
+	import { Item } from '#lib/components/item/index.js';
 	import MingcuteNotificationLine from '~icons/mingcute/notification-line';
 	import MingcuteSettings1Line from '~icons/mingcute/settings-1-line';
 	import MingcuteUser1Line from '~icons/mingcute/user-1-line';
