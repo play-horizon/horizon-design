@@ -18,13 +18,16 @@ Docs: ContextMenu. Live examples of the ContextMenu component.
 				</div>
 			{/snippet}
 			<ContextMenu
-				items={[
-					{ id: 'actions', type: 'label', label: 'Actions' },
-					{ id: 'separator-1', type: 'separator' },
-					{ id: 'edit', label: 'Edit' },
-					{ id: 'copy', label: 'Copy' },
-					{ id: 'separator-2', type: 'separator' },
-					{ id: 'delete', label: 'Delete' }
+				groups={[
+					{
+						id: 'actions',
+						label: 'Actions',
+						items: [
+							{ id: 'edit', label: 'Edit' },
+							{ id: 'copy', label: 'Copy' }
+						]
+					},
+					{ id: 'danger', items: [{ id: 'delete', label: 'Delete' }] }
 				]}
 			>
 				{@render contextTrigger()}
