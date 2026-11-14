@@ -6,6 +6,7 @@ A button that closes the `Dialog` it is in: the children, or an icon named by `l
 	import type { Snippet } from 'svelte';
 	import { Dialog } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
+	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
 		class: className = '',
@@ -34,19 +35,6 @@ A button that closes the `Dialog` it is in: the children, or an icon named by `l
 	{#if children}
 		{@render children()}
 	{:else}
-		<svg
-			aria-hidden="true"
-			xmlns="http://www.w3.org/2000/svg"
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M18 6 6 18" /><path d="m6 6 12 12" />
-		</svg>
+		<MingcuteCloseLine class="size-4" aria-hidden="true" />
 	{/if}
 </Dialog.CloseTrigger>
