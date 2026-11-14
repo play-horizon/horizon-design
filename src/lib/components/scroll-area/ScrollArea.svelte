@@ -1,6 +1,7 @@
 <!--
 @component
-A scrolling region with thin, themed scrollbars (Ark ScrollArea).
+A scrolling region with a thin, themed vertical scrollbar (Ark ScrollArea), shown only while the
+content is taller than the region.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -13,25 +14,14 @@ A scrolling region with thin, themed scrollbars (Ark ScrollArea).
 		children,
 		...rest
 	}: {
+		/** Classes added to the region; it needs a height, such as `h-52` or `size-full`. */
 		class?: string;
+		/** Classes added to the content, inside the scrolling viewport. */
 		innerClass?: string;
+		/** The content that scrolls. */
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
-
-	let hasOverflow = $state(false);
-
-	/** Shows the scrollbar only while the content is taller than the viewport. */
-	function observeOverflow(content: HTMLElement) {
-		const viewport = content.parentElement;
-		if (!viewport) return;
-		const check = () => (hasOverflow = content.offsetHeight > viewport.clientHeight);
-		const observer = new ResizeObserver(check);
-		observer.observe(content);
-		observer.observe(viewport);
-		check();
-		return () => observer.disconnect();
-	}
 </script>
 
 <ScrollArea.Root
@@ -42,16 +32,14 @@ A scrolling region with thin, themed scrollbars (Ark ScrollArea).
 	<ScrollArea.Viewport
 		class="size-full scrollbar-none rounded-[inherit] [&::-webkit-scrollbar]:hidden"
 	>
-		<div class={cn('size-full', innerClass)} {@attach observeOverflow}>
+		<!-- Ark measures this element to size the thumb, so it grows with the content. -->
+		<ScrollArea.Content class={cn('min-h-full', innerClass)}>
 			{@render children?.()}
-		</div>
+		</ScrollArea.Content>
 	</ScrollArea.Viewport>
 	<ScrollArea.Scrollbar
 		orientation="vertical"
-		class={cn(
-			'group/scrollbar w-2.5 touch-none border-l border-l-transparent p-px transition-colors select-none',
-			hasOverflow ? 'flex' : 'hidden'
-		)}
+		class="group/scrollbar hidden w-2.5 touch-none border-l border-l-transparent p-px transition-colors select-none data-overflow-y:flex"
 	>
 		<ScrollArea.Thumb
 			class="relative flex-1 rounded-full bg-border transition-colors group-data-dragging/scrollbar:bg-muted group-data-scrolling/scrollbar:bg-faint hover:bg-border-strong"
