@@ -4,8 +4,9 @@ A date field with a calendar popover (Ark DatePicker); `placeholder` and Ark `tr
 passed in.
 -->
 <script lang="ts">
-	import { DatePicker } from '@ark-ui/svelte';
-	import type { DateValue } from '@ark-ui/svelte/date-picker';
+	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
+	import type { DatePickerValueChangeDetails, DateValue } from '@ark-ui/svelte/date-picker';
+	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '$lib/utils';
 	import MingcuteCalendarLine from '~icons/mingcute/calendar-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
@@ -15,14 +16,36 @@ passed in.
 		class: className = '',
 		label = '',
 		placeholder = '',
-		value = $bindable(undefined),
+		value = $bindable(),
+		onValueChange,
+		translations,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The field's visible label, such as "Release date". */
 		label?: string;
 		/** The text shown while no date is chosen. */
 		placeholder?: string;
+		/** The chosen dates (bindable); when unset, `defaultValue` gives the first ones. */
 		value?: DateValue[];
+		/** Called with the new dates when they change. */
+		onValueChange?: (details: DatePickerValueChangeDetails) => void;
+		/**
+		 * The accessible names Ark gives the controls: the calendar button (`trigger(open)`), the
+		 * popover (`content`), each day (`dayCell(state)`, from its formatted `valueText`), the
+		 * previous and next buttons and the view switch (`viewTrigger`).
+		 */
+		translations: Required<
+			Pick<
+				NonNullable<DatePickerRootProps['translations']>,
+				'trigger' | 'content' | 'dayCell' | 'prevTrigger' | 'nextTrigger' | 'viewTrigger'
+			>
+		>;
+		/**
+		 * Other props of Ark's `DatePicker.Root`: `selectionMode` (`single`, `multiple` or
+		 * `range`), `locale`, `min` and `max`.
+		 */
 		[key: string]: unknown;
 	} = $props();
 
@@ -37,7 +60,11 @@ passed in.
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="date-picker"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	{translations}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
 	{#if label}
@@ -51,129 +78,131 @@ passed in.
 		<DatePicker.Trigger
 			class="absolute top-1/2 right-2 -translate-y-1/2 text-muted transition-colors hover:text-fg"
 		>
-			<MingcuteCalendarLine class="size-4" />
+			<MingcuteCalendarLine class="size-4" aria-hidden="true" />
 		</DatePicker.Trigger>
 	</DatePicker.Control>
-	<DatePicker.Positioner>
-		<DatePicker.Content
-			class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
-			data-slot="date-picker-content"
-		>
-			<DatePicker.View view="day">
-				<div class="mb-3 flex items-center justify-between">
-					<DatePicker.PrevTrigger class={navBtnClass}>
-						<MingcuteLeftLine class="size-4" />
-					</DatePicker.PrevTrigger>
-					<DatePicker.ViewTrigger
-						class="text-sm font-medium text-fg transition-colors hover:text-primary"
-					>
-						<DatePicker.RangeText />
-					</DatePicker.ViewTrigger>
-					<DatePicker.NextTrigger class={navBtnClass}>
-						<MingcuteRightLine class="size-4" />
-					</DatePicker.NextTrigger>
-				</div>
-				<DatePicker.Context>
-					{#snippet render(api)}
-						<DatePicker.Table class="w-full border-collapse">
-							<DatePicker.TableHead>
-								<DatePicker.TableRow>
-									{#each api().weekDays as weekDay, i (i)}
-										<DatePicker.TableHeader
-											class="h-8 w-8 pb-2 text-center text-xs font-medium text-muted"
-										>
-											{weekDay.short}
-										</DatePicker.TableHeader>
+	<Portal>
+		<DatePicker.Positioner>
+			<DatePicker.Content
+				class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
+				data-slot="date-picker-content"
+			>
+				<DatePicker.View view="day">
+					<div class="mb-3 flex items-center justify-between">
+						<DatePicker.PrevTrigger class={navBtnClass}>
+							<MingcuteLeftLine class="size-4" aria-hidden="true" />
+						</DatePicker.PrevTrigger>
+						<DatePicker.ViewTrigger
+							class="text-sm font-medium text-fg transition-colors hover:text-primary"
+						>
+							<DatePicker.RangeText />
+						</DatePicker.ViewTrigger>
+						<DatePicker.NextTrigger class={navBtnClass}>
+							<MingcuteRightLine class="size-4" aria-hidden="true" />
+						</DatePicker.NextTrigger>
+					</div>
+					<DatePicker.Context>
+						{#snippet render(api)}
+							<DatePicker.Table class="w-full border-collapse">
+								<DatePicker.TableHead>
+									<DatePicker.TableRow>
+										{#each api().weekDays as weekDay (weekDay.long)}
+											<DatePicker.TableHeader
+												class="h-8 w-8 pb-2 text-center text-xs font-medium text-muted"
+											>
+												{weekDay.short}
+											</DatePicker.TableHeader>
+										{/each}
+									</DatePicker.TableRow>
+								</DatePicker.TableHead>
+								<DatePicker.TableBody>
+									{#each api().weeks as week (week[0].toString())}
+										<DatePicker.TableRow>
+											{#each week as day (day.toString())}
+												<DatePicker.TableCell value={day}>
+													<DatePicker.TableCellTrigger class={cellClass}>
+														{day.day}
+													</DatePicker.TableCellTrigger>
+												</DatePicker.TableCell>
+											{/each}
+										</DatePicker.TableRow>
 									{/each}
-								</DatePicker.TableRow>
-							</DatePicker.TableHead>
-							<DatePicker.TableBody>
-								{#each api().weeks as week, i (i)}
-									<DatePicker.TableRow>
-										{#each week as day (day.toString())}
-											<DatePicker.TableCell value={day}>
-												<DatePicker.TableCellTrigger class={cellClass}>
-													{day.day}
-												</DatePicker.TableCellTrigger>
-											</DatePicker.TableCell>
-										{/each}
-									</DatePicker.TableRow>
-								{/each}
-							</DatePicker.TableBody>
-						</DatePicker.Table>
-					{/snippet}
-				</DatePicker.Context>
-			</DatePicker.View>
+								</DatePicker.TableBody>
+							</DatePicker.Table>
+						{/snippet}
+					</DatePicker.Context>
+				</DatePicker.View>
 
-			<DatePicker.View view="month">
-				<div class="mb-3 flex items-center justify-between">
-					<DatePicker.PrevTrigger class={navBtnClass}>
-						<MingcuteLeftLine class="size-4" />
-					</DatePicker.PrevTrigger>
-					<DatePicker.ViewTrigger
-						class="text-sm font-medium text-fg transition-colors hover:text-primary"
-					>
-						<DatePicker.RangeText />
-					</DatePicker.ViewTrigger>
-					<DatePicker.NextTrigger class={navBtnClass}>
-						<MingcuteRightLine class="size-4" />
-					</DatePicker.NextTrigger>
-				</div>
-				<DatePicker.Context>
-					{#snippet render(api)}
-						<DatePicker.Table class="w-full border-collapse">
-							<DatePicker.TableBody>
-								{#each api().getMonthsGrid() as months, i (i)}
-									<DatePicker.TableRow>
-										{#each months as month (month.value)}
-											<DatePicker.TableCell value={month.value}>
-												<DatePicker.TableCellTrigger class={cn(cellClass, 'w-16')}>
-													{month.label}
-												</DatePicker.TableCellTrigger>
-											</DatePicker.TableCell>
-										{/each}
-									</DatePicker.TableRow>
-								{/each}
-							</DatePicker.TableBody>
-						</DatePicker.Table>
-					{/snippet}
-				</DatePicker.Context>
-			</DatePicker.View>
+				<DatePicker.View view="month">
+					<div class="mb-3 flex items-center justify-between">
+						<DatePicker.PrevTrigger class={navBtnClass}>
+							<MingcuteLeftLine class="size-4" aria-hidden="true" />
+						</DatePicker.PrevTrigger>
+						<DatePicker.ViewTrigger
+							class="text-sm font-medium text-fg transition-colors hover:text-primary"
+						>
+							<DatePicker.RangeText />
+						</DatePicker.ViewTrigger>
+						<DatePicker.NextTrigger class={navBtnClass}>
+							<MingcuteRightLine class="size-4" aria-hidden="true" />
+						</DatePicker.NextTrigger>
+					</div>
+					<DatePicker.Context>
+						{#snippet render(api)}
+							<DatePicker.Table class="w-full border-collapse">
+								<DatePicker.TableBody>
+									{#each api().getMonthsGrid() as months (months[0].value)}
+										<DatePicker.TableRow>
+											{#each months as month (month.value)}
+												<DatePicker.TableCell value={month.value}>
+													<DatePicker.TableCellTrigger class={cn(cellClass, 'w-16')}>
+														{month.label}
+													</DatePicker.TableCellTrigger>
+												</DatePicker.TableCell>
+											{/each}
+										</DatePicker.TableRow>
+									{/each}
+								</DatePicker.TableBody>
+							</DatePicker.Table>
+						{/snippet}
+					</DatePicker.Context>
+				</DatePicker.View>
 
-			<DatePicker.View view="year">
-				<div class="mb-3 flex items-center justify-between">
-					<DatePicker.PrevTrigger class={navBtnClass}>
-						<MingcuteLeftLine class="size-4" />
-					</DatePicker.PrevTrigger>
-					<DatePicker.ViewTrigger
-						class="text-sm font-medium text-fg transition-colors hover:text-primary"
-					>
-						<DatePicker.RangeText />
-					</DatePicker.ViewTrigger>
-					<DatePicker.NextTrigger class={navBtnClass}>
-						<MingcuteRightLine class="size-4" />
-					</DatePicker.NextTrigger>
-				</div>
-				<DatePicker.Context>
-					{#snippet render(api)}
-						<DatePicker.Table class="w-full border-collapse">
-							<DatePicker.TableBody>
-								{#each api().getYearsGrid() as years, i (i)}
-									<DatePicker.TableRow>
-										{#each years as year (year.value)}
-											<DatePicker.TableCell value={year.value}>
-												<DatePicker.TableCellTrigger class={cn(cellClass, 'w-12')}>
-													{year.label}
-												</DatePicker.TableCellTrigger>
-											</DatePicker.TableCell>
-										{/each}
-									</DatePicker.TableRow>
-								{/each}
-							</DatePicker.TableBody>
-						</DatePicker.Table>
-					{/snippet}
-				</DatePicker.Context>
-			</DatePicker.View>
-		</DatePicker.Content>
-	</DatePicker.Positioner>
+				<DatePicker.View view="year">
+					<div class="mb-3 flex items-center justify-between">
+						<DatePicker.PrevTrigger class={navBtnClass}>
+							<MingcuteLeftLine class="size-4" aria-hidden="true" />
+						</DatePicker.PrevTrigger>
+						<DatePicker.ViewTrigger
+							class="text-sm font-medium text-fg transition-colors hover:text-primary"
+						>
+							<DatePicker.RangeText />
+						</DatePicker.ViewTrigger>
+						<DatePicker.NextTrigger class={navBtnClass}>
+							<MingcuteRightLine class="size-4" aria-hidden="true" />
+						</DatePicker.NextTrigger>
+					</div>
+					<DatePicker.Context>
+						{#snippet render(api)}
+							<DatePicker.Table class="w-full border-collapse">
+								<DatePicker.TableBody>
+									{#each api().getYearsGrid() as years (years[0].value)}
+										<DatePicker.TableRow>
+											{#each years as year (year.value)}
+												<DatePicker.TableCell value={year.value}>
+													<DatePicker.TableCellTrigger class={cn(cellClass, 'w-12')}>
+														{year.label}
+													</DatePicker.TableCellTrigger>
+												</DatePicker.TableCell>
+											{/each}
+										</DatePicker.TableRow>
+									{/each}
+								</DatePicker.TableBody>
+							</DatePicker.Table>
+						{/snippet}
+					</DatePicker.Context>
+				</DatePicker.View>
+			</DatePicker.Content>
+		</DatePicker.Positioner>
+	</Portal>
 </DatePicker.Root>
