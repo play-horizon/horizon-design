@@ -1,25 +1,67 @@
 <!--
 @component
-The Editor's hierarchy of a scene's objects: a tree with keyboard navigation, multiple selection,
-renaming, and drag and drop to reparent and reorder.
+The Editor's hierarchy of a scene's objects: a `VirtualTree` (only the rows in view are rendered)
+with multiple selection, renaming, deletion, and drag and drop to reparent and reorder.
+
+The tree works on its own copy of `data`, which follows the prop: every change the user makes
+(a move, a rename, a deletion) replaces that copy and is reported through `onDataChange`, and a
+new `data` from the parent replaces the copy again. Every node's value (`nodeToValue`) must be
+unique in the tree. A rename writes the new name with `nodeWithName`, the inverse of
+`nodeToString`: an app that reads names from another field passes both.
+
+Mouse: a click selects one object, Ctrl/Cmd+click adds or removes one, Shift+click selects the
+range from the first selected object, a double click renames, and a click on empty space clears
+the selection. Dragging an object drags the selection (or the object alone, when it isn't
+selected): dropped on the upper or lower quarter of a row, the objects go before or after it; on
+the rest of the row, inside it as its last children; left of the last row of a group (over its
+indentation), after the ancestor at the level pointed at; on the tree's empty space, at the end of
+the root. The moved objects end up selected; a drag dropped anywhere else changes nothing, and
+objects are never dropped into themselves.
+
+Keyboard: the keys of `VirtualTree` (the arrows, typeahead, F2 renames), and Space or Enter adds
+or removes the focused object from the selection (a Space typed inside a name goes to type-to-find),
+Delete or Backspace deletes the selection when the focused object is in it and the focused object
+otherwise, Escape clears the selection, and Shift+arrows move the focused object up, down, out of
+its parent, or into the sibling above it as its last child. When a branch closes over the focused
+object, the focus moves to the branch.
 -->
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import MingcuteRightLine from '~icons/mingcute/right-line';
+	import type { Attachment } from 'svelte/attachments';
+	import { createTreeCollection, type TreeCollection } from '@ark-ui/svelte';
+	import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+	import {
+		draggable,
+		dropTargetForElements,
+		monitorForElements
+	} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+	import type { Instruction, ItemMode } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item';
+	import { attachInstruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item/attach-instruction';
+	import { extractInstruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item/extract-instruction';
+	import { cn } from '$lib/utils';
 	import MingcuteFileLine from '~icons/mingcute/file-line';
-	import { SvelteSet } from 'svelte/reactivity';
+	import VirtualTree from '../../components/virtual-tree/VirtualTree.svelte';
+	import { setTextDragPreview } from '../drag-preview';
 	import type { AnyNode } from '.';
 
-	type DropTarget = { value: string; position: 'before' | 'inside' | 'after' } | null;
+	/** The indentation of each level, in pixels: the tree draws it, the drop hitbox reads it. */
+	const INDENT = 14;
+	const BLOCK_ALL: Instruction['type'][] = [
+		'reorder-above',
+		'reorder-below',
+		'make-child',
+		'reparent'
+	];
 
 	let {
 		class: className = '',
 		data,
 		nodeToValue = (n: AnyNode) => (n.id ?? n.name ?? '') as string,
 		nodeToString = (n: AnyNode) => (n.name ?? n.label ?? '') as string,
+		nodeWithName = (n: AnyNode, name: string) => ({ ...n, name }),
 		icon,
+		label,
+		renameLabel,
 		dragLabel,
 		selectedValue = $bindable<string[]>([]),
 		expandedValue = $bindable<string[]>([]),
@@ -27,729 +69,370 @@ renaming, and drag and drop to reparent and reorder.
 		onExpandedChange,
 		onDataChange
 	}: {
+		/** Classes added to the hierarchy's element. */
 		class?: string;
+		/** The root's children: the objects at the top of the hierarchy. */
 		data: AnyNode[];
+		/** A node's value, unique in the tree. Defaults to its `id`, then its `name`. */
 		nodeToValue?: (node: AnyNode) => string;
+		/** A node's displayed name. Defaults to its `name`, then its `label`. */
 		nodeToString?: (node: AnyNode) => string;
+		/**
+		 * A copy of a node with a new displayed name, after a rename: the inverse of `nodeToString`.
+		 * Defaults to setting its `name`.
+		 */
+		nodeWithName?: (node: AnyNode, name: string) => AnyNode;
+		/** Replaces a node's icon (a file icon by default). */
 		icon?: Snippet<[AnyNode]>;
-		/** The drag ghost's text while several objects are dragged, such as `${count} objects`. */
+		/** The tree's accessible name, such as "Scene hierarchy". */
+		label: string;
+		/** The rename field's accessible name, such as "Name". */
+		renameLabel: string;
+		/** The drag image's text while several objects are dragged, such as `${count} objects`. */
 		dragLabel: (count: number) => string;
+		/** The values of the selected objects. */
 		selectedValue?: string[];
+		/** The values of the open branches. */
 		expandedValue?: string[];
+		/** Called when the selection changes. */
 		onSelectionChange?: (details: { selectedValue: string[] }) => void;
+		/** Called when a branch opens or closes. */
 		onExpandedChange?: (details: { expandedValue: string[] }) => void;
+		/** Called with the root's new children after the user moves, renames or deletes objects. */
 		onDataChange?: (data: AnyNode[]) => void;
 	} = $props();
 
-	let treeData = $state<AnyNode>(untrack(() => ({ children: structuredClone(data) })));
-	let pivot = $state<string | null>(null);
-	let containerEl = $state<HTMLElement | null>(null);
+	const uid = $props.id();
+	/** Tags this hierarchy's drags: its drop targets take nothing else, and other views ignore them. */
+	const dragType = `${uid}-objects`;
 
-	let isDragging = $state(false);
-	let dragValues = $state<string[]>([]);
-	let ghostPos = $state({ x: 0, y: 0 });
-	let dropTarget = $state<DropTarget>(null);
-	let justFinishedDrag = false;
-	let longPressTimer: ReturnType<typeof setTimeout> | null = null;
-	let pressStart: { x: number; y: number } | null = null;
-	let isOverInvalidTarget = false;
+	let tree = $state<VirtualTree<AnyNode>>();
+	// Writable: the user's changes override it until the parent passes a new `data`.
+	let treeData = $derived(data);
+	/** The objects dragged, dimmed while the drag lasts. */
+	let dragging = $state.raw<string[]>([]);
+	/** Where the dragged objects would land, drawn on the row under the pointer. */
+	let dropTarget = $state.raw<{ value: string; instruction: Instruction } | null>(null);
 
-	let renamingValue = $state<string | null>(null);
-	let renameText = $state('');
-
-	let cursorValue = $state<string | null>(null);
-	let isKeyboardMode = $state(false);
-	let justMovedValue = $state<string | null>(null);
-	let justMovedTimer: ReturnType<typeof setTimeout> | null = null;
-
-	// Tracks the last children reference we sent via onDataChange so we can
-	// distinguish an external data update from the parent echoing our own change back.
-	let _sentDataRef: AnyNode[] = untrack(() => data);
-
-	function emitDataChange() {
-		_sentDataRef = treeData.children ?? [];
-		onDataChange?.(_sentDataRef);
-	}
-
-	$effect(() => {
-		const snapshot = data;
-		untrack(() => {
-			if (isDragging || renamingValue !== null) return;
-			if (snapshot === _sentDataRef) return;
-			treeData = { children: structuredClone(snapshot) };
+	const collection = $derived.by(() => {
+		const root: AnyNode = { children: treeData };
+		return createTreeCollection<AnyNode>({
+			rootNode: root,
+			nodeToValue: (node) => (node === root ? `${uid}-root` : nodeToValue(node)),
+			nodeToString,
+			nodeToChildren: (node) => node.children ?? [],
+			// A scene object may have a `disabled` field of its own: no row of the hierarchy is disabled.
+			isNodeDisabled: () => false
 		});
 	});
 
-	/** Moves the drag ghost to the end of <body>, so no ancestor clips or transforms it. */
-	function portal(node: HTMLElement) {
-		document.body.appendChild(node);
-		return () => node.remove();
+	function setSelection(next: string[]) {
+		selectedValue = next;
+		onSelectionChange?.({ selectedValue: next });
 	}
 
-	function getValue(node: AnyNode): string {
-		return nodeToValue(node);
+	function expand(value: string) {
+		if (expandedValue.includes(value)) return;
+		expandedValue = [...expandedValue, value];
+		onExpandedChange?.({ expandedValue });
 	}
 
-	function findNodes(root: AnyNode, values: Set<string>, found: AnyNode[] = []): AnyNode[] {
-		if (values.has(getValue(root))) found.push(root);
-		for (const c of root.children ?? []) findNodes(c, values, found);
-		return found;
+	/** Replaces the tree with `next` and reports it. */
+	function commit(next: TreeCollection<AnyNode>) {
+		treeData = next.rootNode.children ?? [];
+		onDataChange?.(treeData);
 	}
 
-	function findNodeLabel(value: string): string {
-		function find(node: AnyNode): string | null {
-			if (getValue(node) === value) return nodeToString(node);
-			for (const c of node.children ?? []) {
-				const r = find(c);
-				if (r !== null) return r;
-			}
-			return null;
+	/** The values among `values` that aren't inside another of them, in tree order. */
+	function topmost(values: string[]): string[] {
+		const set = new Set(values);
+		return collection
+			.sort(values)
+			.filter((v) => !collection.getParentNodes(v).some((p) => set.has(nodeToValue(p))));
+	}
+
+	/** Whether the node `value` is one of `values` or inside one of them. */
+	function isWithin(value: string, values: string[]): boolean {
+		const path = collection.getValuePath(collection.getIndexPath(value));
+		return path.some((v) => values.includes(v));
+	}
+
+	/** The index paths of the objects `values` that aren't inside another of them. */
+	function topmostPaths(values: string[]): number[][] {
+		return topmost(values).flatMap((v) => {
+			const path = collection.getIndexPath(v);
+			return path ? [path] : [];
+		});
+	}
+
+	/** Moves the objects `values` (with their children) to `to`, an index path of the tree as it is. */
+	function moveTo(values: string[], to: number[]) {
+		commit(collection.move(topmostPaths(values), to));
+	}
+
+	/**
+	 * Shift+arrows: moves the object `value` up or down among its siblings, out of its parent (just
+	 * after it), or into the sibling above it (as its last child).
+	 */
+	function moveWithKey(value: string, key: string) {
+		const path = collection.getIndexPath(value);
+		if (!path) return;
+		const parent = path.slice(0, -1);
+		const index = path[path.length - 1];
+		const above = index > 0 ? collection.at([...parent, index - 1]) : undefined;
+		if (key === 'ArrowUp' && index > 0) moveTo([value], [...parent, index - 1]);
+		else if (key === 'ArrowDown' && index < collection.getSiblingNodes(path).length - 1)
+			moveTo([value], [...parent, index + 2]);
+		else if (key === 'ArrowLeft' && parent.length > 0)
+			moveTo([value], [...parent.slice(0, -1), parent[parent.length - 1] + 1]);
+		else if (key === 'ArrowRight' && above) {
+			moveTo([value], [...parent, index - 1, collection.getNodeChildren(above).length]);
+			expand(nodeToValue(above));
+		} else return;
+		// The moved row's element moves in the page, which loses the focus in some browsers.
+		tree?.focus(value);
+	}
+
+	/**
+	 * Deletes the selection when it holds `focused`, otherwise `focused`, with their children,
+	 * and moves the focus to the next row left (or the one before).
+	 */
+	function deleteFrom(focused: string) {
+		const targets = selectedValue.includes(focused) ? selectedValue : [focused];
+		const rows = tree?.visibleValues() ?? [];
+		const index = rows.indexOf(focused);
+		const isLeft = (v: string) => !isWithin(v, targets);
+		const next = rows.slice(index + 1).find(isLeft) ?? rows.slice(0, index).findLast(isLeft);
+		const kept = selectedValue.filter(isLeft);
+		commit(collection.remove(topmostPaths(targets)));
+		if (kept.length < selectedValue.length) setSelection(kept);
+		if (next !== undefined) tree?.focus(next);
+	}
+
+	function toggleSelected(value: string) {
+		setSelection(
+			selectedValue.includes(value)
+				? selectedValue.filter((v) => v !== value)
+				: [...selectedValue, value]
+		);
+	}
+
+	function onKeyDown(event: KeyboardEvent, node: AnyNode) {
+		const value = nodeToValue(node);
+		if (event.shiftKey && event.key.startsWith('Arrow')) {
+			event.preventDefault();
+			moveWithKey(value, event.key);
+			return;
 		}
-		return find(treeData) ?? value;
-	}
-
-	function removeNodes(node: AnyNode, vals: Set<string>): AnyNode {
-		return {
-			...node,
-			children: (node.children ?? [])
-				.filter((c) => !vals.has(getValue(c)))
-				.map((c) => removeNodes(c, vals))
-		};
-	}
-
-	function insertAt(
-		root: AnyNode,
-		targetValue: string,
-		nodesToInsert: AnyNode[],
-		position: 'before' | 'inside' | 'after'
-	): AnyNode {
-		if (position === 'inside' && getValue(root) === targetValue) {
-			return { ...root, children: [...(root.children ?? []), ...nodesToInsert] };
-		}
-		if (!root.children?.length) return root;
-		const newChildren: AnyNode[] = [];
-		for (const child of root.children) {
-			const cv = getValue(child);
-			if (position === 'before' && cv === targetValue) newChildren.push(...nodesToInsert);
-			newChildren.push(insertAt(child, targetValue, nodesToInsert, position));
-			if (position === 'after' && cv === targetValue) newChildren.push(...nodesToInsert);
-		}
-		return { ...root, children: newChildren };
-	}
-
-	function isDescendantOrSelf(root: AnyNode, ancestorValue: string, targetValue: string): boolean {
-		function search(node: AnyNode, inSubtree: boolean): boolean {
-			const v = getValue(node);
-			const entering = inSubtree || v === ancestorValue;
-			if (entering && v === targetValue) return true;
-			return (node.children ?? []).some((c) => search(c, entering));
-		}
-		return search(root, false);
-	}
-
-	function renameNodeInTree(root: AnyNode, targetValue: string, newName: string): AnyNode {
-		if (getValue(root) === targetValue) {
-			const updated = { ...root };
-			if ('name' in root) updated.name = newName;
-			if ('label' in root) updated.label = newName;
-			return updated;
-		}
-		return {
-			...root,
-			children: root.children?.map((c) => renameNodeInTree(c, targetValue, newName))
-		};
-	}
-
-	function collectSubtreeValues(root: AnyNode, targetValue: string): Set<string> {
-		const result = new SvelteSet<string>();
-		function collect(node: AnyNode, inSubtree: boolean) {
-			const v = getValue(node);
-			const entering = inSubtree || v === targetValue;
-			if (entering) result.add(v);
-			for (const c of node.children ?? []) collect(c, entering);
-		}
-		collect(root, false);
-		return result;
-	}
-
-	function findParentAndIndex(
-		root: AnyNode,
-		targetValue: string
-	): { parent: AnyNode; index: number } | null {
-		for (let i = 0; i < (root.children?.length ?? 0); i++) {
-			if (getValue(root.children![i]) === targetValue) return { parent: root, index: i };
-			const found = findParentAndIndex(root.children![i], targetValue);
-			if (found) return found;
-		}
-		return null;
-	}
-
-	function replaceChildren(root: AnyNode, parentValue: string, newChildren: AnyNode[]): AnyNode {
-		if (getValue(root) === parentValue) return { ...root, children: newChildren };
-		if (!root.children?.length) return root;
-		return {
-			...root,
-			children: root.children.map((c) => replaceChildren(c, parentValue, newChildren))
-		};
-	}
-
-	function findNode(root: AnyNode, targetValue: string): AnyNode | null {
-		if (getValue(root) === targetValue) return root;
-		for (const c of root.children ?? []) {
-			const found = findNode(c, targetValue);
-			if (found) return found;
-		}
-		return null;
-	}
-
-	function findParent(root: AnyNode, targetValue: string): AnyNode | null {
-		for (const c of root.children ?? []) {
-			if (getValue(c) === targetValue) return root;
-			const found = findParent(c, targetValue);
-			if (found) return found;
-		}
-		return null;
-	}
-
-	function getVisibleValues(): string[] {
-		const result: string[] = [];
-		function traverse(nodes: AnyNode[]) {
-			for (const node of nodes) {
-				const value = getValue(node);
-				result.push(value);
-				if (node.children?.length && expandedValue.includes(value)) traverse(node.children);
-			}
-		}
-		traverse((treeData.children ?? []) as AnyNode[]);
-		return result;
-	}
-
-	function moveCursor(value: string) {
-		cursorValue = value;
-	}
-
-	function flashMoved(value: string) {
-		if (justMovedTimer) clearTimeout(justMovedTimer);
-		justMovedValue = value;
-		justMovedTimer = setTimeout(() => {
-			justMovedValue = null;
-		}, 350);
-	}
-
-	function moveNodeUp(targetValue: string) {
-		const info = findParentAndIndex(treeData, targetValue);
-		if (!info || info.index === 0) return;
-		const siblings = [...info.parent.children!];
-		[siblings[info.index - 1], siblings[info.index]] = [
-			siblings[info.index],
-			siblings[info.index - 1]
-		];
-		treeData = replaceChildren(treeData, getValue(info.parent), siblings);
-		emitDataChange();
-		flashMoved(targetValue);
-	}
-
-	function moveNodeDown(targetValue: string) {
-		const info = findParentAndIndex(treeData, targetValue);
-		if (!info || info.index >= (info.parent.children?.length ?? 0) - 1) return;
-		const siblings = [...info.parent.children!];
-		[siblings[info.index], siblings[info.index + 1]] = [
-			siblings[info.index + 1],
-			siblings[info.index]
-		];
-		treeData = replaceChildren(treeData, getValue(info.parent), siblings);
-		emitDataChange();
-		flashMoved(targetValue);
-	}
-
-	function indentNode(targetValue: string) {
-		const info = findParentAndIndex(treeData, targetValue);
-		if (!info || info.index === 0) return;
-
-		const node = info.parent.children![info.index];
-		const prevSibling = info.parent.children![info.index - 1];
-
-		const newParentChildren = info.parent.children!.filter((_, i) => i !== info.index);
-
-		newParentChildren[info.index - 1] = {
-			...prevSibling,
-			children: [...(prevSibling.children ?? []), node]
-		};
-
-		treeData = replaceChildren(treeData, getValue(info.parent), newParentChildren);
-
-		if (!expandedValue.includes(getValue(prevSibling))) {
-			expandedValue = [...expandedValue, getValue(prevSibling)];
-			onExpandedChange?.({ expandedValue });
-		}
-
-		emitDataChange();
-		flashMoved(targetValue);
-	}
-
-	function outdentNode(targetValue: string) {
-		const info = findParentAndIndex(treeData, targetValue);
-		if (!info || getValue(info.parent) === getValue(treeData)) return;
-
-		const grandInfo = findParentAndIndex(treeData, getValue(info.parent));
-		if (!grandInfo) return;
-
-		const node = info.parent.children![info.index];
-
-		const newParentChildren = info.parent.children!.filter((_, i) => i !== info.index);
-
-		const newGrandChildren = [...grandInfo.parent.children!];
-
-		newGrandChildren[grandInfo.index] = {
-			...info.parent,
-			children: newParentChildren
-		};
-
-		newGrandChildren.splice(grandInfo.index + 1, 0, node);
-
-		treeData = replaceChildren(treeData, getValue(grandInfo.parent), newGrandChildren);
-
-		emitDataChange();
-		flashMoved(targetValue);
-	}
-
-	function toggleExpand(value: string) {
-		const next = expandedValue.includes(value)
-			? expandedValue.filter((v) => v !== value)
-			: [...expandedValue, value];
-		expandedValue = next;
-		onExpandedChange?.({ expandedValue: next });
-	}
-
-	function handleKeyDown(e: KeyboardEvent) {
-		if (e.target instanceof HTMLInputElement) return;
-		isKeyboardMode = true;
-
-		if (e.shiftKey && cursorValue) {
-			if (e.key === 'ArrowUp') {
-				e.preventDefault();
-				moveNodeUp(cursorValue);
+		switch (event.key) {
+			case ' ':
+			case 'Enter':
+				event.preventDefault();
+				toggleSelected(value);
 				return;
-			} else if (e.key === 'ArrowDown') {
-				e.preventDefault();
-				moveNodeDown(cursorValue);
+			case 'Delete':
+			case 'Backspace':
+				event.preventDefault();
+				deleteFrom(value);
 				return;
-			} else if (e.key === 'ArrowLeft') {
-				e.preventDefault();
-				outdentNode(cursorValue);
+			case 'Escape':
+				setSelection([]);
 				return;
-			} else if (e.key === 'ArrowRight') {
-				e.preventDefault();
-				indentNode(cursorValue);
-				return;
-			}
 		}
+	}
 
-		const visible = getVisibleValues();
-		if (visible.length === 0) return;
-		const idx = cursorValue ? visible.indexOf(cursorValue) : -1;
+	function onRename({ indexPath, label: name }: { indexPath: number[]; label: string }) {
+		const node = collection.at(indexPath);
+		if (node) commit(collection.replace(indexPath, nodeWithName(node, name)));
+	}
 
-		if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			moveCursor(idx < visible.length - 1 ? visible[idx + 1] : visible[0]);
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			moveCursor(idx > 0 ? visible[idx - 1] : visible[visible.length - 1]);
-		} else if (e.key === 'ArrowRight') {
-			if (!cursorValue) return;
-			e.preventDefault();
-			const node = findNode(treeData, cursorValue);
-			if (!node) return;
-			const hasBranch = (node.children?.length ?? 0) > 0;
-			if (hasBranch && !expandedValue.includes(cursorValue)) {
-				toggleExpand(cursorValue);
-			} else if (hasBranch && expandedValue.includes(cursorValue)) {
-				moveCursor(getValue(node.children![0]));
-			}
-		} else if (e.key === 'ArrowLeft') {
-			if (!cursorValue) return;
-			e.preventDefault();
-			if (expandedValue.includes(cursorValue)) {
-				toggleExpand(cursorValue);
-			} else {
-				const parent = findParent(treeData, cursorValue);
-				if (parent && getValue(parent) !== getValue(treeData)) {
-					moveCursor(getValue(parent));
+	/** The objects a drag carries, or null for a drag that isn't this hierarchy's. */
+	function draggedValues(data: Record<string | symbol, unknown>): string[] | null {
+		return data.type === dragType && Array.isArray(data.values) ? data.values : null;
+	}
+
+	/** How a row's hitbox reads the pointer: an open branch takes children, the last of a group lets objects out. */
+	function modeOf(path: number[]): ItemMode {
+		const node = collection.at(path);
+		if (
+			node &&
+			expandedValue.includes(nodeToValue(node)) &&
+			collection.getNodeChildren(node).length > 0
+		)
+			return 'expanded';
+		return path[path.length - 1] === collection.getSiblingNodes(path).length - 1
+			? 'last-in-group'
+			: 'standard';
+	}
+
+	/** Each row drags the selection (or its own object) and takes drops before, after or inside it. */
+	function rowDragAndDrop(node: AnyNode): Attachment<HTMLElement> {
+		return (element) => {
+			const value = nodeToValue(node);
+			return combine(
+				draggable({
+					element,
+					canDrag: () => element.dataset.renaming === undefined,
+					getInitialData: () => ({
+						type: dragType,
+						values: selectedValue.includes(value) ? collection.sort(selectedValue) : [value]
+					}),
+					onGenerateDragPreview: ({ nativeSetDragImage, source }) => {
+						const values = draggedValues(source.data) ?? [];
+						setTextDragPreview(
+							nativeSetDragImage,
+							values.length === 1 ? nodeToString(node) : dragLabel(values.length)
+						);
+					},
+					onDragStart: ({ source }) => (dragging = draggedValues(source.data) ?? [])
+				}),
+				dropTargetForElements({
+					element,
+					canDrop: ({ source }) => draggedValues(source.data) !== null,
+					getData: ({ input, element, source }) => {
+						const path = collection.getIndexPath(value) ?? [];
+						return attachInstruction(
+							{ value },
+							{
+								input,
+								element,
+								currentLevel: path.length - 1,
+								indentPerLevel: INDENT,
+								mode: modeOf(path),
+								// Never into a dragged object: it would become its own descendant.
+								block: isWithin(value, draggedValues(source.data) ?? []) ? BLOCK_ALL : []
+							}
+						);
+					},
+					onDrag: ({ self }) => {
+						const instruction = extractInstruction(self.data);
+						if (dropTarget?.value === value && dropTarget.instruction === instruction) return;
+						dropTarget = instruction ? { value, instruction } : null;
+					},
+					onDragLeave: () => {
+						if (dropTarget?.value === value) dropTarget = null;
+					}
+				})
+			);
+		};
+	}
+
+	/** Where a drop on the row of `value` puts the objects, as an index path of the tree as it is. */
+	function destination(value: string, instruction: Instruction): number[] | null {
+		const path = collection.getIndexPath(value);
+		if (!path) return null;
+		const after = (p: number[]) => [...p.slice(0, -1), p[p.length - 1] + 1];
+		switch (instruction.type) {
+			case 'reorder-above':
+				return path;
+			case 'reorder-below':
+				return after(path);
+			case 'make-child':
+				return [...path, collection.at(path)?.children?.length ?? 0];
+			case 'reparent':
+				return after(path.slice(0, instruction.desiredLevel + 1));
+			case 'instruction-blocked':
+				return null;
+		}
+	}
+
+	/** Moves the dropped objects where the innermost target says, and selects them. */
+	function onDrop(values: string[], target: Record<string | symbol, unknown> | undefined) {
+		if (!target) return;
+		const instruction = extractInstruction(target);
+		const value = typeof target.value === 'string' ? target.value : null;
+		let to: number[] | null = [treeData.length];
+		if (instruction && value !== null) {
+			to = destination(value, instruction);
+			if (to && instruction.type === 'make-child') expand(value);
+		}
+		if (!to) return;
+		moveTo(values, to);
+		if (values.some((v) => !selectedValue.includes(v))) setSelection(values);
+	}
+
+	/** The tree's empty space takes drops at the end of the root; the monitor ends every drag. */
+	function treeDragAndDrop(element: HTMLElement) {
+		return combine(
+			dropTargetForElements({
+				element,
+				canDrop: ({ source }) => draggedValues(source.data) !== null
+			}),
+			monitorForElements({
+				canMonitor: ({ source }) => draggedValues(source.data) !== null,
+				onDrop: ({ source, location }) => {
+					dragging = [];
+					dropTarget = null;
+					const values = draggedValues(source.data);
+					if (values) onDrop(values, location.current.dropTargets[0]?.data);
 				}
-			}
-		} else if (e.key === 'Home') {
-			e.preventDefault();
-			moveCursor(visible[0]);
-		} else if (e.key === 'End') {
-			e.preventDefault();
-			moveCursor(visible[visible.length - 1]);
-		} else if (e.key === 'Enter' || e.key === ' ') {
-			if (!cursorValue) return;
-			e.preventDefault();
-			const isSelected = selectedValue.includes(cursorValue);
-			if (isSelected) {
-				const next = selectedValue.filter((v) => v !== cursorValue);
-				selectedValue = next;
-				if (next.length === 0) pivot = null;
-				onSelectionChange?.({ selectedValue: next });
-			} else {
-				selectedValue = [...selectedValue, cursorValue];
-				pivot = cursorValue;
-				onSelectionChange?.({ selectedValue });
-			}
-		} else if (e.key === 'F2') {
-			if (!cursorValue) return;
-			e.preventDefault();
-			renamingValue = cursorValue;
-			renameText = findNodeLabel(cursorValue);
-		} else if (e.key === 'Delete' || e.key === 'Backspace') {
-			if (!cursorValue) return;
-			e.preventDefault();
-			const deleted = collectSubtreeValues(treeData, cursorValue);
-			const before = visible.slice(0, idx).filter((v) => !deleted.has(v));
-			const after = visible.slice(idx + 1).filter((v) => !deleted.has(v));
-			cursorValue = after[0] ?? before[before.length - 1] ?? null;
-			treeData = removeNodes(treeData, deleted);
-			selectedValue = selectedValue.filter((v) => !deleted.has(v));
-			pivot = pivot && !deleted.has(pivot) ? pivot : null;
-			onSelectionChange?.({ selectedValue });
-			emitDataChange();
-		} else if (e.key === 'Escape') {
-			selectedValue = [];
-			pivot = null;
-			cursorValue = null;
-			onSelectionChange?.({ selectedValue: [] });
-		}
-	}
-
-	function handlePointerDown(e: PointerEvent) {
-		isKeyboardMode = false;
-		const target = e.target as Element;
-		if (target.closest('input') || target.closest('[data-part="trigger"]')) return;
-		const rowEl = target.closest('[data-part="row"]') as HTMLElement | null;
-		if (!rowEl) return;
-		const value = rowEl.getAttribute('data-value');
-		if (!value) return;
-
-		pressStart = { x: e.clientX, y: e.clientY };
-
-		longPressTimer = setTimeout(() => {
-			if (!pressStart) return;
-			const valuesToDrag = selectedValue.includes(value) ? [...selectedValue] : [value];
-			isDragging = true;
-			dragValues = valuesToDrag;
-			ghostPos = { x: e.clientX + 14, y: e.clientY - 12 };
-			window.addEventListener('mousemove', onDragMove);
-			window.addEventListener('mouseup', onDragEnd);
-			window.addEventListener('pointercancel', onDragEnd);
-		}, 320);
-	}
-
-	function cancelPress() {
-		if (longPressTimer) {
-			clearTimeout(longPressTimer);
-			longPressTimer = null;
-		}
-		pressStart = null;
-	}
-
-	function onDragMove(e: MouseEvent) {
-		if (e.buttons === 0) {
-			onDragEnd();
-			return;
-		}
-		ghostPos = { x: e.clientX + 14, y: e.clientY - 12 };
-		computeDropTarget(e.clientX, e.clientY);
-	}
-
-	function computeDropTarget(x: number, y: number) {
-		const ghostEl = document.querySelector('[data-drag-ghost]') as HTMLElement | null;
-		if (ghostEl) ghostEl.style.pointerEvents = 'none';
-		const els = document.elementsFromPoint(x, y);
-		if (ghostEl) ghostEl.style.pointerEvents = '';
-
-		let found: DropTarget = null;
-		isOverInvalidTarget = false;
-		for (const el of els) {
-			const rowEl = el.closest('[data-part="row"]') as HTMLElement | null;
-			if (!rowEl) continue;
-			const value = rowEl.getAttribute('data-value');
-			if (!value || dragValues.includes(value)) continue;
-			if (dragValues.some((dv) => isDescendantOrSelf(treeData, dv, value))) {
-				isOverInvalidTarget = true;
-				break;
-			}
-			const rect = rowEl.getBoundingClientRect();
-			const relY = (y - rect.top) / rect.height;
-			found = {
-				value,
-				position: relY < 0.25 ? 'before' : relY > 0.75 ? 'after' : 'inside'
-			};
-			break;
-		}
-		dropTarget = found;
-	}
-
-	function onDragEnd() {
-		window.removeEventListener('mousemove', onDragMove);
-		window.removeEventListener('mouseup', onDragEnd);
-		window.removeEventListener('pointercancel', onDragEnd);
-		if (dropTarget) {
-			executeDrop(dropTarget);
-		} else if (!isOverInvalidTarget) {
-			const vals = new Set(dragValues);
-			const nodesToInsert = findNodes(treeData, vals);
-			const newTree = removeNodes(treeData, vals);
-			treeData = { ...newTree, children: [...(newTree.children ?? []), ...nodesToInsert] };
-			emitDataChange();
-		}
-		isDragging = false;
-		dragValues = [];
-		dropTarget = null;
-		pressStart = null;
-		justFinishedDrag = true;
-		setTimeout(() => {
-			justFinishedDrag = false;
-		}, 60);
-		selectedValue = [];
-		pivot = null;
-		cursorValue = null;
-		onSelectionChange?.({ selectedValue: [] });
-	}
-
-	function executeDrop(target: NonNullable<DropTarget>) {
-		const vals = new Set(dragValues);
-		const nodesToInsert = findNodes(treeData, vals);
-		let newTree = removeNodes(treeData, vals);
-		newTree = insertAt(newTree, target.value, nodesToInsert, target.position);
-		treeData = newTree;
-		emitDataChange();
-		if (target.position === 'inside' && !expandedValue.includes(target.value)) {
-			expandedValue = [...expandedValue, target.value];
-			onExpandedChange?.({ expandedValue });
-		}
-	}
-
-	function handleClick(e: MouseEvent) {
-		if (isDragging || justFinishedDrag) return;
-		const target = e.target as Element;
-		if (target.closest('[data-part="trigger"]') || target.closest('input')) return;
-		const rowEl = target.closest('[data-part="row"]');
-		if (!rowEl) {
-			selectedValue = [];
-			pivot = null;
-			cursorValue = null;
-			onSelectionChange?.({ selectedValue: [] });
-			return;
-		}
-		const value = rowEl.getAttribute('data-value');
-		if (!value) return;
-		e.stopPropagation();
-		cursorValue = value;
-		const isSelected = selectedValue.includes(value);
-		if (isSelected && !e.shiftKey) {
-			const next = selectedValue.filter((v) => v !== value);
-			selectedValue = next;
-			if (next.length === 0) pivot = null;
-			onSelectionChange?.({ selectedValue: next });
-			return;
-		}
-		if (e.shiftKey && pivot) {
-			const visible = getVisibleValues();
-			const pivotIdx = visible.indexOf(pivot);
-			const currIdx = visible.indexOf(value);
-			if (pivotIdx !== -1 && currIdx !== -1) {
-				const [start, end] = pivotIdx < currIdx ? [pivotIdx, currIdx] : [currIdx, pivotIdx];
-				selectedValue = visible.slice(start, end + 1);
-				onSelectionChange?.({ selectedValue });
-				return;
-			}
-		}
-		selectedValue = [...selectedValue, value];
-		pivot = value;
-		onSelectionChange?.({ selectedValue });
-	}
-
-	function handleDblClick(e: MouseEvent) {
-		if (isDragging) return;
-		const target = e.target as Element;
-		if (target.closest('[data-part="trigger"]') || target.closest('input')) return;
-		const rowEl = target.closest('[data-part="row"]');
-		const value = rowEl?.getAttribute('data-value');
-		if (!value) return;
-		e.stopPropagation();
-		renamingValue = value;
-		renameText = findNodeLabel(value);
-	}
-
-	function commitRename() {
-		if (!renamingValue) return;
-		if (renameText.trim()) {
-			treeData = renameNodeInTree(treeData, renamingValue, renameText.trim());
-			emitDataChange();
-		}
-		renamingValue = null;
-		renameText = '';
-		containerEl?.focus();
-	}
-
-	function cancelRename() {
-		renamingValue = null;
-		renameText = '';
-		containerEl?.focus();
-	}
-
-	function handleRenameKeydown(e: KeyboardEvent) {
-		e.stopPropagation();
-		if (e.key === 'Enter') {
-			e.preventDefault();
-			commitRename();
-		} else if (e.key === 'Escape') {
-			cancelRename();
-		}
-	}
-
-	$effect(() => {
-		if (!isDragging) return;
-		document.body.style.cursor = 'grabbing';
-		return () => {
-			document.body.style.cursor = '';
-		};
-	});
-
-	/** Focuses the rename field and selects its text when it appears. */
-	function focusRename(input: HTMLInputElement) {
-		input.focus();
-		input.select();
-	}
-
-	function cancelIfNotDragging() {
-		if (!isDragging) cancelPress();
+			})
+		);
 	}
 </script>
 
-{#if isDragging}
-	<div
-		{@attach portal}
-		data-drag-ghost
-		style="position:fixed; z-index:9999; left:{ghostPos.x}px; top:{ghostPos.y}px"
-		class="pointer-events-none max-w-48 truncate rounded border bg-background px-2 py-1 text-sm shadow-lg"
-	>
-		{#if dragValues.length === 1}
-			{findNodeLabel(dragValues[0])}
-		{:else}
-			{dragLabel(dragValues.length)}
-		{/if}
-	</div>
-{/if}
-
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (a click here lands on the empty space, the rows take theirs: Escape is its keyboard equivalent) -->
 <div
-	bind:this={containerEl}
-	onclickcapture={handleClick}
-	ondblclickcapture={handleDblClick}
-	onpointerdowncapture={handlePointerDown}
-	onpointercancelcapture={cancelIfNotDragging}
-	onpointerupcapture={cancelIfNotDragging}
-	role="tree"
-	tabindex="0"
+	{@attach treeDragAndDrop}
 	data-slot="hierarchy-view"
-	class={cn('flex size-full flex-col overflow-y-auto text-sm outline-none', className)}
-	ondragstart={(e) => e.preventDefault()}
-	onkeydown={handleKeyDown}
-	onfocus={() => {
-		if (containerEl?.matches(':focus-visible') && !cursorValue)
-			cursorValue = getVisibleValues()[0] ?? null;
-	}}
+	class={cn('size-full', className)}
+	onclick={() => setSelection([])}
 >
-	{#each treeData.children ?? [] as node (getValue(node))}
-		{@render renderNode(node, 1)}
-	{/each}
+	<VirtualTree
+		bind:this={tree}
+		{collection}
+		{label}
+		bind:selectedValue
+		bind:expandedValue
+		multiple
+		indent={INDENT}
+		rename={{ canRename: () => true, label: renameLabel, onRename }}
+		onSelectionChange={(details) => onSelectionChange?.({ selectedValue: details.selectedValue })}
+		onExpandedChange={(details) => onExpandedChange?.({ expandedValue: details.expandedValue })}
+		onActivate={(node) => tree?.startRenaming(nodeToValue(node))}
+		{onKeyDown}
+		attachRow={rowDragAndDrop}
+		class="size-full"
+	>
+		{#snippet row(node, state)}
+			<span
+				class={[
+					'flex min-w-0 items-center gap-1.5',
+					!state.renaming && 'flex-1',
+					dragging.includes(state.value) && 'opacity-50'
+				]}
+			>
+				{#if icon}
+					{@render icon(node)}
+				{:else}
+					<MingcuteFileLine class="size-4 shrink-0 text-muted" aria-hidden="true" />
+				{/if}
+				{#if !state.renaming}
+					<span class="truncate">{nodeToString(node)}</span>
+				{/if}
+			</span>
+			{#if dropTarget?.value === state.value}
+				{@render dropIndicator(dropTarget.instruction, state.depth)}
+			{/if}
+		{/snippet}
+	</VirtualTree>
 </div>
 
-{#snippet renderNode(node: AnyNode, depth: number)}
-	{@const v = getValue(node)}
-	{@const hasBranch = (node.children?.length ?? 0) > 0}
-	{@const isExpanded = expandedValue.includes(v)}
-	{@const isSelected = selectedValue.includes(v)}
-	{@const dt = dropTarget}
-	{@const isDropInside = dt?.value === v && dt?.position === 'inside'}
-	{@const isDropBefore = dt?.value === v && dt?.position === 'before'}
-	{@const isDropAfter = dt?.value === v && dt?.position === 'after'}
-	{@const isRenaming = renamingValue === v}
-	{@const isCursor = cursorValue === v && isKeyboardMode}
-	{@const isJustMoved = justMovedValue === v}
-
-	<div
-		role="treeitem"
-		aria-level={depth}
-		aria-expanded={hasBranch ? isExpanded : undefined}
-		aria-selected={isSelected}
-		class="flex flex-col"
-	>
-		<div
-			data-part="row"
-			data-value={v}
-			data-slot="hierarchy-view-row"
-			style="padding-left: calc({depth - 1} * 1rem)"
-			class={cn(
-				'flex w-full cursor-default items-center gap-1.5 py-1 pr-2 transition-colors hover:bg-hover',
-				isSelected && 'bg-hover text-fg hover:bg-hover',
-				isCursor && !isSelected && 'bg-hover',
-				isCursor && 'ring-1 ring-primary ring-inset',
-				isJustMoved && !isSelected && 'bg-primary-subtle',
-				isDropInside && 'outline -outline-offset-2 outline-primary',
-				isDropBefore && 'border-t-2 border-primary',
-				isDropAfter && 'border-b-2 border-primary'
-			)}
-		>
-			{#if hasBranch}
-				<button
-					data-part="trigger"
-					tabindex="-1"
-					class="flex shrink-0 items-center text-muted"
-					onclick={(e) => {
-						e.stopPropagation();
-						toggleExpand(v);
-					}}
-				>
-					<MingcuteRightLine
-						class={cn('size-3.5 transition-transform', isExpanded && 'rotate-90')}
-					/>
-				</button>
-			{:else}
-				<span class="size-3.5 shrink-0"></span>
-			{/if}
-			{#if icon}
-				{@render icon(node)}
-			{:else}
-				<MingcuteFileLine class="size-4 shrink-0 text-muted" />
-			{/if}
-			{#if isRenaming}
-				<input
-					{@attach focusRename}
-					bind:value={renameText}
-					onkeydown={handleRenameKeydown}
-					onblur={commitRename}
-					onclick={(e: MouseEvent) => e.stopPropagation()}
-					class="min-w-0 flex-1 rounded bg-transparent px-0.5 outline outline-primary focus-visible:outline-2"
-				/>
-			{:else}
-				<span class="truncate">{nodeToString(node)}</span>
-			{/if}
-		</div>
-		{#if hasBranch}
-			<div
-				class={cn(
-					'grid transition-[grid-template-rows] duration-150 ease-out',
-					isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-				)}
-			>
-				<div class="flex flex-col overflow-hidden">
-					{#each node.children ?? [] as child (getValue(child))}
-						{@render renderNode(child, depth + 1)}
-					{/each}
-				</div>
-			</div>
-		{/if}
-	</div>
+{#snippet dropIndicator(instruction: Instruction, depth: number)}
+	{#if instruction.type === 'make-child'}
+		<span
+			class="pointer-events-none absolute inset-0 rounded-md ring-2 ring-primary ring-inset"
+			aria-hidden="true"
+		></span>
+	{:else if instruction.type !== 'instruction-blocked'}
+		<span
+			class={[
+				'pointer-events-none absolute right-0 h-0.5 rounded-full bg-primary',
+				instruction.type === 'reorder-above' ? 'top-0' : 'bottom-0'
+			]}
+			style:left="{(instruction.type === 'reparent' ? instruction.desiredLevel : depth - 1) *
+				INDENT}px"
+			aria-hidden="true"
+		></span>
+	{/if}
 {/snippet}

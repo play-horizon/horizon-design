@@ -13,6 +13,11 @@ import Icons from 'unplugin-icons/vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' }), svelteTesting()],
+	// pragmatic-drag-and-drop has no `exports` map, so Node's ESM loader refuses its directory
+	// imports when the prerender leaves it external: bundle it into the server build instead.
+	ssr: {
+		noExternal: ['@atlaskit/pragmatic-drag-and-drop', '@atlaskit/pragmatic-drag-and-drop-hitbox']
+	},
 	test: {
 		environment: 'jsdom',
 		include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],

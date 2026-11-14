@@ -28,6 +28,16 @@ The components import their icons from [Mingcute](https://www.mingcute.com) thro
 [unplugin-icons](https://github.com/unplugin/unplugin-icons), which compiles each icon into a
 Svelte component when the app is built, so the app sets up the same (see [Icons](#icons)).
 
+An app that server-renders or prerenders the Editor's components bundles the drag-and-drop
+library into its server build, since its packages have no `exports` map that Node's ESM loader
+would accept (`vite.config.ts`):
+
+```ts
+ssr: {
+	noExternal: ['@atlaskit/pragmatic-drag-and-drop', '@atlaskit/pragmatic-drag-and-drop-hitbox'];
+}
+```
+
 Import the stylesheet after Tailwind, in the app's root CSS:
 
 ```css
@@ -383,12 +393,22 @@ variants).
 
 ### Editor
 
-| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`FileTree`](https://play-horizon.github.io/horizon-design/file-tree)             | A tree of files and folders on `VirtualTree` (only the rows in view are rendered) from a `collection`, with expandable folders and custom icons; only files are selected. `label`, required, names it, and `selectedValue`, `expandedValue` and `focusedValue` bind.                                                                                                                                            |
-| [`HierarchyView`](https://play-horizon.github.io/horizon-design/hierarchy-view)   | The Editor's hierarchy of a scene's objects: a tree with keyboard navigation, multiple selection, renaming, and drag and drop to reparent and reorder, which reports each change of `data` through `onDataChange`. `label`, `renameLabel` and `dragLabel` are required; `nodeWithName` writes a renamed node when `nodeToString` reads a field other than `name`, and `selectedValue` and `expandedValue` bind. |
-| [`HorizonLayout`](https://play-horizon.github.io/horizon-design/horizon-layout)   | The Editor window's docking layout: horizon-layout styled with horizon-design, with a button that restores a maximised view; `config` binds, `views` holds the views, and `restoreLabel`, required, names the restore button.                                                                                                                                                                                   |
-| [`InspectorPanel`](https://play-horizon.github.io/horizon-design/inspector-panel) | The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by drag or keyboard; `cards` and `expandedIds` bind.                                                                                                                                                                                                                                                             |
+| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`FileTree`](https://play-horizon.github.io/horizon-design/file-tree)             | A tree of files and folders on `VirtualTree` (only the rows in view are rendered) from a `collection`, with expandable folders and custom icons; only files are selected. `label`, required, names it, and `selectedValue`, `expandedValue` and `focusedValue` bind.                                                                                                                                                                                                        |
+| [`HierarchyView`](https://play-horizon.github.io/horizon-design/hierarchy-view)   | The Editor's hierarchy of a scene's objects, on `VirtualTree`: keyboard navigation, multiple selection, renaming, deletion, and drag and drop ([pragmatic-drag-and-drop](#drag-and-drop)) to reparent and reorder, which reports each change of `data` through `onDataChange`. `label`, `renameLabel` and `dragLabel` are required; `nodeWithName` writes a renamed node when `nodeToString` reads a field other than `name`, and `selectedValue` and `expandedValue` bind. |
+| [`HorizonLayout`](https://play-horizon.github.io/horizon-design/horizon-layout)   | The Editor window's docking layout: horizon-layout styled with horizon-design, with a button that restores a maximised view; `config` binds, `views` holds the views, and `restoreLabel`, required, names the restore button.                                                                                                                                                                                                                                               |
+| [`InspectorPanel`](https://play-horizon.github.io/horizon-design/inspector-panel) | The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by drag or keyboard; `cards` and `expandedIds` bind.                                                                                                                                                                                                                                                                                                                         |
+
+## Drag and drop
+
+The Editor's drag and drop (`HierarchyView`, `InspectorPanel`) uses Atlassian's
+[pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) (Apache-2.0).
+It is framework-agnostic with a small core, maintained by Atlassian for Jira, Trello and
+Confluence, and built on native HTML5 drag and drop, which Electron's Chromium supports. Its hitbox
+package computes exactly the instructions a hierarchy needs (reorder above or below, make child,
+reparent by indent level) and a list's closest edge. `@dnd-kit/svelte` was the alternative; its
+Svelte port is younger and less proven. The keyboard does the same moves (Shift+arrows).
 
 ## Developing
 

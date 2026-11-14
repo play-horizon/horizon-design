@@ -169,6 +169,12 @@ importers:
       '@ark-ui/svelte':
         specifier: ^5.24.2
         version: 5.24.2(svelte@5.57.1(@typescript-eslint/types@8.71.0))
+      '@atlaskit/pragmatic-drag-and-drop':
+        specifier: ^4.0.0
+        version: 4.0.0
+      '@atlaskit/pragmatic-drag-and-drop-hitbox':
+        specifier: ^3.0.0
+        version: 3.0.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -282,6 +288,12 @@ packages:
     resolution: {integrity: sha512-PNbDCTXhpwuS9HGfFIGAtI+k/sDLbx4oPHe/qMSupSYZy/LdcJ78dDt1Bh9p/fNsLgwvILJwvgY4otkCfELXYg==}
     peerDependencies:
       svelte: '>=5.20.0'
+
+  '@atlaskit/pragmatic-drag-and-drop-hitbox@3.0.0':
+    resolution: {integrity: sha512-AGLp1ewjm07eRN2NL62awllSM19FrWVZMQYfZA/jugQlpaeoTr5ah2DE7zfiEt7yrg34htoKQVM+y6SGIQYs2A==}
+
+  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
+    resolution: {integrity: sha512-pyDo2B5NiaExoKGmgeXKGNUL4aR4UzzSZm8QWWjYTEyBLVqSqKyKUwtVxMw2YEkakagOGFONUdHM32LAH2nPug==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -1088,6 +1100,9 @@ packages:
   bcp-47@2.1.2:
     resolution: {integrity: sha512-wsv86UuNFuPnVieKLyECTT+CP1WSAHeoIg5P3xu2kA9Z+7fVPoKt7dxzSeEhtJel0AI+NW3fIW3KtTKQKUCngg==}
 
+  bind-event-listener@3.0.0:
+    resolution: {integrity: sha512-PJvH288AWQhKs2v9zyfYdPzlPqf5bXbGMmhmUIY9x4dAUGIWgomO771oBQNwJnMQSnUIXhKu6sgzpBRXTlvb8Q==}
+
   brace-expansion@5.0.12:
     resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
     engines: {node: 20 || >=22}
@@ -1823,6 +1838,9 @@ packages:
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
+  raf-schd@4.0.3:
+    resolution: {integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==}
+
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
@@ -2237,6 +2255,17 @@ snapshots:
       '@zag-js/types': 1.43.3
       '@zag-js/utils': 1.43.3
       svelte: 5.57.1(@typescript-eslint/types@8.71.0)
+
+  '@atlaskit/pragmatic-drag-and-drop-hitbox@3.0.0':
+    dependencies:
+      '@atlaskit/pragmatic-drag-and-drop': 4.0.0
+      '@babel/runtime': 7.29.14
+
+  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
+    dependencies:
+      '@babel/runtime': 7.29.14
+      bind-event-listener: 3.0.0
+      raf-schd: 4.0.3
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -3314,6 +3343,8 @@ snapshots:
       is-alphanumerical: 2.0.1
       is-decimal: 2.0.1
 
+  bind-event-listener@3.0.0: {}
+
   brace-expansion@5.0.12:
     dependencies:
       balanced-match: 4.0.4
@@ -3917,6 +3948,8 @@ snapshots:
       hookified: 2.2.0
 
   quansync@0.2.11: {}
+
+  raf-schd@4.0.3: {}
 
   react-is@17.0.2: {}
 

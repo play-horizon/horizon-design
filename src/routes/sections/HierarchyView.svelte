@@ -28,10 +28,17 @@ Docs: HierarchyView. Live examples of the HierarchyView component.
 			]
 		}
 	];
+	let hierarchyExpanded = $state(['scene', 'player']);
 </script>
 
 <section id="hierarchy-view">
 	<Card class="h-180">
-		<HierarchyView data={hierarchyData} dragLabel={(count) => `${count} objects`} />
+		<HierarchyView
+			data={hierarchyData}
+			bind:expandedValue={hierarchyExpanded}
+			label="Scene hierarchy"
+			renameLabel="Name"
+			dragLabel={(count) => `${count} objects`}
+		/>
 	</Card>
 </section>
