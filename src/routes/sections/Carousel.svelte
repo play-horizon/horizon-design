@@ -33,11 +33,14 @@ Docs: Carousel. Live examples of the Carousel component.
 			{/snippet}
 			<Carousel
 				slides={[carouselSlide1, carouselSlide2, carouselSlide3]}
+				label="Featured games"
 				translations={{
 					prevTrigger: 'Previous slide',
 					nextTrigger: 'Next slide',
 					indicator: (index) => `Go to slide ${index + 1}`,
-					item: (index, count) => `${index + 1} of ${count}`
+					item: (index, count) => `${index + 1} of ${count}`,
+					roleDescription: 'carousel',
+					slideRoleDescription: 'slide'
 				}}
 			/>
 		</div>

@@ -1,7 +1,8 @@
 <!--
 @component
-A horizontal slideshow with previous and next controls and indicators (Ark Carousel); Ark
-`translations` name the slides and the controls.
+A horizontal slideshow with previous and next controls and indicators (Ark Carousel);
+`translations` name the slides and the controls and give the roles the carousel and its slides are
+announced as.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -12,6 +13,7 @@ A horizontal slideshow with previous and next controls and indicators (Ark Carou
 
 	let {
 		slides = [],
+		label,
 		class: className = '',
 		showIndicators = true,
 		showArrows = true,
@@ -20,6 +22,8 @@ A horizontal slideshow with previous and next controls and indicators (Ark Carou
 	}: {
 		/** The slides, in order. */
 		slides?: Snippet[];
+		/** The carousel's accessible name, such as "Featured games". */
+		label: string;
 		/** Classes merged onto the root. */
 		class?: string;
 		/** Shows a dot per slide under the slides. */
@@ -28,24 +32,29 @@ A horizontal slideshow with previous and next controls and indicators (Ark Carou
 		showArrows?: boolean;
 		/**
 		 * The accessible names Ark gives the slides (`item(index, count)`), the indicators
-		 * (`indicator(index)`) and the buttons (`prevTrigger`, `nextTrigger`).
+		 * (`indicator(index)`) and the buttons (`prevTrigger`, `nextTrigger`), and the roles the
+		 * carousel and each slide are announced as (`roleDescription`, `slideRoleDescription`, such
+		 * as "carousel" and "slide").
 		 */
 		translations: Required<
 			Pick<
 				NonNullable<CarouselRootProps['translations']>,
 				'item' | 'indicator' | 'prevTrigger' | 'nextTrigger'
 			>
-		>;
+		> & { roleDescription: string; slideRoleDescription: string };
 		/** Other props of Ark's `Carousel.Root`: `page` and `onPageChange`, `loop`, `slidesPerPage`. */
 		[key: string]: unknown;
 	} = $props();
 
 	const slideCount = $derived(slides.length);
+	const { roleDescription, slideRoleDescription, ...arkTranslations } = $derived(translations);
 </script>
 
 <Carousel.Root
 	{slideCount}
-	{translations}
+	translations={arkTranslations}
+	aria-roledescription={roleDescription}
+	aria-label={label}
 	class={cn('relative w-full overflow-hidden rounded-xl', className)}
 	data-slot="carousel"
 	{...rest}
@@ -53,7 +62,12 @@ A horizontal slideshow with previous and next controls and indicators (Ark Carou
 	<Carousel.ItemGroup class="flex touch-pan-y items-start" data-slot="carousel-item-group">
 		<!-- Slides are snippets with no identity of their own, given in a fixed order: keyed by place. -->
 		{#each slides as slide, i (i)}
-			<Carousel.Item index={i} class="min-w-0 shrink-0 grow-0 basis-full" data-slot="carousel-item">
+			<Carousel.Item
+				index={i}
+				aria-roledescription={slideRoleDescription}
+				class="min-w-0 shrink-0 grow-0 basis-full"
+				data-slot="carousel-item"
+			>
 				{@render slide()}
 			</Carousel.Item>
 		{/each}
