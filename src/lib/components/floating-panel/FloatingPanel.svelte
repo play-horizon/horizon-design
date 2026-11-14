@@ -41,8 +41,8 @@ A panel that floats over the window and can be dragged and resized (Ark Floating
 		<FloatingPanel.Positioner class="z-80">
 			<FloatingPanel.Content
 				class={cn(
-					'w-80 overflow-hidden rounded-xl border border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=open]:animate-zoom-in',
-					frosted && 'frosted',
+					'w-80 overflow-hidden rounded-xl border border-border-strong shadow-lg inset-shadow-highlight data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised',
 					className
 				)}
 				data-slot="floating-panel-content"

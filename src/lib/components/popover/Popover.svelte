@@ -49,8 +49,8 @@ A non-modal panel anchored to its trigger (Ark Popover), with a title, content a
 		<Popover.Positioner>
 			<Popover.Content
 				class={cn(
-					'z-50 w-72 rounded-lg border border-border-strong bg-raised text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-					frosted && 'frosted',
+					'z-50 w-72 rounded-lg border border-border-strong text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised',
 					contentClass
 				)}
 				data-slot="popover-content"

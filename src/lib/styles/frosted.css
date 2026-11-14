@@ -1,6 +1,6 @@
 /* The frosted surface: a translucent raised fill with a backdrop blur, for overlays only (the
-   `frosted` prop of Dialog, Sheet, Drawer, Popover, Menu, HoverCard, FloatingPanel and
-   CommandPalette). Nothing is blurred by default: a full-surface backdrop-filter costs GPU time
+   `frosted` prop of Dialog, AlertDialog, Sheet, Drawer, Popover, Menu, ContextMenu, HoverCard,
+   FloatingPanel and CommandPalette, which use it instead of their opaque raised fill). Nothing is blurred by default: a full-surface backdrop-filter costs GPU time
    next to a running game viewport. */
 
 @utility frosted {

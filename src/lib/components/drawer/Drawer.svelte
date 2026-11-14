@@ -54,8 +54,8 @@ A panel that slides in from the edge of the window (Ark Drawer), with a title, c
 		<Drawer.Positioner class="fixed inset-0 z-70 flex justify-end overflow-hidden">
 			<Drawer.Content
 				class={cn(
-					'flex h-full w-full max-w-sm flex-col border-l border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=closed]:animate-sheet-exit-right data-[state=open]:animate-sheet-enter-right',
-					frosted && 'frosted',
+					'flex h-full w-full max-w-sm flex-col border-l border-border-strong shadow-lg inset-shadow-highlight data-[state=closed]:animate-sheet-exit-right data-[state=open]:animate-sheet-enter-right',
+					frosted ? 'frosted' : 'bg-raised',
 					className
 				)}
 				data-slot="drawer-content"

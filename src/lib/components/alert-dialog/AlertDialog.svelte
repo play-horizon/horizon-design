@@ -54,8 +54,8 @@ the confirming action, whose labels the app passes translated.
 		<Dialog.Content
 			role="alertdialog"
 			class={cn(
-				'relative w-full max-w-md overflow-hidden rounded-xl border border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-				frosted && 'frosted'
+				'relative w-full max-w-md overflow-hidden rounded-xl border border-border-strong shadow-lg inset-shadow-highlight data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+				frosted ? 'frosted' : 'bg-raised'
 			)}
 			data-slot="alert-dialog-content"
 		>

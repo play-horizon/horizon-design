@@ -42,8 +42,8 @@ for a translucent surface.
 		<Menu.Positioner>
 			<Menu.Content
 				class={cn(
-					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong bg-raised p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-					frosted && 'frosted'
+					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised'
 				)}
 				data-slot="context-menu-content"
 			>

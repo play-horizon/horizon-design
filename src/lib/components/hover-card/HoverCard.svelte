@@ -37,8 +37,8 @@ function; `frosted` for a translucent surface.
 		<HoverCard.Positioner>
 			<HoverCard.Content
 				class={cn(
-					'z-50 w-72 rounded-lg border border-border-strong bg-raised px-3 py-2.5 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-					frosted && 'frosted',
+					'z-50 w-72 rounded-lg border border-border-strong px-3 py-2.5 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised',
 					contentClass
 				)}
 				data-slot="hover-card-content"

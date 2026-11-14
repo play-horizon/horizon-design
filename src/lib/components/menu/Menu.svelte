@@ -38,8 +38,8 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 		<Menu.Positioner>
 			<Menu.Content
 				class={cn(
-					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong bg-raised p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-					frosted && 'frosted',
+					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised',
 					contentClass
 				)}
 				data-slot="menu-content"

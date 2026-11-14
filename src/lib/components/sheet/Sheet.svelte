@@ -65,9 +65,9 @@ close button; `frosted` for a translucent surface.
 		<Dialog.Positioner class="fixed inset-0 z-70 overflow-hidden">
 			<Dialog.Content
 				class={cn(
-					'absolute flex flex-col border-border-strong bg-raised shadow-lg inset-shadow-highlight',
+					'absolute flex flex-col border-border-strong shadow-lg inset-shadow-highlight',
 					sides[side],
-					frosted && 'frosted',
+					frosted ? 'frosted' : 'bg-raised',
 					className
 				)}
 				data-slot="sheet-content"

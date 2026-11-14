@@ -1,6 +1,6 @@
 <!--
 @component
-Docs: Dialog. Live examples of the Dialog component.
+Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 -->
 <script lang="ts">
 	import { Button, buttonVariants } from '$lib/components/button';
@@ -8,6 +8,7 @@ Docs: Dialog. Live examples of the Dialog component.
 	import { Dialog, DialogClose } from '$lib/components/dialog';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
 	import MingcuteWindowsLine from '~icons/mingcute/windows-line';
+	import { art } from '../examples';
 </script>
 
 <section id="dialog">
@@ -33,5 +34,26 @@ Docs: Dialog. Live examples of the Dialog component.
 				</Button>
 			{/snippet}
 		</Dialog>
+	</Card>
+	<Card
+		class="mt-4"
+		title="Frosted"
+		description="For an overlay above busy content, such as a running game: a translucent, blurred surface."
+	>
+		<div class="relative overflow-hidden rounded-lg p-6">
+			<img src={art.neon} alt="" class="absolute inset-0 size-full object-cover" />
+			<Dialog
+				frosted
+				closeLabel="Close"
+				title="Paused"
+				description="The game keeps running for the other players."
+				triggerClass="relative {buttonVariants({ variant: 'default' })}"
+			>
+				{#snippet trigger()}Open a frosted dialog{/snippet}
+				{#snippet footer()}
+					<DialogClose class={buttonVariants({ variant: 'primary' })}>Resume</DialogClose>
+				{/snippet}
+			</Dialog>
+		</div>
 	</Card>
 </section>

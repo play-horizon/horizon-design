@@ -58,8 +58,8 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 		<Dialog.Positioner class="fixed inset-0 z-70 flex items-center justify-center p-4">
 			<Dialog.Content
 				class={cn(
-					'relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-border-strong bg-raised shadow-lg inset-shadow-highlight data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
-					frosted && 'frosted',
+					'relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-border-strong shadow-lg inset-shadow-highlight data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised',
 					className
 				)}
 				data-slot="dialog-content"
