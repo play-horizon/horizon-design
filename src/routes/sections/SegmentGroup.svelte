@@ -13,6 +13,7 @@ Docs: SegmentGroup. Live examples of the SegmentGroup component.
 			<SegmentGroup
 				size="sm"
 				defaultValue="day"
+				aria-label="Period"
 				items={[
 					{ value: 'day', label: 'Day' },
 					{ value: 'week', label: 'Week' },
@@ -22,6 +23,7 @@ Docs: SegmentGroup. Live examples of the SegmentGroup component.
 			<SegmentGroup
 				size="md"
 				defaultValue="day"
+				aria-label="Period"
 				items={[
 					{ value: 'day', label: 'Day' },
 					{ value: 'week', label: 'Week' },
@@ -31,6 +33,7 @@ Docs: SegmentGroup. Live examples of the SegmentGroup component.
 			<SegmentGroup
 				size="lg"
 				defaultValue="day"
+				aria-label="Period"
 				items={[
 					{ value: 'day', label: 'Day' },
 					{ value: 'week', label: 'Week' },
