@@ -5,26 +5,16 @@ Docs: Progress. Live examples of the Progress component.
 <script lang="ts">
 	import { Card } from '$lib/components/card';
 	import { Progress } from '$lib/components/progress';
-
-	let progressValue = $state(72);
 </script>
 
 <section id="progress">
 	<Card>
-		<div class="space-y-3" data-progress-animate>
-			<div class="flex items-center justify-between">
-				<p class="text-sm font-medium">Upload progress</p>
-				<span class="text-sm text-muted tabular-nums">{progressValue}%</span>
-			</div>
-			<Progress value={progressValue} class="transition-all duration-1000" />
+		<div class="space-y-3">
+			<Progress label="Upload progress" showValue value={72} />
 			<div class="mt-4 grid grid-cols-3 gap-2">
 				{#each [{ label: 'CPU', value: 45 }, { label: 'RAM', value: 68 }, { label: 'Disk', value: 23 }] as metric (metric.label)}
-					<div class="space-y-1.5 rounded-lg bg-active p-3">
-						<div class="flex items-center justify-between text-xs">
-							<span class="text-muted">{metric.label}</span>
-							<span class="font-medium tabular-nums">{metric.value}%</span>
-						</div>
-						<Progress value={metric.value} class="h-1" />
+					<div class="rounded-lg bg-active p-3">
+						<Progress label={metric.label} showValue value={metric.value} />
 					</div>
 				{/each}
 			</div>
