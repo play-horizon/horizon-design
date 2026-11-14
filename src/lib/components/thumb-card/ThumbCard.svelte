@@ -25,7 +25,7 @@ A card showing a preview (its content) with a label under it.
 
 <div
 	class={cn(
-		'group hover:shadow-primary-shadow relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface transition-all hover:border-primary/40 hover:shadow-lg',
+		'group relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface transition-all hover:border-primary/40 hover:shadow-lg',
 		className
 	)}
 	data-slot="thumb-card"

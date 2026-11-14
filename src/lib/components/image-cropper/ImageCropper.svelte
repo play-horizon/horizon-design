@@ -43,7 +43,7 @@ thumbnails.
 		/>
 		<ImageCropper.Selection
 			class={cn(
-				'shadow-cropper',
+				'shadow-[0_0_0_9999px_var(--scrim)]',
 				'border-2 border-on-art/64',
 				'cursor-move',
 				'data-[shape=circle]:rounded-full',
