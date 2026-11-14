@@ -64,6 +64,14 @@ restores a maximised view (`restoreLabel`).
 		/** The restore button's accessible name, such as "Restore view". */
 		restoreLabel: string;
 	} = $props();
+
+	/**
+	 * Leaves the maximised view. A new config rather than a mutation, so the layout updates even
+	 * when the app passes a config that isn't deeply reactive (unbound, or `$state.raw`).
+	 */
+	function restore() {
+		config = { ...config, maximizedView: undefined };
+	}
 </script>
 
 <div class="relative h-full w-full">
@@ -76,7 +84,7 @@ restores a maximised view (`restoreLabel`).
 			<Button
 				variant="default"
 				size="icon-xs"
-				onclick={() => (config.maximizedView = undefined)}
+				onclick={restore}
 				aria-label={restoreLabel}
 				class="absolute top-1 right-1"
 			>
