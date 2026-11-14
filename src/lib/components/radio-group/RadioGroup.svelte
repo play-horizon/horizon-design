@@ -1,12 +1,15 @@
 <!--
 @component
-A group of radio buttons to choose one option (Ark RadioGroup).
+A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or Ark's
+`RadioGroup.Item` parts in `children`. `value` binds the chosen option; without it, Ark's
+`defaultValue` sets the first one. Without `label`, name the group with an `aria-label`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { RadioGroup } from '@ark-ui/svelte';
+	import { RadioGroup, type RadioGroupValueChangeDetails } from '@ark-ui/svelte';
 	import { cn } from '$lib/utils';
 
+	/** One option: its value, its label (text or a snippet) and whether it can be chosen. */
 	type Item = { value: string; label: string | Snippet; disabled?: boolean };
 
 	type SizeConfig = { control: string; dot: string; label: string };
@@ -23,15 +26,24 @@ A group of radio buttons to choose one option (Ark RadioGroup).
 		label,
 		items,
 		children,
-		value = $bindable(''),
+		value = $bindable(),
+		onValueChange,
 		...rest
 	}: {
+		/** Classes added to the group. */
 		class?: string;
+		/** The size of the circles and of the text. */
 		size?: 'sm' | 'md' | 'lg';
+		/** The group's label, which names it. */
 		label?: string;
+		/** The options; without them, `children` renders Ark's parts. */
 		items?: Item[];
+		/** Ark's `RadioGroup.Item` parts, used when there are no `items`. */
 		children?: Snippet;
+		/** The chosen option's value; `null` when none is. */
 		value?: string | null;
+		/** Called on every change of the value, after `value` is updated. */
+		onValueChange?: (details: RadioGroupValueChangeDetails) => void;
 		[key: string]: unknown;
 	} = $props();
 
@@ -42,7 +54,10 @@ A group of radio buttons to choose one option (Ark RadioGroup).
 	class={cn('flex flex-col gap-3', className)}
 	data-slot="radio-group"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
 	{#if label}
@@ -55,12 +70,12 @@ A group of radio buttons to choose one option (Ark RadioGroup).
 			<RadioGroup.Item
 				value={item.value}
 				disabled={item.disabled}
-				class="flex items-center gap-2"
+				class="flex items-center gap-2 data-disabled:cursor-not-allowed data-disabled:opacity-50"
 				data-slot="radio-group-item"
 			>
 				<RadioGroup.ItemControl
 					class={cn(
-						'group relative aspect-square rounded-full border border-border bg-sunken transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50 data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary',
+						'group relative aspect-square rounded-full border border-border bg-sunken transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary',
 						sz.control
 					)}
 				>
