@@ -24,19 +24,37 @@ Docs: Swap. Live examples of the Swap component.
 		<div>
 			<p class="mb-4 text-sm text-muted">Toggle between two states with animated transitions.</p>
 			<div class="flex items-center gap-6">
-				{#snippet swapSun()}<MingcuteSunLine class="size-6" />{/snippet}
-				{#snippet swapMoon()}<MingcuteMoonLine class="size-6" />{/snippet}
-				{#snippet swapVolOn()}<MingcuteVolumeLine class="size-6" />{/snippet}
-				{#snippet swapVolOff()}<MingcuteVolumeOffLine class="size-6" />{/snippet}
-				{#snippet swapPlayIcon()}<MingcutePlayLine class="size-6" />{/snippet}
-				{#snippet swapPauseIcon()}<MingcutePauseLine class="size-6" />{/snippet}
-				<button onclick={() => (swapOn = !swapOn)} class="rounded-lg p-2 hover:bg-hover">
+				{#snippet swapSun()}<MingcuteSunLine class="size-6" aria-hidden="true" />{/snippet}
+				{#snippet swapMoon()}<MingcuteMoonLine class="size-6" aria-hidden="true" />{/snippet}
+				{#snippet swapVolOn()}<MingcuteVolumeLine class="size-6" aria-hidden="true" />{/snippet}
+				{#snippet swapVolOff()}<MingcuteVolumeOffLine class="size-6" aria-hidden="true" />{/snippet}
+				{#snippet swapPlayIcon()}<MingcutePlayLine class="size-6" aria-hidden="true" />{/snippet}
+				{#snippet swapPauseIcon()}<MingcutePauseLine class="size-6" aria-hidden="true" />{/snippet}
+				<button
+					type="button"
+					aria-label="Light theme"
+					aria-pressed={swapOn}
+					onclick={() => (swapOn = !swapOn)}
+					class="rounded-lg p-2 hover:bg-hover"
+				>
 					<Swap swap={swapOn} on={swapSun} off={swapMoon} />
 				</button>
-				<button onclick={() => (swapVolume = !swapVolume)} class="rounded-lg p-2 hover:bg-hover">
+				<button
+					type="button"
+					aria-label="Sound"
+					aria-pressed={swapVolume}
+					onclick={() => (swapVolume = !swapVolume)}
+					class="rounded-lg p-2 hover:bg-hover"
+				>
 					<Swap swap={swapVolume} on={swapVolOn} off={swapVolOff} />
 				</button>
-				<button onclick={() => (swapPlay = !swapPlay)} class="rounded-lg p-2 hover:bg-hover">
+				<button
+					type="button"
+					aria-label="Play"
+					aria-pressed={swapPlay}
+					onclick={() => (swapPlay = !swapPlay)}
+					class="rounded-lg p-2 hover:bg-hover"
+				>
 					<Swap swap={swapPlay} on={swapPlayIcon} off={swapPauseIcon} />
 				</button>
 			</div>

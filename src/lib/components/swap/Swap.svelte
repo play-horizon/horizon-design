@@ -16,12 +16,18 @@ Swaps between two contents with an animation, such as a play and a pause icon (A
 		unmountOnExit = true,
 		...rest
 	}: {
+		/** What shows while `swap` is on. */
 		on?: Snippet;
+		/** What shows while `swap` is off. */
 		off?: Snippet;
 		class?: string;
+		/** Which content shows: `on` when true, `off` when false. */
 		swap?: boolean;
+		/** Renders each content only once it first shows. */
 		lazyMount?: boolean;
+		/** Removes the hidden content once its exit animation ends. */
 		unmountOnExit?: boolean;
+		/** Other props of Ark's `Swap.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
