@@ -31,7 +31,15 @@ Docs: Carousel. Live examples of the Carousel component.
 					Slide 3
 				</div>
 			{/snippet}
-			<Carousel slides={[carouselSlide1, carouselSlide2, carouselSlide3]} />
+			<Carousel
+				slides={[carouselSlide1, carouselSlide2, carouselSlide3]}
+				translations={{
+					prevTrigger: 'Previous slide',
+					nextTrigger: 'Next slide',
+					indicator: (index) => `Go to slide ${index + 1}`,
+					item: (index, count) => `${index + 1} of ${count}`
+				}}
+			/>
 		</div>
 	</Card>
 </section>
