@@ -54,7 +54,7 @@
 		"./horizon-design.css": "./dist/horizon-design.css"
 	},
 	"peerDependencies": {
-		"svelte": "^5.0.0"
+		"svelte": "^5.29.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.1",
