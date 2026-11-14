@@ -67,15 +67,17 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 {#if variant === 'feature'}
 	<div class={cn('group relative min-w-0', className)} data-slot="game-card" data-variant="feature">
 		<div
-			class="relative aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard group-hover:-translate-y-0.5 group-hover:shadow-md"
+			class="relative grid aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard group-hover:-translate-y-0.5 group-hover:shadow-md"
 		>
+			<!-- The art, its scrim and the name bar share one grid cell, none of them positioned, so
+			     the link's ::after is placed against this container and covers the whole card. -->
 			{#if thumbnail}
-				<img src={thumbnail} alt="" class="absolute inset-0 size-full object-cover" />
+				<img src={thumbnail} alt="" class="col-start-1 row-start-1 size-full object-cover" />
 			{/if}
 			<div
-				class="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-art-scrim to-transparent"
+				class="col-start-1 row-start-1 h-2/3 self-end bg-linear-to-t from-art-scrim to-transparent"
 			></div>
-			<div class="absolute inset-x-3 bottom-3 flex items-end gap-2.5">
+			<div class="col-start-1 row-start-1 flex items-end gap-2.5 self-end p-3">
 				{#if icon}
 					<img
 						src={icon}
