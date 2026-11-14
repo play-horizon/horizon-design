@@ -1,6 +1,6 @@
 /**
  * Tests of `FacetedSearch`: choosing facet options, searching, sorting and clearing, each
- * reported through `onChange`.
+ * reported through `onChange`, and focus kept when the clear button goes.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -49,6 +49,7 @@ describe('FacetedSearch', () => {
 
 		await fireEvent.click(getByRole('button', { name: 'Clear filters' }));
 		expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ selected: {} }));
+		expect(document.activeElement).toBe(getByLabelText('Obby'));
 	});
 
 	it('reports the query and the sort', async () => {

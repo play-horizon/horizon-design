@@ -23,20 +23,25 @@ shows while any option is chosen. Every text is passed in, translated.
 		id: string;
 		/** Its heading, translated. */
 		label: string;
+		/** Its options, in the order shown. */
 		options: readonly FacetOption[];
 	}
 
 	/** A way to order the results. */
 	export interface SortOption {
+		/** The sort's stable id ("players", "newest"). */
 		id: string;
+		/** Its label, translated. */
 		label: string;
 	}
 
 	/** The state of a search: what `onChange` reports. */
 	export interface SearchState {
+		/** The search text. */
 		query: string;
 		/** The chosen option ids of each facet, by facet id. */
 		selected: Record<string, string[]>;
+		/** The chosen sort's id; unset while none is chosen. */
 		sort: string | undefined;
 	}
 </script>
@@ -70,11 +75,13 @@ shows while any option is chosen. Every text is passed in, translated.
 		selected?: Record<string, string[]>;
 		/** The chosen sort's id. */
 		sort?: string;
+		/** The facets, in the order shown. */
 		facets: readonly Facet[];
 		/** The ways to order the results; no sort control when empty. */
 		sorts?: readonly SortOption[];
 		/** The search field's accessible name, such as "Search games". */
 		searchLabel: string;
+		/** The search field's placeholder, such as "Search games by name". */
 		placeholder?: string;
 		/** The sort control's accessible name, such as "Sort by"; needed with `sorts`. */
 		sortLabel?: string;
@@ -84,6 +91,7 @@ shows while any option is chosen. Every text is passed in, translated.
 		onChange?: (state: SearchState) => void;
 		/** The results. */
 		children?: Snippet;
+		/** Classes merged onto the root. */
 		class?: string;
 	} = $props();
 
@@ -106,9 +114,12 @@ shows while any option is chosen. Every text is passed in, translated.
 		changed();
 	}
 
-	function clear() {
+	// The button disappears with the last chosen option, so focus moves to the first option
+	// rather than falling back to the page.
+	function clear(event: MouseEvent & { currentTarget: HTMLElement }) {
 		selected = {};
 		changed();
+		event.currentTarget.closest('aside')?.querySelector('input')?.focus();
 	}
 </script>
 
