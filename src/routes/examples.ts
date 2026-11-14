@@ -1,6 +1,6 @@
 /**
  * Sample data the docs site's live examples share: game art (SVG files in `static/examples`),
- * people, the game tag list and a few commands.
+ * people and the game tag list.
  * @module
  */
 import { asset } from '$app/paths';
