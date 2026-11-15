@@ -1,25 +1,27 @@
+<!--
+@component
+Docs: Toggle. Live examples of the Toggle component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Toggle } from '$lib/components/toggle';
+	import { Card } from '#lib/components/card/index.js';
+	import { Toggle } from '#lib/components/toggle/index.js';
 	import MingcuteBoldLine from '~icons/mingcute/bold-line';
 	import MingcuteItalicLine from '~icons/mingcute/italic-line';
 	import MingcuteUnderlineLine from '~icons/mingcute/underline-line';
 </script>
 
 <section id="toggle">
-	<p class="section-tag">Actions</p>
-	<h2 class="mb-6 text-2xl font-bold">Toggle</h2>
 	<Card>
 		<div>
 			<div class="flex flex-wrap items-center gap-3">
-				<Toggle>
-					<MingcuteBoldLine class="size-4" />
+				<Toggle aria-label="Bold">
+					<MingcuteBoldLine class="size-4" aria-hidden="true" />
 				</Toggle>
-				<Toggle>
-					<MingcuteItalicLine class="size-4" />
+				<Toggle aria-label="Italic">
+					<MingcuteItalicLine class="size-4" aria-hidden="true" />
 				</Toggle>
 				<Toggle variant="outline">
-					<MingcuteUnderlineLine class="size-4" />
+					<MingcuteUnderlineLine class="size-4" aria-hidden="true" />
 					<span>Underline</span>
 				</Toggle>
 				<Toggle variant="outline" size="sm">Small</Toggle>

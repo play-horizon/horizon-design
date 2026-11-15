@@ -19,3 +19,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+The fonts in src/lib/fonts (dist/fonts in the published package) are not covered by this
+licence: they are under the SIL Open Font License, Version 1.1, given next to them
+(OFL-EncodeSans.txt for Horizon Sans, a renamed subset of Encode Sans, and OFL-Lilex.txt for
+Lilex).

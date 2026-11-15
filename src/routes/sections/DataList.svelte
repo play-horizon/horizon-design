@@ -1,12 +1,14 @@
+<!--
+@component
+Docs: DataList. Live examples of the DataList component.
+-->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
-	import { DataList } from '$lib/components/data-list';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { DataList } from '#lib/components/data-list/index.js';
 </script>
 
 <section id="data-list">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Data List</h2>
 	<Card>
 		<div>
 			{#snippet dataListStatus()}

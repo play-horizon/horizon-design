@@ -1,16 +1,18 @@
+<!--
+@component
+Docs: CircularProgress. Live examples of the CircularProgress component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { CircularProgress } from '$lib/components/circular-progress';
+	import { Card } from '#lib/components/card/index.js';
+	import { CircularProgress } from '#lib/components/circular-progress/index.js';
 </script>
 
 <section id="circular-progress">
-	<p class="section-tag">Feedback</p>
-	<h2 class="mb-6 text-2xl font-bold">Circular Progress</h2>
 	<Card>
 		<div class="flex items-center gap-6">
-			<CircularProgress value={72} size={80} />
-			<CircularProgress value={45} size={64} />
-			<CircularProgress value={90} size={48} strokeWidth={5} />
+			<CircularProgress value={72} valueText="72%" size={80} label="Upload" />
+			<CircularProgress value={45} valueText="45%" size={64} label="Build" />
+			<CircularProgress value={90} size={48} strokeWidth={5} label="Download" hideLabel />
 		</div>
 	</Card>
 </section>

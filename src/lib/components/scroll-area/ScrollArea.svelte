@@ -1,7 +1,12 @@
+<!--
+@component
+A scrolling region with a thin, themed vertical scrollbar (Ark ScrollArea), shown only while the
+content is taller than the region.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ScrollArea } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',
@@ -9,30 +14,15 @@
 		children,
 		...rest
 	}: {
+		/** Classes added to the region; it needs a height, such as `h-52` or `size-full`. */
 		class?: string;
+		/** Classes added to the content, inside the scrolling viewport. */
 		innerClass?: string;
+		/** The content that scrolls. */
 		children?: Snippet;
+		/** Other props of Ark's `ScrollArea.Root`. */
 		[key: string]: unknown;
 	} = $props();
-
-	let contentEl = $state<HTMLElement | null>(null);
-	let hasOverflow = $state(false);
-
-	$effect(() => {
-		if (!contentEl) return;
-		const viewport = contentEl.parentElement as HTMLElement;
-
-		const check = () => {
-			hasOverflow = contentEl!.offsetHeight > viewport.clientHeight;
-		};
-
-		const ro = new ResizeObserver(check);
-		ro.observe(contentEl);
-		ro.observe(viewport);
-		check();
-
-		return () => ro.disconnect();
-	});
 </script>
 
 <ScrollArea.Root
@@ -43,19 +33,17 @@
 	<ScrollArea.Viewport
 		class="size-full scrollbar-none rounded-[inherit] [&::-webkit-scrollbar]:hidden"
 	>
-		<div class={cn('size-full', innerClass)} bind:this={contentEl}>
+		<!-- Ark measures this element to size the thumb, so it grows with the content. -->
+		<ScrollArea.Content class={cn('min-h-full', innerClass)}>
 			{@render children?.()}
-		</div>
+		</ScrollArea.Content>
 	</ScrollArea.Viewport>
 	<ScrollArea.Scrollbar
 		orientation="vertical"
-		class={cn(
-			'group/scrollbar w-2.5 touch-none border-l border-l-transparent p-px transition-colors select-none',
-			hasOverflow ? 'flex' : 'hidden'
-		)}
+		class="group/scrollbar hidden w-2.5 touch-none border-l border-l-transparent p-px transition-colors select-none data-overflow-y:flex"
 	>
 		<ScrollArea.Thumb
-			class="bg-border hover:bg-scroll-thumb group-data-scrolling/scrollbar:bg-scroll-thumb-hover group-data-dragging/scrollbar:bg-scroll-thumb-active relative flex-1 rounded-full transition-colors"
+			class="relative flex-1 rounded-full bg-border transition-colors group-data-dragging/scrollbar:bg-muted group-data-scrolling/scrollbar:bg-faint hover:bg-border-strong"
 		/>
 	</ScrollArea.Scrollbar>
 	<ScrollArea.Corner />

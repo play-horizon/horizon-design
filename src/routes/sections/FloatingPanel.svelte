@@ -1,26 +1,27 @@
+<!--
+@component
+Docs: FloatingPanel. Live examples of the FloatingPanel component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { FloatingPanel } from '$lib/components/floating-panel';
+	import { Card } from '#lib/components/card/index.js';
+	import { FloatingPanel } from '#lib/components/floating-panel/index.js';
 </script>
 
 <section id="floating-panel">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Floating Panel</h2>
 	<Card>
 		<div class="flex flex-col gap-3">
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted">
 				A draggable floating panel anchored to a trigger. Drag the header to reposition it.
 			</p>
 			{#snippet floatingPanelTrigger()}Open Panel{/snippet}
 			{#snippet floatingPanelBody()}
-				<p class="text-muted-foreground text-sm">
-					Drag the header to move this panel around the screen.
-				</p>
+				<p class="text-sm text-muted">Drag the header to move this panel around the screen.</p>
 			{/snippet}
 			<FloatingPanel
+				closeLabel="Close"
 				title="Settings"
 				trigger={floatingPanelTrigger}
-				triggerClass="border-border hover:bg-accent inline-flex h-8 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors"
+				triggerClass="border-border hover:bg-hover inline-flex h-8 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors"
 			>
 				{@render floatingPanelBody()}
 			</FloatingPanel>

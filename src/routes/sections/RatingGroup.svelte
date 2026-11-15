@@ -1,14 +1,24 @@
+<!--
+@component
+Docs: RatingGroup. Live examples of the RatingGroup component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { RatingGroup } from '$lib/components/rating-group';
+	import { Card } from '#lib/components/card/index.js';
+	import { RatingGroup } from '#lib/components/rating-group/index.js';
 </script>
 
 <section id="rating-group">
-	<p class="section-tag">Feedback</p>
-	<h2 class="mb-6 text-2xl font-bold">Rating Group</h2>
 	<Card>
 		<div>
-			<RatingGroup count={5} defaultValue={3} />
+			<RatingGroup
+				label="Your rating"
+				count={5}
+				defaultValue={3}
+				translations={{
+					ratingValueText: (index: number) => (index === 1 ? '1 star' : `${index} stars`),
+					roleDescription: 'rating'
+				}}
+			/>
 		</div>
 	</Card>
 </section>

@@ -1,21 +1,28 @@
+<!--
+@component
+A small pill that announces something new, with an optional icon and a tag.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the pill. */
 		class?: string;
+		/** The announcement: its text, with an optional icon and tag. */
 		children?: Snippet;
+		/** Other attributes of the pill. */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <div
 	class={cn(
-		'border-primary-subtle-border bg-primary-subtle-bg text-primary inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm',
+		'inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-subtle px-3 py-1 text-sm text-primary',
 		className
 	)}
 	data-slot="announcement"

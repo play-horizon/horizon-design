@@ -1,18 +1,30 @@
+<!--
+@component
+Docs: ImageCropper. Live examples of the ImageCropper component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { ImageCropper } from '$lib/components/image-cropper';
+	import { Card } from '#lib/components/card/index.js';
+	import { ImageCropper } from '#lib/components/image-cropper/index.js';
+	import { art } from '../examples';
+
+	const translations = {
+		rootLabel: 'Thumbnail cropper',
+		rootRoleDescription: 'Image cropper',
+		previewLoading: 'Loading the thumbnail',
+		previewDescription: ({ crop }: { crop: { width: number; height: number } }) =>
+			`Thumbnail cropped to ${crop.width} by ${crop.height} pixels`,
+		selectionLabel: () => 'Crop frame',
+		selectionRoleDescription: '2D slider',
+		selectionInstructions: 'Use the arrow keys to move the frame; hold Alt to resize it.',
+		selectionValueText: ({ x, y, width, height }: Record<'x' | 'y' | 'width' | 'height', number>) =>
+			`${width} by ${height} pixels, at ${x}, ${y}`
+	};
 </script>
 
 <section id="image-cropper">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Image Cropper</h2>
 	<Card>
 		<div>
-			<ImageCropper
-				src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
-				alt="Mountain landscape"
-				axis="both"
-			/>
+			<ImageCropper src={art.skyline} alt="Skyline Obby's thumbnail" axis="both" {translations} />
 		</div>
 	</Card>
 </section>

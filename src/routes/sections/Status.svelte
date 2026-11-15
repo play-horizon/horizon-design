@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Status. Live examples of the Status component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Status } from '$lib/components/status';
+	import { Card } from '#lib/components/card/index.js';
+	import { Status } from '#lib/components/status/index.js';
 </script>
 
 <section id="status">
-	<p class="section-tag">Indicators</p>
-	<h2 class="mb-6 text-2xl font-bold">Status</h2>
 	<Card>
 		<div class="space-y-4">
 			{#each [{ variant: 'online', label: 'Online' }, { variant: 'away', label: 'Away' }, { variant: 'busy', label: 'Busy' }, { variant: 'offline', label: 'Offline' }] as s (s.variant)}

@@ -1,7 +1,12 @@
+<!--
+@component
+A form field: its label, the control, a help text and an error message, wired together for
+assistive technology (Ark Field).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Field } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',
@@ -11,11 +16,17 @@
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The label, tied to the control. */
 		label?: string | Snippet;
+		/** A help text under the control, which describes it. */
 		helperText?: string | Snippet;
+		/** The error message, shown while the field is `invalid`. */
 		errorText?: string | Snippet;
+		/** The control: an `Input`, a `Textarea` or another field of the library. */
 		children?: Snippet;
+		/** Other props of Ark's `Field.Root`, such as `invalid`, `required` or `disabled`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -32,12 +43,12 @@
 	{/if}
 	{@render children?.()}
 	{#if helperText}
-		<Field.HelperText class="text-muted-foreground text-xs" data-slot="field-helper-text">
+		<Field.HelperText class="text-xs text-muted" data-slot="field-helper-text">
 			{#if isSnippet(helperText)}{@render helperText()}{:else}{helperText}{/if}
 		</Field.HelperText>
 	{/if}
 	{#if errorText}
-		<Field.ErrorText class="text-destructive text-xs" data-slot="field-error-text">
+		<Field.ErrorText class="text-xs text-danger" data-slot="field-error-text">
 			{#if isSnippet(errorText)}{@render errorText()}{:else}{errorText}{/if}
 		</Field.ErrorText>
 	{/if}

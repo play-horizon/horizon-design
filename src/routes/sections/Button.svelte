@@ -1,122 +1,65 @@
+<!--
+@component
+Docs: Button. Every variant and size, icon-only buttons, a link styled as a button, and the
+loading and disabled states.
+-->
 <script lang="ts">
-	import { Button } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Separator } from '$lib/components/separator';
+	import { Button, buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
 	import MingcuteAddLine from '~icons/mingcute/add-line';
-	import MingcuteAlertLine from '~icons/mingcute/alert-line';
-	import MingcuteBellRingingLine from '~icons/mingcute/bell-ringing-line';
-	import MingcuteCheckCircleLine from '~icons/mingcute/check-circle-line';
-	import MingcuteCloseCircleLine from '~icons/mingcute/close-circle-line';
-	import MingcuteInformationLine from '~icons/mingcute/information-line';
-	import MingcuteMore1Line from '~icons/mingcute/more-1-line';
-	import MingcuteNotificationLine from '~icons/mingcute/notification-line';
+	import MingcutePlayFill from '~icons/mingcute/play-fill';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
-	import MingcuteSettings2Line from '~icons/mingcute/settings-2-line';
+	import MingcuteMore1Line from '~icons/mingcute/more-1-line';
+	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
 
-	let isLoading = $state(false);
+	let loading = $state(false);
 
-	function triggerLoading() {
-		isLoading = true;
-		setTimeout(() => {
-			isLoading = false;
-		}, 2000);
+	function load() {
+		loading = true;
+		setTimeout(() => (loading = false), 1500);
 	}
 </script>
 
-<section id="button">
-	<p class="section-tag">Actions</p>
-	<h2 class="mb-6 text-2xl font-bold">Button</h2>
-	<Card>
-		<div class="space-y-6">
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Variants
-				</p>
-				<div class="flex flex-wrap gap-3">
-					<Button variant="default">Default</Button>
-					<Button variant="secondary">Secondary</Button>
-					<Button variant="outline">Outline</Button>
-					<Button variant="ghost">Ghost</Button>
-					<Button variant="destructive">Destructive</Button>
-					<Button variant="link">Link</Button>
-				</div>
-			</div>
-			<Separator />
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Semantic colors
-				</p>
-				<div class="flex flex-wrap gap-3">
-					<Button variant="success">
-						<MingcuteCheckCircleLine class="size-4" />
-						Success
-					</Button>
-					<Button variant="warning">
-						<MingcuteAlertLine class="size-4" />
-						Warning
-					</Button>
-					<Button variant="info">
-						<MingcuteInformationLine class="size-4" />
-						Info
-					</Button>
-					<Button variant="destructive">
-						<MingcuteCloseCircleLine class="size-4" />
-						Destructive
-					</Button>
-				</div>
-			</div>
-			<Separator />
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Sizes
-				</p>
-				<div class="flex flex-wrap items-center gap-3">
-					<Button size="xs">Extra Small</Button>
-					<Button size="sm">Small</Button>
-					<Button size="md">Medium</Button>
-					<Button size="lg">Large</Button>
-					<Button size="xl">Extra Large</Button>
-				</div>
-			</div>
-			<Separator />
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Icon buttons
-				</p>
-				<div class="flex flex-wrap items-center gap-3">
-					<Button size="icon-md" variant="ghost" aria-label="Search">
-						<MingcuteSearchLine class="size-4" />
-					</Button>
-					<Button size="icon-md" variant="ghost" aria-label="Settings">
-						<MingcuteSettings2Line class="size-4" />
-					</Button>
-					<Button size="icon-md" variant="ghost" aria-label="Notifications">
-						<MingcuteNotificationLine class="size-4" />
-					</Button>
-					<Button size="icon-md" variant="outline" aria-label="Alerts">
-						<MingcuteBellRingingLine class="size-4" />
-					</Button>
-					<Button size="icon-md" variant="secondary" aria-label="Add">
-						<MingcuteAddLine class="size-4" />
-					</Button>
-					<Button size="icon-md" variant="ghost" aria-label="More">
-						<MingcuteMore1Line class="size-4" />
-					</Button>
-				</div>
-			</div>
-			<Separator />
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					States
-				</p>
-				<div class="flex flex-wrap items-center gap-3">
-					<Button pill>Pill Shape</Button>
-					<Button {isLoading} onclick={triggerLoading}>
-						{isLoading ? 'Loading…' : 'Click to Load'}
-					</Button>
-					<Button disabled>Disabled</Button>
-				</div>
-			</div>
+<div class="grid gap-4">
+	<Card title="Variants" description="Primary is for the one main action of a screen.">
+		<div class="flex flex-wrap items-center gap-2">
+			<Button variant="primary"><MingcutePlayFill aria-hidden="true" />Play</Button>
+			<Button>Play privately</Button>
+			<Button variant="tint"><MingcuteAddLine aria-hidden="true" />New game</Button>
+			<Button variant="ghost">Cancel</Button>
+			<Button variant="danger"><MingcuteDelete2Line aria-hidden="true" />Delete</Button>
+			<Button variant="danger-solid">Delete game</Button>
+			<Button variant="link">Profile</Button>
 		</div>
 	</Card>
-</section>
+	<Card title="Sizes">
+		<div class="flex flex-wrap items-center gap-2">
+			<Button size="xs">Extra small</Button>
+			<Button size="sm">Small</Button>
+			<Button size="md">Medium</Button>
+			<Button size="lg" variant="primary"><MingcutePlayFill aria-hidden="true" />Large</Button>
+		</div>
+	</Card>
+	<Card title="Icon buttons" description="An icon-only button needs an aria-label.">
+		<div class="flex flex-wrap items-center gap-2">
+			<Button size="icon-xs" variant="ghost" aria-label="Search"
+				><MingcuteSearchLine aria-hidden="true" /></Button
+			>
+			<Button size="icon-sm" aria-label="More"><MingcuteMore1Line aria-hidden="true" /></Button>
+			<Button size="icon-md" variant="tint" aria-label="Add"
+				><MingcuteAddLine aria-hidden="true" /></Button
+			>
+			<Button size="icon-lg" variant="primary" aria-label="Play"
+				><MingcutePlayFill aria-hidden="true" /></Button
+			>
+		</div>
+	</Card>
+	<Card title="States and links">
+		<div class="flex flex-wrap items-center gap-2">
+			<Button {loading} onclick={load}>Publish</Button>
+			<Button disabled>Disabled</Button>
+			<Button pill>Pill</Button>
+			<a href="#top" class={buttonVariants({ variant: 'primary', size: 'sm' })}>A link</a>
+		</div>
+	</Card>
+</div>

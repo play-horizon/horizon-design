@@ -1,10 +1,20 @@
+<!--
+@component
+A multi-step flow: the steps, the current step's content, and back and next buttons whose labels
+the app passes (Ark Steps).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Steps } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
+	/** One step of the flow. */
 	interface StepConfig {
+		/** The step's stable, unique id. */
+		id: string;
+		/** Its title, translated, shown next to its number. */
 		title: string;
+		/** What the step shows while it is the current one. */
 		content: Snippet;
 	}
 
@@ -12,17 +22,24 @@
 		steps = [],
 		step = $bindable(),
 		completedContent,
-		prevLabel = 'Back',
-		nextLabel = 'Next',
+		prevLabel,
+		nextLabel,
 		class: className = '',
 		...rest
 	}: {
+		/** The steps, in order. */
 		steps?: StepConfig[];
+		/** The current step's index (bindable); `steps.length` once every step is done. */
 		step?: number;
+		/** What shows once every step is done. */
 		completedContent?: Snippet;
-		prevLabel?: string;
-		nextLabel?: string;
+		/** The back button's text, such as "Back". */
+		prevLabel: string;
+		/** The next button's text, such as "Next". */
+		nextLabel: string;
+		/** Classes merged onto Ark's `Steps.Root`. */
 		class?: string;
+		/** Other props of Ark's `Steps.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -37,23 +54,23 @@
 	{...rest}
 >
 	<Steps.List class="flex w-full items-center gap-2" data-slot="steps-list">
-		{#each steps as s, i (i)}
-			<Steps.Item index={i} class="flex items-center gap-2" data-slot="steps-item">
+		{#each steps as s, i (s.id)}
+			<Steps.Item index={i} class="flex items-center gap-2 not-last:flex-1" data-slot="steps-item">
 				<Steps.Trigger
-					class="hover:text-foreground text-muted-foreground data-[state=current]:text-foreground data-[state=complete]:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
+					class="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-fg data-[state=complete]:text-fg data-[state=current]:text-fg"
 					data-slot="steps-trigger"
 				>
 					<Steps.Indicator
-						class="border-steps-indicator-border text-muted-foreground data-[state=complete]:bg-primary data-[state=complete]:border-primary data-[state=complete]:text-primary-foreground data-[state=current]:border-primary data-[state=current]:text-primary flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors"
+						class="flex size-7 shrink-0 items-center justify-center rounded-full border-2 border-border-strong text-xs font-bold text-muted transition-colors data-[state=complete]:border-primary data-[state=complete]:bg-primary data-[state=complete]:text-on-primary data-[state=current]:border-primary data-[state=current]:text-primary"
 						data-slot="steps-indicator"
 					>
 						{i + 1}
 					</Steps.Indicator>
-					<span class="hidden sm:inline">{s.title}</span>
+					<span class="max-sm:sr-only">{s.title}</span>
 				</Steps.Trigger>
 				{#if i < steps.length - 1}
 					<Steps.Separator
-						class="bg-steps-separator data-[state=complete]:bg-primary h-0.5 flex-1 rounded-full transition-colors"
+						class="h-0.5 flex-1 rounded-full bg-border transition-colors data-[state=complete]:bg-primary"
 						data-slot="steps-separator"
 					/>
 				{/if}
@@ -61,7 +78,7 @@
 		{/each}
 	</Steps.List>
 
-	{#each steps as s, i (i)}
+	{#each steps as s, i (s.id)}
 		<Steps.Content index={i} data-slot="steps-content">
 			{@render s.content()}
 		</Steps.Content>
@@ -75,13 +92,13 @@
 
 	<div class="mt-4 flex gap-2">
 		<Steps.PrevTrigger
-			class="border-border text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-8 items-center justify-center gap-2 rounded-lg border px-3 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-60"
+			class="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border px-3 text-sm font-medium text-fg transition-all hover:bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-60"
 			data-slot="steps-prev-trigger"
 		>
 			{prevLabel}
 		</Steps.PrevTrigger>
 		<Steps.NextTrigger
-			class="bg-primary text-primary-foreground shadow-glow-primary hover:bg-primary-hover inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-transparent px-3 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-60"
+			class="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-transparent bg-primary px-3 text-sm font-medium text-on-primary shadow-md transition-all hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
 			data-slot="steps-next-trigger"
 		>
 			{nextLabel}

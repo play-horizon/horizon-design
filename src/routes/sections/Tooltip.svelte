@@ -1,20 +1,37 @@
+<!--
+@component
+Docs: Tooltip. A tooltip on its own trigger button, and one on an icon button of the app's.
+-->
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/button';
-	import { Card } from '$lib/components/card';
-	import { Tooltip } from '$lib/components/tooltip';
+	import { buttonVariants } from '#lib/components/button/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { Tooltip } from '#lib/components/tooltip/index.js';
 	import MingcuteInformationLine from '~icons/mingcute/information-line';
+	import MingcuteSettings3Line from '~icons/mingcute/settings-3-line';
 </script>
 
 <section id="tooltip">
-	<p class="section-tag">Overlays</p>
-	<h2 class="mb-6 text-2xl font-bold">Tooltip</h2>
 	<Card>
-		<Tooltip
-			content="Tooltips provide helpful context on hover."
-			triggerClass={buttonVariants({ variant: 'outline' })}
-		>
-			<MingcuteInformationLine class="size-4" />
-			Hover Tooltip
-		</Tooltip>
+		<div class="flex items-center gap-3">
+			<Tooltip
+				content="Tooltips provide helpful context on hover."
+				triggerClass={buttonVariants({ variant: 'default' })}
+			>
+				<MingcuteInformationLine class="size-4" aria-hidden="true" />
+				Hover Tooltip
+			</Tooltip>
+			<Tooltip content="Settings">
+				{#snippet trigger(props)}
+					<button
+						{...props}
+						type="button"
+						aria-label="Settings"
+						class={buttonVariants({ variant: 'ghost', size: 'icon-md' })}
+					>
+						<MingcuteSettings3Line aria-hidden="true" />
+					</button>
+				{/snippet}
+			</Tooltip>
+		</div>
 	</Card>
 </section>

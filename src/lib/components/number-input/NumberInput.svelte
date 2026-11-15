@@ -1,30 +1,65 @@
+<!--
+@component
+A number field with increment and decrement buttons (Ark NumberInput). `value` binds the text of
+the field; without it, Ark's `defaultValue` sets the first value. `translations` names the two
+buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced role
+(`roleDescription`).
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { NumberInput } from '@ark-ui/svelte';
+	import {
+		NumberInput,
+		type NumberInputRootProps,
+		type NumberInputValueChangeDetails
+	} from '@ark-ui/svelte';
 	import MingcuteUpLine from '~icons/mingcute/up-line';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',
 		label,
 		children,
-		value = $bindable(''),
+		value = $bindable(),
+		onValueChange,
+		translations,
 		...rest
 	}: {
+		/** Classes added to the root, around the label and the field. */
 		class?: string;
+		/** The field's label, tied to the input. */
 		label?: string;
+		/** Content between the label and the field, such as a hint. */
 		children?: Snippet;
+		/** The field's text, such as `"5"`. */
 		value?: string;
+		/** Called on every change of the value, after `value` is updated. */
+		onValueChange?: (details: NumberInputValueChangeDetails) => void;
+		/**
+		 * Names of the step buttons (`incrementLabel`, `decrementLabel`), the role the field is
+		 * announced as (`roleDescription`, such as "number field"), and optionally `valueText`, the
+		 * value as announced.
+		 */
+		translations: Required<
+			Pick<NonNullable<NumberInputRootProps['translations']>, 'incrementLabel' | 'decrementLabel'>
+		> &
+			NonNullable<NumberInputRootProps['translations']> & { roleDescription: string };
+		/** Other props of Ark's `NumberInput.Root`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const { roleDescription, ...arkTranslations } = $derived(translations);
 </script>
 
 <NumberInput.Root
+	translations={arkTranslations}
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
 	{#if label}
@@ -34,21 +69,22 @@
 	{/if}
 	{@render children?.()}
 	<NumberInput.Control
-		class="border-border bg-input focus-visible:border-primary focus-visible:ring-ring flex h-9 w-full overflow-hidden rounded-lg border transition-all focus-visible:ring-2"
+		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all has-[input:focus-visible]:border-primary has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-primary/20"
 	>
 		<NumberInput.Input
-			class="placeholder:text-muted-foreground text-foreground min-w-0 flex-1 bg-transparent pl-2 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
+			aria-roledescription={roleDescription}
+			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50"
 		/>
-		<div class="border-border flex shrink-0 flex-col border-l">
+		<div class="flex shrink-0 flex-col border-l border-border">
 			<NumberInput.IncrementTrigger
-				class="text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex flex-1 items-center justify-center px-1.5 transition-colors outline-none focus-visible:ring-1"
+				class="flex flex-1 items-center justify-center px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
-				<MingcuteUpLine class="size-3" />
+				<MingcuteUpLine class="size-3" aria-hidden="true" />
 			</NumberInput.IncrementTrigger>
 			<NumberInput.DecrementTrigger
-				class="text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex flex-1 items-center justify-center border-t px-1.5 transition-colors outline-none focus-visible:ring-1"
+				class="flex flex-1 items-center justify-center border-t border-border px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
 			>
-				<MingcuteDownLine class="size-3" />
+				<MingcuteDownLine class="size-3" aria-hidden="true" />
 			</NumberInput.DecrementTrigger>
 		</div>
 	</NumberInput.Control>

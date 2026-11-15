@@ -1,64 +1,64 @@
-import { cn } from '$lib/utils';
+/**
+ * The button styles, shared by `Button` and by anything that must look like a button without
+ * being one (a link styled as a button: `<a class={buttonVariants({ variant: 'primary' })}>`).
+ * @module
+ */
+import type { ClassValue } from 'clsx';
+import { cn } from '#lib/utils.js';
 
 const base =
-	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap font-medium text-sm rounded-lg transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 ease-out outline-none focus-visible:ring-[3px] focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-60 [&_svg:not([class*="size-"])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0';
+	'inline-flex shrink-0 items-center justify-center whitespace-nowrap border font-medium outline-none transition-[background-color,border-color,color,opacity,transform] duration-150 active:scale-98 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0';
 
 const variants = {
-	default:
-		'bg-primary-subtle-bg text-primary border border-ring shadow-glass hover:bg-primary/15 focus-visible:border-primary',
-	outline:
-		'bg-transparent text-foreground border border-border shadow-glass hover:bg-accent hover:text-accent-foreground focus-visible:border-primary',
-	destructive:
-		'bg-destructive-subtle-bg text-destructive border border-destructive-ring shadow-glass hover:bg-destructive/15 focus-visible:ring-destructive-ring',
-	secondary:
-		'bg-secondary text-secondary-foreground border border-border shadow-glass hover:opacity-80 focus-visible:border-primary',
-	ghost:
-		'hover:bg-accent hover:text-accent-foreground border border-transparent focus-visible:border-primary',
-	link: 'text-primary underline-offset-4 border border-transparent hover:underline focus-visible:border-primary',
-	success:
-		'bg-success-subtle-bg text-success border border-success-ring shadow-glass hover:bg-success/15 focus-visible:ring-success-ring',
-	warning:
-		'bg-warning-subtle-bg text-warning border border-warning-ring shadow-glass hover:bg-warning/15 focus-visible:ring-warning-ring',
-	info: 'bg-info-subtle-bg text-info border border-info-ring shadow-glass hover:bg-info/15 focus-visible:ring-info-ring'
+	/** A neutral button on a surface: most actions. */
+	default: 'bg-surface border-border text-fg inset-shadow-highlight hover:bg-hover',
+	/** The one main action of a screen. */
+	primary:
+		'bg-primary border-primary text-on-primary font-semibold hover:bg-primary-hover hover:border-primary-hover',
+	/** A secondary action that should stand out: tinted with the primary colour. */
+	tint: 'bg-primary-subtle border-primary-border text-primary hover:bg-primary/20',
+	/** A quiet action in toolbars and lists. */
+	ghost: 'bg-transparent border-transparent text-fg-2 hover:bg-hover hover:text-fg',
+	/** A destructive action next to others. */
+	danger: 'bg-danger-subtle border-danger-border text-danger hover:bg-danger/20',
+	/** The confirming action of a destructive dialog. */
+	'danger-solid': 'bg-danger border-danger text-on-danger font-semibold hover:opacity-90',
+	/** Text that acts like a link. */
+	link: 'border-transparent text-primary underline-offset-4 hover:underline'
 } as const;
 
 const sizes = {
-	xs: 'h-6 gap-1.5 px-2 text-xs rounded-sm [&_svg:not([class*="size-"])]:size-2.5',
-	sm: 'h-7 px-2.5 gap-1.5 [&_svg:not([class*="size-"])]:size-3.5',
-	md: 'h-8 px-3 py-2',
-	lg: 'h-9 px-3.5',
-	xl: 'h-10 text-base px-4',
-	'icon-xs': 'size-6 rounded-sm',
-	'icon-sm': 'size-7',
-	'icon-md': 'size-8',
-	'icon-lg': 'size-9',
-	'icon-xl': 'size-10 [&_svg:not([class*="size-"])]:size-5'
+	xs: 'h-control-xs gap-1 rounded-md px-1.75 text-xs [&_svg]:size-3',
+	sm: 'h-control-sm gap-1.5 rounded-md px-2.25 text-sm [&_svg]:size-3.5',
+	md: 'h-control-md gap-1.5 rounded-lg px-2.75 text-sm [&_svg]:size-4',
+	lg: 'h-control-lg gap-2 rounded-lg px-4.5 text-md [&_svg]:size-4.5',
+	'icon-xs': 'size-control-xs rounded-md [&_svg]:size-3',
+	'icon-sm': 'size-control-sm rounded-md [&_svg]:size-3.5',
+	'icon-md': 'size-control-md rounded-lg [&_svg]:size-4',
+	'icon-lg': 'size-control-lg rounded-lg [&_svg]:size-4.5'
 } as const;
 
+/** A button's look. */
 export type ButtonVariant = keyof typeof variants;
+
+/** A button's size; the `icon-*` sizes are square, for icon-only buttons. */
 export type ButtonSize = keyof typeof sizes;
 
+/** The classes of a button of the given variant and size, with `className` merged last. */
 export function buttonVariants({
 	variant = 'default',
 	size = 'md',
 	pill = false,
-	clickEffect = true,
 	className = ''
 }: {
+	/** The look. */
 	variant?: ButtonVariant;
+	/** The height, or a square `icon-*` size. */
 	size?: ButtonSize;
+	/** Fully rounded ends. */
 	pill?: boolean;
-	clickEffect?: boolean;
-	className?: string;
+	/** Classes merged last, so they win over the button's own. */
+	className?: ClassValue | null;
 } = {}): string {
-	return cn(
-		base,
-		variants[variant],
-		sizes[size],
-		{
-			'active:scale-98': clickEffect,
-			'rounded-full': pill
-		},
-		className
-	);
+	return cn(base, variants[variant], sizes[size], pill && 'rounded-full', className);
 }

@@ -1,17 +1,21 @@
+<!--
+@component
+Docs: Breadcrumb. Live examples of the Breadcrumb component.
+-->
 <script lang="ts">
-	import { Breadcrumb } from '$lib/components/breadcrumb';
-	import { Card } from '$lib/components/card';
+	import { resolve } from '$app/paths';
+	import { Breadcrumb } from '#lib/components/breadcrumb/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="breadcrumb">
-	<p class="section-tag">Navigation</p>
-	<h2 class="mb-6 text-2xl font-bold">Breadcrumb</h2>
 	<Card>
 		<div>
 			<Breadcrumb
+				label="Breadcrumb"
 				items={[
-					{ label: 'Home', href: '/' },
-					{ label: 'Components', href: '/components' },
+					{ label: 'Foundations', href: resolve('/') },
+					{ label: 'Navigation', href: resolve('/[section]', { section: 'tabs' }) },
 					{ label: 'Breadcrumb' }
 				]}
 			/>

@@ -1,26 +1,70 @@
+<!--
+@component
+A menu opened by a right click (or a long press) on its content (Ark Menu): its `groups` of items,
+with a line between groups and each titled group named by its title; Ark's `onSelect` reports the
+chosen item's `id`. `frosted` for a translucent surface.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Menu } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
+	/** An item to choose. */
 	interface ContextMenuItem {
-		type?: 'item' | 'separator' | 'label';
-		value?: string;
-		label?: string;
+		/** A stable id, unique in the menu, which is also the item's value. */
+		id: string;
+		/** The item's text. */
+		label: string;
+		/** Shows an item that can't be chosen. */
 		disabled?: boolean;
 	}
 
+	/** A group of items. */
+	interface ContextMenuGroup {
+		/** A stable id, unique in the menu. */
+		id: string;
+		/**
+		 * The group's title, which names it for assistive technology; an untitled group is a plain
+		 * run of items.
+		 */
+		label?: string;
+		/** The group's items, in order. */
+		items: ContextMenuItem[];
+	}
+
 	let {
-		items = [],
+		groups = [],
 		children,
+		frosted = false,
 		...rest
 	}: {
-		items?: ContextMenuItem[];
+		/** The menu's groups, in order, with a line between each. */
+		groups?: ContextMenuGroup[];
+		/** The content that opens the menu on a right click. */
 		children?: Snippet;
+		/** A translucent, blurred surface: for overlays above busy content only. */
+		frosted?: boolean;
+		/** Other props of Ark's `Menu.Root`, such as `onSelect`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
+
+{#snippet menuItems(entries: ContextMenuItem[])}
+	{#each entries as item (item.id)}
+		<Menu.Item
+			value={item.id}
+			disabled={item.disabled}
+			class={cn(
+				'relative flex h-7.5 items-center gap-2 rounded-md px-2 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-highlighted:text-fg',
+				{ 'pointer-events-none opacity-50': item.disabled }
+			)}
+			data-slot="context-menu-item"
+		>
+			{item.label}
+		</Menu.Item>
+	{/each}
+{/snippet}
 
 <Menu.Root {...rest}>
 	<Menu.ContextTrigger data-slot="context-menu-trigger">
@@ -33,35 +77,28 @@
 	<Portal>
 		<Menu.Positioner>
 			<Menu.Content
-				class="data-[state=open]:animate-zoom-in data-[state=closed]:animate-zoom-out border-border bg-popover text-popover-foreground z-50 min-w-36 overflow-hidden rounded-xl border p-1 shadow-xl backdrop-blur-xl outline-none"
+				class={cn(
+					'z-50 min-w-36 overflow-hidden rounded-lg border border-border-strong p-1 text-fg shadow-md inset-shadow-highlight outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in',
+					frosted ? 'frosted' : 'bg-raised'
+				)}
 				data-slot="context-menu-content"
 			>
-				{#each items as item, i (i)}
-					{#if item.type === 'separator'}
-						<div
-							class="bg-border -mx-1 my-1 h-px"
-							role="separator"
-							data-slot="context-menu-separator"
-						></div>
-					{:else if item.type === 'label'}
-						<div
-							class="text-muted-foreground px-2.5 py-1 text-xs font-semibold"
-							data-slot="context-menu-label"
-						>
-							{item.label}
-						</div>
+				{#each groups as group, index (group.id)}
+					{#if index > 0}
+						<Menu.Separator class="-mx-1 my-1 h-px bg-border" data-slot="context-menu-separator" />
+					{/if}
+					{#if group.label}
+						<Menu.ItemGroup data-slot="context-menu-group">
+							<Menu.ItemGroupLabel
+								class="px-2.5 py-1 text-xs font-semibold text-muted"
+								data-slot="context-menu-label"
+							>
+								{group.label}
+							</Menu.ItemGroupLabel>
+							{@render menuItems(group.items)}
+						</Menu.ItemGroup>
 					{:else}
-						<Menu.Item
-							value={item.value ?? ''}
-							disabled={item.disabled}
-							class={cn(
-								'hover:bg-accent data-highlighted:bg-accent data-highlighted:text-accent-foreground relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors select-none',
-								{ 'pointer-events-none opacity-50': item.disabled }
-							)}
-							data-slot="context-menu-item"
-						>
-							{item.label}
-						</Menu.Item>
+						{@render menuItems(group.items)}
 					{/if}
 				{/each}
 			</Menu.Content>

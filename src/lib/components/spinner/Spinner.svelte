@@ -1,8 +1,14 @@
+<!--
+@component
+A spinning loading indicator, for an action in progress inside a control (a button). Pages and
+lists show skeletons instead. With `label`, the text shows beside it and is announced; with only
+`aria-label`, it is announced without text; with neither, it is decorative.
+-->
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 	import MingcuteLoading3Fill from '~icons/mingcute/loading-3-fill';
 
-	const sizes: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
+	const sizes = {
 		sm: 'size-3',
 		md: 'size-4',
 		lg: 'size-5',
@@ -13,13 +19,18 @@
 		class: className = '',
 		size = 'md',
 		label,
-		'aria-label': ariaLabel = 'Loading',
+		'aria-label': ariaLabel,
 		...rest
 	}: {
+		/** Classes added to the spinner, or to its wrapper when it has a `label`. */
 		class?: string;
-		size?: 'sm' | 'md' | 'lg' | 'xl';
+		/** The spinner's size, from `sm` (12 px) to `xl` (24 px). */
+		size?: keyof typeof sizes;
+		/** Text shown beside the spinner and announced. */
 		label?: string;
+		/** Announced when there is no visible label. */
 		'aria-label'?: string;
+		/** Other attributes, passed on to the `<span>`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -41,9 +52,10 @@
 {:else}
 	<MingcuteLoading3Fill
 		aria-label={ariaLabel}
+		aria-hidden={ariaLabel ? undefined : 'true'}
+		role={ariaLabel ? 'status' : undefined}
 		class={cn('animate-spin', sizes[size], className)}
 		data-slot="spinner"
-		role="status"
 		{...rest}
 	/>
 {/if}

@@ -1,65 +1,33 @@
+<!--
+@component
+Docs: Avatar. Sizes, the five fallback tones, and an image.
+-->
 <script lang="ts">
-	import { Avatar, AvatarGroup } from '$lib/components/avatar';
-	import { Card } from '$lib/components/card';
-	import { Separator } from '$lib/components/separator';
+	import { Avatar } from '#lib/components/avatar/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { art } from '../examples';
+
+	const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+	const tones = [1, 2, 3, 4, 5] as const;
 </script>
 
-<section id="avatar">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Avatar</h2>
-	<Card>
-		<div class="space-y-6">
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Sizes
-				</p>
-				<div class="flex items-end gap-4">
-					<div class="flex flex-col items-center gap-2">
-						<Avatar
-							size="sm"
-							src="https://avatars.githubusercontent.com/u/239214719"
-							alt="sm"
-							fallback="SM"
-						/>
-						<span class="text-muted-foreground text-xs">sm</span>
-					</div>
-					<div class="flex flex-col items-center gap-2">
-						<Avatar size="md" fallback="MD" />
-						<span class="text-muted-foreground text-xs">md</span>
-					</div>
-					<div class="flex flex-col items-center gap-2">
-						<Avatar
-							size="lg"
-							src="https://avatars.githubusercontent.com/u/239214719"
-							alt="lg"
-							fallback="LG"
-						/>
-						<span class="text-muted-foreground text-xs">lg</span>
-					</div>
-					<div class="flex flex-col items-center gap-2">
-						<Avatar size="xl" fallback="XL" />
-						<span class="text-muted-foreground text-xs">xl</span>
-					</div>
-				</div>
-			</div>
-			<Separator />
-			<div>
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
-					Group
-				</p>
-				<div class="flex items-center gap-4">
-					<AvatarGroup>
-						{#each ['RK', 'JD', 'AM', 'SL', 'TW'] as initials (initials)}
-							<Avatar
-								size="sm"
-								fallback={initials}
-								class="ring-background ring-2 transition-transform hover:-translate-y-1"
-							/>
-						{/each}
-					</AvatarGroup>
-					<span class="text-muted-foreground text-sm">+12 more</span>
-				</div>
-			</div>
+<div class="grid gap-4">
+	<Card
+		title="Sizes"
+		description="Initials on a tone picked from them, so a person keeps one colour."
+	>
+		<div class="flex items-end gap-4">
+			{#each sizes as size (size)}
+				<Avatar {size} fallback="RM" alt="Rayan M." />
+			{/each}
 		</div>
 	</Card>
-</section>
+	<Card title="Tones and images">
+		<div class="flex items-center gap-3">
+			{#each tones as tone (tone)}
+				<Avatar {tone} fallback="T{tone}" />
+			{/each}
+			<Avatar src={art.icon} fallback="SK" alt="Skyline studio" size="lg" />
+		</div>
+	</Card>
+</div>

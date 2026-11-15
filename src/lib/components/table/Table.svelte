@@ -1,14 +1,23 @@
+<!--
+@component
+A data table from columns and rows.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
+	/** One column of the table. */
 	interface Column {
+		/** The key of each row's value in this column, unique among the columns. */
 		key: string;
+		/** The column's header, translated. */
 		label: string;
 	}
 
+	/** A cell: text, or a snippet for richer content. */
 	type CellValue = string | Snippet;
 
+	/** One row: its cells by column key. */
 	interface Row {
 		[key: string]: CellValue;
 	}
@@ -16,12 +25,19 @@
 	let {
 		columns = [],
 		rows = [],
+		rowKey,
 		class: className = '',
 		...rest
 	}: {
+		/** The columns, in order. */
 		columns?: Column[];
+		/** The rows, in order. */
 		rows?: Row[];
+		/** A stable, unique key of a row, such as its id. */
+		rowKey: (row: Row) => string;
+		/** Classes merged onto the `<table>`. */
 		class?: string;
+		/** Other attributes of the `<table>`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -32,14 +48,14 @@
 
 <div class="w-full overflow-auto">
 	<table class={cn('w-full caption-bottom text-sm', className)} data-slot="table" {...rest}>
-		<thead class="[&_tr]:border-border [&_tr]:border-b" data-slot="table-header">
+		<thead class="[&_tr]:border-b [&_tr]:border-border" data-slot="table-header">
 			<tr
-				class="border-border hover:bg-muted-surface-hover data-[state=selected]:bg-muted border-b transition-colors"
+				class="border-b border-border transition-colors hover:bg-hover data-[state=selected]:bg-hover"
 				data-slot="table-row"
 			>
 				{#each columns as col (col.key)}
 					<th
-						class="text-muted-foreground h-10 px-3 text-left align-middle text-xs font-medium"
+						class="h-10 px-3 text-left align-middle text-xs font-medium text-muted"
 						data-slot="table-head"
 					>
 						{col.label}
@@ -48,9 +64,9 @@
 			</tr>
 		</thead>
 		<tbody class="[&_tr:last-child]:border-0" data-slot="table-body">
-			{#each rows as row, i (i)}
+			{#each rows as row (rowKey(row))}
 				<tr
-					class="border-border hover:bg-muted-surface-hover data-[state=selected]:bg-muted border-b transition-colors"
+					class="border-b border-border transition-colors hover:bg-hover data-[state=selected]:bg-hover"
 					data-slot="table-row"
 				>
 					{#each columns as col (col.key)}

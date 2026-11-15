@@ -1,6 +1,10 @@
+<!--
+@component
+Groups buttons into one connected row or column.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		class: className = '',
@@ -8,9 +12,13 @@
 		children,
 		...rest
 	}: {
+		/** Classes merged onto the group. */
 		class?: string;
+		/** A row or a column. */
 		orientation?: 'horizontal' | 'vertical';
+		/** The buttons, direct children of the group. */
 		children?: Snippet;
+		/** Other attributes of the group, such as `aria-label`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -26,6 +34,7 @@
 
 <div
 	class={cn(base, orientations[orientation], className)}
+	role="group"
 	data-slot="button-group"
 	data-orientation={orientation}
 	{...rest}

@@ -1,12 +1,17 @@
+<!--
+@component
+Docs: Slider. One value, and a range with two thumbs.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Slider } from '$lib/components/slider';
+	import { Card } from '#lib/components/card/index.js';
+	import { Slider } from '#lib/components/slider/index.js';
 </script>
 
 <section id="slider">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Slider</h2>
 	<Card>
-		<Slider defaultValue={[40]} min={0} max={100} label="Volume" showValue />
+		<div class="space-y-6">
+			<Slider defaultValue={[40]} min={0} max={100} label="Volume" showValue />
+			<Slider defaultValue={[20, 80]} min={0} max={100} label="Price range" showValue />
+		</div>
 	</Card>
 </section>

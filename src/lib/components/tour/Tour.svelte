@@ -1,7 +1,16 @@
+<!--
+@component
+A guided tour of the interface, step by step (Ark Tour): each step's title, description, progress
+and action buttons, over a scrim with the step's target spotlit. The app passes the steps and
+their action labels translated, `closeLabel` for the close button and `progressText` for the
+progress line; each action button is named by its label. Every other prop of Ark's `useTour`
+(`onStatusChange`, `onStepChange`, `closeOnInteractOutside`, `keyboardNavigation`…) configures the
+tour.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Tour, Portal, useTour, type TourStepDetails } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { Tour, Portal, useTour, type TourStepDetails, type UseTourProps } from '@ark-ui/svelte';
+	import { cn } from '#lib/utils.js';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
@@ -11,33 +20,48 @@
 		trigger,
 		showProgress = true,
 		showClose = true,
+		closeLabel,
+		progressText,
 		lazyMount = true,
 		unmountOnExit = true,
-		...rest
-	}: {
+		...tourProps
+	}: Omit<UseTourProps, 'steps' | 'translations'> & {
+		/** The steps, in order, with their texts and action labels translated. */
 		steps?: TourStepDetails[];
-		trigger?: Snippet<[() => void]>;
+		/** What starts the tour, such as a button; it receives the function that starts it. */
+		trigger?: Snippet<[start: () => void]>;
+		/** Shows the progress line, such as "2 of 3". */
 		showProgress?: boolean;
+		/** Shows the close button. */
 		showClose?: boolean;
+		/** The close button's accessible name, such as "Close". */
+		closeLabel: string;
+		/** The progress line, translated, from the current step's index (from 0) and the count. */
+		progressText: (details: Tour.ProgressTextDetails) => string;
+		/** Renders the tour only once it first opens. */
 		lazyMount?: boolean;
+		/** Removes the tour from the page once it closes. */
 		unmountOnExit?: boolean;
-		[key: string]: unknown;
 	} = $props();
 
-	const tour = useTour(() => ({ steps }));
+	const tour = useTour(() => ({
+		...tourProps,
+		steps,
+		translations: { close: closeLabel, progressText }
+	}));
 
 	function handleStart() {
 		tour().start();
 	}
 </script>
 
-<Tour.Root {lazyMount} {tour} {unmountOnExit} {...rest}>
+<Tour.Root {lazyMount} {tour} {unmountOnExit}>
 	{#if trigger}
 		{@render trigger(handleStart)}
 	{/if}
 	<Portal>
 		<Tour.Backdrop
-			class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 bg-overlay-bg fixed inset-0 z-90"
+			class="fixed inset-0 z-90 bg-scrim data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
 			data-slot="tour-overlay"
 		/>
 		<Tour.Positioner
@@ -48,21 +72,19 @@
 				class={cn(
 					'relative z-90 w-full max-w-md',
 					'flex flex-col gap-4',
-					'bg-background rounded-lg border shadow-lg',
+					'rounded-lg border bg-background shadow-lg',
 					'focus:ring-0 focus:outline-none',
-					'data-[state=closed]:animate-out data-[state=open]:animate-in',
-					'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-					'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95'
+					'data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in'
 				)}
 				data-slot="tour-content"
 			>
 				{#if showClose}
 					<Tour.CloseTrigger
-						class="text-muted-foreground hover:bg-accent absolute top-4 right-4 inline-flex size-8 items-center justify-center rounded-lg border-none opacity-70 transition-all hover:opacity-100"
+						class="absolute top-4 right-4 inline-flex size-8 items-center justify-center rounded-lg border-none text-muted opacity-70 transition-all hover:bg-hover hover:opacity-100"
+						aria-label={closeLabel}
 						data-slot="tour-close-trigger"
 					>
-						<MingcuteCloseLine class="size-4" />
-						<span class="sr-only">Close</span>
+						<MingcuteCloseLine class="size-4" aria-hidden="true" />
 					</Tour.CloseTrigger>
 				{/if}
 
@@ -76,16 +98,13 @@
 							>
 								{api.step?.title}
 							</Tour.Title>
-							<Tour.Description class="text-muted-foreground text-sm" data-slot="tour-description">
+							<Tour.Description class="text-sm text-muted" data-slot="tour-description">
 								{api.step?.description}
 							</Tour.Description>
 						</div>
 						<div class="px-6" data-slot="tour-body">
 							{#if showProgress}
-								<Tour.ProgressText
-									class="text-muted-foreground text-sm"
-									data-slot="tour-progress-text"
-								/>
+								<Tour.ProgressText class="text-sm text-muted" data-slot="tour-progress-text" />
 							{/if}
 						</div>
 						{#if (api.step?.actions ?? []).length > 0}
@@ -97,20 +116,21 @@
 									{#each api.step?.actions ?? [] as action (action.label)}
 										<Tour.ActionTrigger
 											{action}
+											aria-label={action.label}
 											class={cn(
 												'inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors',
 												action.action === 'dismiss' || action.action === 'prev'
-													? 'border-border hover:bg-accent hover:text-accent-foreground border bg-transparent'
-													: 'bg-primary text-primary-foreground hover:bg-primary-faded'
+													? 'border border-border bg-transparent hover:bg-hover hover:text-fg'
+													: 'bg-primary text-on-primary hover:bg-primary/90'
 											)}
 											data-slot="tour-action-trigger"
 										>
 											{#if action.action === 'prev'}
-												<MingcuteLeftLine class="size-3.5" />
+												<MingcuteLeftLine class="size-3.5" aria-hidden="true" />
 											{/if}
 											{action.label}
 											{#if action.action === 'next'}
-												<MingcuteRightLine class="size-3.5" />
+												<MingcuteRightLine class="size-3.5" aria-hidden="true" />
 											{/if}
 										</Tour.ActionTrigger>
 									{/each}
@@ -121,6 +141,6 @@
 				</Tour.Context>
 			</Tour.Content>
 		</Tour.Positioner>
-		<Tour.Spotlight class="border-primary z-90 border-2" data-slot="tour-spotlight" />
+		<Tour.Spotlight class="z-90 border-2 border-primary" data-slot="tour-spotlight" />
 	</Portal>
 </Tour.Root>

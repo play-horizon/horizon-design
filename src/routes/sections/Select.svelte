@@ -1,6 +1,10 @@
+<!--
+@component
+Docs: Select. Live examples of the Select component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Select } from '$lib/components/select';
+	import { Card } from '#lib/components/card/index.js';
+	import { Select } from '#lib/components/select/index.js';
 
 	const selectItems = [
 		{ label: 'Svelte', value: 'svelte' },
@@ -11,8 +15,6 @@
 </script>
 
 <section id="select">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Select</h2>
 	<Card>
 		<Select items={selectItems} label="Framework" placeholder="Choose a framework…" />
 	</Card>

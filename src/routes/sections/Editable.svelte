@@ -1,14 +1,20 @@
+<!--
+@component
+Docs: Editable. Live examples of the Editable component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Editable } from '$lib/components/editable';
+	import { Card } from '#lib/components/card/index.js';
+	import { Editable } from '#lib/components/editable/index.js';
 </script>
 
 <section id="editable">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Editable</h2>
 	<Card>
 		<div>
-			<Editable label="Display Name" defaultValue="Click me to edit" />
+			<Editable
+				label="Display Name"
+				defaultValue="Click me to edit"
+				translations={{ input: 'Display name', edit: 'Edit display name' }}
+			/>
 		</div>
 	</Card>
 </section>

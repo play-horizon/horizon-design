@@ -1,8 +1,14 @@
+<!--
+@component
+A checkbox with its label (Ark Checkbox); `checked` binds true, false or indeterminate, drawn
+as a check or a dash.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Checkbox } from '@ark-ui/svelte';
+	import { Checkbox, type CheckboxCheckedChangeDetails } from '@ark-ui/svelte';
 	import MingcuteCheckFill from '~icons/mingcute/check-fill';
-	import { cn } from '$lib/utils';
+	import MingcuteSubtractFill from '~icons/mingcute/subtract-fill';
+	import { cn } from '#lib/utils.js';
 
 	type SizeConfig = { control: string; icon: number; label: string };
 
@@ -17,14 +23,23 @@
 		size = 'md',
 		label,
 		children,
-		checked = $bindable(undefined),
+		checked = $bindable(),
+		onCheckedChange,
 		...rest
 	}: {
+		/** Classes merged onto the root. */
 		class?: string;
+		/** The box's and the label's size. */
 		size?: 'sm' | 'md' | 'lg';
+		/** The label's text. */
 		label?: string;
+		/** The label's content, instead of `label`. */
 		children?: Snippet;
+		/** Checked, unchecked or `indeterminate` (bindable); when unset, `defaultChecked` gives the first state. */
 		checked?: boolean | 'indeterminate';
+		/** Called with the new state when the box is checked or unchecked. */
+		onCheckedChange?: (details: CheckboxCheckedChangeDetails) => void;
+		/** Other props of Ark's `Checkbox.Root`, such as `defaultChecked`, `disabled` and `name`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -38,17 +53,23 @@
 	)}
 	data-slot="checkbox"
 	{checked}
-	onCheckedChange={(details) => (checked = details.checked)}
+	onCheckedChange={(details) => {
+		checked = details.checked;
+		onCheckedChange?.(details);
+	}}
 	{...rest}
 >
 	<Checkbox.Control
 		class={cn(
-			'peer focus-visible:ring-ring bg-input border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground shrink-0 border shadow-sm transition-colors outline-none focus-visible:ring-2',
+			'peer shrink-0 border border-border bg-sunken shadow-sm transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-on-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-on-primary',
 			sz.control
 		)}
 	>
 		<Checkbox.Indicator class="flex items-center justify-center text-current">
-			<MingcuteCheckFill width={sz.icon} height={sz.icon} />
+			<MingcuteCheckFill width={sz.icon} height={sz.icon} aria-hidden="true" />
+		</Checkbox.Indicator>
+		<Checkbox.Indicator indeterminate class="flex items-center justify-center text-current">
+			<MingcuteSubtractFill width={sz.icon} height={sz.icon} aria-hidden="true" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 	{#if label || children}

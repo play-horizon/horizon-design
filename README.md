@@ -1,2497 +1,489 @@
 # horizon-design
 
-<div align="center">
-	<a href="https://www.npmjs.com/package/horizon-design">
-		<img src="https://img.shields.io/npm/v/horizon-design.svg" alt="npm version" />
-	</a>
-	<a href="https://www.npmjs.com/package/horizon-design">
-		<img src="https://img.shields.io/npm/l/horizon-design.svg" alt="npm license" />
-	</a>
-</div>
+Horizon's design system and Svelte 5 component library: one OKLCH palette and its tokens, the
+theme and page-motion helpers, and the components of horizon, horizon-editor and the website,
+built on [Ark UI](https://ark-ui.com) for behaviour and accessibility and
+[Tailwind CSS 4](https://tailwindcss.com) for styling.
 
-Horizon's design system and Svelte 5 UI component library. Built on [Ark UI](https://ark-ui.com) for headless behaviour and [Tailwind CSS v4](https://tailwindcss.com) for styling, with OKLCH color tokens and full dark/light theme support.
+**Docs and live examples:** <https://play-horizon.github.io/horizon-design> (every component,
+both themes). Each component's props are typed and documented in its source, so editors show
+them.
 
----
+## Entry points
+
+| Import                              | What it holds                                                                                                                                                                                                                    |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `horizon-design`                    | The general kit: every component below but the Editor's, `theme` and `THEME_STORAGE_KEY`, `slidePage` and `prefersReducedMotion`, `cn`, and Ark's `createTreeCollection` for `VirtualTree`.                                      |
+| `horizon-design/editor`             | The Editor window's components: `HierarchyView`, `InspectorPanel`, `FileTree` (with Ark's `createTreeCollection` and `createFileTreeCollection`), `HorizonLayout` (with everything horizon-layout exports), `createMonacoTheme`. |
+| `horizon-design/tokens`             | `tokenValues`: every colour token of each theme as OKLCH and as sRGB hex, plain TypeScript with no Svelte.                                                                                                                       |
+| `horizon-design/horizon-design.css` | The stylesheet: fonts, theme tokens, the Tailwind theme, base styles, page motion.                                                                                                                                               |
 
 ## Setup
 
-```bash
+```sh
 pnpm add horizon-design
 ```
 
-Import the global design CSS in your root layout:
+The components import their icons from [Mingcute](https://www.mingcute.com) through
+[unplugin-icons](https://github.com/unplugin/unplugin-icons), which compiles each icon into a
+Svelte component when the app is built, so the app sets up the same (see [Icons](#icons)).
 
-```svelte
-<!-- src/routes/+layout.svelte -->
-<script>
-	import 'horizon-design/horizon-design.css';
-</script>
-```
-
-The dark theme is the default (`:root`). Add `.light` to `<html>` for the light variant.
-
----
-
-## Developing
-
-```bash
-pnpm dev        # start the showcase app
-pnpm check      # svelte-check type checking
-pnpm build      # build library → dist/
-```
-
----
-
-## Components
-
-### Accordion
-
-Collapsible sections. `trigger` accepts a string or Snippet for rich content.
-
-```svelte
-<script>
-	import { Accordion, AccordionItem } from 'horizon-design';
-
-	let openItems = $state([]);
-</script>
-
-<Accordion bind:value={openItems}>
-	<AccordionItem value="faq-1" trigger="Question?">Answer.</AccordionItem>
-	<AccordionItem value="faq-2" trigger="Another question?">Another answer.</AccordionItem>
-</Accordion>
-```
-
-| Component       | Prop            | Type                    | Default     |
-| --------------- | --------------- | ----------------------- | ----------- |
-| `Accordion`     | `collapsible`   | `boolean`               | `true`      |
-|                 | `multiple`      | `boolean`               | `false`     |
-|                 | `lazyMount`     | `boolean`               | `true`      |
-|                 | `unmountOnExit` | `boolean`               | `true`      |
-|                 | `value`         | `string[]`              | `undefined` |
-|                 | `defaultValue`  | `string[]`              | —           |
-| `AccordionItem` | `value`         | `string` **(required)** | —           |
-|                 | `trigger`       | `string \| Snippet`     | —           |
-|                 | `disabled`      | `boolean`               | —           |
-
----
-
-### ActionBar
-
-Floating contextual action bar for compact page-level actions.
-
-```svelte
-<script>
-	import { ActionBar, ActionBarSeparator, Button } from 'horizon-design';
-	import MingcuteArchiveLine from '~icons/mingcute/archive-line';
-	import MingcuteCopy2Line from '~icons/mingcute/copy2-line';
-	import MingcuteDelete2Line from '~icons/mingcute/delete2-line';
-</script>
-
-<ActionBar>
-	<Button variant="ghost" size="icon-sm" aria-label="Archive">
-		<MingcuteArchiveLine class="size-4" />
-	</Button>
-	<Button variant="ghost" size="icon-sm" aria-label="Copy">
-		<MingcuteCopy2Line class="size-4" />
-	</Button>
-	<ActionBarSeparator />
-	<Button variant="ghost" size="icon-sm" aria-label="Delete">
-		<MingcuteDelete2Line class="size-4" />
-	</Button>
-</ActionBar>
-```
-
-`ActionBar` is fixed to the bottom center by default. Use `ActionBarSeparator` to split action groups.
-
----
-
-### Alert
-
-Contextual feedback message with icon, title, and description.
-
-```svelte
-<script>
-	import { Alert } from 'horizon-design';
-</script>
-
-<Alert variant="success" title="Saved!" description="Your changes were saved successfully." />
-<Alert variant="error" title="Error" description="Something went wrong." />
-```
-
-| Prop          | Type                                                           | Default                  |
-| ------------- | -------------------------------------------------------------- | ------------------------ |
-| `variant`     | `'info' \| 'success' \| 'warning' \| 'error' \| 'destructive'` | `'info'`                 |
-| `title`       | `string`                                                       | —                        |
-| `description` | `string`                                                       | —                        |
-| `icon`        | `Snippet`                                                      | default icon per variant |
-
----
-
-### AlertDialog
-
-A confirmation dialog that prevents accidental actions.
-
-```svelte
-<script>
-	import { AlertDialog } from 'horizon-design';
-	import { buttonVariants } from 'horizon-design';
-	import MingcuteDelete2Line from '~icons/mingcute/delete2-line';
-</script>
-
-{#snippet trigger()}
-	<MingcuteDelete2Line class="size-4" />
-	Delete
-{/snippet}
-
-<AlertDialog
-	{trigger}
-	triggerClass={buttonVariants({ variant: 'destructive' })}
-	title="Are you absolutely sure?"
-	description="This action cannot be undone."
-	cancelLabel="Cancel"
-	actionLabel="Delete"
-/>
-```
-
-| Prop           | Type      | Default     |
-| -------------- | --------- | ----------- |
-| `trigger`      | `Snippet` | —           |
-| `triggerClass` | `string`  | `''`        |
-| `title`        | `string`  | —           |
-| `description`  | `string`  | —           |
-| `cancelLabel`  | `string`  | `'Cancel'`  |
-| `actionLabel`  | `string`  | `'Confirm'` |
-| `cancelClass`  | `string`  | —           |
-| `actionClass`  | `string`  | —           |
-
----
-
-### AngleSlider
-
-A circular drag-handle for picking an angle (0–360°).
-
-```svelte
-<script>
-	import { AngleSlider } from 'horizon-design';
-
-	let angle = $state(45);
-</script>
-
-<AngleSlider bind:value={angle} />
-```
-
-| Prop           | Type     | Default |
-| -------------- | -------- | ------- |
-| `value`        | `number` | `0`     |
-| `defaultValue` | `number` | —       |
-| `size`         | `number` | `120`   |
-
----
-
-### Announcement
-
-A compact pill-shaped badge for highlighting news or updates.
-
-```svelte
-<script>
-	import { Announcement } from 'horizon-design';
-	import { MingcuteLightningLine } from '~icons/mingcute/lightning-line';
-</script>
-
-<Announcement>
-	<MingcuteLightningLine class="size-3.5" />
-	New: horizon-design
-</Announcement>
-```
-
----
-
-### AspectRatio
-
-Maintains a fixed aspect ratio for its children.
-
-```svelte
-<script>
-	import { AspectRatio } from 'horizon-design';
-</script>
-
-<AspectRatio ratio={16 / 9} class="overflow-hidden rounded-lg">
-	<img src="/photo.jpg" alt="Photo" class="h-full w-full object-cover" />
-</AspectRatio>
-```
-
-| Prop    | Type     | Default |
-| ------- | -------- | ------- |
-| `ratio` | `number` | `1`     |
-
----
-
-### Avatar
-
-User avatar with image and text fallback.
-
-```svelte
-<script>
-	import { Avatar, AvatarGroup } from 'horizon-design';
-</script>
-
-<Avatar src="/photo.jpg" alt="User" fallback="AB" size="md" />
-
-<AvatarGroup>
-	<Avatar fallback="A" />
-	<Avatar fallback="B" />
-	<Avatar fallback="C" />
-</AvatarGroup>
-```
-
-| Prop       | Type                           | Default |
-| ---------- | ------------------------------ | ------- |
-| `src`      | `string`                       | —       |
-| `alt`      | `string`                       | —       |
-| `fallback` | `string`                       | —       |
-| `size`     | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`  |
-
-`AvatarGroup` is a layout wrapper that overlaps its children with negative margins.
-
----
-
-### Badge
-
-Small status or label indicator.
-
-```svelte
-<script>
-	import { Badge } from 'horizon-design';
-</script>
-
-<Badge>New</Badge>
-<Badge variant="success">Active</Badge>
-<Badge variant="warning">Pending</Badge>
-```
-
-| Prop      | Type                                                                                         | Default     |
-| --------- | -------------------------------------------------------------------------------------------- | ----------- |
-| `variant` | `'default' \| 'secondary' \| 'outline' \| 'destructive' \| 'success' \| 'warning' \| 'info'` | `'default'` |
-
----
-
-### BottomNavigation
-
-Fixed bottom navigation bar for mobile interfaces. `icon` in each item is a Snippet.
-
-```svelte
-<script>
-	import { BottomNavigation } from 'horizon-design';
-	import MingcuteHomeLine from '~icons/mingcute/home-line';
-	import MingcuteSearchLine from '~icons/mingcute/search-line';
-</script>
-
-{#snippet iconHome()}<MingcuteHomeLine class="size-5" />{/snippet}
-{#snippet iconSearch()}<MingcuteSearchLine class="size-5" />{/snippet}
-
-<BottomNavigation
-	items={[
-		{ label: 'Home', href: '/', icon: iconHome, active: true },
-		{ label: 'Search', href: '/search', icon: iconSearch }
-	]}
-/>
-```
-
-| Prop    | Type                                                                       | Default |
-| ------- | -------------------------------------------------------------------------- | ------- |
-| `items` | `Array<{ label: string; href: string; icon?: Snippet; active?: boolean }>` | `[]`    |
-
----
-
-### Breadcrumb
-
-Navigation trail showing the current page location.
-
-```svelte
-<script>
-	import { Breadcrumb } from 'horizon-design';
-</script>
-
-<Breadcrumb
-	items={[
-		{ label: 'Home', href: '/' },
-		{ label: 'Components', href: '/components' },
-		{ label: 'Breadcrumb' }
-	]}
-/>
-```
-
-| Prop    | Type                                      | Default |
-| ------- | ----------------------------------------- | ------- |
-| `items` | `Array<{ label: string; href?: string }>` | `[]`    |
-
-The last item (without `href`) is treated as the current page (`aria-current="page"`).
-
----
-
-### Button
-
-Primary interactive element.
-
-```svelte
-<script>
-	import { Button, buttonVariants } from 'horizon-design';
-</script>
-
-<Button>Click me</Button>
-<Button variant="outline" size="lg">Outline</Button>
-<Button isLoading>Saving…</Button>
-```
-
-| Prop          | Type                                                                                                              | Default     |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
-| `variant`     | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'link' \| 'destructive' \| 'success' \| 'warning' \| 'info'` | `'default'` |
-| `size`        | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'icon-xs' \| 'icon-sm' \| 'icon-md' \| 'icon-lg' \| 'icon-xl'`           | `'md'`      |
-| `isLoading`   | `boolean`                                                                                                         | `false`     |
-| `clickEffect` | `boolean`                                                                                                         | `true`      |
-| `pill`        | `boolean`                                                                                                         | `false`     |
-| `disabled`    | `boolean`                                                                                                         | `false`     |
-
-`buttonVariants({ variant, size })` returns the class string for use on non-button elements.
-
----
-
-### ButtonGroup
-
-Groups buttons into a visually connected row.
-
-```svelte
-<script>
-	import { ButtonGroup } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-<ButtonGroup>
-	<Button variant="outline" size="sm">Cut</Button>
-	<Button variant="outline" size="sm">Copy</Button>
-	<Button variant="outline" size="sm">Paste</Button>
-</ButtonGroup>
-```
-
----
-
-### Calendar
-
-Standalone inline date picker (no popover). Built on the DatePicker primitive with `inline` mode.
-
-```svelte
-<script>
-	import { Calendar } from 'horizon-design';
-</script>
-
-<Calendar onValueChange={(d) => console.log(d.value)} />
-```
-
-Supports all DatePicker props: `value`, `defaultValue`, `min`, `max`, `selectionMode` (`'single' | 'range' | 'multiple'`), `onValueChange`.
-
----
-
-### Card
-
-Content container with optional header and footer.
-
-```svelte
-<script>
-	import { Card } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-<Card title="Title" description="Subtitle">
-	Body content goes here.
-	{#snippet footer()}
-		<Button>Save</Button>
-	{/snippet}
-</Card>
-```
-
-| Prop          | Type      | Default |
-| ------------- | --------- | ------- |
-| `title`       | `string`  | —       |
-| `description` | `string`  | —       |
-| `footer`      | `Snippet` | —       |
-| `class`       | `string`  | `''`    |
-
----
-
-### Carousel
-
-Slideshow with prev/next controls and indicator dots. Each slide is a Snippet.
-
-```svelte
-<script>
-	import { Carousel } from 'horizon-design';
-</script>
-
-{#snippet slide1()}
-	<div class="flex h-40 items-center justify-center rounded-lg bg-blue-100">Slide 1</div>
-{/snippet}
-{#snippet slide2()}
-	<div class="flex h-40 items-center justify-center rounded-lg bg-green-100">Slide 2</div>
-{/snippet}
-
-<Carousel slides={[slide1, slide2]} />
-```
-
-| Prop             | Type        | Default |
-| ---------------- | ----------- | ------- |
-| `slides`         | `Snippet[]` | `[]`    |
-| `showIndicators` | `boolean`   | `true`  |
-| `showArrows`     | `boolean`   | `true`  |
-
----
-
-### Checkbox
-
-Accessible checkbox with label.
-
-```svelte
-<script>
-	import { Checkbox } from 'horizon-design';
-
-	let accepted = $state(false);
-</script>
-
-<Checkbox label="Accept terms" bind:checked={accepted} />
-<Checkbox label="Newsletter" defaultChecked />
-```
-
-| Prop             | Type      | Default |
-| ---------------- | --------- | ------- |
-| `label`          | `string`  | —       |
-| `checked`        | `boolean` | —       |
-| `defaultChecked` | `boolean` | —       |
-| `disabled`       | `boolean` | —       |
-
----
-
-### CircularProgress
-
-SVG ring progress indicator with percentage label.
-
-```svelte
-<script>
-	import { CircularProgress } from 'horizon-design';
-</script>
-
-<CircularProgress value={72} showLabel />
-<CircularProgress value={72} label="Complete" />
-```
-
-| Prop        | Type      | Default |
-| ----------- | --------- | ------- |
-| `value`     | `number`  | `0`     |
-| `max`       | `number`  | `100`   |
-| `showLabel` | `boolean` | `true`  |
-| `label`     | `string`  | —       |
-
----
-
-### CircularSlider
-
-A circular angle-based slider rendered with SVG rings, with an optional value display.
-
-```svelte
-<script>
-	import { CircularSlider } from 'horizon-design';
-
-	let angle = $state(90);
-</script>
-
-<CircularSlider size={120} thickness={8} bind:value={angle} suffix="°" />
-```
-
-| Prop        | Type      | Default |
-| ----------- | --------- | ------- |
-| `size`      | `number`  | `100`   |
-| `thickness` | `number`  | `6`     |
-| `step`      | `number`  | `1`     |
-| `showValue` | `boolean` | `true`  |
-| `prefix`    | `string`  | `''`    |
-| `suffix`    | `string`  | `''`    |
-| `value`     | `number`  | `0`     |
-
----
-
-### Clipboard
-
-Copy-to-clipboard input with a toggle trigger icon.
-
-```svelte
-<script>
-	import { Clipboard } from 'horizon-design';
-</script>
-
-<Clipboard value="npm install horizon-design" label="Install command" />
-```
-
-| Prop    | Type                    | Default |
-| ------- | ----------------------- | ------- |
-| `value` | `string` **(required)** | —       |
-| `label` | `string`                | —       |
-
----
-
-### Collapsible
-
-A section that can be toggled open or closed.
-
-```svelte
-<script>
-	import { Collapsible } from 'horizon-design';
-
-	let open = $state(false);
-</script>
-
-<Collapsible bind:open>
-	{#snippet trigger()}Toggle{/snippet}
-	Hidden content
-</Collapsible>
-```
-
-| Prop          | Type      | Default |
-| ------------- | --------- | ------- |
-| `trigger`     | `Snippet` | —       |
-| `open`        | `boolean` | `false` |
-| `defaultOpen` | `boolean` | —       |
-| `disabled`    | `boolean` | —       |
-
----
-
-### ColorPicker
-
-Full-featured HSLA color picker with hex input and swatches.
-
-```svelte
-<script>
-	import { ColorPicker, parseColor } from 'horizon-design';
-
-	let color = $state(parseColor('#737efa'));
-</script>
-
-<ColorPicker label="Brand color" bind:value={color} />
-```
-
-| Prop    | Type     | Default |
-| ------- | -------- | ------- |
-| `label` | `string` | —       |
-| `value` | `Color`  | —       |
-
-`Color` is a type exported from `horizon-design` representing a parsed color object. `parseColor` accepts any of the following string formats:
-
-- Hex: `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`
-- RGB: `rgb(r, g, b)`, `rgba(r, g, b, a)`
-- HSL: `hsl(h, s%, l%)`, `hsla(h, s%, l%, a)`
-- HSB: `hsb(h, s%, b%)`, `hsba(h, s%, b%, a)`
-
----
-
-### Combobox
-
-Searchable dropdown that filters a list of options.
-
-```svelte
-<script>
-	import { Combobox } from 'horizon-design';
-
-	const items = [
-		{ label: 'Svelte', value: 'svelte' },
-		{ label: 'React', value: 'react' }
-	];
-</script>
-
-<Combobox {items} label="Framework" placeholder="Search…" />
-```
-
-| Prop          | Type                                      | Default     |
-| ------------- | ----------------------------------------- | ----------- |
-| `items`       | `Array<{ label: string; value: string }>` | `[]`        |
-| `label`       | `string`                                  | —           |
-| `placeholder` | `string`                                  | `'Search…'` |
-
----
-
-### ContextMenu
-
-Menu triggered on right-click. Pass the target area as `children`.
-
-```svelte
-<script>
-	import { ContextMenu } from 'horizon-design';
-</script>
-
-{#snippet area()}
-	<div class="rounded-lg border-2 border-dashed p-4">Right-click here</div>
-{/snippet}
-
-<ContextMenu
-	items={[
-		{ type: 'label', label: 'Actions' },
-		{ type: 'separator' },
-		{ value: 'edit', label: 'Edit' },
-		{ value: 'copy', label: 'Copy' },
-		{ type: 'separator' },
-		{ value: 'delete', label: 'Delete' }
-	]}
->
-	{@render area()}
-</ContextMenu>
-```
-
-| Prop       | Type                                                                                                     | Default |
-| ---------- | -------------------------------------------------------------------------------------------------------- | ------- |
-| `items`    | `Array<{ type?: 'item' \| 'separator' \| 'label'; value?: string; label?: string; disabled?: boolean }>` | `[]`    |
-| `children` | `Snippet`                                                                                                | —       |
-
----
-
-### DataList
-
-Key–value pair list. Values can be strings or Snippets.
-
-```svelte
-<script>
-	import { DataList } from 'horizon-design';
-</script>
-
-{#snippet statusBadge()}
-	<Badge variant="success">Active</Badge>
-{/snippet}
-
-<DataList
-	items={[
-		{ label: 'Name', value: 'John Doe' },
-		{ label: 'Role', value: 'Admin' },
-		{ label: 'Status', value: statusBadge }
-	]}
-/>
-```
-
-| Prop    | Type                                                 | Default |
-| ------- | ---------------------------------------------------- | ------- |
-| `items` | `Array<{ label: string; value: string \| Snippet }>` | `[]`    |
-
----
-
-### DatePicker
-
-Date picker with a calendar popover.
-
-```svelte
-<script>
-	import { DatePicker } from 'horizon-design';
-
-	let selectedDates = $state([]);
-</script>
-
-<DatePicker label="Event date" bind:value={selectedDates} placeholder="Pick a date" />
-```
-
-| Prop           | Type          | Default |
-| -------------- | ------------- | ------- |
-| `label`        | `string`      | —       |
-| `placeholder`  | `string`      | —       |
-| `value`        | `DateValue[]` | —       |
-| `defaultValue` | `DateValue[]` | —       |
-
----
-
-### Dialog
-
-Modal dialog with backdrop.
-
-```svelte
-<script>
-	import { Dialog } from 'horizon-design';
-	import { Button } from 'horizon-design';
-
-	let open = $state(false);
-</script>
-
-<Dialog title="Edit Profile" description="Update your information." bind:open>
-	{#snippet trigger()}
-		<Button variant="outline">Edit</Button>
-	{/snippet}
-	<p>Form fields go here.</p>
-	{#snippet footer()}
-		<Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
-		<Button>Save</Button>
-	{/snippet}
-</Dialog>
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `trigger`      | `Snippet` | —       |
-| `triggerClass` | `string`  | `''`    |
-| `title`        | `string`  | —       |
-| `description`  | `string`  | —       |
-| `footer`       | `Snippet` | —       |
-| `showClose`    | `boolean` | `true`  |
-| `open`         | `boolean` | `false` |
-| `defaultOpen`  | `boolean` | —       |
-| `modal`        | `boolean` | `true`  |
-
----
-
-### Drawer
-
-Slide-in panel from an edge of the viewport.
-
-```svelte
-<script>
-	import { Drawer } from 'horizon-design';
-	import { Button } from 'horizon-design';
-
-	let open = $state(false);
-</script>
-
-<Drawer title="Settings" side="right" bind:open>
-	{#snippet trigger()}
-		<Button variant="outline">Open</Button>
-	{/snippet}
-	<p>Drawer body.</p>
-</Drawer>
-```
-
-| Prop           | Type                                     | Default   |
-| -------------- | ---------------------------------------- | --------- |
-| `trigger`      | `Snippet`                                | —         |
-| `triggerClass` | `string`                                 | `''`      |
-| `title`        | `string`                                 | —         |
-| `description`  | `string`                                 | —         |
-| `footer`       | `Snippet`                                | —         |
-| `side`         | `'top' \| 'bottom' \| 'left' \| 'right'` | `'right'` |
-| `showClose`    | `boolean`                                | `true`    |
-| `open`         | `boolean`                                | `false`   |
-| `defaultOpen`  | `boolean`                                | —         |
-
----
-
-### Editable
-
-Inline-editable text field that shows a preview until clicked.
-
-```svelte
-<script>
-	import { Editable } from 'horizon-design';
-
-	let name = $state('Click me to edit');
-</script>
-
-<Editable label="Display Name" bind:value={name} />
-```
-
-| Prop           | Type     | Default |
-| -------------- | -------- | ------- |
-| `label`        | `string` | —       |
-| `defaultValue` | `string` | —       |
-| `value`        | `string` | —       |
-| `placeholder`  | `string` | —       |
-
----
-
-### Field
-
-Wraps a form control with accessible label, helper text, and error text.
-
-```svelte
-<script>
-	import { Field } from 'horizon-design';
-	import { Input } from 'horizon-design';
-</script>
-
-<Field label="Email" helperText="We'll never share your email.">
-	<Input type="email" />
-</Field>
-
-<Field invalid label="Email" errorText="Invalid email address.">
-	<Input type="email" />
-</Field>
-```
-
-`label`, `helperText`, and `errorText` accept a string or a `Snippet` for rich content.
-
-| Prop         | Type                | Default |
-| ------------ | ------------------- | ------- |
-| `label`      | `string \| Snippet` | —       |
-| `helperText` | `string \| Snippet` | —       |
-| `errorText`  | `string \| Snippet` | —       |
-| `invalid`    | `boolean`           | —       |
-| `disabled`   | `boolean`           | —       |
-| `required`   | `boolean`           | —       |
-
----
-
-### FileUpload
-
-Drag-and-drop file upload area with a hidden file input.
-
-```svelte
-<script>
-	import { FileUpload } from 'horizon-design';
-</script>
-
-<FileUpload label="Attachments" accept="image/*" maxFiles={3} />
-```
-
-| Prop          | Type     | Default |
-| ------------- | -------- | ------- |
-| `label`       | `string` | —       |
-| `accept`      | `string` | —       |
-| `maxFiles`    | `number` | —       |
-| `maxFileSize` | `number` | —       |
-
----
-
-### Float
-
-Positions its children as a floating overlay (e.g. FAB button).
-
-```svelte
-<script>
-	import { Float } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-<Float position="bottom-right">
-	<Button size="icon-md" class="rounded-full shadow-lg">+</Button>
-</Float>
-```
-
-| Prop       | Type                                                           | Default          |
-| ---------- | -------------------------------------------------------------- | ---------------- |
-| `position` | `'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right'` | `'bottom-right'` |
-
----
-
-### FloatingPanel
-
-A draggable floating panel anchored to a trigger button. Drag the header to reposition.
-
-```svelte
-<script>
-	import { FloatingPanel } from 'horizon-design';
-</script>
-
-{#snippet panelTrigger()}Open Panel{/snippet}
-{#snippet panelBody()}
-	<p class="text-muted-foreground text-sm">Drag the header to move this panel.</p>
-{/snippet}
-
-<FloatingPanel title="Settings" trigger={panelTrigger}>
-	{@render panelBody()}
-</FloatingPanel>
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `trigger`      | `Snippet` | —       |
-| `triggerClass` | `string`  | `''`    |
-| `title`        | `string`  | —       |
-| `children`     | `Snippet` | —       |
-
----
-
-### Frame
-
-A code-editor-style container with a title bar and traffic-light dots.
-
-```svelte
-<script>
-	import { Frame } from 'horizon-design';
-</script>
-
-<Frame title="app.svelte" class="h-32">
-	<div class="p-4 font-mono text-xs">let count = $state(0);</div>
-</Frame>
-```
-
-| Prop    | Type     | Default |
-| ------- | -------- | ------- |
-| `title` | `string` | —       |
-
----
-
-### Hint
-
-Small helper text below a form field.
-
-```svelte
-<script>
-	import { Hint } from 'horizon-design';
-	import { Input } from 'horizon-design';
-</script>
-
-<Input type="password" />
-<Hint>Must be at least 8 characters.</Hint>
-```
-
----
-
-### HoverCard
-
-Rich preview card revealed on hover.
-
-```svelte
-<script>
-	import { HoverCard } from 'horizon-design';
-</script>
-
-<HoverCard>
-	{#snippet trigger()}
-		<a href="#">@username</a>
-	{/snippet}
-	<p>User profile preview content.</p>
-</HoverCard>
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `trigger`      | `Snippet` | —       |
-| `triggerClass` | `string`  | `''`    |
-| `openDelay`    | `number`  | —       |
-| `closeDelay`   | `number`  | —       |
-
----
-
-### LinkOverlay
-
-Clickable overlay link for making a full card area follow its primary link.
-
-```svelte
-<script>
-	import { LinkBox, LinkOverlay } from 'horizon-design';
-</script>
-
-<LinkBox class="rounded-xl border p-4">
-	<h3>
-		<LinkOverlay href="/projects/alpha">Project Alpha</LinkOverlay>
-	</h3>
-	<p>Open the project overview.</p>
-</LinkBox>
-```
-
-Use `LinkBox` as the positioned wrapper and `LinkOverlay` for the main link.
-
----
-
-### ImageCropper
-
-Interactive image crop area with drag handles, grid lines, and resize handles.
-
-```svelte
-<script>
-	import { ImageCropper } from 'horizon-design';
-</script>
-
-<ImageCropper src="/photo.jpg" alt="Photo" axis="both" />
-```
-
-| Prop   | Type                                   | Default  |
-| ------ | -------------------------------------- | -------- |
-| `src`  | `string` **(required)**                | —        |
-| `alt`  | `string`                               | `''`     |
-| `axis` | `'horizontal' \| 'vertical' \| 'both'` | `'both'` |
-
----
-
-### Input
-
-Styled text input field.
-
-```svelte
-<script>
-	import { Input } from 'horizon-design';
-</script>
-
-<Input placeholder="Enter text…" />
-<Input size="lg" type="email" />
-```
-
-| Prop   | Type                   | Default |
-| ------ | ---------------------- | ------- |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'`  |
-
-Accepts all HTML `<input>` attributes.
-
----
-
-### InputGroup
-
-Connects an input with prefix/suffix addons.
-
-```svelte
-<script>
-	import { InputGroup, InputAddon } from 'horizon-design';
-	import { Input } from 'horizon-design';
-</script>
-
-<InputGroup>
-	<InputAddon>https://</InputAddon>
-	<Input placeholder="yoursite.com" />
-</InputGroup>
-```
-
----
-
-### Item
-
-A styled list row (label + icon/trailing slot).
-
-```svelte
-<script>
-	import { Item } from 'horizon-design';
-	import MingcuteUserLine from '~icons/mingcute/user-line';
-</script>
-
-<Item>
-	<MingcuteUserLine class="text-muted-foreground size-4" />
-	<span class="text-sm">Profile</span>
-</Item>
-```
-
----
-
-### Kbd
-
-Keyboard shortcut badge.
-
-```svelte
-<script>
-	import { Kbd } from 'horizon-design';
-</script>
-
-<Kbd>⌘K</Kbd>
-<Kbd size="lg">Ctrl+S</Kbd>
-```
-
-| Prop   | Type                   | Default |
-| ------ | ---------------------- | ------- |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'`  |
-
----
-
-### Listbox
-
-A scrollable list that lets users select one or more items.
-
-```svelte
-<script>
-	import { Listbox } from 'horizon-design';
-
-	const items = [
-		{ label: 'Svelte', value: 'svelte' },
-		{ label: 'React', value: 'react' }
-	];
-
-	let selected = $state([]);
-</script>
-
-<Listbox {items} label="Choose a framework" bind:value={selected} />
-```
-
-| Prop           | Type                                      | Default |
-| -------------- | ----------------------------------------- | ------- |
-| `items`        | `Array<{ label: string; value: string }>` | `[]`    |
-| `label`        | `string`                                  | —       |
-| `multiple`     | `boolean`                                 | `false` |
-| `value`        | `string[]`                                | `[]`    |
-| `defaultValue` | `string[]`                                | —       |
-
----
-
-### Marquee
-
-Horizontally scrolling ticker band.
-
-```svelte
-<script>
-	import { Marquee, MarqueeItem } from 'horizon-design';
-	import { Badge } from 'horizon-design';
-</script>
-
-<Marquee class="py-2">
-	{#each ['Svelte', 'TypeScript', 'Tailwind'] as name (name)}
-		<MarqueeItem class="px-3">
-			<Badge variant="outline">{name}</Badge>
-		</MarqueeItem>
-	{/each}
-</Marquee>
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `speed`        | `number`  | —       |
-| `pauseOnHover` | `boolean` | —       |
-| `reverse`      | `boolean` | —       |
-
----
-
-### Menu
-
-Dropdown menu with items, separators, and groups.
-
-```svelte
-<script>
-	import { Menu, MenuItem, MenuSeparator, MenuGroup, MenuGroupLabel } from 'horizon-design';
-	import { Button } from 'horizon-design';
-
-	let menuOpen = $state(false);
-</script>
-
-<Menu bind:open={menuOpen}>
-	{#snippet trigger()}
-		<Button variant="outline">Options</Button>
-	{/snippet}
-	<MenuItem value="edit">Edit</MenuItem>
-	<MenuItem value="delete">Delete</MenuItem>
-	<MenuSeparator />
-	<MenuItem value="help">Help</MenuItem>
-</Menu>
-```
-
-| `Menu` Prop    | Type      | Default |
-| -------------- | --------- | ------- |
-| `trigger`      | `Snippet` | —       |
-| `triggerClass` | `string`  | `''`    |
-| `contentClass` | `string`  | `''`    |
-| `open`         | `boolean` | `false` |
-
----
-
-### NativeSelect
-
-A styled native `<select>` element.
+An app that server-renders or prerenders the Editor's components bundles the drag-and-drop
+library into its server build, since its packages have no `exports` map that Node's ESM loader
+would accept (`vite.config.ts`):
 
-```svelte
-<script>
-	import { NativeSelect } from 'horizon-design';
-</script>
-
-<NativeSelect>
-	<option value="">Choose…</option>
-	<option value="svelte">Svelte</option>
-	<option value="react">React</option>
-</NativeSelect>
-```
-
----
-
-### NumberInput
-
-Numeric input with increment/decrement buttons.
-
-```svelte
-<script>
-	import { NumberInput } from 'horizon-design';
-
-	let qty = $state('1');
-</script>
-
-<NumberInput label="Quantity" min={0} max={100} bind:value={qty} />
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `label`        | `string`  | —       |
-| `min`          | `number`  | —       |
-| `max`          | `number`  | —       |
-| `step`         | `number`  | `1`     |
-| `defaultValue` | `string`  | —       |
-| `value`        | `string`  | `''`    |
-| `disabled`     | `boolean` | —       |
-
----
-
-### Pagination
-
-Page navigation controls.
-
-```svelte
-<script>
-	import { Pagination } from 'horizon-design';
-
-	let currentPage = $state(1);
-</script>
-
-<Pagination count={100} pageSize={10} bind:page={currentPage} />
-```
-
-| Prop           | Type                    | Default |
-| -------------- | ----------------------- | ------- |
-| `count`        | `number` **(required)** | —       |
-| `pageSize`     | `number`                | `10`    |
-| `siblingCount` | `number`                | `1`     |
-| `page`         | `number`                | `1`     |
-| `defaultPage`  | `number`                | —       |
-
----
-
-### PinInput
-
-One-time code entry with individual digit boxes.
-
-```svelte
-<script>
-	import { PinInput } from 'horizon-design';
-
-	let code = $state([]);
-</script>
-
-<PinInput label="Verification code" length={6} bind:value={code} />
-```
-
-| Prop              | Type                                          | Default     |
-| ----------------- | --------------------------------------------- | ----------- |
-| `label`           | `string`                                      | —           |
-| `length`          | `number`                                      | `4`         |
-| `placeholder`     | `string`                                      | `'○'`       |
-| `type`            | `'numeric' \| 'alphabetic' \| 'alphanumeric'` | `'numeric'` |
-| `value`           | `string[]`                                    | `[]`        |
-| `onValueComplete` | `(details) => void`                           | —           |
-
----
-
-### Popover
-
-Floating content panel anchored to a trigger.
-
-```svelte
-<script>
-	import { Popover } from 'horizon-design';
-	import { Button } from 'horizon-design';
-
-	let open = $state(false);
-</script>
-
-<Popover title="Info" bind:open>
-	{#snippet trigger()}
-		<Button variant="outline" size="icon-md">?</Button>
-	{/snippet}
-	<p>Helpful information here.</p>
-</Popover>
-```
-
-| Prop           | Type      | Default |
-| -------------- | --------- | ------- |
-| `trigger`      | `Snippet` | —       |
-| `triggerClass` | `string`  | `''`    |
-| `title`        | `string`  | —       |
-| `description`  | `string`  | —       |
-| `footer`       | `Snippet` | —       |
-| `contentClass` | `string`  | `''`    |
-| `open`         | `boolean` | `false` |
-| `defaultOpen`  | `boolean` | —       |
-
----
-
-### Progress
-
-Horizontal progress bar.
-
-```svelte
-<script>
-	import { Progress } from 'horizon-design';
-
-	let progress = $state(60);
-</script>
-
-<Progress label="Loading" bind:value={progress} />
-<Progress value={null} /><!-- indeterminate -->
-```
-
-| Prop    | Type             | Default |
-| ------- | ---------------- | ------- |
-| `label` | `string`         | —       |
-| `value` | `number \| null` | `0`     |
-| `max`   | `number`         | `100`   |
-
----
-
-### Prose
-
-Rich text typography wrapper for rendered Markdown, CMS content, or long-form copy.
-
-```svelte
-<script>
-	import { Prose } from 'horizon-design';
-</script>
-
-<Prose>
-	<h2>Release notes</h2>
-	<p>Use Prose to style headings, paragraphs, lists, quotes, and inline code.</p>
-	<ul>
-		<li>Consistent spacing</li>
-		<li>Design-system colours</li>
-	</ul>
-</Prose>
-```
-
----
-
-### QrCode
-
-Renders a QR code SVG for a given string value.
-
-```svelte
-<script>
-	import { QrCode } from 'horizon-design';
-</script>
-
-<QrCode value="https://github.com" size={120} />
-```
-
-| Prop    | Type                    | Default |
-| ------- | ----------------------- | ------- |
-| `value` | `string` **(required)** | —       |
-| `size`  | `number`                | `200`   |
-
----
-
-### RadioGroup
-
-A group of mutually exclusive radio buttons. Pass an `items` config array for a self-contained component, or use `children` for fully custom markup.
-
-```svelte
-<script>
-	import { RadioGroup } from 'horizon-design';
-
-	let plan = $state('pro');
-</script>
-
-<RadioGroup
-	label="Subscription plan"
-	bind:value={plan}
-	items={[
-		{ value: 'free', label: 'Free' },
-		{ value: 'pro', label: 'Pro' },
-		{ value: 'enterprise', label: 'Enterprise', disabled: true }
-	]}
-/>
-```
-
-Items can also use a `Snippet` for rich labels:
-
-```svelte
-{#snippet proLabel()}
-	<span>Pro <Badge variant="info">Popular</Badge></span>
-{/snippet}
-
-<RadioGroup items={[{ value: 'pro', label: proLabel }]} />
-```
-
-| Prop           | Type                                                                | Default |
-| -------------- | ------------------------------------------------------------------- | ------- |
-| `label`        | `string`                                                            | —       |
-| `items`        | `{ value: string; label: string \| Snippet; disabled?: boolean }[]` | —       |
-| `value`        | `string`                                                            | `''`    |
-| `defaultValue` | `string`                                                            | —       |
-| `disabled`     | `boolean`                                                           | —       |
-| `children`     | `Snippet`                                                           | —       |
-
----
-
-### RatingGroup
-
-Star rating input.
-
-```svelte
-<script>
-	import { RatingGroup } from 'horizon-design';
-
-	let rating = $state(3);
-</script>
-
-<RatingGroup label="Rate this" count={5} bind:value={rating} />
-```
-
-| Prop           | Type     | Default |
-| -------------- | -------- | ------- |
-| `label`        | `string` | —       |
-| `count`        | `number` | `5`     |
-| `defaultValue` | `number` | —       |
-| `value`        | `number` | `0`     |
-
----
-
-### ScrollArea
-
-Thin custom scrollbars in a fixed-height container.
-
-```svelte
-<script>
-	import { ScrollArea } from 'horizon-design';
-</script>
-
-<ScrollArea class="h-64">
-	<p>Long content…</p>
-</ScrollArea>
-```
-
----
-
-### SegmentGroup
-
-Segmented button group (radio-style). Labels can be strings or Snippets.
-
-```svelte
-<script>
-	import { SegmentGroup } from 'horizon-design';
-
-	let view = $state('week');
-</script>
-
-<SegmentGroup
-	items={[
-		{ value: 'day', label: 'Day' },
-		{ value: 'week', label: 'Week' },
-		{ value: 'month', label: 'Month' }
-	]}
-	bind:value={view}
-/>
-```
-
-The component uses `items-stretch` internally, so items always fill whatever height the root has. To control height, pass a height class: `class="h-9"` or `class="h-full"`.
-
-| Prop           | Type                                                 | Default |
-| -------------- | ---------------------------------------------------- | ------- |
-| `items`        | `Array<{ value: string; label: string \| Snippet }>` | `[]`    |
-| `value`        | `string`                                             | `''`    |
-| `defaultValue` | `string`                                             | —       |
-
----
-
-### Select
-
-Styled accessible dropdown select.
-
-```svelte
-<script>
-	import { Select } from 'horizon-design';
-
-	const items = [
-		{ label: 'Apple', value: 'apple' },
-		{ label: 'Banana', value: 'banana' }
-	];
-
-	let selected = $state([]);
-</script>
-
-<Select {items} label="Fruit" bind:value={selected} placeholder="Pick a fruit…" />
-```
-
-| Prop           | Type                                                                         | Default              |
-| -------------- | ---------------------------------------------------------------------------- | -------------------- |
-| `items`        | `Array<{ label: string; value: string; disabled?: boolean }>` **(required)** | `[]`                 |
-| `label`        | `string`                                                                     | —                    |
-| `placeholder`  | `string`                                                                     | `'Select an option'` |
-| `value`        | `string[]`                                                                   | `[]`                 |
-| `defaultValue` | `string[]`                                                                   | —                    |
-| `multiple`     | `boolean`                                                                    | `false`              |
-| `disabled`     | `boolean`                                                                    | —                    |
-
----
-
-### Separator
-
-Horizontal or vertical dividing line.
-
-```svelte
-<script>
-	import { Separator } from 'horizon-design';
-</script>
-
-<Separator />
-<Separator orientation="vertical" class="h-6" />
-```
-
-| Prop          | Type                         | Default        |
-| ------------- | ---------------------------- | -------------- |
-| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| `decorative`  | `boolean`                    | `true`         |
-
----
-
-### Sheet
-
-Slide-in panel (alias of Drawer with configurable side).
-
-```svelte
-<script>
-	import { Sheet } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-<Sheet title="Filters" side="right">
-	{#snippet trigger()}
-		<Button variant="outline">Open Filters</Button>
-	{/snippet}
-	<p>Filter content here.</p>
-</Sheet>
-```
-
-| Prop           | Type                                     | Default   |
-| -------------- | ---------------------------------------- | --------- |
-| `trigger`      | `Snippet`                                | —         |
-| `triggerClass` | `string`                                 | `''`      |
-| `title`        | `string`                                 | —         |
-| `description`  | `string`                                 | —         |
-| `footer`       | `Snippet`                                | —         |
-| `side`         | `'top' \| 'bottom' \| 'left' \| 'right'` | `'right'` |
-| `showClose`    | `boolean`                                | `true`    |
-| `open`         | `boolean`                                | `false`   |
-| `defaultOpen`  | `boolean`                                | —         |
-
----
-
-### Sidebar
-
-Vertical navigation layout with header, grouped content, items, and footer.
-
-```svelte
-<script>
-	import { Sidebar, SidebarSection, SidebarItem } from 'horizon-design';
-</script>
-
-<Sidebar>
-	{#snippet header()}Workspace{/snippet}
-	{#snippet footer()}<p>Signed in as Rayan</p>{/snippet}
-	<SidebarSection label="General">
-		<SidebarItem href="/" active>Overview</SidebarItem>
-		<SidebarItem href="/settings">Settings</SidebarItem>
-	</SidebarSection>
-</Sidebar>
-```
-
-| `Sidebar` Prop | Type      | Default |
-| -------------- | --------- | ------- |
-| `collapsed`    | `boolean` | `false` |
-| `header`       | `Snippet` | —       |
-| `footer`       | `Snippet` | —       |
-
-| `SidebarSection` Prop | Type     | Default |
-| --------------------- | -------- | ------- |
-| `label`               | `string` | `''`    |
-
-| `SidebarItem` Prop | Type      | Default |
-| ------------------ | --------- | ------- |
-| `href`             | `string`  | `''`    |
-| `active`           | `boolean` | `false` |
-
----
-
-### SignaturePad
-
-Freehand drawing canvas for signatures.
-
-```svelte
-<script>
-	import { SignaturePad } from 'horizon-design';
-</script>
-
-<SignaturePad label="Draw your signature" onDrawEnd={(d) => console.log(d.paths)} />
-```
-
-| Prop        | Type                | Default |
-| ----------- | ------------------- | ------- |
-| `label`     | `string`            | —       |
-| `onDrawEnd` | `(details) => void` | —       |
-
----
-
-### Skeleton
-
-Animated loading placeholder.
-
-```svelte
-<script>
-	import { Skeleton } from 'horizon-design';
-</script>
-
-<Skeleton class="h-4 w-48" />
-<Skeleton class="h-12 w-12 rounded-full" />
-```
-
----
-
-### SkipNav
-
-Keyboard-only skip link for jumping directly to main page content.
-
-```svelte
-<script>
-	import { SkipNav } from 'horizon-design';
-</script>
-
-<SkipNav href="#main-content">Skip to content</SkipNav>
-```
-
-| Prop   | Type     | Default           |
-| ------ | -------- | ----------------- |
-| `href` | `string` | `'#main-content'` |
-
----
-
-### Slider
-
-Range input with draggable thumb.
-
-```svelte
-<script>
-	import { Slider } from 'horizon-design';
-
-	let volume = $state([50]);
-</script>
-
-<Slider label="Volume" showValue min={0} max={100} bind:value={volume} />
-```
-
-| Prop           | Type                         | Default        |
-| -------------- | ---------------------------- | -------------- |
-| `label`        | `string`                     | —              |
-| `showValue`    | `boolean`                    | `false`        |
-| `min`          | `number`                     | `0`            |
-| `max`          | `number`                     | `100`          |
-| `step`         | `number`                     | `1`            |
-| `value`        | `number[]`                   | `[0]`          |
-| `defaultValue` | `number[]`                   | —              |
-| `orientation`  | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| `disabled`     | `boolean`                    | —              |
-
----
-
-### Spinner
-
-Animated loading indicator.
-
-```svelte
-<script>
-	import { Spinner } from 'horizon-design';
-</script>
-
-<Spinner />
-<Spinner class="size-8" aria-label="Uploading" />
-```
-
----
-
-### Splitter
-
-Resizable split pane layout.
-
-```svelte
-<script>
-	import { Splitter, SplitterPanel, SplitterResizeTrigger } from 'horizon-design';
-
-	const panels = [{ id: 'a' }, { id: 'b' }];
-</script>
-
-<Splitter {panels} class="h-40 rounded-lg border">
-	<SplitterPanel id="a">Panel A</SplitterPanel>
-	<SplitterResizeTrigger id="a:b" />
-	<SplitterPanel id="b">Panel B</SplitterPanel>
-</Splitter>
-```
-
-| `Splitter` Prop | Type                                   | Default        |
-| --------------- | -------------------------------------- | -------------- |
-| `panels`        | `Array<{ id: string }>` **(required)** | —              |
-| `orientation`   | `'horizontal' \| 'vertical'`           | `'horizontal'` |
-
----
-
-### Status
-
-Colour-coded presence dot.
-
-```svelte
-<script>
-	import { Status } from 'horizon-design';
-</script>
-
-<Status variant="online" />
-<Status variant="away" />
-```
-
-| Prop      | Type                                        | Default    |
-| --------- | ------------------------------------------- | ---------- |
-| `variant` | `'online' \| 'offline' \| 'away' \| 'busy'` | `'online'` |
-
----
-
-### Steps
-
-Multi-step wizard with progress indicators.
-
-```svelte
-<script>
-	import { Steps } from 'horizon-design';
-</script>
-
-{#snippet step1()}
-	<p>Fill in your profile details.</p>
-{/snippet}
-{#snippet step2()}
-	<p>Configure your preferences.</p>
-{/snippet}
-{#snippet done()}
-	<p>All done! 🎉</p>
-{/snippet}
-
-<Steps
-	steps={[
-		{ title: 'Profile', content: step1 },
-		{ title: 'Preferences', content: step2 }
-	]}
-	completedContent={done}
-/>
-```
-
-| Prop               | Type                                         | Default  |
-| ------------------ | -------------------------------------------- | -------- |
-| `steps`            | `Array<{ title: string; content: Snippet }>` | `[]`     |
-| `step`             | `number` (bindable)                          | —        |
-| `completedContent` | `Snippet`                                    | —        |
-| `prevLabel`        | `string`                                     | `'Back'` |
-| `nextLabel`        | `string`                                     | `'Next'` |
-
----
-
-### Swap
-
-Toggle between two rendered states with an animated transition. Both `on` and `off` are Snippets.
-
-```svelte
-<script>
-	import { Swap } from 'horizon-design';
-	import MingcuteSunLine from '~icons/mingcute/sun-line';
-	import MingcuteMoonLine from '~icons/mingcute/moon-line';
-</script>
-
-{#snippet sunIcon()}<MingcuteSunLine class="size-6" />{/snippet}
-{#snippet moonIcon()}<MingcuteMoonLine class="size-6" />{/snippet}
-
-<button onclick={() => (dark = !dark)}>
-	<Swap swap={dark} on={sunIcon} off={moonIcon} />
-</button>
-```
-
-| Prop            | Type      | Default |
-| --------------- | --------- | ------- |
-| `swap`          | `boolean` | `false` |
-| `on`            | `Snippet` | —       |
-| `off`           | `Snippet` | —       |
-| `lazyMount`     | `boolean` | `true`  |
-| `unmountOnExit` | `boolean` | `true`  |
-
----
-
-### Switch
-
-Toggle switch.
-
-```svelte
-<script>
-	import { Switch } from 'horizon-design';
-
-	let notifications = $state(false);
-</script>
-
-<Switch label="Dark mode" />
-<Switch label="Notifications" bind:checked={notifications} />
-<Switch label="With content">
-	{#snippet checkedContent()}<MyCheckIcon />{/snippet}
-	{#snippet uncheckedContent()}<MyCloseIcon />{/snippet}
-</Switch>
-```
-
-| Prop               | Type                           | Default     |
-| ------------------ | ------------------------------ | ----------- |
-| `size`             | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`      |
-| `variant`          | `'default' \| 'secondary'`     | `'default'` |
-| `label`            | `string`                       | —           |
-| `checked`          | `boolean`                      | —           |
-| `defaultChecked`   | `boolean`                      | —           |
-| `disabled`         | `boolean`                      | —           |
-| `checkedContent`   | `Snippet`                      | —           |
-| `uncheckedContent` | `Snippet`                      | —           |
-
----
-
-### Table
-
-Data table from column config and row data. Row values can be strings or Snippets.
-
-```svelte
-<script>
-	import { Table } from 'horizon-design';
-</script>
-
-<Table
-	columns={[
-		{ key: 'name', label: 'Name' },
-		{ key: 'role', label: 'Role' },
-		{ key: 'joined', label: 'Joined' }
-	]}
-	rows={[
-		{ name: 'Alice', role: 'Admin', joined: 'Jan 2024' },
-		{ name: 'Bob', role: 'Developer', joined: 'Mar 2024' }
-	]}
-/>
-```
-
-| Prop      | Type                                       | Default |
-| --------- | ------------------------------------------ | ------- |
-| `columns` | `Array<{ key: string; label: string }>`    | `[]`    |
-| `rows`    | `Array<Record<string, string \| Snippet>>` | `[]`    |
-
----
-
-### Tabs
-
-Tabbed content sections. Each tab has a label (string or Snippet) and a content Snippet.
-
-```svelte
-<script>
-	import { Tabs } from 'horizon-design';
-
-	let activeTab = $state('overview');
-</script>
-
-{#snippet overview()}<p>Overview content.</p>{/snippet}
-{#snippet settings()}<p>Settings content.</p>{/snippet}
-
-<Tabs
-	tabs={[
-		{ value: 'overview', label: 'Overview', content: overview },
-		{ value: 'settings', label: 'Settings', content: settings }
-	]}
-	bind:value={activeTab}
-	defaultValue="overview"
-/>
-```
-
-For the underline style:
-
-```svelte
-<Tabs {tabs} variant="underline" />
-```
-
-| Prop           | Type                                                                   | Default     |
-| -------------- | ---------------------------------------------------------------------- | ----------- |
-| `tabs`         | `Array<{ value: string; label: string \| Snippet; content: Snippet }>` | `[]`        |
-| `variant`      | `'default' \| 'underline'`                                             | `'default'` |
-| `value`        | `string`                                                               | —           |
-| `defaultValue` | `string`                                                               | —           |
-
----
-
-### Textarea
-
-Multi-line text input.
-
-```svelte
-<script>
-	import { Textarea } from 'horizon-design';
-</script>
-
-<Textarea placeholder="Write something…" rows={4} />
+```ts
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' })],
+	ssr: {
+		noExternal: ['@atlaskit/pragmatic-drag-and-drop', '@atlaskit/pragmatic-drag-and-drop-hitbox']
+	}
+});
 ```
-
-Accepts all HTML `<textarea>` attributes.
-
----
 
-### ThemeSwitch
+Import the stylesheet after Tailwind, in the app's root CSS:
 
-A three-position toggle (System / Dark / Light) with animated sliding thumb.
-
-```svelte
-<script>
-	import { ThemeSwitch } from 'horizon-design';
-</script>
-
-<ThemeSwitch />
-<ThemeSwitch size="lg" />
+```css
+@import 'tailwindcss';
+@import 'horizon-design/horizon-design.css';
 ```
 
-To enable theme switching, add an inline script to `app.html` to apply the stored theme before first paint (prevents flash):
-
-```html
-<!-- app.html, inside <head> -->
-<script>
-	(function () {
-		var m = localStorage.getItem('horizon-theme');
-		var dark =
-			m === 'dark' || (m !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-		if (!dark) document.documentElement.classList.add('light');
-	})();
-</script>
-```
+The stylesheet tells Tailwind to scan the library's components itself.
 
-Then initialize the theme store once in your root layout:
+Then initialise the theme once, in the root layout (`theme.init` returns the function that removes
+its listeners, which `onMount` calls when the layout unmounts):
 
 ```svelte
-<!-- src/routes/+layout.svelte -->
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { theme } from 'horizon-design';
+
 	onMount(() => theme.init());
 </script>
 ```
 
-| Prop   | Type                           | Default |
-| ------ | ------------------------------ | ------- |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`  |
+and set it before the first paint, so the page never flashes the other theme (an inline script in
+`app.html`, or the same lines in a preload script under a strict CSP). The script reads the mode
+saved under `THEME_STORAGE_KEY` (`horizon-theme`) and, when storage is disabled, follows the OS as
+the theme controller does:
 
----
-
-### ThumbCard
-
-Preview card with a thumbnail area and optional label link.
-
-```svelte
+```html
 <script>
-	import { ThumbCard } from 'horizon-design';
-</script>
-
-<ThumbCard label="Component preview" href="/components">
-	<img src="/preview.png" alt="" class="h-20 w-20 rounded-lg object-cover" />
-</ThumbCard>
-```
-
-| Prop    | Type     | Default |
-| ------- | -------- | ------- |
-| `label` | `string` | `''`    |
-| `href`  | `string` | `''`    |
-
----
-
-### Timer
-
-Countdown / stopwatch display with start, stop, and reset controls.
-
-```svelte
-<script>
-	import { Timer } from 'horizon-design';
-</script>
-
-<Timer autoStart={true} />
-```
-
-| Prop        | Type      | Default |
-| ----------- | --------- | ------- |
-| `autoStart` | `boolean` | `false` |
-
----
-
-### Toast
-
-Transient notification messages.
-
-```svelte
-<script>
-	import { Toaster, createToaster } from 'horizon-design';
-
-	const toaster = createToaster({ placement: 'bottom-end' });
-
-	function notify() {
-		toaster.create({ title: 'Saved!', description: 'Changes were saved.', type: 'success' });
-	}
-</script>
-
-<button onclick={notify}>Save</button>
-<Toaster {toaster} />
-```
-
-`createToaster` options: `placement`, `max`, `duration`, `removeDelay`.
-
----
-
-### Toggle
-
-A pressable on/off button.
-
-```svelte
-<script>
-	import { Toggle } from 'horizon-design';
-
-	let bold = $state(false);
-</script>
-
-<Toggle bind:pressed={bold}>Bold</Toggle>
-<Toggle variant="outline" size="sm">Italic</Toggle>
-```
-
-| Prop             | Type                     | Default     |
-| ---------------- | ------------------------ | ----------- |
-| `variant`        | `'default' \| 'outline'` | `'default'` |
-| `size`           | `'sm' \| 'md' \| 'lg'`   | `'md'`      |
-| `pressed`        | `boolean`                | `false`     |
-| `defaultPressed` | `boolean`                | —           |
-
----
-
-### ToggleGroup
-
-A group of toggle buttons (multi-select or single-select). Each item content is a Snippet.
-
-```svelte
-<script>
-	import { ToggleGroup } from 'horizon-design';
-	import MingcuteBoldLine from '~icons/mingcute/bold-line';
-	import MingcuteItalicLine from '~icons/mingcute/italic-line';
-
-	let formatting = $state([]);
-</script>
-
-{#snippet boldIcon()}<MingcuteBoldLine class="size-4" />{/snippet}
-{#snippet italicIcon()}<MingcuteItalicLine class="size-4" />{/snippet}
-
-<ToggleGroup
-	items={[
-		{ value: 'bold', content: boldIcon },
-		{ value: 'italic', content: italicIcon }
-	]}
-	bind:value={formatting}
-/>
-```
-
-| Prop           | Type                                         | Default      |
-| -------------- | -------------------------------------------- | ------------ |
-| `items`        | `Array<{ value: string; content: Snippet }>` | `[]`         |
-| `type`         | `'single' \| 'multiple'`                     | `'multiple'` |
-| `value`        | `string[]`                                   | `[]`         |
-| `defaultValue` | `string[]`                                   | —            |
-
----
-
-### ToggleTooltip
-
-A toggle button with an attached tooltip label.
-
-```svelte
-<script>
-	import { ToggleTooltip } from 'horizon-design';
-	import MingcuteBoldLine from '~icons/mingcute/bold-line';
-</script>
-
-<ToggleTooltip label="Bold">
-	<MingcuteBoldLine class="size-4" />
-</ToggleTooltip>
-```
-
-| Prop    | Type                    | Default |
-| ------- | ----------------------- | ------- |
-| `label` | `string` **(required)** | —       |
-
----
-
-### Tooltip
-
-Floating text hint on hover/focus.
-
-```svelte
-<script>
-	import { Tooltip } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-<Tooltip content="Helpful text">
-	<Button variant="ghost" size="icon-md">?</Button>
-</Tooltip>
-```
-
-| Prop          | Type                               | Default                |
-| ------------- | ---------------------------------- | ---------------------- |
-| `content`     | `string \| Snippet` **(required)** | —                      |
-| `openDelay`   | `number`                           | `200`                  |
-| `closeDelay`  | `number`                           | `100`                  |
-| `positioning` | `PositioningOptions`               | `{ placement: 'top' }` |
-
----
-
-### Tour
-
-Guided multi-step product tour with spotlight and step navigation.
-
-```svelte
-<script>
-	import { Tour } from 'horizon-design';
-	import { Button } from 'horizon-design';
-</script>
-
-{#snippet tourTrigger(start)}
-	<Button onclick={start}>Start Tour</Button>
-{/snippet}
-
-<Tour
-	trigger={tourTrigger}
-	steps={[
-		{
-			id: 'step-1',
-			type: 'dialog',
-			title: 'Welcome',
-			description: 'This is the first step.',
-			actions: [{ label: 'Next', action: 'next' }]
-		},
-		{
-			id: 'step-2',
-			type: 'dialog',
-			title: 'Done!',
-			description: 'You finished the tour.',
-			actions: [{ label: 'Finish', action: 'dismiss' }]
+	(function () {
+		var mode = null;
+		try {
+			mode = localStorage.getItem('horizon-theme');
+		} catch {
+			// Storage disabled: follow the OS, as the theme controller does.
 		}
-	]}
-/>
+		var dark =
+			mode === 'dark' ||
+			(mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+	})();
+</script>
 ```
 
-The `trigger` snippet receives a `start` function as its first argument — pass it to your button's `onclick` to avoid nested `<button>` elements.
+## Tokens
 
-| Prop           | Type                    | Default |
-| -------------- | ----------------------- | ------- |
-| `steps`        | `TourStepDetails[]`     | `[]`    |
-| `trigger`      | `Snippet<[() => void]>` | —       |
-| `showProgress` | `boolean`               | `true`  |
-| `showClose`    | `boolean`               | `true`  |
+One OKLCH palette (a navy ramp, a blue ramp and the status hues) is mapped, per theme, onto
+semantic tokens. Components use only the semantic tokens, so both themes stay consistent; apps do
+the same, and never write a colour literal.
 
----
+| Group                | Tokens (Tailwind: `bg-*`, `text-*`, `border-*`…)                                                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Surfaces             | `background` (the page), `sunken` (sidebars, fields, tracks), `surface` (cards, panels), `raised` (popovers, dialogs), `hover`, `active`                                                          |
+| Lines                | `border`, `border-strong`                                                                                                                                                                         |
+| Text                 | `fg`, `fg-2`, `muted`, `faint`                                                                                                                                                                    |
+| Actions and status   | `primary`, `primary-hover`, `on-primary`, `danger`, `on-danger`, `success`, `warning`, `info`, `accent`, each with `-subtle` (a tinted fill) and `-border`                                        |
+| Editor               | `server`, `local` (the two object modes), `grid-line`, the code colours `code-keyword`, `code-function`, `code-string`, `code-number`, `code-type`, `code-comment`, `code-attribute`, `code-line` |
+| Fixed in both themes | `paper` (switch and slider thumbs, QR codes), `on-art` and `art-scrim` (text and pills over game art), `avatar-1` to `avatar-5`                                                                   |
+| Overlays             | `scrim`                                                                                                                                                                                           |
 
-### FileTree
+- **Theme:** dark is the default; `data-theme="light"` on `<html>` (or on any element, for a
+  light island) switches to light. `color-scheme` follows.
+- **Type scale:** `text-2xs` (10.5 px) to `text-4xl` (34 px) for apps, 13 px body; `text-display-sm`,
+  `text-display` and `text-display-lg` for marketing headlines. Horizon Sans (semi-expanded; see
+  [Fonts](#fonts)) and Lilex for code.
+- **Radius:** `rounded-xs` 2 px, `sm` 4 px, `md` 6 px, `lg` 10 px, `xl` 14 px.
+- **Control heights:** `h-control-xs` 22 px, `sm` 26 px, `md` 30 px, `lg` 40 px.
+- **Elevation:** `shadow-sm`, `shadow-md`, `shadow-lg`, and `inset-shadow-highlight`, the light
+  edge on raised surfaces; each theme has its own.
+- **Motion:** `ease-standard`, `ease-emphasized`; `--duration-fast` (0.15 s), `--duration-base`
+  (0.2 s), `--duration-page` (0.32 s).
+- **No blur by default.** Overlays (`Dialog`, `AlertDialog`, `Sheet`, `Drawer`, `Popover`, `Menu`,
+  `ContextMenu`, `HoverCard`, `FloatingPanel`, `CommandPalette`) take `frosted` for a translucent,
+  blurred surface; the `frosted` utility is for overlays only.
+- Tailwind's default palette and shadows are removed: only these tokens produce colour utilities.
 
-File-explorer style tree. Folders (branches) are expand-only — clicking a folder row expands or collapses it but does not select it. Files (leaves) are selectable. Depth indentation is driven by a `--depth` CSS variable; no structural padding is added to containers.
+The tokens have one source, `scripts/tokens/tokens.ts`. When the library is built,
+`scripts/tokens/generate.ts` writes the theme CSS (`src/lib/generated/theme.css`) and the
+exported values (`src/lib/generated/tokens.ts`), converting each OKLCH value to sRGB hex. Every
+OKLCH colour of the library lies inside sRGB (the generator refuses one that doesn't, and a test
+checks every colour of the token source and every `oklch()` written in `src/`), so the CSS and its
+hex show the same colour on every display.
 
-```svelte
-<script>
-	import { FileTree, createTreeCollection } from 'horizon-design';
+### Token values as data
 
-	const collection = createTreeCollection({
-		nodeToValue: (n) => n.id,
-		nodeToString: (n) => n.name,
-		rootNode: {
-			id: 'root',
-			name: '',
-			children: [
-				{
-					id: 'src',
-					name: 'src',
-					children: [
-						{ id: 'app', name: 'app.ts' },
-						{ id: 'index', name: 'index.ts' }
-					]
-				},
-				{ id: 'package', name: 'package.json' }
-			]
-		}
+`horizon-design/tokens` gives every colour token of each theme in both forms, generated when the
+library is built: `tokenValues[theme][token]` is `{ oklch, hex }`, where `oklch` is the value the
+theme CSS uses (`oklch(0.202 0.029 268.7)`) and `hex` the same colour as lowercase sRGB hex
+(`#111624`, or `#rrggbbaa` for translucent tokens), converted with CSS Color 4's conversion (colorjs.io, at build time). It is
+for the colours needed before any CSS loads, which take no CSS variable and, for Electron, no
+OKLCH:
+
+```ts
+import { tokenValues } from 'horizon-design/tokens';
+
+new BrowserWindow({ backgroundColor: tokenValues[theme].background.hex });
+```
+
+## Theme and motion
+
+```ts
+import { theme, slidePage } from 'horizon-design';
+
+theme.mode; // 'system' | 'dark' | 'light': the choice (reactive, read-only: change it with theme.set)
+theme.resolved; // 'dark' | 'light': the theme in effect, following the OS while the mode is system (reactive)
+theme.set('light'); // saves the mode and crossfades the whole page into it; resolves once the crossfade ends
+theme.init({ blockContextMenu: true }); // applies the theme, follows the OS, blocks the browser's context menu only when asked; returns the function that stops it
+```
+
+The mode is saved in `localStorage` under `THEME_STORAGE_KEY`. Without storage (disabled, or
+server rendering) the mode starts as system, and a choice lasts until the page is closed; on the
+server, where there is no OS theme, `resolved` is dark. Calling `theme.init` again replaces the
+listeners of the previous call.
+
+Switching themes crossfades the whole page, and navigating slides the screen in the direction of
+travel, both with the View Transitions API in 0.32 s, and neither when the browser has no View
+Transitions or the system asks for reduced motion (`prefersReducedMotion()` says whether it does).
+Mark the element that slides with `data-slide-region` and start the slide from SvelteKit's
+`onNavigate`, with the app's own order of screens:
+
+```ts
+onNavigate((navigation) => {
+	const direction = order(navigation.to) > order(navigation.from) ? 'forward' : 'backward';
+	return new Promise((resolve) => {
+		slidePage(direction, async () => {
+			resolve();
+			// A failed or cancelled navigation is SvelteKit's to report; the slide just ends.
+			await navigation.complete.catch(() => {});
+		});
 	});
-
-	let selectedValue = $state([]);
-	let expandedValue = $state([]);
-</script>
-
-<FileTree {collection} bind:selectedValue bind:expandedValue />
-```
-
-| Prop                | Type                                      | Default                    |
-| ------------------- | ----------------------------------------- | -------------------------- |
-| `collection`        | `TreeCollection<TreeNode>` **(required)** | —                          |
-| `icon`              | `Snippet<[node]>`                         | folder/file mingcute icons |
-| `selectedValue`     | `string[]` (bindable)                     | `[]`                       |
-| `expandedValue`     | `string[]` (bindable)                     | `[]`                       |
-| `focusedValue`      | `string` (bindable)                       | —                          |
-| `onSelectionChange` | `(details) => void`                       | —                          |
-| `onExpandedChange`  | `(details) => void`                       | —                          |
-| `onFocusChange`     | `(details) => void`                       | —                          |
-
-**Custom icons**
-
-The `icon` snippet receives the current node:
-
-```svelte
-{#snippet icon(node)}
-	{#if node.children}
-		<FolderIcon class="size-4" />
-	{:else}
-		<FileIcon class="size-4" />
-	{/if}
-{/snippet}
-
-<FileTree {collection} {icon} />
-```
-
-Folder branches default to `mingcute:folder-2-line` / `mingcute:folder-open-line` (open/closed) and files to `mingcute:file-line`.
-
-The following are re-exported from `horizon-design` for convenience: `createTreeCollection`, `createFileTreeCollection`, `TreeCollection`, `TreeNode`, `TreeCollectionOptions`, `FilePathTreeNode`.
-
----
-
-### HierarchyView
-
-Unity-style hierarchy panel. Accepts a plain nested object tree — no collection wrapper needed. Both branches and leaves are fully selectable. Clicking a row selects it; only the chevron button toggles expand/collapse. Supports multi-select (Shift-click), inline rename (double-click or F2), long-press drag-and-drop reordering, and keyboard-driven node movement. `onDataChange` fires whenever the tree is mutated by any interaction.
-
-```svelte
-<script>
-	import { HierarchyView } from 'horizon-design';
-
-	const data = [
-		{
-			id: 'scene',
-			name: 'Scene',
-			children: [
-				{
-					id: 'player',
-					name: 'Player',
-					children: [
-						{ id: 'camera', name: 'Camera' },
-						{ id: 'mesh', name: 'Mesh' }
-					]
-				},
-				{ id: 'light', name: 'Directional Light' },
-				{
-					id: 'ui',
-					name: 'UI Canvas',
-					children: [{ id: 'hud', name: 'HUD' }]
-				}
-			]
-		}
-	];
-
-	let selectedValue = $state([]);
-	let expandedValue = $state([]);
-</script>
-
-<HierarchyView {data} bind:selectedValue bind:expandedValue />
-```
-
-| Prop                | Type                                             | Default                            |
-| ------------------- | ------------------------------------------------ | ---------------------------------- |
-| `data`              | `AnyNode[]` **(required)**                       | —                                  |
-| `nodeToValue`       | `(node: AnyNode) => string`                      | uses `node.id` then `node.name`    |
-| `nodeToString`      | `(node: AnyNode) => string`                      | uses `node.name` then `node.label` |
-| `icon`              | `Snippet<[node]>`                                | `mingcute:file-line`               |
-| `selectedValue`     | `string[]` (bindable)                            | `[]`                               |
-| `expandedValue`     | `string[]` (bindable)                            | `[]`                               |
-| `onSelectionChange` | `(details: { selectedValue: string[] }) => void` | —                                  |
-| `onExpandedChange`  | `(details: { expandedValue: string[] }) => void` | —                                  |
-| `onDataChange`      | `(data: AnyNode[]) => void`                      | —                                  |
-
-`AnyNode` is a flexible shape: `{ id?, name?, label?, children?, [key: string]: unknown }`. Pass the top-level nodes directly — no root wrapper needed.
-
-**Keyboard shortcuts**
-
-| Key                    | Action                                          |
-| ---------------------- | ----------------------------------------------- |
-| `↑` / `↓`              | Move cursor                                     |
-| `→`                    | Expand branch / move cursor into first child    |
-| `←`                    | Collapse branch / move cursor to parent         |
-| `Shift+↑` / `Shift+↓`  | Move focused node up / down within its siblings |
-| `Shift+→` / `Shift+←`  | Indent / outdent focused node                   |
-| `Enter` / `Space`      | Toggle selection                                |
-| `F2`                   | Rename focused node                             |
-| `Delete` / `Backspace` | Delete focused node and its subtree             |
-| `Home` / `End`         | Jump to first / last visible node               |
-| `Escape`               | Clear selection                                 |
-
-All nodes default to `mingcute:file-line`. Supply an `icon` snippet to differentiate node types by shape.
-
----
-
-### InspectorPanel
-
-An accordion-style panel of cards with drag-to-reorder and full keyboard navigation. Each card has a title, an optional subtitle, and collapsible content rendered via a `content` snippet.
-
-```svelte
-<script>
-	import { InspectorPanel } from 'horizon-design';
-
-	let cards = $state([
-		{ id: 'fill', title: 'Fill', subtitle: 'Solid' },
-		{ id: 'stroke', title: 'Stroke', subtitle: '2px' },
-		{ id: 'shadow', title: 'Shadow' }
-	]);
-
-	let expandedIds = $state(['fill']);
-</script>
-
-<InspectorPanel bind:cards bind:expandedIds>
-	{#snippet content(card)}
-		<p>Content for {card.title}</p>
-	{/snippet}
-</InspectorPanel>
-```
-
-| Prop               | Type                               | Default | Description                                |
-| ------------------ | ---------------------------------- | ------- | ------------------------------------------ |
-| `cards`            | `InspectorCard[]`                  | `[]`    | List of cards (bindable)                   |
-| `expandedIds`      | `string[]`                         | `[]`    | IDs of currently expanded cards (bindable) |
-| `content`          | `Snippet<[InspectorCard]>`         | —       | Snippet rendered inside each card body     |
-| `onCardsChange`    | `(cards: InspectorCard[]) => void` | —       | Fired when card order changes              |
-| `onExpandedChange` | `(ids: string[]) => void`          | —       | Fired when expanded state changes          |
-| `class`            | `string`                           | `''`    | Extra classes on the root element          |
-
-`InspectorCard` requires an `id: string` and `title: string`; any additional properties are passed through to the `content` snippet.
-
-**Keyboard navigation** (focus the panel first): `↑`/`↓` move the cursor, `Enter`/`Space` toggle expansion, `Shift+↑`/`Shift+↓` reorder, `Home`/`End` jump to first/last, `Escape` clears the cursor. `Tab` moves focus into the expanded card's content (inputs, buttons, etc.); `Escape` from inside card content returns focus to the panel.
-
----
-
-### HorizonLayout
-
-A resizable, drag-to-reorder tabbed layout engine. Wrapper around [horizon-layout](https://github.com/play-horizon/horizon-layout).
-
-```svelte
-<script>
-	import HorizonLayout from '$lib/components/horizon-layout/HorizonLayout.svelte';
-	import type { LayoutConfig, Id, View } from 'horizon-layout';
-	import { SvelteMap } from 'svelte/reactivity';
-
-	let config: LayoutConfig = $state({
-		root: {/* ... */}
-	});
-
-	const views = new SvelteMap<Id, View>([['panel-a', { title: 'Panel A', snippet: mySnippetA }]]);
-</script>
-
-<HorizonLayout bind:config {views} />
-```
-
-| Prop               | Type                                     | Default |
-| ------------------ | ---------------------------------------- | ------- |
-| `config`           | `LayoutConfig` (bindable) **(required)** | —       |
-| `views`            | `SvelteMap<Id, View>` **(required)**     | —       |
-| `tabgroupControls` | `View[]`                                 | —       |
-| `showSplitRatio`   | `boolean`                                | `false` |
-
----
-
-## Utilities
-
-### `theme`
-
-The global theme store. Import it to read or change the active theme:
-
-```ts
-import { theme } from 'horizon-design';
-
-theme.mode; // 'system' | 'dark' | 'light' — the stored preference
-theme.resolved; // 'dark' | 'light' — the effective theme (resolves 'system' against OS preference)
-theme.set('dark');
-```
-
-`theme.onChange(callback)` fires whenever the effective theme changes — either because `theme.set()` was called or because the OS preference changed while mode is `'system'`. Returns an unsubscribe function.
-
-```ts
-const off = theme.onChange((resolved, mode) => {
-	console.log(resolved); // 'dark' | 'light'
-	console.log(mode); // 'system' | 'dark' | 'light'
-});
-
-// later:
-off();
-```
-
-| Member         | Type                                           | Description                                       |
-| -------------- | ---------------------------------------------- | ------------------------------------------------- |
-| `mode`         | `'system' \| 'dark' \| 'light'`                | Stored preference (`$state` — reactive in Svelte) |
-| `resolved`     | `'dark' \| 'light'`                            | Effective theme (resolves `'system'`)             |
-| `set(mode)`    | `(mode: ThemeMode) => void`                    | Change and persist the theme                      |
-| `onChange(cb)` | `(cb: (resolved, mode) => void) => () => void` | Subscribe to theme changes; returns unsubscribe   |
-| `init()`       | `() => void`                                   | Apply stored theme and listen for OS changes      |
-
----
-
-### `cn(...inputs)`
-
-Merges Tailwind class names (clsx + tailwind-merge).
-
-```ts
-import { cn } from 'horizon-design';
-
-const cls = cn('px-4 py-2', { 'bg-primary': isActive });
-```
-
----
-
-### `createMonacoTheme()`
-
-Returns a Monaco `IStandaloneThemeData` object built from the active Horizon CSS tokens. Call it after the DOM is ready (so CSS variables are resolved) and re-call when the theme switches.
-
-```ts
-import { createMonacoTheme } from 'horizon-design';
-import * as monaco from 'monaco-editor';
-
-monaco.editor.defineTheme('horizon', createMonacoTheme());
-monaco.editor.setTheme('horizon');
-```
-
-To keep it in sync with the Horizon theme store:
-
-```ts
-import { theme, createMonacoTheme } from 'horizon-design';
-import * as monaco from 'monaco-editor';
-
-$effect(() => {
-	void theme.mode;
-	monaco.editor.defineTheme('horizon', createMonacoTheme());
-	monaco.editor.setTheme('horizon');
 });
 ```
 
----
+Switching documents or views inside one window is not a navigation: it switches at once.
 
-## Theme Tokens
+## Text
 
-Override any token in your CSS:
+Components hold no interface text of their own: every label, placeholder and accessible name is a
+prop (`closeLabel`, `labels`, `emptyText`…) or a snippet, so apps pass their i18n messages; the
+texts a component can't do without are required props. Numbers and dates arrive formatted
+(`PlayerCount`'s `count`, `CircularProgress`'s `valueText`, a notification's `time`).
 
-```css
-:root {
-	--primary: oklch(0.7 0.2 300);
-	--radius: 0.75rem;
+Ark UI components whose parts Ark names in English take Ark's `translations` prop, so the app
+gives those names translated. It is required by `Calendar`, `Carousel`, `Clipboard`, `Combobox`,
+`DatePicker`, `Editable`, `ImageCropper`, `NumberInput` (`incrementLabel`, `decrementLabel`,
+`roleDescription`), `Pagination` (`rootLabel`, `prevTriggerLabel`, `nextTriggerLabel`,
+`itemLabel`), `PinInput` (`inputLabel`) and `RatingGroup` (`ratingValueText`, `roleDescription`),
+each with the keys it shows; `Calendar`, `Carousel` and `DatePicker` add the roles their parts are
+announced as (`tableRoleDescription`; `roleDescription` and `slideRoleDescription`;
+`contentRoleDescription` and `tableRoleDescription`). The other Ark components take props of their own instead: `Tour`'s
+`closeLabel` and `progressText`, `Marquee`'s `label` and `roleDescription`, `SignaturePad`'s
+`label`, `roleDescription` and `clearLabel`, `FileUpload`'s `prompt`, `VirtualTree`'s `label` and `rename.label`, `FileTree`'s `label`, `HierarchyView`'s `label` and `renameLabel` and the
+`closeLabel` of `Toaster`, `ToastItem` and `FloatingPanel` replace the names Ark gives in English,
+and `ColorPicker`'s `labels` (each control, the area's role and the values its area and sliders
+announce) and `Timer`'s `labels` (its buttons) name the controls Ark leaves unnamed.
+`AngleSlider`'s and `CircularSlider`'s `valueText` format the values they show and announce.
+
+`HorizonLayout` takes horizon-layout's `translations` (`resizePane`, `floatingPanel`, `tabList`)
+required and complete, where horizon-layout itself would fill in English for a key left out.
+
+## Text selection
+
+Like a desktop app's, interface text isn't selectable: the base styles set `user-select: none` on
+`<body>`. The base styles turn selection back on in what the user types (`<input>`, `<textarea>`,
+editable `contenteditable` elements, so `Input`, `Textarea`, `Editable`, `PinInput`,
+`NumberInput` and the other fields), and the components that show text to read or to copy turn it
+on with `select-text`: `Prose` and the value of `Clipboard`.
+
+Anywhere else that needs it, opt in with Tailwind's `select-text` class on the element:
+documentation and other reading text, code (a Monaco editor's host element, a code block), and
+values a user copies (an id, a link to share). Elements a pointer drags (`Slider`, `ScrollArea`'s
+scroll bar, the `Splitter` handles, the `ImageCropper` image, the layout's tabs) keep
+`select-none`, so a drag never selects text even inside a selectable region.
+
+```svelte
+<pre class="select-text"><code>{source}</code></pre>
+```
+
+## Icons
+
+Icons are the [Mingcute](https://www.mingcute.com) set, through
+[unplugin-icons](https://github.com/unplugin/unplugin-icons), and nothing else: no inline `<svg>`
+markup in a component. Any other graphic (a logo, an illustration, example art) is a file (an
+`.svg` or an image) referenced by its path. The library's components follow the same rule, and
+import their icons as `~icons/mingcute/<name>`, which the app's build resolves. An app sets it up
+once:
+
+```sh
+pnpm add -D unplugin-icons @iconify-json/mingcute
+```
+
+```ts
+// vite.config.ts
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import Icons from 'unplugin-icons/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit(), Icons({ compiler: 'svelte' })]
+});
+```
+
+```jsonc
+// tsconfig.json: the types of the `~icons/*` imports. A SvelteKit app keeps `$app/types`, which
+// its `$app/tsconfig` sets and `types` replaces.
+{
+	"extends": "$app/tsconfig",
+	"compilerOptions": { "types": ["$app/types", "unplugin-icons/types/svelte"] }
 }
 ```
 
-| Token                  | Dark (default) | Light (`.light`)             |
-| ---------------------- | -------------- | ---------------------------- |
-| `--background`         | `#111624`      | `#f8fafc`                    |
-| `--foreground`         | `#f1f5f9`      | `#0f172a`                    |
-| `--primary`            | `#2d65f2`      | same                         |
-| `--primary-foreground` | `#ffffff`      | same                         |
-| `--primary-hover`      | `#4577f5`      | `#1d4ed8`                    |
-| `--secondary`          | `#192138`      | `#f1f5f9`                    |
-| `--muted`              | `#182035`      | `#f1f5f9`                    |
-| `--muted-foreground`   | `#7888a6`      | `#64748b`                    |
-| `--accent`             | `#1e2944`      | `#e2e8f0`                    |
-| `--card`               | `#141a2b`      | `#ffffff`                    |
-| `--popover`            | `#171e32`      | `#ffffff`                    |
-| `--border`             | `#212c47`      | `oklch(0.9288 0.0126 255.5)` |
-| `--input`              | `#151c2e`      | `#ffffff`                    |
-| `--ring`               | `#2d65f2`      | same                         |
-| `--destructive`        | `#ef4444`      | same                         |
-| `--success`            | `#10b981`      | same                         |
-| `--warning`            | `#f59e0b`      | same                         |
-| `--info`               | `#38bdf8`      | `#3b82f6`                    |
-| `--radius`             | `0.375rem`     | same                         |
+Then import an icon as a component; it takes the `class` of its size and colour and inherits
+`currentColor`:
 
----
+```svelte
+<script lang="ts">
+	import SearchIcon from '~icons/mingcute/search-line';
+</script>
+
+<SearchIcon class="size-4 text-muted" aria-hidden="true" />
+```
+
+Browse the set's names on [mingcute.com](https://www.mingcute.com) (`-line` and `-fill`
+variants).
+
+## Components
+
+### Actions
+
+| Component                                                                       | What it is                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ActionBar`](https://play-horizon.github.io/horizon-design/action-bar)         | A floating bar of actions at the bottom of the window, for the current selection; `ActionBarSeparator` divides its groups.                                                                                                                                    |
+| [`Button`](https://play-horizon.github.io/horizon-design/button)                | A button: `variant` sets its look and `size` its height (`icon-*` for a square icon-only button, which needs an `aria-label`); `loading` shows a spinner and disables it. `buttonVariants` gives its classes to other elements, such as an overlay's trigger. |
+| [`ButtonGroup`](https://play-horizon.github.io/horizon-design/button-group)     | Groups buttons into one connected row or column (`orientation`).                                                                                                                                                                                              |
+| [`Clipboard`](https://play-horizon.github.io/horizon-design/clipboard)          | Copies `value` to the clipboard, showing it, selectable, with a copy button that confirms the copy (Ark Clipboard); Ark `translations` (`triggerLabel`), required, name the button.                                                                           |
+| [`SegmentGroup`](https://play-horizon.github.io/horizon-design/segment-group)   | A segmented control: a sunken track whose chosen segment is raised (Ark SegmentGroup), such as the theme or a view switch; `value` binds the chosen segment, and an `aria-label` names the group.                                                             |
+| [`Swap`](https://play-horizon.github.io/horizon-design/swap)                    | Swaps between two contents with an animation, such as a play and a pause icon (Ark Swap): `on` while `swap` is true, `off` while it is false.                                                                                                                 |
+| [`Toggle`](https://play-horizon.github.io/horizon-design/toggle)                | A button that stays pressed or not (Ark Toggle); `pressed` binds its state, and an icon-only toggle takes an `aria-label`.                                                                                                                                    |
+| [`ToggleGroup`](https://play-horizon.github.io/horizon-design/toggle-group)     | A row of toggles of which one or several stay pressed (Ark ToggleGroup); `value` binds the pressed items, an `aria-label` names the group and an icon-only item takes a `label`.                                                                              |
+| [`ToggleTooltip`](https://play-horizon.github.io/horizon-design/toggle-tooltip) | An icon toggle, such as a toolbar's Bold, with a tooltip that names it: `label`, required, is both the tooltip's text and the toggle's accessible name, and `pressed` binds its state.                                                                        |
+| [`VoteButtons`](https://play-horizon.github.io/horizon-design/vote-buttons)     | Up and down votes, side by side on a segmented track, each with its count (`upCount`, `downCount`, formatted); `vote` binds the account's vote, and `labels` names the group and the buttons.                                                                 |
+
+### Forms
+
+| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`AngleSlider`](https://play-horizon.github.io/horizon-design/angle-slider)       | A circular control that picks an angle in degrees from 0 to 359, 0 at the top and clockwise (Ark AngleSlider); `label`, required, is its accessible name, `valueText`, required, formats the angle shown and announced (such as `45°`), and `value` binds the angle.                                                                                                            |
+| [`Calendar`](https://play-horizon.github.io/horizon-design/calendar)              | A month calendar to pick a date or a range, inline (Ark DatePicker without its field); Ark `translations`, required, name its days and controls and the roles of its tables.                                                                                                                                                                                                    |
+| [`Checkbox`](https://play-horizon.github.io/horizon-design/checkbox)              | A checkbox with its label (`label` or `children`, Ark Checkbox); `checked` binds true, false or indeterminate.                                                                                                                                                                                                                                                                  |
+| [`CircularSlider`](https://play-horizon.github.io/horizon-design/circular-slider) | A circular control that picks a value from 0 to 359 along a ring that fills clockwise from the top up to its thumb (Ark AngleSlider), with the value in its centre; `label`, required, is its accessible name, `valueText`, required, formats the value shown and announced (such as `120°`), and `value` binds the value.                                                      |
+| [`ColorPicker`](https://play-horizon.github.io/horizon-design/color-picker)       | Picks a colour: a hex field and a swatch trigger opening an area, hue and alpha sliders and fields (Ark ColorPicker); `value` binds the colour (from `parseColor`), `labels`, required, names every control, the area's role and the values the area and sliders announce, and `swatches` are passed in.                                                                        |
+| [`Combobox`](https://play-horizon.github.io/horizon-design/combobox)              | A text field that filters a list of options to choose from (Ark Combobox); `label`, required, names the field, `emptyText`, required, shows when none matches, and Ark `translations` (`triggerLabel`), required, name its open button; Ark announces the options found to screen readers only when `translations` gives the messages (`resultsCount`, `noResults`, `loading`). |
+| [`DatePicker`](https://play-horizon.github.io/horizon-design/date-picker)         | A date field with a calendar popover (Ark DatePicker); `label`, required, names the field, `value` binds the chosen dates, `placeholder` shows while none is chosen, and Ark `translations`, required, name its controls and the roles of its popover and tables.                                                                                                               |
+| [`Editable`](https://play-horizon.github.io/horizon-design/editable)              | Text that turns into a field when edited, then back (Ark Editable); `value` binds the text, and Ark `translations` (`input`, `edit`), required, name the field (when there is no `label`, which names it otherwise) and the text.                                                                                                                                               |
+| [`FacetedSearch`](https://play-horizon.github.io/horizon-design/faceted-search)   | Search with facets, for Discover and the store: a search field and an optional sort at the top, the facets in a column at the side (each a group of checkboxes, with optional counts), and the results, which the app renders in `children`. `query`, `selected` and `sort` bind, `onChange` reports each change, and `searchLabel`, `sortLabel` and `clearLabel` are required. |
+| [`Field`](https://play-horizon.github.io/horizon-design/field)                    | A form field: its label, the control, a help text and an error message (`label`, `helperText`, `errorText`), wired together for assistive technology (Ark Field).                                                                                                                                                                                                               |
+| [`FileUpload`](https://play-horizon.github.io/horizon-design/file-upload)         | A dropzone that takes files by drop or by browsing (Ark FileUpload); `prompt`, required, is its text and accessible name, and `hint` a second line.                                                                                                                                                                                                                             |
+| [`Hint`](https://play-horizon.github.io/horizon-design/hint)                      | A short help text under a field, which the field's `aria-describedby` points at through the hint's `id`; inside a `Field`, its `helperText` takes its place.                                                                                                                                                                                                                    |
+| [`ImageCropper`](https://play-horizon.github.io/horizon-design/image-cropper)     | Crops an image (`src`) to a frame that can be moved and resized (Ark ImageCropper), for avatars and thumbnails; Ark `translations`, all required, name and describe it for assistive technology.                                                                                                                                                                                |
+| [`Input`](https://play-horizon.github.io/horizon-design/input)                    | A text input on a sunken field, with optional icons or controls at its start and end (`start`, `end`); `value` binds its text and `invalid` marks it invalid. Inside a `Field`, it takes the field's label, description and error.                                                                                                                                              |
+| [`InputGroup`](https://play-horizon.github.io/horizon-design/input-group)         | An `Input` with `InputAddon`s (text or an icon, such as `https://`) attached to its sides, joined into one field.                                                                                                                                                                                                                                                               |
+| [`Listbox`](https://play-horizon.github.io/horizon-design/listbox)                | A list of options to choose one or several from (Ark Listbox); `label`, required, names it, and `value` binds the chosen options.                                                                                                                                                                                                                                               |
+| [`NativeSelect`](https://play-horizon.github.io/horizon-design/native-select)     | The browser's own select, styled like the other fields; `value` binds the chosen option, and a `<label for>` or an `aria-label` names it.                                                                                                                                                                                                                                       |
+| [`NumberInput`](https://play-horizon.github.io/horizon-design/number-input)       | A number field with increment and decrement buttons (Ark NumberInput); `value` binds the field's text, and `translations` (`incrementLabel`, `decrementLabel`, `roleDescription`), required, name the buttons and the field's role.                                                                                                                                             |
+| [`PinInput`](https://play-horizon.github.io/horizon-design/pin-input)             | A row of `count` one-character fields for a code, such as the sign-up code (Ark PinInput); `value` binds the characters, and Ark `translations.inputLabel` names each field.                                                                                                                                                                                                    |
+| [`RadioGroup`](https://play-horizon.github.io/horizon-design/radio-group)         | A group of radio buttons to choose one option (Ark RadioGroup), from `items` or Ark's `RadioGroup.Item` parts; `value` binds the chosen option, and `label` or an `aria-label` names the group.                                                                                                                                                                                 |
+| [`RatingGroup`](https://play-horizon.github.io/horizon-design/rating-group)       | A row of `count` stars to give a rating (Ark RatingGroup); `value` binds the rating, `label`, required, names the group, and `translations` (`ratingValueText`, `roleDescription`), required, name each star and its role.                                                                                                                                                      |
+| [`Select`](https://play-horizon.github.io/horizon-design/select)                  | A select field with a dropdown list of options (Ark Select); `value` binds the chosen values, `label`, required, names the field, and `placeholder` shows while none is chosen.                                                                                                                                                                                                 |
+| [`SignaturePad`](https://play-horizon.github.io/horizon-design/signature-pad)     | A pad to draw a signature or a sketch (Ark SignaturePad), with a clear button once something is drawn; `label`, `roleDescription` and `clearLabel`, required, name the pad, its role and the button.                                                                                                                                                                            |
+| [`Slider`](https://play-horizon.github.io/horizon-design/slider)                  | A slider to pick a value, or a range with one thumb per value (Ark Slider); `value` binds the values, and `label` (or Ark's `aria-label`) names the thumbs.                                                                                                                                                                                                                     |
+| [`Switch`](https://play-horizon.github.io/horizon-design/switch)                  | An on/off switch with its label (`label` or `children`, Ark Switch); `checked` binds its state.                                                                                                                                                                                                                                                                                 |
+| [`TagPicker`](https://play-horizon.github.io/horizon-design/tag-picker)           | Chooses tags from a fixed list (the platform's tag lists are never free text): every tag is a toggle chip, the chosen ones tinted and checked. `value` binds the chosen ids, in the order chosen, `max` caps how many, and `label`, required, names the group.                                                                                                                  |
+| [`Textarea`](https://play-horizon.github.io/horizon-design/textarea)              | A multi-line text field on a sunken field; `value` binds its text. Inside a `Field`, it takes the field's label, description and error.                                                                                                                                                                                                                                         |
+
+### Display
+
+| Component                                                                    | What it is                                                                                                                                                                                                                                                                         |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Announcement`](https://play-horizon.github.io/horizon-design/announcement) | A small pill that announces something new, with an optional icon and a tag.                                                                                                                                                                                                        |
+| [`AspectRatio`](https://play-horizon.github.io/horizon-design/aspect-ratio)  | Keeps its content at a fixed width-to-height ratio (`ratio`, such as `16 / 9`).                                                                                                                                                                                                    |
+| [`AssetCard`](https://play-horizon.github.io/horizon-design/asset-card)      | An asset in a list (a store listing, an entry of My assets or of a game's assets): its square thumbnail, its `name` (the card's link or button), its `kind`, a `meta` line (votes, the rig profile) and `actions` (Add to my assets). `name` and `kind`, translated, are required. |
+| [`Avatar`](https://play-horizon.github.io/horizon-design/avatar)             | A person's avatar: their image, or their initials (`fallback`) on a coloured disc while it loads or when there is none. `alt`, the person's name, names it; without it, it is decorative.                                                                                          |
+| [`AvatarStack`](https://play-horizon.github.io/horizon-design/avatar-stack)  | A row of overlapping avatars, such as who is editing a game now: up to `max` people, then a chip whose text `overflowText` gives; `label`, required, names the group.                                                                                                              |
+| [`Badge`](https://play-horizon.github.io/horizon-design/badge)               | A small label: a status, a count, a tag or a restriction badge; `variant` sets its colour and `size` its height.                                                                                                                                                                   |
+| [`Card`](https://play-horizon.github.io/horizon-design/card)                 | A surface that groups related content: an optional title and description, the content, and an optional footer.                                                                                                                                                                     |
+| [`Carousel`](https://play-horizon.github.io/horizon-design/carousel)         | A horizontal slideshow of `slides` with previous and next controls and indicators (Ark Carousel); `label`, required, names it, and Ark `translations`, required, name the slides and the controls and the roles of the carousel and its slides.                                    |
+| [`DataList`](https://play-horizon.github.io/horizon-design/data-list)        | A list of label and value pairs (`items`), such as the details of a game.                                                                                                                                                                                                          |
+| [`Frame`](https://play-horizon.github.io/horizon-design/frame)               | A window-like frame around content, such as a code sample or a screenshot; with a `title`, a title bar shows it between three window dots.                                                                                                                                         |
+| [`GameCard`](https://play-horizon.github.io/horizon-design/game-card)        | A game in a list: its 16:9 thumbnail and its name, the card's link (`href`) or button (`onclick`); the `feature` variant is the larger Continue playing card, with the icon and an `action` (Play).                                                                                |
+| [`GameHero`](https://play-horizon.github.io/horizon-design/game-hero)        | The top of a game page: the game's 16:9 thumbnail as a banner that fades into the page, with the square icon, the name, a `byline` (the creator) and the game's `tags` over its bottom, and a `top` slot at its top left (Back).                                                   |
+| [`Item`](https://play-horizon.github.io/horizon-design/item)                 | A row of a list, laying out what it is given (media, a title, a description, actions) in a line.                                                                                                                                                                                   |
+| [`Kbd`](https://play-horizon.github.io/horizon-design/kbd)                   | A keyboard key or shortcut, such as `Ctrl K`, drawn as a raised key.                                                                                                                                                                                                               |
+| [`Marquee`](https://play-horizon.github.io/horizon-design/marquee)           | Content (`MarqueeItem`s) that scrolls continuously, pausing while hovered or focused and still under reduced motion (Ark Marquee); `label` and `roleDescription`, required, name the region and its role.                                                                          |
+| [`PlayerCount`](https://play-horizon.github.io/horizon-design/player-count)  | How many people are playing a game now: a live dot and the count. `count` (formatted) and `label` (`playing now`) are required; `variant` is `inline` or an `overlay` pill on game art.                                                                                            |
+| [`Prose`](https://play-horizon.github.io/horizon-design/prose)               | Typography for long-form text, such as rendered Markdown; its text is selectable.                                                                                                                                                                                                  |
+| [`QrCode`](https://play-horizon.github.io/horizon-design/qr-code)            | A QR code of `value` on the fixed `paper` background, so scanners read it in both themes (Ark QrCode); `label`, required, names the image.                                                                                                                                         |
+| [`ScrollArea`](https://play-horizon.github.io/horizon-design/scroll-area)    | A scrolling region with a thin, themed vertical scrollbar, shown only while the content overflows (Ark ScrollArea); the region needs a height.                                                                                                                                     |
+| [`Separator`](https://play-horizon.github.io/horizon-design/separator)       | A horizontal or vertical divider, hidden from assistive technology unless `decorative` is false.                                                                                                                                                                                   |
+| [`Status`](https://play-horizon.github.io/horizon-design/status)             | A small dot that shows a status: online (or running), away, busy (or failing) or offline, with a soft ring in its colour; `label` names it, and without it the dot is decorative.                                                                                                  |
+| [`Table`](https://play-horizon.github.io/horizon-design/table)               | A data table from `columns` and `rows`; `rowKey`, required, gives each row's stable key.                                                                                                                                                                                           |
+| [`ThemeSwitch`](https://play-horizon.github.io/horizon-design/theme-switch)  | The theme switch: three icon buttons (system, dark, light) on a sunken pill, the chosen one raised, which call `theme.set`; `labels`, required, names the group and each mode.                                                                                                     |
+| [`ThumbCard`](https://play-horizon.github.io/horizon-design/thumb-card)      | A card showing a preview (its content) with a `label` under it, a link when `href` is set.                                                                                                                                                                                         |
+| [`Timer`](https://play-horizon.github.io/horizon-design/timer)               | A countdown or a stopwatch (Ark Timer), with the days before the hours from one day on (`01:02:00:00`), and start, pause, resume and reset buttons that `labels`, required, names.                                                                                                 |
+
+### Feedback
+
+| Component                                                                                 | What it is                                                                                                                                                                                                                                                                                                           |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Alert`](https://play-horizon.github.io/horizon-design/alert)                            | An inline message (a banner): a neutral, info, success, warning or error tint, an icon, a title and a description.                                                                                                                                                                                                   |
+| [`CircularProgress`](https://play-horizon.github.io/horizon-design/circular-progress)     | A ring that fills with progress (`value` out of `max`), with an optional value in its centre; `label`, required, names the progress bar, and `valueText` (formatted, such as `72%`) is shown and announced.                                                                                                          |
+| [`NotificationCenter`](https://play-horizon.github.io/horizon-design/notification-center) | The notification centre: a heading with "Mark all as read", then the account's notifications, newest first, each with its image (a game's icon), its text, its time and, while unread, a dot. `heading`, `emptyText`, `markAllLabel` and `unreadLabel` are required, and `actions` renders a notification's buttons. |
+| [`Progress`](https://play-horizon.github.io/horizon-design/progress)                      | A horizontal progress bar of `value`, required, with an optional label and value (Ark Progress); `label` names the bar.                                                                                                                                                                                              |
+| [`Skeleton`](https://play-horizon.github.io/horizon-design/skeleton)                      | A placeholder block that pulses while content loads (pages show skeletons, not spinners).                                                                                                                                                                                                                            |
+| [`Spinner`](https://play-horizon.github.io/horizon-design/spinner)                        | A spinning loading indicator, for an action in progress inside a control (a button); `label` shows beside it and is announced, an `aria-label` is only announced, and with neither it is decorative.                                                                                                                 |
+| [`Toaster`](https://play-horizon.github.io/horizon-design/toast)                          | Shows the toasts of a toaster made with `createToaster`, stacked at the window's edge, in a live region; `label` and `closeLabel`, required, name the region and each toast's close button.                                                                                                                          |
+| [`ToastItem`](https://play-horizon.github.io/horizon-design/toast)                        | One toast message: an info, success, warning or error tint (or, while loading, a neutral one with a spinner), a title, a description and a close button named by `closeLabel`, required.                                                                                                                             |
+
+### Navigation
+
+| Component                                                                             | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Accordion`](https://play-horizon.github.io/horizon-design/accordion)                | A vertical stack of collapsible sections (Ark Accordion); `AccordionItem` is one section, with its `value` and its `trigger`, and `value` binds the open sections.                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| [`BottomNavigation`](https://play-horizon.github.io/horizon-design/bottom-navigation) | A bar of navigation `items` fixed to the bottom of a narrow screen; `label`, required, names it among the page's landmarks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| [`Breadcrumb`](https://play-horizon.github.io/horizon-design/breadcrumb)              | The trail of pages leading to the current one, each a link but the last; `label`, required, names the trail.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| [`Collapsible`](https://play-horizon.github.io/horizon-design/collapsible)            | Content that a trigger shows and hides (Ark Collapsible); `open` binds whether it shows.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| [`CommandPalette`](https://play-horizon.github.io/horizon-design/command-palette)     | The command palette: a dialog at the top of the window with a search field and every command that matches what is typed (each word whole, ignoring case and accents, through Ark's `useFilter`), ranked by [fuzzysort](https://github.com/farzher/fuzzysort), label matches first, each with its shortcut. The field and the virtualised list are an Ark combobox: Up, Down, Home and End move through the commands that can run, Enter runs one, Escape closes. `open` binds, `onRun` runs the chosen command once the palette has finished closing, so the command can move the focus, and `label` and `emptyText` are required. |
+| [`LinkOverlay`](https://play-horizon.github.io/horizon-design/link-overlay)           | The link of a `LinkBox`, stretched over the whole box so a click anywhere follows it, while the box's other links and controls stay usable.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| [`Pagination`](https://play-horizon.github.io/horizon-design/pagination)              | Page links with previous and next for `count` items, required (Ark Pagination); `page` binds the current page, and Ark `translations` name its controls. `children` replaces the built-in controls with the parts `PaginationPrevTrigger`, `PaginationNextTrigger`, `PaginationItem`, `PaginationEllipsis` and `PaginationContext`, which reads its state.                                                                                                                                                                                                                                                                         |
+| [`Sidebar`](https://play-horizon.github.io/horizon-design/sidebar)                    | An app's navigation sidebar: a sunken column with an optional header (the brand), the navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (the account); `collapsed` narrows it to its icons.                                                                                                                                                                                                                                                                                                                                                                                                            |
+| [`SkipNav`](https://play-horizon.github.io/horizon-design/skip-nav)                   | A link, shown on keyboard focus, that skips to the page's main content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| [`Steps`](https://play-horizon.github.io/horizon-design/steps)                        | A multi-step flow (Ark Steps): the `steps` (each an `id`, a `title` and its `content`), the current step's content, and back and next buttons named by `prevLabel` and `nextLabel`, required; `step` binds the current step.                                                                                                                                                                                                                                                                                                                                                                                                       |
+| [`Tabs`](https://play-horizon.github.io/horizon-design/tabs)                          | Tabs and their panels (Ark Tabs), a segmented or an underlined tab list; each tab is a `value`, a `label` and its `content`, and `value` binds the selected tab.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Overlays
+
+| Component                                                                       | What it is                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`AlertDialog`](https://play-horizon.github.io/horizon-design/alert-dialog)     | A confirmation dialog for a destructive or irreversible action: a title, a description, Cancel and the confirming action, named by `cancelLabel` and `actionLabel`, required. Cancel takes the focus; the confirming button calls `onAction`, required, and closes it; `open` binds.                        |
+| [`ContextMenu`](https://play-horizon.github.io/horizon-design/context-menu)     | A menu opened by a right click or a long press on its content (Ark Menu): its `groups` (each with an `id`, an optional title that names it, and its `items` to choose, each with an `id`), a line between groups, and Ark's `onSelect` reports the chosen item's `id`; `frosted` for a translucent surface. |
+| [`Dialog`](https://play-horizon.github.io/horizon-design/dialog)                | A modal dialog (Ark Dialog): a title, a description, the content and a footer, on the raised surface over a scrim; `closeLabel`, required, names its close button, `open` binds, and `DialogClose` closes it from inside; `frosted` for a translucent surface.                                              |
+| [`Drawer`](https://play-horizon.github.io/horizon-design/drawer)                | A panel that slides in from the end edge of the window and is swiped back toward it to dismiss it (Ark Drawer), with a title, content and footer; `title`, required, names it, `closeLabel`, required, names its close button, `open` binds, and `DrawerClose` closes it from inside.                       |
+| [`FloatingPanel`](https://play-horizon.github.io/horizon-design/floating-panel) | A panel that floats over the window, dragged by its header and resized by its edges and corners (Ark FloatingPanel); `title`, required, names it, `closeLabel`, required, names its close button, and `open` binds.                                                                                         |
+| [`HoverCard`](https://play-horizon.github.io/horizon-design/hover-card)         | A card that shows on hover or focus of its trigger (Ark HoverCard), such as the docs card of a function; `frosted` for a translucent surface.                                                                                                                                                               |
+| [`Menu`](https://play-horizon.github.io/horizon-design/menu)                    | A dropdown menu opened by its trigger (Ark Menu): `MenuItem`s (each a `value`, which Ark's `onSelect` reports), `MenuGroup`s named by a `MenuGroupLabel`, and `MenuSeparator`s; `open` binds, `frosted` for a translucent surface.                                                                          |
+| [`Popover`](https://play-horizon.github.io/horizon-design/popover)              | A non-modal panel anchored to its trigger (Ark Popover), with a title, content and footer; `open` binds, and `PopoverClose`, named by its required `label`, closes it from inside; `frosted` for a translucent surface.                                                                                     |
+| [`Sheet`](https://play-horizon.github.io/horizon-design/sheet)                  | A modal panel that slides in from one `side` of the window (Ark Dialog); `closeLabel`, required, names its close button, and `open` binds; `frosted` for a translucent surface.                                                                                                                             |
+| [`Tooltip`](https://play-horizon.github.io/horizon-design/tooltip)              | A short label (`content`) shown on hover or keyboard focus of its trigger (Ark Tooltip): a button holding `children`, or the app's own element through `trigger`. It describes the trigger, so an icon-only trigger still needs an `aria-label`.                                                            |
+| [`Tour`](https://play-horizon.github.io/horizon-design/tour)                    | A guided tour of the interface, step by step, with the step's target spotlit (Ark Tour); the app passes the `steps` and their action labels translated, and `closeLabel` and `progressText`, required.                                                                                                      |
+
+### Layout
+
+| Component                                                                   | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Float`](https://play-horizon.github.io/horizon-design/float)              | Pins its content at a corner or the bottom centre of the window (`position`), over the page, such as floating action buttons; several children stack in a column.                                                                                                                                                                                                                                                                                                                                                                                                |
+| [`Splitter`](https://play-horizon.github.io/horizon-design/splitter)        | Resizable panels (Ark Splitter): `SplitterPanel`s, each with its `id` from `panels`, and a `SplitterResizeTrigger` between each two, named by its `label`, required.                                                                                                                                                                                                                                                                                                                                                                                             |
+| [`VirtualList`](https://play-horizon.github.io/horizon-design/virtual-list) | A scrolling list that renders only the rows in view (plus `overscan` rows on each side), so a list of any length costs the same as one screenful; `items`, `itemHeight`, `key` and `row` are required, and `scrollToIndex` brings a row into view, and `keepIndex` keeps a row (such as the active one) rendered while it is out of view.                                                                                                                                                                                                                        |
+| [`VirtualTree`](https://play-horizon.github.io/horizon-design/virtual-tree) | A virtualised tree (WAI-ARIA tree view, on Ark TreeView): only the rows in view are rendered, so a hierarchy of any size stays fast, with Ark's keyboard, multiple selection and renaming, and its own type-to-find, which takes names with spaces. `collection` (from `createTreeCollection`), `label` and `row` are required; `expandedValue`, `selectedValue` and `focusedValue` bind, `rename` enables F2 renaming, and `focus`, `visibleValues` and `startRenaming` bring a row into view and focus it, list the rows on screen, and open the rename field. |
+
+### Editor
+
+| Component                                                                         | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`FileTree`](https://play-horizon.github.io/horizon-design/file-tree)             | A tree of files and folders on `VirtualTree` (only the rows in view are rendered) from a `collection`, with expandable folders and custom icons; only files are selected. `label`, required, names it, and `selectedValue`, `expandedValue` and `focusedValue` bind.                                                                                                                                                                                                                |
+| [`HierarchyView`](https://play-horizon.github.io/horizon-design/hierarchy-view)   | The Editor's hierarchy of a scene's objects, on `VirtualTree`: keyboard navigation, multiple selection, renaming, deletion, and drag and drop ([pragmatic-drag-and-drop](#drag-and-drop)) to reparent and reorder, which reports each change of `data` through `onDataChange`. `label`, `renameLabel` and `dragLabel` are required; `nodeWithName` writes a renamed node when `nodeToString` reads a field other than `name`, and `selectedValue` and `expandedValue` bind.         |
+| [`HorizonLayout`](https://play-horizon.github.io/horizon-design/horizon-layout)   | The Editor window's docking layout: horizon-layout 2.0.2 styled with horizon-design, taking every prop of its `HorizonLayout`, with docked panes that meet on a single line, floating panels raised over them, and a button that restores a maximised view; `config` binds, `views` holds the views, horizon-layout's `translations`, required and complete, name the split handles, the tab lists and the floating panels, and `restoreLabel`, required, names the restore button. |
+| [`InspectorPanel`](https://play-horizon.github.io/horizon-design/inspector-panel) | The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by drag ([pragmatic-drag-and-drop](#drag-and-drop)) or keyboard; `cards` and `expandedIds` bind.                                                                                                                                                                                                                                                                                     |
+
+## Drag and drop
+
+The Editor's drag and drop (`HierarchyView`, `InspectorPanel`) uses Atlassian's
+[pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) (Apache-2.0).
+It is framework-agnostic with a small core, maintained by Atlassian for Jira, Trello and
+Confluence, and built on native HTML5 drag and drop, which Electron's Chromium supports. Its hitbox
+package computes exactly the instructions a hierarchy needs (reorder above or below, make child,
+reparent by indent level) and a list's closest edge. `@dnd-kit/svelte` was the alternative; its
+Svelte port is younger and less proven. The keyboard does the same moves (Shift+arrows).
+
+## Developing
+
+Requirements: Node 24.2 or later (the token generator uses `import.meta.main`) and pnpm 12 (`.node-version`, `packageManager`).
+
+```sh
+pnpm install
+pnpm dev     # the docs site on http://localhost:5173
+pnpm lint    # Prettier and ESLint
+pnpm check   # svelte-check
+pnpm test    # vitest: the token pipeline and component tests (jsdom)
+pnpm build   # the docs site (build/) and the package (dist/)
+```
+
+- `src/lib/components/<name>/`: one directory per general component, with its `index.ts`, its
+  tests (`*.test.ts`) and any helper module.
+- `src/lib/editor/`: the Editor's components, exported as `horizon-design/editor`.
+- `src/lib/styles/`: the stylesheet's parts (fonts, scale, base, motion, frosted), imported by
+  `src/lib/horizon-design.css`; `src/lib/generated/` holds the generated token files (gitignored).
+- `src/lib/theme.svelte.ts` and `src/lib/motion/`: the theme controller and page motion.
+- `scripts/tokens/`: the token source and the generator, which converts OKLCH to hex with [colorjs.io](https://colorjs.io) when the library is built.
+- `src/routes/`: the docs site, one page per component (`sections/<Name>.svelte`), listed in
+  `src/routes/nav.ts`.
+
+Every new component gets a docs page with live examples and component tests. Publishing: a push
+to `main` that bumps the version publishes to npm and deploys the docs site.
+
+Upgrading horizon-layout: `src/lib/editor/horizon-layout/horizon-layout.css` is a copy of the
+library's default theme with horizon-design's differences, listed in its header. Diff the
+library's default theme (`src/lib/horizon-layout.css` in horizon-layout) between the version
+pinned in `package.json` and the new one, apply that diff to the copy, keeping the listed
+differences, and update the version the header names.
 
 ## Fonts
 
-Both fonts are self-hosted and bundled with the library CSS.
+Two variable fonts are self-hosted and bundled with the stylesheet (`src/lib/fonts`, published in
+`dist/fonts`), each split into a Latin and an extended subset:
 
-| Token         | Family                                                                  | Usage                         |
-| ------------- | ----------------------------------------------------------------------- | ----------------------------- |
-| `--font-sans` | [Encode Sans](https://fonts.google.com/specimen/Encode+Sans) (variable) | All UI text                   |
-| `--font-mono` | [Lilex](https://github.com/mishamyrt/Lilex) (variable)                  | Code, `Kbd`, numeric displays |
+- **Horizon Sans** (`--font-sans`, variable weight and width) is a subset of
+  [Encode Sans](https://github.com/thundernixon/Encode-Sans), Copyright 2020 The Encode Project
+  Authors, renamed as its licence requires: the SIL Open Font License reserves the name
+  "Encode Sans" for the unmodified font, and a subset is a modified version.
+- **Lilex** (`--font-mono`, variable weight), Copyright 2019 The Lilex Project Authors
+  ([Lilex](https://github.com/mishamyrt/Lilex)), is subset under its own name: its licence reserves
+  no name.
 
-`Encode Sans` is applied at `semi-expanded` stretch by default. Override either token in your CSS to swap in a different font:
+Both are under the SIL Open Font License 1.1, shipped next to them: `OFL-EncodeSans.txt` and
+`OFL-Lilex.txt`.
 
-```css
-:root {
-	--font-mono: 'Fira Code', monospace;
-}
+The Horizon Sans files are the Encode Sans subsets of commit `12ca3cd` with their names changed by
+`scripts/fonts/rename-horizon-sans.py` (family, full name, PostScript name, unique ID and
+typographic family; nothing else). fontTools runs once, outside the project's dependencies, here in
+a throwaway container; the same input gives the same files:
+
+```sh
+mkdir -p /tmp/horizon-sans
+for subset in latin latin-ext; do
+	git show 12ca3cd:src/lib/fonts/EncodeSans-$subset.woff2 > /tmp/horizon-sans/EncodeSans-$subset.woff2
+done
+docker run --rm -v /tmp/horizon-sans:/fonts -v "$PWD/scripts/fonts:/scripts:ro" -w /fonts \
+	python:3.13-slim sh -c 'pip install fonttools==4.68.0 brotli==1.2.1 && for subset in latin latin-ext; do
+		python -I /scripts/rename-horizon-sans.py EncodeSans-$subset.woff2 HorizonSans-$subset.woff2
+	done'
+cp /tmp/horizon-sans/HorizonSans-*.woff2 src/lib/fonts/
 ```
+
+## Licence
+
+MIT, except the fonts in `src/lib/fonts` (`dist/fonts` in the package), which are under the SIL
+Open Font License 1.1 (see [Fonts](#fonts)).

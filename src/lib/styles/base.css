@@ -1,0 +1,86 @@
+/* Base styles every app gets with horizon-design: the page colours and font, text selection
+   (off by default, like a desktop app), focus, pointer cursors on interactive parts, and reduced
+   motion. */
+
+@layer base {
+	*,
+	::before,
+	::after {
+		border-color: var(--border);
+	}
+
+	html,
+	body {
+		background-color: var(--background);
+	}
+
+	body {
+		color: var(--fg);
+		font-family: var(--font-sans);
+		font-size: var(--text-base);
+		line-height: var(--text-base--line-height);
+		font-stretch: semi-expanded;
+		-webkit-font-smoothing: antialiased;
+		/* Interface text isn't selectable, like a desktop app's. Text the user types or reads at
+		   length opts back in: fields below, and Tailwind's `select-text` on reading content, code
+		   and values a user copies. */
+		user-select: none;
+	}
+
+	input,
+	textarea,
+	[contenteditable]:not([contenteditable='false']) {
+		user-select: text;
+	}
+
+	/* A light or dark island takes its theme's text colour: inherited text would keep the page's. */
+	[data-theme] {
+		color: var(--fg);
+	}
+
+	/* Lilex has no width axis: monospace text keeps its normal width. */
+	code,
+	kbd,
+	pre,
+	samp,
+	.font-mono {
+		font-stretch: normal;
+	}
+
+	::selection {
+		background-color: color-mix(in oklab, var(--primary) 30%, transparent);
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+
+	button:not(:disabled),
+	[role='button']:not([aria-disabled='true']),
+	[role='tab'],
+	[role='menuitem'],
+	[role='option'],
+	[role='radio'],
+	[role='checkbox'],
+	[role='switch'],
+	summary,
+	label[for] {
+		cursor: pointer;
+	}
+
+	[disabled],
+	[aria-disabled='true'] {
+		cursor: not-allowed;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}

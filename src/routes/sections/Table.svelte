@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Table. Live examples of the Table component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Table } from '$lib/components/table';
+	import { Card } from '#lib/components/card/index.js';
+	import { Table } from '#lib/components/table/index.js';
 </script>
 
 <section id="table">
-	<p class="section-tag">Display</p>
-	<h2 class="mb-6 text-2xl font-bold">Table</h2>
 	<Card>
 		<div>
 			<Table
@@ -20,6 +22,7 @@
 					{ name: 'Bob Smith', status: 'away', role: 'Developer', joined: 'Mar 2024' },
 					{ name: 'Carol White', status: 'offline', role: 'Designer', joined: 'Jun 2024' }
 				]}
+				rowKey={(row) => String(row.name)}
 			/>
 		</div>
 	</Card>

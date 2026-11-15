@@ -1,21 +1,26 @@
+<!--
+@component
+Docs: Badge. Live examples of the Badge component.
+-->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="badge">
-	<p class="section-tag">Indicators</p>
-	<h2 class="mb-6 text-2xl font-bold">Badge</h2>
 	<Card>
 		<div>
-			<div class="flex flex-wrap gap-2">
-				<Badge>Default</Badge>
-				<Badge variant="secondary">Secondary</Badge>
-				<Badge variant="outline">Outline</Badge>
-				<Badge variant="destructive">Destructive</Badge>
+			<div class="flex flex-wrap items-center gap-2">
+				<Badge>Neutral</Badge>
+				<Badge variant="primary">Primary</Badge>
 				<Badge variant="success">Success</Badge>
 				<Badge variant="warning">Warning</Badge>
+				<Badge variant="danger">Danger</Badge>
 				<Badge variant="info">Info</Badge>
+				<Badge variant="accent">Accent</Badge>
+				<Badge variant="server">Server</Badge>
+				<Badge variant="local">Local</Badge>
+				<Badge size="sm">Small</Badge>
 			</div>
 		</div>
 	</Card>

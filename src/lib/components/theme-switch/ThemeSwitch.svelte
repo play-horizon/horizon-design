@@ -1,125 +1,70 @@
-<script lang="ts">
-	import { flushSync, onMount } from 'svelte';
-	import { cn } from '$lib/utils';
-	import MingcuteComputerFill from '~icons/mingcute/computer-fill';
-	import MingcuteMoonStarsFill from '~icons/mingcute/moon-stars-fill';
-	import MingcuteSunFill from '~icons/mingcute/sun-fill';
-	import { theme, type ThemeMode } from '$lib/theme.svelte';
+<!--
+@component
+The theme switch: three icon buttons (system, dark, light) on a sunken pill, the chosen one
+raised. Choosing one calls `theme.set`, which saves the mode and crossfades the page. The labels
+name each mode for assistive technology and tooltips; the app passes them translated.
+-->
+<script lang="ts" module>
+	/** The switch's accessible texts. */
+	export interface ThemeSwitchLabels {
+		/** The group's name, such as "Theme". */
+		group: string;
+		/** The system mode's name, such as "System". */
+		system: string;
+		/** The dark mode's name, such as "Dark". */
+		dark: string;
+		/** The light mode's name, such as "Light". */
+		light: string;
+	}
+</script>
 
-	let mounted = $state(false);
-	onMount(() => (mounted = true));
+<script lang="ts">
+	import { cn } from '#lib/utils.js';
+	import MingcuteComputerLine from '~icons/mingcute/computer-line';
+	import MingcuteMoonLine from '~icons/mingcute/moon-line';
+	import MingcuteSunLine from '~icons/mingcute/sun-line';
+	import { theme, type ThemeMode } from '#lib/theme.svelte.js';
 
 	let {
+		labels,
 		size = 'md',
 		class: className = ''
 	}: {
-		size?: 'sm' | 'md' | 'lg' | 'xl';
+		/** The names of the group and of each mode, translated. */
+		labels: ThemeSwitchLabels;
+		/** The control's size. */
+		size?: 'sm' | 'md';
+		/** Classes merged onto the `<div>`. */
 		class?: string;
 	} = $props();
 
-	function setThemeMode(next: ThemeMode) {
-		if (!document.startViewTransition) {
-			theme.set(next);
-			return;
-		}
-		const style = document.createElement('style');
-		style.textContent = '*:not([data-slot="theme-switch-thumb"]) { transition: none !important; }';
-		document.head.appendChild(style);
-		const t = document.startViewTransition(() => {
-			flushSync(() => theme.set(next));
-		});
-		t.finished.finally(() => style.remove());
-	}
-
-	type SizeConfig = {
-		thumb: string;
-		iconPx: number;
-		translateByMode: Record<ThemeMode, string>;
-	};
-
-	const sizes: Record<'sm' | 'md' | 'lg' | 'xl', SizeConfig> = {
-		sm: {
-			thumb: 'size-5',
-			iconPx: 11,
-			translateByMode: { system: 'translate-x-0', dark: 'translate-x-5', light: 'translate-x-10' }
-		},
-		md: {
-			thumb: 'size-6',
-			iconPx: 13,
-			translateByMode: { system: 'translate-x-0', dark: 'translate-x-6', light: 'translate-x-12' }
-		},
-		lg: {
-			thumb: 'size-7',
-			iconPx: 15,
-			translateByMode: { system: 'translate-x-0', dark: 'translate-x-7', light: 'translate-x-14' }
-		},
-		xl: {
-			thumb: 'size-8',
-			iconPx: 17,
-			translateByMode: { system: 'translate-x-0', dark: 'translate-x-8', light: 'translate-x-16' }
-		}
-	};
-
-	const sz = $derived(sizes[size]);
-
-	type ModeConfig = {
-		value: ThemeMode;
-		IconComponent: typeof MingcuteComputerFill;
-		label: string;
-	};
-
-	const modes: ModeConfig[] = [
-		{ value: 'system', IconComponent: MingcuteComputerFill, label: 'System mode' },
-		{ value: 'dark', IconComponent: MingcuteMoonStarsFill, label: 'Dark mode' },
-		{ value: 'light', IconComponent: MingcuteSunFill, label: 'Light mode' }
-	];
+	const modes = [
+		{ value: 'system', Icon: MingcuteComputerLine },
+		{ value: 'dark', Icon: MingcuteMoonLine },
+		{ value: 'light', Icon: MingcuteSunLine }
+	] as const satisfies { value: ThemeMode; Icon: unknown }[];
 </script>
 
 <div
-	role="radiogroup"
-	aria-label="Theme mode"
-	class={cn(
-		{ invisible: !mounted },
-		'inline-flex rounded-full border-2 border-transparent select-none',
-		'bg-input p-0.5 shadow-sm',
-		className
-	)}
+	role="group"
+	aria-label={labels.group}
+	class={cn('inline-flex gap-0.5 rounded-lg border border-border bg-sunken p-0.5', className)}
+	data-slot="theme-switch"
 >
-	<div class="relative flex items-center">
-		<div
-			data-slot="theme-switch-thumb"
+	{#each modes as mode (mode.value)}
+		<button
+			type="button"
+			aria-pressed={theme.mode === mode.value}
+			aria-label={labels[mode.value]}
+			title={labels[mode.value]}
 			class={cn(
-				'bg-switch-thumb pointer-events-none absolute z-0 rounded-full shadow-md ring-0',
-				{ 'transition-transform duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]': mounted },
-				sz.thumb,
-				sz.translateByMode[theme.mode]
+				'grid place-items-center rounded-md text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary',
+				size === 'sm' ? 'size-5.5 [&_svg]:size-3.5' : 'size-6.5 [&_svg]:size-4',
+				theme.mode === mode.value && 'bg-surface text-fg shadow-sm inset-shadow-highlight'
 			)}
-		></div>
-
-		{#each modes as m (m.value)}
-			<button
-				type="button"
-				role="radio"
-				aria-checked={theme.mode === m.value}
-				aria-label={m.label}
-				class={cn(
-					'relative z-10 flex cursor-pointer items-center justify-center rounded-full outline-none',
-					'focus-visible:ring-ring focus-visible:ring-2',
-					sz.thumb
-				)}
-				onclick={() => setThemeMode(m.value)}
-			>
-				<m.IconComponent
-					width={sz.iconPx - 2}
-					height={sz.iconPx - 2}
-					class={cn({
-						'text-primary': theme.mode === m.value && m.value === 'dark',
-						'text-warning': theme.mode === m.value && m.value === 'light',
-						'text-foreground': theme.mode === m.value && m.value === 'system',
-						'text-foreground-dim': theme.mode !== m.value
-					})}
-				/>
-			</button>
-		{/each}
-	</div>
+			onclick={() => theme.set(mode.value)}
+		>
+			<mode.Icon aria-hidden="true" />
+		</button>
+	{/each}
 </div>

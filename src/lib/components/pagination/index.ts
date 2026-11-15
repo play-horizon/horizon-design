@@ -1,3 +1,8 @@
+/**
+ * The pagination entry point: `Pagination`, `PaginationPrevTrigger`, `PaginationNextTrigger`,
+ * `PaginationItem`, `PaginationEllipsis`, `PaginationContext`.
+ * @module
+ */
 export { default as Pagination } from './Pagination.svelte';
 export { default as PaginationPrevTrigger } from './PaginationPrevTrigger.svelte';
 export { default as PaginationNextTrigger } from './PaginationNextTrigger.svelte';

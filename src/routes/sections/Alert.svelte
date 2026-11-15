@@ -1,11 +1,13 @@
+<!--
+@component
+Docs: Alert. Live examples of the Alert component.
+-->
 <script lang="ts">
-	import { Alert } from '$lib/components/alert';
-	import { Card } from '$lib/components/card';
+	import { Alert } from '#lib/components/alert/index.js';
+	import { Card } from '#lib/components/card/index.js';
 </script>
 
 <section id="alert">
-	<p class="section-tag">Feedback</p>
-	<h2 class="mb-6 text-2xl font-bold">Alert</h2>
 	<Card>
 		<div class="space-y-3">
 			<Alert title="Default Alert" description="This is a default informational alert message." />

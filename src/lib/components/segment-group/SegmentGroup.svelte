@@ -1,8 +1,15 @@
+<!--
+@component
+A segmented control: a sunken track whose chosen segment is raised (Ark SegmentGroup), such as the
+theme or a view switch. `value` binds the chosen segment; without it, Ark's `defaultValue` sets the
+first one. Name the group with an `aria-label`.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { SegmentGroup } from '@ark-ui/svelte';
-	import { cn } from '$lib/utils';
+	import { SegmentGroup, type SegmentGroupValueChangeDetails } from '@ark-ui/svelte';
+	import { cn } from '#lib/utils.js';
 
+	/** One segment: its value and its label (text or a snippet). */
 	interface SegmentItem {
 		value: string;
 		label: string | Snippet;
@@ -20,13 +27,21 @@
 		items = [],
 		class: className = '',
 		size = 'md',
-		value = $bindable(''),
+		value = $bindable(),
+		onValueChange,
 		...rest
 	}: {
+		/** The segments, in order. */
 		items?: SegmentItem[];
+		/** Classes added to the track. */
 		class?: string;
+		/** The size of the segments and of their text. */
 		size?: 'sm' | 'md' | 'lg';
+		/** The chosen segment's value; `null` when none is. */
 		value?: string | null;
+		/** Called on every change of the value, after `value` is updated. */
+		onValueChange?: (details: SegmentGroupValueChangeDetails) => void;
+		/** Other props of Ark's `SegmentGroup.Root`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -39,23 +54,26 @@
 
 <SegmentGroup.Root
 	class={cn(
-		'bg-muted border-border inline-flex items-stretch gap-1 rounded-lg border p-1',
+		'inline-flex items-stretch gap-1 rounded-lg border border-border bg-hover p-1',
 		className
 	)}
 	data-slot="segment-group"
 	{value}
-	onValueChange={(details) => (value = details.value)}
+	onValueChange={(details) => {
+		value = details.value;
+		onValueChange?.(details);
+	}}
 	{...rest}
 >
 	<SegmentGroup.Indicator
-		class="bg-background border-border absolute rounded-md border shadow-sm transition-all"
+		class="absolute rounded-md border border-border bg-background shadow-sm transition-all"
 		style="left: var(--left); top: var(--top); width: var(--width); height: var(--height);"
 	/>
 	{#each items as item (item.value)}
 		<SegmentGroup.Item
 			value={item.value}
 			class={cn(
-				'text-muted-foreground data-[state=checked]:text-foreground relative z-10 flex items-center justify-center font-medium transition-colors',
+				'relative z-10 flex items-center justify-center font-medium text-muted transition-colors data-focus-visible:ring-2 data-focus-visible:ring-primary data-[state=checked]:text-fg',
 				sz.item
 			)}
 			data-slot="segment-group-item"

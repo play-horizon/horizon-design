@@ -1,15 +1,18 @@
+<!--
+@component
+Docs: Checkbox. Live examples of the Checkbox component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { Checkbox } from '$lib/components/checkbox';
+	import { Card } from '#lib/components/card/index.js';
+	import { Checkbox } from '#lib/components/checkbox/index.js';
 </script>
 
 <section id="checkbox">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Checkbox</h2>
 	<Card>
 		<div class="space-y-2">
 			<Checkbox defaultChecked label="Accept terms and conditions" />
 			<Checkbox label="Subscribe to newsletter" />
+			<Checkbox checked="indeterminate" label="Some games selected" />
 			<Checkbox disabled label="Disabled option" />
 		</div>
 	</Card>

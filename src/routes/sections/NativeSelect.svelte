@@ -1,14 +1,16 @@
+<!--
+@component
+Docs: NativeSelect. Live examples of the NativeSelect component.
+-->
 <script lang="ts">
-	import { Card } from '$lib/components/card';
-	import { NativeSelect } from '$lib/components/native-select';
+	import { Card } from '#lib/components/card/index.js';
+	import { NativeSelect } from '#lib/components/native-select/index.js';
 </script>
 
 <section id="native-select">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Native Select</h2>
 	<Card>
 		<div>
-			<NativeSelect>
+			<NativeSelect aria-label="Framework">
 				<option value="">Choose framework…</option>
 				<option value="svelte">Svelte</option>
 				<option value="react">React</option>

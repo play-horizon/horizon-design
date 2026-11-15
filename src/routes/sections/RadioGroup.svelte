@@ -1,12 +1,14 @@
+<!--
+@component
+Docs: RadioGroup. Live examples of the RadioGroup component.
+-->
 <script lang="ts">
-	import { Badge } from '$lib/components/badge';
-	import { Card } from '$lib/components/card';
-	import { RadioGroup } from '$lib/components/radio-group';
+	import { Badge } from '#lib/components/badge/index.js';
+	import { Card } from '#lib/components/card/index.js';
+	import { RadioGroup } from '#lib/components/radio-group/index.js';
 </script>
 
 <section id="radio-group">
-	<p class="section-tag">Forms</p>
-	<h2 class="mb-6 text-2xl font-bold">Radio Group</h2>
 	{#snippet proLabel()}
 		<span class="text-sm font-medium"
 			>Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge></span
