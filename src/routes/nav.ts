@@ -28,6 +28,7 @@ export const navGroups: NavGroup[] = [
 			{ id: 'button', label: 'Button' },
 			{ id: 'button-group', label: 'Button Group' },
 			{ id: 'clipboard', label: 'Clipboard' },
+			{ id: 'icon-button', label: 'Icon Button' },
 			{ id: 'segment-group', label: 'Segment Group' },
 			{ id: 'swap', label: 'Swap' },
 			{ id: 'toggle', label: 'Toggle' },

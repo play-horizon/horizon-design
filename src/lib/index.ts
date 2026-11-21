@@ -52,6 +52,7 @@ export * from './components/game-card';
 export * from './components/game-hero';
 export * from './components/hint';
 export * from './components/hover-card';
+export * from './components/icon-button';
 export * from './components/image-cropper';
 export * from './components/input';
 export * from './components/input-group';
