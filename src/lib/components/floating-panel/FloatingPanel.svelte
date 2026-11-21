@@ -1,13 +1,15 @@
 <!--
 @component
 A panel that floats over the window and can be dragged by its header and resized by its edges
-and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its close button.
+and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its close button and is
+its tooltip.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { FloatingPanel, type FloatingPanelOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
@@ -32,7 +34,7 @@ and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its clo
 		children?: Snippet;
 		/** Classes merged onto the panel. */
 		class?: string;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's accessible name and tooltip, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
@@ -81,13 +83,19 @@ and corners (Ark FloatingPanel); `title` names it and `closeLabel` names its clo
 					>
 						{title}
 					</FloatingPanel.Title>
-					<FloatingPanel.CloseTrigger
-						class="relative z-10 inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
-						aria-label={closeLabel}
-						data-slot="floating-panel-close"
-					>
-						<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
-					</FloatingPanel.CloseTrigger>
+					<!-- Above the panel's own layer (z-80), which a tooltip's default one is under. -->
+					<Tooltip content={closeLabel} contentClass="z-90">
+						{#snippet trigger(props)}
+							<FloatingPanel.CloseTrigger
+								{...props}
+								class="relative z-10 inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+								aria-label={closeLabel}
+								data-slot="floating-panel-close"
+							>
+								<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
+							</FloatingPanel.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				</FloatingPanel.Header>
 				{#if children}
 					<div class="min-h-0 flex-1 overflow-auto p-4" data-slot="floating-panel-body">
