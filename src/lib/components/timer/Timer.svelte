@@ -2,7 +2,8 @@
 @component
 A countdown or a stopwatch (Ark Timer): the time as hours, minutes and seconds, led by the days
 from one day on (`01:02:00:00`: digits and colons only, so nothing needs translating), and icon
-buttons to start, pause, resume and reset it, named by `labels`. Only the buttons that apply show.
+buttons to start, pause, resume and reset it, named by `labels` (their accessible names and their
+tooltips). Only the buttons that apply show. It starts paused, unless `autoStart` is set.
 -->
 <script lang="ts" module>
 	/** The accessible names of the timer's buttons. */
@@ -24,8 +25,9 @@ buttons to start, pause, resume and reset it, named by `labels`. Only the button
 	import MingcutePauseFill from '~icons/mingcute/pause-fill';
 	import MingcuteRefresh2Line from '~icons/mingcute/refresh-2-line';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
-	const btnClass =
+	const buttonClass =
 		'border-border hover:bg-hover inline-flex size-8 items-center justify-center rounded-lg border transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary';
 
 	let {
@@ -42,13 +44,20 @@ buttons to start, pause, resume and reset it, named by `labels`. Only the button
 		countdown?: boolean;
 		/** The time it starts from, in milliseconds. */
 		startMs?: number;
-		/** Starts it as soon as it shows. */
+		/** Starts it as soon as it shows; otherwise it waits, paused, for its start button. */
 		autoStart?: boolean;
 		/** The buttons' names, translated. */
 		labels: TimerLabels;
 		/** Other props of Ark's `Timer.Root`, such as `targetMs` or `onComplete`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const actions = [
+		{ name: 'start', Icon: MingcutePlayFill },
+		{ name: 'resume', Icon: MingcutePlayFill },
+		{ name: 'pause', Icon: MingcutePauseFill },
+		{ name: 'reset', Icon: MingcuteRefresh2Line }
+	] as const;
 </script>
 
 <Timer.Root
@@ -76,18 +85,20 @@ buttons to start, pause, resume and reset it, named by `labels`. Only the button
 				<span class="rounded-lg bg-hover px-3 py-2">{timer().formattedTime.seconds}</span>
 			</div>
 			<div class="flex items-center gap-2">
-				<Timer.ActionTrigger action="start" class={btnClass} aria-label={labels.start}>
-					<MingcutePlayFill class="size-4" aria-hidden="true" />
-				</Timer.ActionTrigger>
-				<Timer.ActionTrigger action="resume" class={btnClass} aria-label={labels.resume}>
-					<MingcutePlayFill class="size-4" aria-hidden="true" />
-				</Timer.ActionTrigger>
-				<Timer.ActionTrigger action="pause" class={btnClass} aria-label={labels.pause}>
-					<MingcutePauseFill class="size-4" aria-hidden="true" />
-				</Timer.ActionTrigger>
-				<Timer.ActionTrigger action="reset" class={btnClass} aria-label={labels.reset}>
-					<MingcuteRefresh2Line class="size-4" aria-hidden="true" />
-				</Timer.ActionTrigger>
+				{#each actions as action (action.name)}
+					<Tooltip content={labels[action.name]}>
+						{#snippet trigger(props)}
+							<Timer.ActionTrigger
+								{...props}
+								action={action.name}
+								class={buttonClass}
+								aria-label={labels[action.name]}
+							>
+								<action.Icon class="size-4" aria-hidden="true" />
+							</Timer.ActionTrigger>
+						{/snippet}
+					</Tooltip>
+				{/each}
 			</div>
 		{/snippet}
 	</Timer.Context>
