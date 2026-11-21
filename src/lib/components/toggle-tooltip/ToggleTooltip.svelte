@@ -1,7 +1,8 @@
 <!--
 @component
 An icon toggle, such as a toolbar's Bold, with a tooltip that names it: `label` is both the
-tooltip's text and the toggle's accessible name, and `pressed` binds its state.
+tooltip's text and the toggle's accessible name, and `pressed` binds its state. A press shrinks it
+for a moment, and the pressed state is tinted primary, distinct from a hover.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -47,7 +48,9 @@ tooltip's text and the toggle's accessible name, and `pressed` binds its state.
 		aria-pressed={pressed}
 		onclick={toggle}
 		class={cn(
-			'relative inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent p-2 text-muted transition-all outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary aria-pressed:bg-hover aria-pressed:text-fg',
+			// A press shrinks the toggle and darkens it at once, and its pressed state is tinted primary,
+			// unlike a hover: a click shows even with the pointer still on it.
+			'relative inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent p-2 text-muted transition-[background-color,color,scale] duration-150 outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary active:scale-90 active:bg-active aria-pressed:bg-primary-subtle aria-pressed:text-primary aria-pressed:hover:bg-primary/20 motion-reduce:active:scale-100',
 			className
 		)}
 		data-slot="toggle-tooltip"
