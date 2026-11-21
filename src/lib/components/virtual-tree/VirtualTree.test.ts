@@ -126,6 +126,17 @@ describe('VirtualTree', () => {
 		expect(selected()).toEqual(['b']);
 	});
 
+	it('shows the selected row by its background only, with no bar at its start', async () => {
+		const { rowOf, press } = setup({});
+		rowOf('b').focus();
+		await press('Enter');
+		const classes = [...rowOf('b').classList];
+		expect(classes).toContain('data-selected:bg-primary-subtle');
+		expect(classes.filter((name) => name.includes('shadow') || name.includes('border-l'))).toEqual(
+			[]
+		);
+	});
+
 	it('reaches rows out of view with the arrows and typeahead, scrolling them in', async () => {
 		const leaves = Array.from({ length: 100 }, (_, i) => ({ id: `n${i}`, name: `Item ${i}` }));
 		leaves[80] = { id: 'zebra', name: 'Zebra' };
