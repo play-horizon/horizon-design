@@ -2,8 +2,8 @@
 @component
 A number field with increment and decrement buttons (Ark NumberInput). `value` binds the text of
 the field; without it, Ark's `defaultValue` sets the first value. `translations` names the two
-buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced role
-(`roleDescription`).
+buttons (`incrementLabel`, `decrementLabel`), which show their names as tooltips too, and gives the
+field's announced role (`roleDescription`). Ark's `invalid` turns the border danger.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -15,6 +15,7 @@ buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced rol
 	import MingcuteUpLine from '~icons/mingcute/up-line';
 	import MingcuteDownLine from '~icons/mingcute/down-line';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
 		class: className = '',
@@ -49,9 +50,13 @@ buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced rol
 	} = $props();
 
 	const { roleDescription, ...arkTranslations } = $derived(translations);
+	// Each step button is also its tooltip's trigger, so both must know it by the same id.
+	const id = $props.id();
+	const ids = { incrementTrigger: `${id}-increment`, decrementTrigger: `${id}-decrement` };
 </script>
 
 <NumberInput.Root
+	{ids}
 	translations={arkTranslations}
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"
@@ -69,23 +74,41 @@ buttons (`incrementLabel`, `decrementLabel`) and gives the field's announced rol
 	{/if}
 	{@render children?.()}
 	<NumberInput.Control
-		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all has-[input:focus-visible]:border-primary has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-primary/20"
+		class="flex h-9 w-full overflow-hidden rounded-lg border border-border bg-sunken transition-all has-[input:focus-visible]:border-primary has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-primary/20 data-disabled:opacity-50 data-invalid:border-danger data-invalid:has-[input:focus-visible]:border-danger data-invalid:has-[input:focus-visible]:ring-danger/20"
 	>
 		<NumberInput.Input
 			aria-roledescription={roleDescription}
-			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50"
+			class="min-w-0 flex-1 bg-transparent pl-2 text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed"
 		/>
 		<div class="flex shrink-0 flex-col border-l border-border">
-			<NumberInput.IncrementTrigger
-				class="flex flex-1 items-center justify-center px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
+			<Tooltip
+				content={translations.incrementLabel}
+				ids={{ trigger: ids.incrementTrigger }}
+				positioning={{ placement: 'right' }}
 			>
-				<MingcuteUpLine class="size-3" aria-hidden="true" />
-			</NumberInput.IncrementTrigger>
-			<NumberInput.DecrementTrigger
-				class="flex flex-1 items-center justify-center border-t border-border px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary"
+				{#snippet trigger(props)}
+					<NumberInput.IncrementTrigger
+						{...props}
+						class="flex flex-1 items-center justify-center px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none"
+					>
+						<MingcuteUpLine class="size-3" aria-hidden="true" />
+					</NumberInput.IncrementTrigger>
+				{/snippet}
+			</Tooltip>
+			<Tooltip
+				content={translations.decrementLabel}
+				ids={{ trigger: ids.decrementTrigger }}
+				positioning={{ placement: 'right' }}
 			>
-				<MingcuteDownLine class="size-3" aria-hidden="true" />
-			</NumberInput.DecrementTrigger>
+				{#snippet trigger(props)}
+					<NumberInput.DecrementTrigger
+						{...props}
+						class="flex flex-1 items-center justify-center border-t border-border px-1.5 text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none"
+					>
+						<MingcuteDownLine class="size-3" aria-hidden="true" />
+					</NumberInput.DecrementTrigger>
+				{/snippet}
+			</Tooltip>
 		</div>
 	</NumberInput.Control>
 </NumberInput.Root>
