@@ -1,13 +1,15 @@
 <!--
 @component
 A modal dialog (Ark Dialog): a title, a description, the content and a footer, on the raised
-surface over a scrim; `closeLabel` names its close button; `frosted` for a translucent surface.
+surface over a scrim; `closeLabel` names its close button and is its tooltip; `frosted` for a
+translucent surface.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
@@ -39,7 +41,7 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 		footer?: Snippet;
 		/** Whether to show the close button at the top right. */
 		showClose?: boolean;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's accessible name and tooltip, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
@@ -81,13 +83,19 @@ surface over a scrim; `closeLabel` names its close button; `frosted` for a trans
 				data-slot="dialog-content"
 			>
 				{#if showClose}
-					<Dialog.CloseTrigger
-						class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
-						aria-label={closeLabel}
-						data-slot="dialog-close"
-					>
-						<MingcuteCloseLine class="size-4" aria-hidden="true" />
-					</Dialog.CloseTrigger>
+					<!-- Above the dialog's own layer (z-70), which a tooltip's default one is under. -->
+					<Tooltip content={closeLabel} contentClass="z-80">
+						{#snippet trigger(props)}
+							<Dialog.CloseTrigger
+								{...props}
+								class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+								aria-label={closeLabel}
+								data-slot="dialog-close"
+							>
+								<MingcuteCloseLine class="size-4" aria-hidden="true" />
+							</Dialog.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				{/if}
 				{#if title || description}
 					<div class="flex flex-col gap-1 px-4.5 pt-4 pr-12 pb-3" data-slot="dialog-header">

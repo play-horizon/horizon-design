@@ -1,11 +1,11 @@
 /**
- * Tests of `Dialog`: its trigger button, its named close button, and the frosted surface
- * replacing the opaque one.
+ * Tests of `Dialog`: its trigger button, its close button named and tooltipped by `closeLabel`,
+ * and the frosted surface replacing the opaque one.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render } from '@testing-library/svelte';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import Dialog from './Dialog.svelte';
 
 describe('Dialog', () => {
@@ -29,6 +29,18 @@ describe('Dialog', () => {
 		expect(dialog.className).toContain('bg-raised');
 		expect(dialog.className).not.toContain('frosted');
 		expect(await findByRole('button', { name: 'Close' })).toBeTruthy();
+	});
+
+	it('shows the close label as the close button tooltip', async () => {
+		const { findByRole, getByRole } = render(Dialog, {
+			open: true,
+			title: 'Paused',
+			closeLabel: 'Close'
+		});
+		await fireEvent.focus(await findByRole('button', { name: 'Close' }));
+		await waitFor(() =>
+			expect(getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Close')
+		);
 	});
 
 	it('takes the frosted surface instead of the opaque fill', async () => {
