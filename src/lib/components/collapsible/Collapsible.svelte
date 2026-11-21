@@ -1,6 +1,7 @@
 <!--
 @component
-Content that a trigger shows and hides (Ark Collapsible).
+Content that a trigger shows and hides (Ark Collapsible); disabled, the trigger is turned off and
+faded.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -13,6 +14,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 		children,
 		open = $bindable(),
 		onOpenChange,
+		disabled = false,
 		...rest
 	}: {
 		/** Classes merged onto the root. */
@@ -25,7 +27,9 @@ Content that a trigger shows and hides (Ark Collapsible).
 		open?: boolean;
 		/** Called with the new state when the content is shown or hidden. */
 		onOpenChange?: (details: CollapsibleOpenChangeDetails) => void;
-		/** Other props of Ark's `Collapsible.Root`, such as `disabled` and `lazyMount`. */
+		/** Turns the trigger off (faded), so the content stays shown or hidden as it is. */
+		disabled?: boolean;
+		/** Other props of Ark's `Collapsible.Root`, such as `defaultOpen` and `lazyMount`. */
 		[key: string]: unknown;
 	} = $props();
 </script>
@@ -34,6 +38,7 @@ Content that a trigger shows and hides (Ark Collapsible).
 	class={cn('flex flex-col', className)}
 	data-slot="collapsible"
 	{open}
+	{disabled}
 	onOpenChange={(details) => {
 		open = details.open;
 		onOpenChange?.(details);
@@ -41,8 +46,10 @@ Content that a trigger shows and hides (Ark Collapsible).
 	{...rest}
 >
 	{#if trigger}
+		<!-- Zag only marks the trigger data-disabled: the attribute takes it out of the tab order too. -->
 		<Collapsible.Trigger
-			class="flex items-center gap-2 text-sm font-medium outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary"
+			{disabled}
+			class="flex items-center gap-2 text-sm font-medium outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
 			data-slot="collapsible-trigger"
 		>
 			{@render trigger()}
