@@ -1,11 +1,12 @@
 /**
  * Tests of `Tour`: its progress line comes from `progressText`, each action button is named by
- * its label, and the tour's own props (such as `onStatusChange`) reach the tour.
+ * its label, the close button's tooltip says its name, and the tour's own props (such as `onStatusChange`) reach the tour.
  * @module
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render } from '@testing-library/svelte';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 import Tour from './Tour.svelte';
 
 const steps = [
@@ -82,5 +83,18 @@ describe('Tour', () => {
 			'started',
 			'dismissed'
 		]);
+	});
+
+	it("shows the close button's name as its tooltip", async () => {
+		const user = userEvent.setup();
+		const { getByRole, findByRole } = render(Tour, {
+			steps,
+			closeLabel: 'End the tour',
+			progressText: () => '',
+			trigger
+		});
+		await fireEvent.click(getByRole('button', { name: 'Start tour' }));
+		await user.hover(await findByRole('button', { name: 'End the tour' }));
+		await waitFor(() => expect(getByRole('tooltip').textContent?.trim()).toBe('End the tour'));
 	});
 });

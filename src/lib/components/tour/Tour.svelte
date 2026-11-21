@@ -2,8 +2,8 @@
 @component
 A guided tour of the interface, step by step (Ark Tour): each step's title, description, progress
 and action buttons, over a scrim with the step's target spotlit. The app passes the steps and
-their action labels translated, `closeLabel` for the close button and `progressText` for the
-progress line; each action button is named by its label. Every other prop of Ark's `useTour`
+their action labels translated, `closeLabel` for the close button (its tooltip and its
+accessible name) and `progressText` for the progress line; each action button is named by its label. Every other prop of Ark's `useTour`
 (`onStatusChange`, `onStepChange`, `closeOnInteractOutside`, `keyboardNavigation`…) configures the
 tour.
 -->
@@ -14,6 +14,7 @@ tour.
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
 		steps = [],
@@ -34,7 +35,7 @@ tour.
 		showProgress?: boolean;
 		/** Shows the close button. */
 		showClose?: boolean;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's tooltip and accessible name, such as "Close". */
 		closeLabel: string;
 		/** The progress line, translated, from the current step's index (from 0) and the count. */
 		progressText: (details: Tour.ProgressTextDetails) => string;
@@ -64,8 +65,10 @@ tour.
 			class="fixed inset-0 z-90 bg-scrim data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
 			data-slot="tour-overlay"
 		/>
+		<!-- A tooltip step's positioner gets Ark's inline `z-index: var(--z-index)`, which stays
+		     unset: the important z-index keeps the step above the backdrop. -->
 		<Tour.Positioner
-			class="z-90 flex items-center justify-center data-[type=dialog]:fixed data-[type=dialog]:inset-0 data-[type=tooltip]:absolute"
+			class="z-90! flex items-center justify-center data-[type=dialog]:fixed data-[type=dialog]:inset-0 data-[type=tooltip]:absolute"
 			data-slot="tour-positioner"
 		>
 			<Tour.Content
@@ -79,13 +82,18 @@ tour.
 				data-slot="tour-content"
 			>
 				{#if showClose}
-					<Tour.CloseTrigger
-						class="absolute top-4 right-4 inline-flex size-8 items-center justify-center rounded-lg border-none text-muted opacity-70 transition-all hover:bg-hover hover:opacity-100"
-						aria-label={closeLabel}
-						data-slot="tour-close-trigger"
-					>
-						<MingcuteCloseLine class="size-4" aria-hidden="true" />
-					</Tour.CloseTrigger>
+					<Tooltip content={closeLabel}>
+						{#snippet trigger(props)}
+							<Tour.CloseTrigger
+								{...props}
+								class="absolute top-4 right-4 inline-flex size-8 items-center justify-center rounded-lg border-none text-muted opacity-70 transition-all hover:bg-hover hover:opacity-100"
+								aria-label={closeLabel}
+								data-slot="tour-close-trigger"
+							>
+								<MingcuteCloseLine class="size-4" aria-hidden="true" />
+							</Tour.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				{/if}
 
 				<Tour.Context>
