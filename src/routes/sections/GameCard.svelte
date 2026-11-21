@@ -1,7 +1,8 @@
 <!--
 @component
-Docs: GameCard. A row of cards with live counts and tags, editing avatars, and the large
-Continue playing card with its Play action.
+Docs: GameCard. A playground over its variant, its link or button, its art and every slot, then
+the large Continue playing cards with their Play action, a row of cards with live counts and
+tags, and cards with editing avatars, a status line, and no thumbnail.
 -->
 <script lang="ts">
 	import { GameCard } from '#lib/components/game-card/index.js';
@@ -10,6 +11,8 @@ Continue playing card with its Play action.
 	import { Button } from '#lib/components/button/index.js';
 	import { Badge } from '#lib/components/badge/index.js';
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, choice, text } from '../playground/controls';
 	import { art, people } from '../examples';
 
 	let opened = $state('');
@@ -34,6 +37,52 @@ Continue playing card with its Play action.
 </script>
 
 <div class="grid gap-8">
+	<Playground
+		description="The icon shows on the feature variant only; overlay and corner on the default one."
+		controls={{
+			name: text('Neon Drift'),
+			variant: choice(['default', 'feature'] as const),
+			target: choice(['button', 'link'] as const),
+			thumbnail: boolean(true),
+			icon: boolean(true),
+			overlay: boolean(true),
+			corner: boolean(),
+			meta: boolean(true),
+			action: boolean()
+		}}
+	>
+		{#snippet example(values)}
+			{#snippet overlay()}
+				<PlayerCount variant="overlay" count="1,204" label="playing now" />
+			{/snippet}
+			{#snippet corner()}
+				<AvatarStack
+					people={people.slice(0, 2)}
+					label="Friends playing"
+					overflowText={(n) => `+${n}`}
+				/>
+			{/snippet}
+			{#snippet meta()}racing · multiplayer{/snippet}
+			{#snippet action()}
+				<Button variant="primary" size="sm" aria-label="Play {values.name}">
+					<MingcutePlayFill aria-hidden="true" />Play
+				</Button>
+			{/snippet}
+			<GameCard
+				class={values.variant === 'feature' ? 'w-96' : 'w-64'}
+				name={values.name}
+				variant={values.variant}
+				href={values.target === 'link' ? '#top' : undefined}
+				onclick={values.target === 'button' ? () => (opened = values.name) : undefined}
+				thumbnail={values.thumbnail ? art.neon : undefined}
+				icon={values.icon ? art.icon : undefined}
+				overlay={values.overlay ? overlay : undefined}
+				corner={values.corner ? corner : undefined}
+				meta={values.meta ? meta : undefined}
+				action={values.action ? action : undefined}
+			/>
+		{/snippet}
+	</Playground>
 	<div>
 		<h2 class="mb-3 text-lg font-bold">Continue playing</h2>
 		<div class="grid grid-cols-2 gap-4">
