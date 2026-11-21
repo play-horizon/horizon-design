@@ -1,6 +1,8 @@
 <!--
 @component
-Docs: Dialog. A confirmation dialog, and a frosted one over game art.
+Docs: Dialog. A playground over its texts, parts and closing behaviour, then a confirmation
+dialog, a dialog opened from outside (`bind:open`), the icon form of `DialogClose`, and a frosted
+dialog over game art.
 -->
 <script lang="ts">
 	import { Button, buttonVariants } from '#lib/components/button/index.js';
@@ -8,35 +10,110 @@ Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 	import { Dialog, DialogClose } from '#lib/components/dialog/index.js';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
 	import MingcuteWindowsLine from '~icons/mingcute/windows-line';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, choice, text } from '../playground/controls';
 	import { art } from '../examples';
+
+	let renameOpen = $state(false);
 </script>
 
-<section id="dialog">
-	<Card>
+<div class="grid gap-4">
+	<Playground
+		description="Open the dialog after changing a control."
+		controls={{
+			title: text('Leave the game?'),
+			description: text('Your progress since the last checkpoint is lost.'),
+			closeLabel: text('Close'),
+			showClose: boolean(true),
+			body: boolean(true),
+			footer: boolean(true),
+			frosted: boolean(),
+			role: choice(['dialog', 'alertdialog']),
+			modal: boolean(true),
+			closeOnEscape: boolean(true),
+			closeOnInteractOutside: boolean(true)
+		}}
+	>
+		{#snippet example(values)}
+			{#snippet body()}
+				<p class="text-sm text-muted">The other players keep playing without you.</p>
+			{/snippet}
+			{#snippet footer()}
+				<DialogClose class={buttonVariants({ variant: 'ghost' })}>Stay</DialogClose>
+				<DialogClose class={buttonVariants({ variant: 'danger' })}>Leave</DialogClose>
+			{/snippet}
+			<Dialog
+				title={values.title}
+				description={values.description}
+				closeLabel={values.closeLabel}
+				showClose={values.showClose}
+				frosted={values.frosted}
+				role={values.role}
+				modal={values.modal}
+				closeOnEscape={values.closeOnEscape}
+				closeOnInteractOutside={values.closeOnInteractOutside}
+				triggerClass={buttonVariants({ variant: 'default' })}
+				children={values.body ? body : undefined}
+				footer={values.footer ? footer : undefined}
+			>
+				{#snippet trigger()}
+					<MingcuteWindowsLine class="size-4" aria-hidden="true" />
+					Open the dialog
+				{/snippet}
+			</Dialog>
+		{/snippet}
+	</Playground>
+	<Card title="Confirmation" description="A title, a description, a body and a footer.">
 		<Dialog
 			closeLabel="Close"
-			title="Confirm Deletion"
-			description="Are you sure you want to proceed? This action cannot be undone."
-			triggerClass={buttonVariants({ variant: 'default' })}
+			title="Delete the game?"
+			description="This can't be undone."
+			triggerClass={buttonVariants({ variant: 'danger' })}
 		>
 			{#snippet trigger()}
-				<MingcuteWindowsLine class="size-4" aria-hidden="true" />
-				Open Dialog
+				<MingcuteDelete2Line class="size-4" aria-hidden="true" />
+				Delete
 			{/snippet}
 			<p class="text-sm text-muted">
-				This will permanently delete the item and all associated data from our servers.
+				Neon Drift, its versions and its saved worlds are removed for every player.
 			</p>
 			{#snippet footer()}
 				<DialogClose class={buttonVariants({ variant: 'default' })}>Cancel</DialogClose>
-				<Button variant="danger">
+				<Button variant="danger-solid">
 					<MingcuteDelete2Line class="size-4" aria-hidden="true" />
-					Delete
+					Delete the game
 				</Button>
 			{/snippet}
 		</Dialog>
 	</Card>
 	<Card
-		class="mt-4"
+		title="Opened from outside"
+		description="No trigger: the app opens it with bind:open, here from a button."
+	>
+		<Button onclick={() => (renameOpen = true)}>Rename the world</Button>
+		<Dialog bind:open={renameOpen} closeLabel="Close" title="Rename the world">
+			<p class="text-sm text-muted">The new name shows in the game's world list.</p>
+			{#snippet footer()}
+				<Button variant="primary" onclick={() => (renameOpen = false)}>Done</Button>
+			{/snippet}
+		</Dialog>
+	</Card>
+	<Card
+		title="Its own close button"
+		description="showClose off, with DialogClose's icon form placed in the body: its label is its name and tooltip."
+	>
+		<Dialog
+			closeLabel="Close"
+			showClose={false}
+			title="Controls"
+			triggerClass={buttonVariants({ variant: 'default' })}
+		>
+			{#snippet trigger()}Show the controls{/snippet}
+			<DialogClose label="Close the controls" />
+			<p class="text-sm text-muted">Move with WASD, jump with Space.</p>
+		</Dialog>
+	</Card>
+	<Card
 		title="Frosted"
 		description="For an overlay above busy content, such as a running game: a translucent, blurred surface."
 	>
@@ -56,4 +133,4 @@ Docs: Dialog. A confirmation dialog, and a frosted one over game art.
 			</Dialog>
 		</div>
 	</Card>
-</section>
+</div>
