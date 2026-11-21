@@ -9,6 +9,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import { parseColor } from '@ark-ui/svelte';
 import ColorPicker from './ColorPicker.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const labels = {
 	trigger: 'Choose a colour',
@@ -109,5 +110,10 @@ describe('ColorPicker', () => {
 		await waitFor(() => getByRole('dialog', { name: 'Choose a colour' }));
 		expect(queryByRole('list', { name: 'Colour values' })).toBeNull();
 		expect(document.querySelector('[data-slot="color-picker-swatches"]')).toBeNull();
+	});
+
+	it('names its swatch button in a tooltip', async () => {
+		const { getByRole } = render(ColorPicker, { labels });
+		await expectTooltip(getByRole('button', { name: 'Choose a colour' }), 'Choose a colour');
 	});
 });

@@ -6,7 +6,7 @@ opaque), and take 3, 4, 6 or 8 digits (opaque without alpha digits). Under the c
 is written in each of `formats` at once (hex, `rgba()` and `hsla()` by default), and under them the
 `swatches`, preset colours on a single line; no swatches, no row. `labels` names every control
 for assistive technology and gives the values the sliders announce; the trigger takes the visible
-`label` when there is one.
+`label` when there is one, and shows `labels.trigger` in its tooltip.
 -->
 <script lang="ts">
 	import {
@@ -17,6 +17,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
 	import { formatColor, parseHex, type ColorFormat } from './formats';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
 		class: className = '',
@@ -134,17 +135,22 @@ for assistive technology and gives the values the sliders announce; the trigger 
 	{/if}
 	<ColorPicker.Control class="flex items-center gap-2">
 		{@render hexField('h-8 px-3 py-1 text-sm shadow-sm')}
-		<ColorPicker.Trigger
-			aria-label={labels.trigger}
-			class="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-border shadow-sm transition-colors hover:opacity-90"
-		>
-			<ColorPicker.TransparencyGrid class="rounded-md" />
-			<ColorPicker.Context>
-				{#snippet render(api)}
-					<ColorPicker.Swatch value={api().value} class="size-full rounded-md" />
-				{/snippet}
-			</ColorPicker.Context>
-		</ColorPicker.Trigger>
+		<Tooltip content={labels.trigger}>
+			{#snippet trigger(props)}
+				<ColorPicker.Trigger
+					{...props}
+					aria-label={labels.trigger}
+					class="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-border shadow-sm transition-colors hover:opacity-90"
+				>
+					<ColorPicker.TransparencyGrid class="rounded-md" />
+					<ColorPicker.Context>
+						{#snippet render(api)}
+							<ColorPicker.Swatch value={api().value} class="size-full rounded-md" />
+						{/snippet}
+					</ColorPicker.Context>
+				</ColorPicker.Trigger>
+			{/snippet}
+		</Tooltip>
 	</ColorPicker.Control>
 	<Portal>
 		<ColorPicker.Positioner>
