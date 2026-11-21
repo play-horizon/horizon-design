@@ -1,7 +1,7 @@
 <!--
 @component
 The Editor window's docking layout: horizon-layout styled with horizon-design, with a button that
-restores a maximised view (`restoreLabel`). It takes every prop of horizon-layout's
+restores a maximised view (`restoreLabel`, its accessible name and tooltip). It takes every prop of horizon-layout's
 `HorizonLayout`, documented there, with `translations` required and complete, so no English is
 left in another language.
 -->
@@ -11,7 +11,7 @@ left in another language.
 	import MingcuteRestoreLine from '~icons/mingcute/restore-line';
 	import './horizon-layout.css';
 	import type { ComponentProps, Snippet } from 'svelte';
-	import Button from '../../components/button/Button.svelte';
+	import IconButton from '../../components/icon-button/IconButton.svelte';
 
 	let {
 		config = $bindable(),
@@ -27,7 +27,7 @@ left in another language.
 		translations: LayoutTranslations;
 		/** Replaces the button that restores a maximised view. */
 		restoreButton?: Snippet<[Id]>;
-		/** The restore button's accessible name, such as "Restore view". */
+		/** The restore button's accessible name and tooltip, such as "Restore view". */
 		restoreLabel: string;
 	} = $props();
 
@@ -47,15 +47,16 @@ left in another language.
 		{#if restoreButton}
 			{@render restoreButton(config.maximizedView)}
 		{:else}
-			<Button
+			<IconButton
+				label={restoreLabel}
 				variant="default"
-				size="icon-xs"
+				size="xs"
+				side="left"
 				onclick={restore}
-				aria-label={restoreLabel}
 				class="absolute top-1 right-1"
 			>
 				<MingcuteRestoreLine aria-hidden="true" />
-			</Button>
+			</IconButton>
 		{/if}
 	{/if}
 </div>

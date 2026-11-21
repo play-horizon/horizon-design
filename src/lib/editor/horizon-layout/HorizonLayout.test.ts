@@ -1,6 +1,6 @@
 /**
  * Tests of `HorizonLayout`'s own part: the restore button, shown only while a view is maximised,
- * named by `restoreLabel`, restoring the layout when pressed, and replaced by `restoreButton`; and
+ * named and tooltipped by `restoreLabel`, restoring the layout when pressed, and replaced by `restoreButton`; and
  * the `translations` it passes on, which name the split handles, the tab lists and the floating
  * panels.
  * @module
@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
-import { fireEvent, render } from '@testing-library/svelte';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import type { Id, LayoutConfig, LayoutTranslations, View } from 'horizon-layout';
 import HorizonLayout from './HorizonLayout.svelte';
 
@@ -59,6 +59,14 @@ describe('HorizonLayout', () => {
 		const { getByRole, queryByRole } = setup({ root: split, maximizedView: 'scene' });
 		await fireEvent.click(getByRole('button', { name: 'Restore view' }));
 		expect(queryByRole('button', { name: 'Restore view' })).toBeNull();
+	});
+
+	it('shows the restore label as the restore button tooltip', async () => {
+		const { getByRole } = setup({ root: split, maximizedView: 'scene' });
+		await fireEvent.focus(getByRole('button', { name: 'Restore view' }));
+		await waitFor(() =>
+			expect(getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Restore view')
+		);
 	});
 
 	it('renders restoreButton instead, with the maximised view', () => {
