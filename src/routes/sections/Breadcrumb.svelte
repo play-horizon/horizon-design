@@ -15,7 +15,7 @@ Docs: Breadcrumb. Live examples of the Breadcrumb component.
 				label="Breadcrumb"
 				items={[
 					{ label: 'Foundations', href: resolve('/') },
-					{ label: 'Navigation', href: resolve('/[section]', { section: 'tabs' }) },
+					{ label: 'Navigation', href: resolve('/[section]', { section: 'steps' }) },
 					{ label: 'Breadcrumb' }
 				]}
 			/>

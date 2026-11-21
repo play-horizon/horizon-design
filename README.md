@@ -373,7 +373,6 @@ variants).
 | [`Sidebar`](https://play-horizon.github.io/horizon-design/sidebar)                    | An app's navigation sidebar: a sunken column with an optional header (the brand), the navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (the account); `collapsed` narrows it to its icons.                                                                                                                                                                                                                                                                                                                                                                                                            |
 | [`SkipNav`](https://play-horizon.github.io/horizon-design/skip-nav)                   | A link, shown on keyboard focus, that skips to the page's main content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | [`Steps`](https://play-horizon.github.io/horizon-design/steps)                        | A multi-step flow (Ark Steps): the `steps` (each an `id`, a `title` and its `content`), the current step's content, and back and next buttons named by `prevLabel` and `nextLabel`, required; `step` binds the current step.                                                                                                                                                                                                                                                                                                                                                                                                       |
-| [`Tabs`](https://play-horizon.github.io/horizon-design/tabs)                          | Tabs and their panels (Ark Tabs), a segmented or an underlined tab list; each tab is a `value`, a `label` and its `content`, and `value` binds the selected tab.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Overlays
 
@@ -418,6 +417,16 @@ Confluence, and built on native HTML5 drag and drop, which Electron's Chromium s
 package computes exactly the instructions a hierarchy needs (reorder above or below, make child,
 reparent by indent level) and a list's closest edge. `@dnd-kit/svelte` was the alternative; its
 Svelte port is younger and less proven. The keyboard does the same moves (Shift+arrows).
+
+## Upgrading from 1.0.0
+
+2.0.0 changes what code written for 1.0.0 may rely on:
+
+- **`Tabs` is removed.** Use `SegmentGroup` with `variant="underline"`, and render the view of its
+  `value` below it: `<SegmentGroup variant="underline" items={…} bind:value />` then
+  `{#if value === 'overview'}…{/if}`. Its items are `{ value, label, disabled? }` (a tab's
+  `content` snippet has no counterpart), and it is a radio group for assistive technology, not a tab
+  list.
 
 ## Developing
 

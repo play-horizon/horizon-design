@@ -127,8 +127,7 @@ export const navGroups: NavGroup[] = [
 			{ id: 'pagination', label: 'Pagination' },
 			{ id: 'sidebar', label: 'Sidebar' },
 			{ id: 'skip-nav', label: 'Skip Nav' },
-			{ id: 'steps', label: 'Steps' },
-			{ id: 'tabs', label: 'Tabs' }
+			{ id: 'steps', label: 'Steps' }
 		]
 	},
 	{

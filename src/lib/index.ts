@@ -91,7 +91,6 @@ export * from './components/steps';
 export * from './components/swap';
 export * from './components/switch';
 export * from './components/table';
-export * from './components/tabs';
 export * from './components/tag-picker';
 export * from './components/textarea';
 export * from './components/theme-switch';
