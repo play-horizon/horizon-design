@@ -1,21 +1,25 @@
 <!--
 @component
 A modal panel that slides in from one side of the window (Ark Dialog); `closeLabel` names its
-close button; `frosted` for a translucent surface. The trigger is a button holding the `trigger`
-snippet, styled by `triggerClass`; the title and description name and describe the panel. `open`
-binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
+close button, which shows it as a tooltip too; `frosted` for a translucent surface. The trigger is
+a button holding the `trigger` snippet, styled by `triggerClass`, and a trigger that shows only an
+icon takes a `triggerLabel`: its accessible name and its tooltip. The title and description name
+and describe the panel. `open` binds whether it is open; without it, Ark's `defaultOpen` sets the
+first state.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	type Side = 'top' | 'bottom' | 'left' | 'right';
 
 	let {
-		trigger,
+		trigger: triggerContent,
+		triggerLabel,
 		triggerClass = '',
 		title,
 		description,
@@ -32,6 +36,11 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 	}: {
 		/** The trigger button's content; without it, the sheet opens only through `open`. */
 		trigger?: Snippet;
+		/**
+		 * The trigger's action, translated, such as "Open the menu", for a trigger that shows only an
+		 * icon: its accessible name and its tooltip. Unset, the trigger's content names it.
+		 */
+		triggerLabel?: string;
 		/** Classes of the trigger button, such as `buttonVariants(...)`. */
 		triggerClass?: string;
 		/** The panel's title, which names it. */
@@ -46,7 +55,7 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 		side?: Side;
 		/** Shows the close button in the top corner. */
 		showClose?: boolean;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's accessible name and tooltip, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
@@ -68,9 +77,13 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 		right:
 			'inset-y-0 right-0 border-l data-[state=open]:animate-sheet-enter-right data-[state=closed]:animate-sheet-exit-right h-full w-full max-w-sm rounded-l-xl'
 	};
+
+	// The tooltip and the dialog share the trigger, so both must know it by the same id.
+	const triggerId = $props.id();
 </script>
 
 <Dialog.Root
+	ids={{ trigger: triggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -78,9 +91,22 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 	}}
 	{...rest}
 >
-	{#if trigger}
+	{#if triggerContent && triggerLabel}
+		<Tooltip content={triggerLabel} ids={{ trigger: triggerId }}>
+			{#snippet trigger(props)}
+				<Dialog.Trigger
+					{...props}
+					aria-label={triggerLabel}
+					class={triggerClass || undefined}
+					data-slot="sheet-trigger"
+				>
+					{@render triggerContent()}
+				</Dialog.Trigger>
+			{/snippet}
+		</Tooltip>
+	{:else if triggerContent}
 		<Dialog.Trigger class={triggerClass || undefined} data-slot="sheet-trigger">
-			{@render trigger()}
+			{@render triggerContent()}
 		</Dialog.Trigger>
 	{/if}
 	<Portal>
@@ -98,13 +124,19 @@ binds whether it is open; without it, Ark's `defaultOpen` sets the first state.
 				data-slot="sheet-content"
 			>
 				{#if showClose}
-					<Dialog.CloseTrigger
-						class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
-						aria-label={closeLabel}
-						data-slot="sheet-close"
-					>
-						<MingcuteCloseLine class="size-4" aria-hidden="true" />
-					</Dialog.CloseTrigger>
+					<!-- Above the sheet's z-70 layer, which would hide a tooltip of the default z-50. -->
+					<Tooltip content={closeLabel} contentClass="z-80">
+						{#snippet trigger(props)}
+							<Dialog.CloseTrigger
+								{...props}
+								class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+								aria-label={closeLabel}
+								data-slot="sheet-close"
+							>
+								<MingcuteCloseLine class="size-4" aria-hidden="true" />
+							</Dialog.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				{/if}
 				{#if title || description}
 					<div
