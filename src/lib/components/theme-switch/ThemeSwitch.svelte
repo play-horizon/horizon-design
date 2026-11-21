@@ -1,8 +1,8 @@
 <!--
 @component
 The theme switch: three icon buttons (system, dark, light) on a sunken pill, with a raised
-highlight that slides to the chosen one. Choosing one calls `theme.set`, which saves the mode and crossfades the page. The labels
-name each mode, both for assistive technology and in each button's tooltip; the app passes them
+highlight that slides to the chosen one. Once it has slid, choosing calls `theme.set`, which saves
+the mode and crossfades the page (at once under reduced motion). The labels name each mode, both for assistive technology and in each button's tooltip; the app passes them
 translated.
 -->
 <script lang="ts" module>
@@ -26,7 +26,12 @@ translated.
 	import MingcuteMoonLine from '~icons/mingcute/moon-line';
 	import MingcuteSunLine from '~icons/mingcute/sun-line';
 	import { theme, type ThemeMode } from '#lib/theme.svelte.js';
-	import { slidingIndicator, slidingIndicatorClasses } from '#lib/motion/sliding-indicator.js';
+	import { prefersReducedMotion } from '#lib/motion/page-transition.js';
+	import {
+		slidingIndicator,
+		slidingIndicatorClasses,
+		slidingIndicatorMs
+	} from '#lib/motion/sliding-indicator.js';
 
 	let {
 		labels,
@@ -49,6 +54,28 @@ translated.
 		{ value: 'dark', Icon: MingcuteMoonLine },
 		{ value: 'light', Icon: MingcuteSunLine }
 	] as const satisfies { value: ThemeMode; Icon: unknown }[];
+
+	// The mode just chosen, shown while the highlight slides to it. The theme changes once the slide
+	// is over: its crossfade (a view transition of the whole page) would otherwise show the highlight
+	// at its new place at once.
+	let pending = $state<ThemeMode | null>(null);
+	let applying: ReturnType<typeof setTimeout> | undefined;
+	const chosen = $derived(pending ?? theme.mode);
+
+	function choose(mode: ThemeMode) {
+		clearTimeout(applying);
+		if (prefersReducedMotion()) {
+			pending = null;
+			void theme.set(mode);
+			return;
+		}
+		pending = mode;
+		applying = setTimeout(async () => {
+			await theme.set(mode);
+			// A later choice may be sliding meanwhile: leave its highlight in place.
+			if (pending === mode) pending = null;
+		}, slidingIndicatorMs);
+	}
 </script>
 
 <div
@@ -72,14 +99,14 @@ translated.
 				<button
 					{...props}
 					type="button"
-					aria-pressed={theme.mode === mode.value}
+					aria-pressed={chosen === mode.value}
 					aria-label={labels[mode.value]}
 					class={cn(
 						'relative grid place-items-center rounded-md text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary',
 						size === 'sm' ? 'size-5.5 [&_svg]:size-3.5' : 'size-6.5 [&_svg]:size-4',
-						theme.mode === mode.value && 'text-fg'
+						chosen === mode.value && 'text-fg'
 					)}
-					onclick={() => theme.set(mode.value)}
+					onclick={() => choose(mode.value)}
 				>
 					<mode.Icon aria-hidden="true" />
 				</button>

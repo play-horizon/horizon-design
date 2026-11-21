@@ -53,6 +53,9 @@ export function slidingIndicator(chosen: string): Attachment<HTMLElement> {
 	};
 }
 
+/** How long the indicator slides, in milliseconds: the `duration-200` of its classes. */
+export const slidingIndicatorMs = 200;
+
 /**
  * The classes of the indicator element: placed from the row's variables, hidden until the
  * attachment has placed it (on the server, before hydration, and while nothing is chosen), and
