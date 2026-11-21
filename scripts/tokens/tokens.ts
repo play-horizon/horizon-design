@@ -139,11 +139,11 @@ const shared = {
 	paper: 'navy-0',
 	'on-art': 'navy-0',
 	'art-scrim': 'oklch(0.15 0.02 268 / 0.72)',
-	'avatar-1': 'oklch(0.6 0.17 264)',
-	'avatar-2': 'oklch(0.6 0.135 160)',
-	'avatar-3': 'oklch(0.64 0.16 45)',
+	'avatar-1': 'oklch(0.56 0.17 264)',
+	'avatar-2': 'oklch(0.54 0.12 160)',
+	'avatar-3': 'oklch(0.56 0.15 45)',
 	'avatar-4': 'oklch(0.58 0.18 330)',
-	'avatar-5': 'oklch(0.6 0.102 200)'
+	'avatar-5': 'oklch(0.54 0.09 200)'
 } as const satisfies Partial<Record<ColorToken, ColorValue>>;
 
 /** The semantic colour tokens of each theme. */

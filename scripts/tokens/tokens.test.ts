@@ -176,4 +176,13 @@ describe('contrast', () => {
 			}
 		}
 	});
+
+	it('keeps the initials on every avatar tone at 4.5:1', () => {
+		for (const tone of [1, 2, 3, 4, 5] as const) {
+			expect(
+				contrast(value('dark', 'on-art'), value('dark', `avatar-${tone}`)),
+				`avatar-${tone}`
+			).toBeGreaterThanOrEqual(4.5);
+		}
+	});
 });
