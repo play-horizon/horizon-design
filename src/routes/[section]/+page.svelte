@@ -20,4 +20,6 @@ its live examples.
 <p class="mt-1 mb-6 text-sm text-muted">
 	<code class="font-mono select-text">{importLine}</code>
 </p>
+<!-- The examples' cards title themselves with h3: this heading keeps the outline in order. -->
+<h2 class="sr-only">Examples</h2>
 <data.component />
