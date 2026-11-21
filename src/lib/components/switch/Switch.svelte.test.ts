@@ -1,9 +1,11 @@
 /**
  * Tests of `Switch`: its label, its bound state alongside an `onCheckedChange` callback, and the
- * neutral variant's checked colours.
+ * neutral variant's checked colours, the same gap at both ends of the thumb's travel at every size,
+ * and an icon sized to the thumb.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
+import { createRawSnippet } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import Switch from './Switch.svelte';
 
@@ -49,5 +51,38 @@ describe('Switch', () => {
 		const control = container.querySelector('[data-part="control"]');
 		expect(control?.getAttribute('data-state')).toBe('unchecked');
 		expect(control?.classList).toContain('bg-faint');
+	});
+
+	it('leaves the same 2 px gap at both ends of the travel, at every size', () => {
+		// [size, track width, track height]: the thumb is the height minus the 2 px border on each
+		// side, and travels the width minus the height, so the end gap equals the start gap.
+		const tracks = [
+			['sm', 24, 14, 10, 10],
+			['md', 30, 17, 13, 13],
+			['lg', 36, 20, 16, 16],
+			['xl', 52, 28, 24, 24]
+		] as const;
+		for (const [size, width, height, thumb, travel] of tracks) {
+			const { container, unmount } = render(Switch, { props: { size, label: size } });
+			const control = container.querySelector<HTMLElement>('[data-part="control"]');
+			const knob = container.querySelector<HTMLElement>('[data-part="thumb"]');
+			expect(control?.style.width).toBe(`${width}px`);
+			expect(control?.style.height).toBe(`${height}px`);
+			expect(knob?.style.width).toBe(`${thumb}px`);
+			expect(control?.style.getPropertyValue('--switch-travel')).toBe(`${travel}px`);
+			// The start gap is the border; the end gap is what the travel leaves: width - 4 - thumb - travel.
+			expect(width - 4 - thumb - travel).toBe(0);
+			unmount();
+		}
+	});
+
+	it('sizes a thumb icon to 60% of the thumb', () => {
+		const icon = createRawSnippet(() => ({ render: () => '<svg aria-hidden="true"></svg>' }));
+		const { container } = render(Switch, {
+			props: { size: 'xl', label: 'Sound', checkedContent: icon, uncheckedContent: icon }
+		});
+		const control = container.querySelector<HTMLElement>('[data-part="control"]');
+		// 60% of the 24 px thumb, rounded.
+		expect(control?.style.getPropertyValue('--switch-icon')).toBe('14px');
 	});
 });
