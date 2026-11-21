@@ -2,8 +2,11 @@
 @component
 A short label shown on hover or keyboard focus of its trigger (Ark Tooltip). The trigger is a
 button holding `children`, styled by `triggerClass`; to put the tooltip on an element of its own,
-such as an icon button, the app passes `trigger` instead and spreads the props it receives onto
-that element. The tooltip describes its trigger; an icon-only trigger still needs its own
+such as an icon button or another component's trigger, the app passes `trigger` instead and spreads
+the props it receives onto that element. Those props carry no `data-scope`, `data-part` or
+`data-state`, so another component's trigger keeps its own (a toggle's `on`, a popover trigger's
+`open`). Both components also find the element by its id: give the tooltip the id the other
+component gives its trigger, `triggerId`, set through that component's `ids` (Ark's `ids` prop). The tooltip describes its trigger; an icon-only trigger still needs its own
 `aria-label`.
 -->
 <script lang="ts">
@@ -21,6 +24,7 @@ that element. The tooltip describes its trigger; an icon-only trigger still need
 		contentClass = '',
 		openDelay = 200,
 		closeDelay = 100,
+		triggerId,
 		...rest
 	}: {
 		/** The content of the trigger button. */
@@ -40,16 +44,36 @@ that element. The tooltip describes its trigger; an icon-only trigger still need
 		openDelay?: number;
 		/** How long it stays after the pointer leaves, in milliseconds. */
 		closeDelay?: number;
+		/**
+		 * The id of the element `trigger` renders, when another component also gives it one (its
+		 * trigger's id, set through its `ids`), so both find the same element.
+		 */
+		triggerId?: string;
 		/** Other props of Ark's `Tooltip.Root`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const partAttributes = new Set(['data-scope', 'data-part', 'data-state']);
+
+	/** The trigger's props but the attributes that would override another component's own. */
+	function withoutPartAttributes(props: HTMLAttributes<HTMLElement>): HTMLAttributes<HTMLElement> {
+		return Object.fromEntries(
+			Object.entries(props).filter(([name]) => !partAttributes.has(name))
+		) as HTMLAttributes<HTMLElement>;
+	}
 </script>
 
-<Tooltip.Root {openDelay} {closeDelay} positioning={{ placement: 'top' }} {...rest}>
+<Tooltip.Root
+	{openDelay}
+	{closeDelay}
+	positioning={{ placement: 'top' }}
+	ids={triggerId ? { trigger: triggerId } : undefined}
+	{...rest}
+>
 	{#if trigger}
 		<Tooltip.Trigger data-slot="tooltip-trigger">
 			{#snippet asChild(getProps)}
-				{@render trigger(getProps())}
+				{@render trigger(withoutPartAttributes(getProps()))}
 			{/snippet}
 		</Tooltip.Trigger>
 	{:else}
