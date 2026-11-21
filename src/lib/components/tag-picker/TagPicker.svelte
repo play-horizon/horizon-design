@@ -1,7 +1,7 @@
 <!--
 @component
 Chooses tags from a fixed list (the platform's tag lists are never free text): every tag is a
-toggle chip, the chosen ones tinted and checked. With `max`, the other chips are disabled once
+toggle chip, the chosen ones shown by their colour only (tinted primary). With `max`, the other chips are disabled once
 that many are chosen (games take up to 3 tags, store listings up to 5). The app passes the list
 with its labels translated; `value` holds the chosen tags' ids, in the order they were chosen.
 -->
@@ -17,7 +17,6 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 
 <script lang="ts">
 	import { cn } from '#lib/utils.js';
-	import MingcuteCheckLine from '~icons/mingcute/check-line';
 
 	let {
 		options,
@@ -66,14 +65,13 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 			aria-pressed={on}
 			disabled={disabled || (full && !on)}
 			class={cn(
-				'inline-flex h-control-sm items-center gap-1 rounded-full border px-2.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-40',
+				'inline-flex h-control-sm items-center rounded-full border px-2.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-40',
 				on
-					? 'border-primary-border bg-primary-subtle font-semibold text-primary'
+					? 'border-primary-border bg-primary-subtle text-primary'
 					: 'border-border bg-surface text-fg-2 hover:bg-hover hover:text-fg'
 			)}
 			onclick={() => toggle(option.id)}
 		>
-			{#if on}<MingcuteCheckLine class="-ml-0.5 size-3.5" aria-hidden="true" />{/if}
 			{option.label}
 		</button>
 	{/each}
