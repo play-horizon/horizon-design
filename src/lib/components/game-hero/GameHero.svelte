@@ -2,7 +2,7 @@
 @component
 The top of a game page: the game's 16:9 thumbnail as a banner that fades into the page, with
 the square icon, the name, a `byline` (the creator) and the game's `tags` over its bottom, and a
-`top` slot at its top left (Back). The page's actions (Play, votes) follow under it.
+`top` slot at its top left (Back, a `Button` of the `art` variant, readable over any art). The page's actions (Play, votes) follow under it.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';

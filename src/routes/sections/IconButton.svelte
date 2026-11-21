@@ -10,7 +10,15 @@ Docs: IconButton. A playground over every prop, and every variant and size side 
 	import Playground from '../playground/Playground.svelte';
 	import { boolean, choice, text } from '../playground/controls';
 
-	const variants = ['default', 'primary', 'tint', 'ghost', 'danger', 'danger-solid'] as const;
+	const variants = [
+		'default',
+		'primary',
+		'tint',
+		'ghost',
+		'danger',
+		'danger-solid',
+		'art'
+	] as const;
 	const sizes = ['xs', 'sm', 'md', 'lg'] as const;
 </script>
 

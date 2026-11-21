@@ -14,7 +14,7 @@ Docs: GameHero. A game page's banner with its icon, name, creator and tags.
 <div class="overflow-hidden rounded-xl border border-border bg-background pb-6">
 	<GameHero name="Skyline Obby" thumbnail={art.skyline} icon={art.icon}>
 		{#snippet top()}
-			<Button size="sm" class="border-transparent bg-art-scrim text-on-art">
+			<Button size="sm" variant="art">
 				<MingcuteArrowLeftLine aria-hidden="true" />Back
 			</Button>
 		{/snippet}

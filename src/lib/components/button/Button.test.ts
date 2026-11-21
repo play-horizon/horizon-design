@@ -1,5 +1,6 @@
 /**
- * Tests of `Button`: its variant, and the loading state that disables it.
+ * Tests of `Button`: its variant, the art variant's hover that stays dark over game art, and the
+ * loading state that disables it.
  * @module
  */
 import { describe, expect, it } from 'vitest';
@@ -22,5 +23,14 @@ describe('Button', () => {
 		const button = getByRole('button', { name: 'Publish' }) as HTMLButtonElement;
 		expect(button.disabled).toBe(true);
 		expect(button.getAttribute('aria-busy')).toBe('true');
+	});
+
+	it('keeps the art variant a dark scrim with light text, hovered too', () => {
+		const { getByRole } = render(Button, { variant: 'art', children });
+		const classes = getByRole('button', { name: 'Publish' }).classList;
+		expect(classes).toContain('bg-art-scrim');
+		expect(classes).toContain('hover:bg-art-scrim-hover');
+		expect(classes).toContain('text-on-art');
+		expect(classes).not.toContain('hover:bg-hover');
 	});
 });

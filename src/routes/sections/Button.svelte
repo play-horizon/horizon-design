@@ -9,6 +9,8 @@ button, and the loading and disabled states.
 	import MingcuteAddLine from '~icons/mingcute/add-line';
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
+	import MingcuteArrowLeftLine from '~icons/mingcute/arrow-left-line';
+	import { art } from '../examples';
 	import Playground from '../playground/Playground.svelte';
 	import { boolean, choice, text } from '../playground/controls';
 
@@ -65,6 +67,14 @@ button, and the loading and disabled states.
 			<Button variant="danger"><MingcuteDelete2Line aria-hidden="true" />Delete</Button>
 			<Button variant="danger-solid">Delete game</Button>
 			<Button variant="link">Profile</Button>
+		</div>
+	</Card>
+	<Card title="Over game art" description="The art variant stays readable over any art.">
+		<div
+			class="flex h-28 items-start rounded-lg bg-cover bg-center p-3"
+			style:background-image="url({art.skyline})"
+		>
+			<Button size="sm" variant="art"><MingcuteArrowLeftLine aria-hidden="true" />Back</Button>
 		</div>
 	</Card>
 	<Card title="Sizes">

@@ -185,4 +185,13 @@ describe('contrast', () => {
 			).toBeGreaterThanOrEqual(4.5);
 		}
 	});
+
+	it('keeps text on the scrims over game art at 4.5:1, even over white art', () => {
+		for (const scrim of ['art-scrim', 'art-scrim-hover'] as const) {
+			expect(
+				contrast(value('light', 'on-art'), value('light', scrim), 'oklch(1 0 0)'),
+				scrim
+			).toBeGreaterThanOrEqual(4.5);
+		}
+	});
 });
