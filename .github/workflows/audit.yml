@@ -1,0 +1,38 @@
+name: Audit
+
+# Every day, checks the locked dependencies (the published package's and the development tools')
+# against the npm registry's security advisories, and fails on any known vulnerability of moderate
+# severity or above. It reads only the lockfile: nothing is installed and no dependency code runs.
+# (GitHub's dependency review compares the dependencies of a pull request with its base branch, so
+# it can't check what main locks today on a schedule.)
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Known vulnerabilities
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
+      # Both trees run even when the first fails, so one run reports everything.
+      - name: Audit the published package's dependencies
+        run: pnpm audit --prod --audit-level moderate
+
+      - name: Audit the development dependencies
+        if: ${{ !cancelled() }}
+        run: pnpm audit --dev --audit-level moderate

@@ -86,6 +86,20 @@ trusted publishing (no npm token is stored) and creates the GitHub release and i
 already tagged publishes nothing. Once CI passes on `main`, the docs site deploys to GitHub Pages
 (`.github/workflows/deploy-pages.yml`).
 
+## Scheduled checks
+
+Two workflows run every day on `main` (and on demand from the Actions tab):
+
+- **Audit** (`.github/workflows/audit.yml`) runs `pnpm audit` on the published package's
+  dependencies (`--prod`) and on the development tools (`--dev`), from the lockfile alone, and
+  fails on any known vulnerability of moderate severity or above. Fix it by updating the dependency
+  that pulls in the vulnerable package.
+- **Outdated dependencies** (`.github/workflows/outdated.yml`) fails when a direct dependency, or
+  the pnpm version of `packageManager`, has a newer version than the one locked; the job summary
+  lists them (`scripts/dependencies/outdated.ts`). Node follows `.node-version` instead: the
+  runtime isn't checked, and `@types/node` is held to the newest release of its major. Fix it by
+  updating them in a `BUILD: …` commit, with the checks above.
+
 ## License
 
 By contributing you agree that your contributions are licensed under the
