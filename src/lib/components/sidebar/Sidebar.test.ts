@@ -33,10 +33,10 @@ describe('Sidebar', () => {
 		const user = userEvent.setup();
 		const collapsed = render(SidebarFixture, { collapsed: true });
 		await user.tab();
-		expect(document.activeElement).toBe(collapsed.getByRole('link', { name: 'Home' }));
-		const home = collapsed.getByRole('link', { name: 'Home' });
+		const collapsedHome = collapsed.getByRole('link', { name: 'Home' });
+		expect(document.activeElement).toBe(collapsedHome);
 		await waitFor(() => {
-			const id = home.getAttribute('aria-describedby');
+			const id = collapsedHome.getAttribute('aria-describedby');
 			expect(id && document.getElementById(id)?.textContent?.trim()).toBe('Home');
 		});
 		collapsed.unmount();
@@ -45,8 +45,8 @@ describe('Sidebar', () => {
 		await user.tab();
 		const home = expanded.getByRole('link', { name: 'Home' });
 		expect(document.activeElement).toBe(home);
-		// Ark opens a tooltip on focus at once: a closed trigger now stays closed.
-		expect(home.dataset.state).toBe('closed');
+		// Ark opens a tooltip on focus at once: the expanded item's stays closed.
+		expect(home.hasAttribute('aria-describedby')).toBe(false);
 		expect(expanded.queryByRole('tooltip', { hidden: true })).toBeNull();
 	});
 });

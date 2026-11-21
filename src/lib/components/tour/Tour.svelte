@@ -97,8 +97,8 @@ tour.
 				{/if}
 
 				<Tour.Context>
-					{#snippet render(ctx)}
-						{@const api = ctx()}
+					{#snippet render(context)}
+						{@const api = context()}
 						<div class="flex flex-col gap-1.5 px-6 pt-6" data-slot="tour-header">
 							<Tour.Title
 								class="text-base leading-none font-semibold tracking-tight"

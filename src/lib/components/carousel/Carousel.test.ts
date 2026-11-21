@@ -87,7 +87,7 @@ describe('Carousel', () => {
 		// The carousel's ids, not the tooltips': it finds its dots by id to move the focus between them.
 		const ids = ['Back', 'Forward', 'Show 2'].map((name) => getByRole('button', { name }).id);
 		expect(ids.map((id) => id.split('-').slice(1).join('-'))).toEqual([
-			'prev',
+			'previous',
 			'next',
 			'indicator-1'
 		]);

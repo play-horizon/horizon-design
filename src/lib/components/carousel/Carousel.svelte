@@ -56,7 +56,7 @@ text as its accessible name.
 	// trigger by it, and the carousel moves the focus between its dots by it.
 	const uid = $props.id();
 	const ids = {
-		prevTrigger: `${uid}-prev`,
+		prevTrigger: `${uid}-previous`,
 		nextTrigger: `${uid}-next`,
 		indicator: (index: number) => `${uid}-indicator-${index}`
 	};

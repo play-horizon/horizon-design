@@ -57,9 +57,9 @@ pnpm dlx @sveltejs/mcp svelte-autofixer src/lib/components/button/Button.svelte
 - Every behaviour has a test next to the component (`<Name>.test.ts`, or `<Name>.svelte.test.ts`
   when the test uses runes).
 - Every component has a docs page (`src/routes/sections/<Name>.svelte`, listed in
-  `src/routes/navigation.ts`): a `Playground` (`src/routes/playground/`) whose controls toggle every prop,
-  then cards showing every variant, size and state side by side. Pages stay axe clean in both
-  themes.
+  `src/routes/navigation.ts`): a `Playground` (`src/routes/playground/`) whose controls toggle
+  every prop, then cards showing every variant, size and state side by side. Pages stay axe clean
+  in both themes.
 
 ## Commits and pull requests
 

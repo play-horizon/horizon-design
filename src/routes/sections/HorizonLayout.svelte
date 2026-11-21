@@ -98,13 +98,13 @@ showing a maximised view with its restore button.
 	}
 </script>
 
-{#snippet layoutPopOutBtn(activeViewId: Id)}
+{#snippet layoutPopOutButton(activeViewId: Id)}
 	<IconButton label="Pop out" size="xs" onclick={() => popOut(activeViewId)}>
 		<MingcuteExternalLinkLine aria-hidden="true" />
 	</IconButton>
 {/snippet}
 
-{#snippet layoutMaximizeBtn(activeViewId: Id)}
+{#snippet layoutMaximizeButton(activeViewId: Id)}
 	{#if layoutConfig.maximizedView !== activeViewId}
 		<IconButton
 			label="Maximize"
@@ -333,8 +333,8 @@ showing a maximised view with its restore button.
 					tabgroupControls={values.toolbar === 'none'
 						? []
 						: values.toolbar === 'maximize'
-							? [layoutMaximizeBtn]
-							: [layoutPopOutBtn, layoutMaximizeBtn]}
+							? [layoutMaximizeButton]
+							: [layoutPopOutButton, layoutMaximizeButton]}
 					onPopoutClose={floatClosedPopout}
 					showSplitRatio={values.showSplitRatio}
 					disableResizeSplits={values.disableResizeSplits}
