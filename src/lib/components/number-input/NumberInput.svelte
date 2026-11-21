@@ -6,7 +6,7 @@ buttons (`incrementLabel`, `decrementLabel`), which show their names as tooltips
 field's announced role (`roleDescription`). Ark's `invalid` turns the border danger.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import {
 		NumberInput,
 		type NumberInputRootProps,
@@ -24,6 +24,7 @@ field's announced role (`roleDescription`). Ark's `invalid` turns the border dan
 		value = $bindable(),
 		onValueChange,
 		translations,
+		ids: appIds,
 		...rest
 	}: {
 		/** Classes added to the root, around the label and the field. */
@@ -45,6 +46,8 @@ field's announced role (`roleDescription`). Ark's `invalid` turns the border dan
 			Pick<NonNullable<NumberInputRootProps['translations']>, 'incrementLabel' | 'decrementLabel'>
 		> &
 			NonNullable<NumberInputRootProps['translations']> & { roleDescription: string };
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof NumberInput.Root>['ids'];
 		/** Other props of Ark's `NumberInput.Root`. */
 		[key: string]: unknown;
 	} = $props();
@@ -56,7 +59,7 @@ field's announced role (`roleDescription`). Ark's `invalid` turns the border dan
 </script>
 
 <NumberInput.Root
-	{ids}
+	ids={{ ...appIds, ...ids }}
 	translations={arkTranslations}
 	class={cn('flex min-w-12 flex-col gap-1.5', className)}
 	data-slot="number-input"

@@ -1,6 +1,7 @@
 /**
  * Tests of `Popover`: its trigger is a real button, its title and description name and describe
- * the open panel, and an icon-only trigger is named by its `triggerLabel`, shown as a tooltip.
+ * the open panel, an icon-only trigger is named by its `triggerLabel`, shown as a tooltip, and the
+ * app's own Ark `ids` merge with the trigger's, which the tooltip shares.
  * @module
  */
 import { describe, expect, it } from 'vitest';
@@ -44,5 +45,20 @@ describe('Popover', () => {
 		await fireEvent.click(trigger);
 		expect(await findByRole('dialog', { name: 'Filters' })).toBeTruthy();
 		expect(trigger.getAttribute('aria-expanded')).toBe('true');
+	});
+
+	it("merges the app's ids with the trigger's, which the tooltip shares", async () => {
+		const { getByRole, findByRole } = render(Popover, {
+			title: 'Filters',
+			triggerLabel: 'Show filters',
+			ids: { content: 'filters-panel' },
+			trigger: createRawSnippet(() => ({ render: () => '<span aria-hidden="true">#</span>' }))
+		});
+		const trigger = getByRole('button', { name: 'Show filters' });
+		expect(trigger.id).not.toBe('');
+		await fireEvent.click(trigger);
+		const panel = await findByRole('dialog', { name: 'Filters' });
+		expect(panel.id).toBe('filters-panel');
+		expect(trigger.getAttribute('aria-controls')).toBe('filters-panel');
 	});
 });

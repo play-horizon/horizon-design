@@ -8,6 +8,7 @@ does. `label`, required, names the field, and Ark `translations` name the open b
 own to fall back on here.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import {
 		Combobox,
 		createListCollection,
@@ -34,6 +35,7 @@ own to fall back on here.
 		onInputValueChange,
 		translations,
 		class: className = '',
+		ids: appIds,
 		...rest
 	}: {
 		/** The options: the text shown and the value chosen, unique. */
@@ -59,6 +61,8 @@ own to fall back on here.
 			Pick<ArkTranslations, 'resultsCount' | 'noResults' | 'loading'>;
 		/** Classes merged onto the root. */
 		class?: string;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Combobox.Root>['ids'];
 		/** Other props of Ark's `Combobox.Root`, such as `value`, `onValueChange` and `multiple`. */
 		[key: string]: unknown;
 	} = $props();
@@ -92,7 +96,7 @@ own to fall back on here.
 <Combobox.Root
 	{collection}
 	{openOnClick}
-	ids={{ trigger: triggerId }}
+	ids={{ ...appIds, trigger: triggerId }}
 	onInputValueChange={changeInput}
 	translations={arkTranslations}
 	class={cn('flex flex-col gap-1.5', className)}

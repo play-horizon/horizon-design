@@ -5,7 +5,7 @@ footer; `title` names it and `closeLabel` names its close button and is its tool
 dismiss it.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Drawer, type DrawerOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
@@ -25,6 +25,7 @@ dismiss it.
 		class: className = '',
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The content of the button that opens the drawer; no trigger when unset. */
@@ -51,6 +52,8 @@ dismiss it.
 		open?: boolean;
 		/** Called with the new state when the drawer opens or closes. */
 		onOpenChange?: (details: DrawerOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Drawer.Root>['ids'];
 		/** Other props of Ark's `Drawer.Root`, such as `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
@@ -62,7 +65,7 @@ dismiss it.
 </script>
 
 <Drawer.Root
-	ids={{ closeTrigger: closeTriggerId }}
+	ids={{ ...appIds, closeTrigger: closeTriggerId }}
 	swipeDirection="end"
 	{open}
 	onOpenChange={(details) => {

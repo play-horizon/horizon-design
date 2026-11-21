@@ -8,7 +8,7 @@ and describe the panel. `open` binds whether it is open; without it, Ark's `defa
 first state.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
@@ -33,6 +33,7 @@ first state.
 		class: className = '',
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The trigger button's content; without it, the sheet opens only through `open`. */
@@ -66,6 +67,8 @@ first state.
 		open?: boolean;
 		/** Called when the panel opens or closes, after `open` is updated. */
 		onOpenChange?: (details: DialogOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Dialog.Root>['ids'];
 		/** Other props of Ark's `Dialog.Root`. */
 		[key: string]: unknown;
 	} = $props();
@@ -88,7 +91,7 @@ first state.
 </script>
 
 <Dialog.Root
-	ids={{ trigger: triggerId, closeTrigger: closeTriggerId }}
+	ids={{ ...appIds, trigger: triggerId, closeTrigger: closeTriggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;

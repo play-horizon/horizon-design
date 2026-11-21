@@ -5,7 +5,7 @@ surface over a scrim; `closeLabel` names its close button and is its tooltip; `f
 translucent surface.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Dialog, type DialogOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
@@ -26,6 +26,7 @@ translucent surface.
 		class: className = '',
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The content of the button that opens the dialog; no trigger when unset. */
@@ -52,6 +53,8 @@ translucent surface.
 		open?: boolean;
 		/** Called with the new state when the dialog opens or closes. */
 		onOpenChange?: (details: DialogOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Dialog.Root>['ids'];
 		/** Other props of Ark's `Dialog.Root`, such as `role="alertdialog"` or `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
@@ -64,7 +67,7 @@ translucent surface.
 </script>
 
 <Dialog.Root
-	ids={{ closeTrigger: closeTriggerId }}
+	ids={{ ...appIds, closeTrigger: closeTriggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;

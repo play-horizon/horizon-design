@@ -8,6 +8,7 @@ as the user moves between them. Its size follows `--cell-size` (36 px by default
 can set through `class`, such as `[--cell-size:--spacing(8)]`.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
 	import type { DatePickerDateView } from '@ark-ui/svelte/date-picker';
 	import { cn } from '#lib/utils.js';
@@ -17,6 +18,7 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 	let {
 		class: className = '',
 		translations,
+		ids: appIds,
 		...rest
 	}: {
 		/** Classes merged onto the calendar. */
@@ -33,6 +35,8 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 				'dayCell' | 'prevTrigger' | 'nextTrigger' | 'viewTrigger'
 			>
 		> & { tableRoleDescription: (view: DatePickerDateView) => string };
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof DatePicker.Root>['ids'];
 		/**
 		 * Other props of Ark's `DatePicker.Root`: `value` and `onValueChange`, `selectionMode`
 		 * (`single`, `multiple` or `range`), `locale`.
@@ -50,7 +54,7 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 	data-slot="calendar"
 	inline
 	fixedWeeks
-	{ids}
+	ids={{ ...appIds, ...ids }}
 	translations={arkTranslations}
 	{...rest}
 >

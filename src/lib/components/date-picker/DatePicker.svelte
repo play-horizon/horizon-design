@@ -7,6 +7,7 @@ roles the popover and its tables are announced as) are passed in. The popover's 
 as the field is pressed.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
 	import type {
 		DatePickerDateView,
@@ -28,6 +29,7 @@ as the field is pressed.
 		onValueChange,
 		openOnClick = false,
 		translations,
+		ids: appIds,
 		...rest
 	}: {
 		/** Classes merged onto the root. */
@@ -61,6 +63,8 @@ as the field is pressed.
 			contentRoleDescription: string;
 			tableRoleDescription: (view: DatePickerDateView) => string;
 		};
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof DatePicker.Root>['ids'];
 		/**
 		 * Other props of Ark's `DatePicker.Root`: `selectionMode` (`single`, `multiple` or
 		 * `range`), `locale`, `min` and `max`.
@@ -84,7 +88,7 @@ as the field is pressed.
 	{value}
 	{openOnClick}
 	fixedWeeks
-	ids={{ trigger: triggerId, ...ids }}
+	ids={{ ...appIds, trigger: triggerId, ...ids }}
 	translations={arkTranslations}
 	onValueChange={(details) => {
 		value = details.value;

@@ -7,7 +7,7 @@ name and its tooltip. The title and description name and describe the panel. `op
 it is open; without it, Ark's `defaultOpen` sets the first state.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Popover, type PopoverOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
@@ -25,6 +25,7 @@ it is open; without it, Ark's `defaultOpen` sets the first state.
 		frosted = false,
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The trigger button's content; without it, the popover opens only through `open`. */
@@ -52,6 +53,8 @@ it is open; without it, Ark's `defaultOpen` sets the first state.
 		open?: boolean;
 		/** Called when the panel opens or closes, after `open` is updated. */
 		onOpenChange?: (details: PopoverOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Popover.Root>['ids'];
 		/** Other props of Ark's `Popover.Root`. */
 		[key: string]: unknown;
 	} = $props();
@@ -61,7 +64,7 @@ it is open; without it, Ark's `defaultOpen` sets the first state.
 </script>
 
 <Popover.Root
-	ids={{ trigger: triggerId }}
+	ids={{ ...appIds, trigger: triggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;

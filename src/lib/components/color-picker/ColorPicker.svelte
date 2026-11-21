@@ -9,6 +9,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 `label` when there is one, and shows `labels.trigger` in its tooltip.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import {
 		ColorPicker,
 		type ColorPickerColor as Color,
@@ -29,6 +30,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 		formats = ['hexa', 'rgba', 'hsla'],
 		disabled = false,
 		readOnly = false,
+		ids: appIds,
 		...rest
 	}: {
 		/** Classes merged onto the root. */
@@ -75,6 +77,8 @@ for assistive technology and gives the values the sliders announce; the trigger 
 		disabled?: boolean;
 		/** Shows the colour without letting it change. */
 		readOnly?: boolean;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof ColorPicker.Root>['ids'];
 		/** Other props of Ark's `ColorPicker.Root`, such as `defaultValue` and `name`. */
 		[key: string]: unknown;
 	} = $props();
@@ -128,7 +132,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 	{value}
 	{disabled}
 	{readOnly}
-	ids={{ trigger: triggerId }}
+	ids={{ ...appIds, trigger: triggerId }}
 	onValueChange={(details) => {
 		value = details.value;
 		onValueChange?.(details);

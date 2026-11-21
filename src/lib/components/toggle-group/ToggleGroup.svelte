@@ -6,7 +6,7 @@ item; with `multiple`, each pressed item is raised in place. The group takes its
 whose content is only an icon through its `label`, which its tooltip shows too.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { ToggleGroup } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
 	import Tooltip from '../tooltip/Tooltip.svelte';
@@ -30,6 +30,7 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 		class: className = '',
 		value = $bindable([]),
 		multiple = false,
+		ids: appIds,
 		...rest
 	}: {
 		/** The toggles, in order. */
@@ -40,6 +41,8 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 		value?: string[];
 		/** Whether several items can be pressed at once; otherwise pressing one releases the other. */
 		multiple?: boolean;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof ToggleGroup.Root>['ids'];
 		/** Other props of Ark's `ToggleGroup.Root`, such as `aria-label` or `onValueChange`. */
 		[key: string]: unknown;
 	} = $props();
@@ -67,7 +70,7 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 	data-slot="toggle-group"
 	bind:value
 	{multiple}
-	ids={{ item: itemId }}
+	ids={{ ...appIds, item: itemId }}
 	{...rest}
 	{@attach multiple ? undefined : slidingIndicator('[data-state="on"]')}
 >

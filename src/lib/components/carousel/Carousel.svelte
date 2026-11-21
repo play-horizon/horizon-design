@@ -6,7 +6,7 @@ announced as. The arrows and the dots have no text, so each shows its name in a 
 text as its accessible name.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Carousel, type CarouselRootProps } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
 	import Tooltip from '../tooltip/Tooltip.svelte';
@@ -20,6 +20,7 @@ text as its accessible name.
 		showIndicators = true,
 		showArrows = true,
 		translations,
+		ids: appIds,
 		...rest
 	}: {
 		/** The slides, in order. */
@@ -44,6 +45,8 @@ text as its accessible name.
 				'item' | 'indicator' | 'prevTrigger' | 'nextTrigger'
 			>
 		> & { roleDescription: string; slideRoleDescription: string };
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Carousel.Root>['ids'];
 		/** Other props of Ark's `Carousel.Root`: `page` and `onPageChange`, `loop`, `slidesPerPage`. */
 		[key: string]: unknown;
 	} = $props();
@@ -67,7 +70,7 @@ text as its accessible name.
 
 <Carousel.Root
 	{slideCount}
-	{ids}
+	ids={{ ...appIds, ...ids }}
 	translations={arkTranslations}
 	aria-roledescription={roleDescription}
 	aria-label={label}
