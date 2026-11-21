@@ -2,12 +2,14 @@
 @component
 A horizontal slideshow with previous and next controls and indicators (Ark Carousel);
 `translations` name the slides and the controls and give the roles the carousel and its slides are
-announced as.
+announced as. The arrows and the dots have no text, so each shows its name in a tooltip, the same
+text as its accessible name.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Carousel, type CarouselRootProps } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 
@@ -46,12 +48,26 @@ announced as.
 		[key: string]: unknown;
 	} = $props();
 
+	/** The look of the previous and next buttons, which differ only by their side. */
+	const arrowClass =
+		'inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-raised text-fg shadow-sm transition-colors hover:bg-background disabled:opacity-50';
+
+	// The tooltips and the carousel name each button with the same id: the tooltip finds its
+	// trigger by it, and the carousel moves the focus between its dots by it.
+	const uid = $props.id();
+	const ids = {
+		prevTrigger: `${uid}-prev`,
+		nextTrigger: `${uid}-next`,
+		indicator: (index: number) => `${uid}-indicator-${index}`
+	};
+
 	const slideCount = $derived(slides.length);
 	const { roleDescription, slideRoleDescription, ...arkTranslations } = $derived(translations);
 </script>
 
 <Carousel.Root
 	{slideCount}
+	{ids}
 	translations={arkTranslations}
 	aria-roledescription={roleDescription}
 	aria-label={label}
@@ -73,18 +89,30 @@ announced as.
 		{/each}
 	</Carousel.ItemGroup>
 	{#if showArrows}
-		<Carousel.PrevTrigger
-			class="absolute top-1/2 left-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-raised text-fg shadow-sm transition-colors hover:bg-background disabled:opacity-50"
-			data-slot="carousel-prev"
-		>
-			<MingcuteLeftLine class="size-4" aria-hidden="true" />
-		</Carousel.PrevTrigger>
-		<Carousel.NextTrigger
-			class="absolute top-1/2 right-3 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-raised text-fg shadow-sm transition-colors hover:bg-background disabled:opacity-50"
-			data-slot="carousel-next"
-		>
-			<MingcuteRightLine class="size-4" aria-hidden="true" />
-		</Carousel.NextTrigger>
+		<Tooltip content={arkTranslations.prevTrigger} ids={{ trigger: ids.prevTrigger }}>
+			{#snippet trigger(props)}
+				<Carousel.PrevTrigger
+					{...props}
+					aria-label={arkTranslations.prevTrigger}
+					class={['absolute top-1/2 left-3 z-10', arrowClass]}
+					data-slot="carousel-prev"
+				>
+					<MingcuteLeftLine class="size-4" aria-hidden="true" />
+				</Carousel.PrevTrigger>
+			{/snippet}
+		</Tooltip>
+		<Tooltip content={arkTranslations.nextTrigger} ids={{ trigger: ids.nextTrigger }}>
+			{#snippet trigger(props)}
+				<Carousel.NextTrigger
+					{...props}
+					aria-label={arkTranslations.nextTrigger}
+					class={['absolute top-1/2 right-3 z-10', arrowClass]}
+					data-slot="carousel-next"
+				>
+					<MingcuteRightLine class="size-4" aria-hidden="true" />
+				</Carousel.NextTrigger>
+			{/snippet}
+		</Tooltip>
 	{/if}
 	{#if showIndicators}
 		<Carousel.IndicatorGroup
@@ -93,11 +121,18 @@ announced as.
 		>
 			<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 			{#each slides as _, i (i)}
-				<Carousel.Indicator
-					index={i}
-					class="size-1.5 rounded-full bg-faint transition-all data-current:w-4 data-current:bg-primary"
-					data-slot="carousel-indicator"
-				/>
+				{@const name = arkTranslations.indicator(i)}
+				<Tooltip content={name} ids={{ trigger: ids.indicator(i) }}>
+					{#snippet trigger(props)}
+						<Carousel.Indicator
+							{...props}
+							index={i}
+							aria-label={name}
+							class="size-1.5 rounded-full bg-faint transition-all data-current:w-4 data-current:bg-primary"
+							data-slot="carousel-indicator"
+						/>
+					{/snippet}
+				</Tooltip>
 			{/each}
 		</Carousel.IndicatorGroup>
 	{/if}

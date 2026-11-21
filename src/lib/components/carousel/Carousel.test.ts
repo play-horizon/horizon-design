@@ -1,11 +1,12 @@
 /**
  * Tests of `Carousel`: one slide and one indicator per snippet, counted from `slides`, every string
- * announced coming from `translations`, and an indicator asking for its own page.
+ * announced coming from `translations`, an indicator asking for its own page, and the arrows and
+ * dots each showing their accessible name as a tooltip while keeping the carousel's ids.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render } from '@testing-library/svelte';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import Carousel from './Carousel.svelte';
 
 // jsdom has neither; Ark's carousel tracks the slides in view and scrolls to the chosen page.
@@ -73,5 +74,34 @@ describe('Carousel', () => {
 		});
 		await fireEvent.click(getByRole('button', { name: 'Show 3' }));
 		expect(onPageChange).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
+	});
+
+	it('shows the name of each arrow and dot as its tooltip', async () => {
+		const { getByRole, getAllByRole } = render(Carousel, {
+			slides: [slide('One'), slide('Two')],
+			label: 'Holiday pictures',
+			translations,
+			// Looping, Back is enabled on the first page: a disabled button shows no tooltip.
+			loop: true
+		});
+		// The carousel's ids, not the tooltips': it finds its dots by id to move the focus between them.
+		const ids = ['Back', 'Forward', 'Show 2'].map((name) => getByRole('button', { name }).id);
+		expect(ids.map((id) => id.split('-').slice(1).join('-'))).toEqual([
+			'prev',
+			'next',
+			'indicator-1'
+		]);
+		for (const name of ['Back', 'Forward', 'Show 2']) {
+			const button = getByRole('button', { name });
+			await fireEvent.pointerMove(button, { pointerType: 'mouse' });
+			await waitFor(() =>
+				expect(
+					getAllByRole('tooltip', { hidden: true })
+						.filter((tooltip) => tooltip.dataset.state === 'open')
+						.map((tooltip) => tooltip.textContent?.trim())
+				).toEqual([name])
+			);
+			await fireEvent.pointerLeave(button, { pointerType: 'mouse' });
+		}
 	});
 });
