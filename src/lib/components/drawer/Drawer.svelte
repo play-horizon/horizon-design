@@ -1,7 +1,7 @@
 <!--
 @component
 A panel that slides in from the end edge of the window (Ark Drawer), with a title, content and
-footer; `title` names it and `closeLabel` names its close button. It is swiped toward that edge to
+footer; `title` names it and `closeLabel` names its close button and is its tooltip. It is swiped toward that edge to
 dismiss it.
 -->
 <script lang="ts">
@@ -9,6 +9,7 @@ dismiss it.
 	import { Drawer, type DrawerOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
@@ -40,7 +41,7 @@ dismiss it.
 		footer?: Snippet;
 		/** Whether to show the close button at the top right. */
 		showClose?: boolean;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's accessible name and tooltip, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
@@ -83,13 +84,19 @@ dismiss it.
 				data-slot="drawer-content"
 			>
 				{#if showClose}
-					<Drawer.CloseTrigger
-						class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
-						aria-label={closeLabel}
-						data-slot="drawer-close"
-					>
-						<MingcuteCloseLine class="size-4" aria-hidden="true" />
-					</Drawer.CloseTrigger>
+					<!-- Above the drawer's own layer (z-70), which a tooltip's default one is under. -->
+					<Tooltip content={closeLabel} contentClass="z-80">
+						{#snippet trigger(props)}
+							<Drawer.CloseTrigger
+								{...props}
+								class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+								aria-label={closeLabel}
+								data-slot="drawer-close"
+							>
+								<MingcuteCloseLine class="size-4" aria-hidden="true" />
+							</Drawer.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				{/if}
 				<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
 					<Drawer.Title class="text-[1.0625rem] font-bold" data-slot="drawer-title">
