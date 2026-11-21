@@ -1,7 +1,7 @@
 <!--
 @component
 Test fixture of `PopoverClose`: an open `Popover` whose panel holds a close button named by its
-`label`.
+`label`, and an icon-only one.
 -->
 <script lang="ts">
 	import Popover from './Popover.svelte';
@@ -10,4 +10,5 @@ Test fixture of `PopoverClose`: an open `Popover` whose panel holds a close butt
 
 <Popover title="Layer size" defaultOpen>
 	<PopoverClose label="Close the layer size">Done</PopoverClose>
+	<PopoverClose label="Close" iconOnly><span aria-hidden="true">×</span></PopoverClose>
 </Popover>

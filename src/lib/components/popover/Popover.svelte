@@ -2,17 +2,20 @@
 @component
 A non-modal panel anchored to its trigger (Ark Popover), with a title, content and footer;
 `frosted` for a translucent surface. The trigger is a button holding the `trigger` snippet, styled
-by `triggerClass`; the title and description name and describe the panel. `open` binds whether it
-is open; without it, Ark's `defaultOpen` sets the first state.
+by `triggerClass`, and a trigger that shows only an icon takes a `triggerLabel`: its accessible
+name and its tooltip. The title and description name and describe the panel. `open` binds whether
+it is open; without it, Ark's `defaultOpen` sets the first state.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Popover, type PopoverOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
-		trigger,
+		trigger: triggerContent,
+		triggerLabel,
 		triggerClass = '',
 		title,
 		description,
@@ -26,6 +29,11 @@ is open; without it, Ark's `defaultOpen` sets the first state.
 	}: {
 		/** The trigger button's content; without it, the popover opens only through `open`. */
 		trigger?: Snippet;
+		/**
+		 * The trigger's action, translated, such as "Filters", for a trigger that shows only an icon:
+		 * its accessible name and its tooltip. Unset, the trigger's content names it.
+		 */
+		triggerLabel?: string;
 		/** Classes of the trigger button, such as `buttonVariants(...)`. */
 		triggerClass?: string;
 		/** The panel's title, which names it. */
@@ -47,9 +55,13 @@ is open; without it, Ark's `defaultOpen` sets the first state.
 		/** Other props of Ark's `Popover.Root`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// The tooltip and the popover share the trigger, so both must know it by the same id.
+	const triggerId = $props.id();
 </script>
 
 <Popover.Root
+	ids={{ trigger: triggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -57,9 +69,22 @@ is open; without it, Ark's `defaultOpen` sets the first state.
 	}}
 	{...rest}
 >
-	{#if trigger}
+	{#if triggerContent && triggerLabel}
+		<Tooltip content={triggerLabel} ids={{ trigger: triggerId }}>
+			{#snippet trigger(props)}
+				<Popover.Trigger
+					{...props}
+					aria-label={triggerLabel}
+					class={triggerClass || undefined}
+					data-slot="popover-trigger"
+				>
+					{@render triggerContent()}
+				</Popover.Trigger>
+			{/snippet}
+		</Tooltip>
+	{:else if triggerContent}
 		<Popover.Trigger class={triggerClass || undefined} data-slot="popover-trigger">
-			{@render trigger()}
+			{@render triggerContent()}
 		</Popover.Trigger>
 	{/if}
 	<Portal>
