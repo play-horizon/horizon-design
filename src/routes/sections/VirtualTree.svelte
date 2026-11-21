@@ -104,8 +104,9 @@ a tree view.
 						<Badge variant={object.mode} size="sm" class="w-4.25 justify-center px-0">
 							{object.mode === 'server' ? 'S' : 'L'}
 						</Badge>
-						{#if !state.renaming}<span class="truncate">{names[object.id] ?? object.name}</span
-							>{/if}
+						{#if !state.renaming}<span class="truncate">
+								{names[object.id] ?? object.name}
+							</span>{/if}
 					{/snippet}
 				</VirtualTree>
 			{/key}

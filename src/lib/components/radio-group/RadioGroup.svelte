@@ -62,9 +62,12 @@ A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or
 	{...rest}
 >
 	{#if label}
-		<RadioGroup.Label class={cn('leading-none font-medium', sz.label)} data-slot="radio-group-label"
-			>{label}</RadioGroup.Label
+		<RadioGroup.Label
+			class={cn('leading-none font-medium', sz.label)}
+			data-slot="radio-group-label"
 		>
+			{label}
+		</RadioGroup.Label>
 	{/if}
 	{#if items}
 		{#each items as item (item.value)}

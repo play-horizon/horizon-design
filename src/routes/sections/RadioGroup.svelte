@@ -10,9 +10,9 @@ Docs: RadioGroup. Live examples of the RadioGroup component.
 
 <section id="radio-group">
 	{#snippet proLabel()}
-		<span class="text-sm font-medium"
-			>Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge></span
-		>
+		<span class="text-sm font-medium">
+			Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge>
+		</span>
 	{/snippet}
 	<Card>
 		<RadioGroup

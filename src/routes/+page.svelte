@@ -79,8 +79,10 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 						<span class="font-mono">{token}</span>
 						<span
 							class="ml-auto font-mono text-muted select-text"
-							title={tokenValues[name][token].oklch}>{tokenValues[name][token].hex}</span
+							title={tokenValues[name][token].oklch}
 						>
+							{tokenValues[name][token].hex}
+						</span>
 					</div>
 				{/each}
 			</div>

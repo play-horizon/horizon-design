@@ -60,9 +60,9 @@ rename with F2, delete, and drag to reparent or reorder; Reset brings the scene 
 					icon={values.customIcons ? objectIcon : undefined}
 				/>
 			</div>
-			<Button size="sm" class="justify-self-start" onclick={() => (data = scene)}
-				>Reset the scene</Button
-			>
+			<Button size="sm" class="justify-self-start" onclick={() => (data = scene)}>
+				Reset the scene
+			</Button>
 		</div>
 	{/snippet}
 </Playground>

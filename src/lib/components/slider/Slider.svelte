@@ -48,9 +48,9 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 	{#if label || showValue}
 		<div class="flex items-center justify-between">
 			{#if label}
-				<Slider.Label class="text-sm leading-none font-medium" data-slot="slider-label"
-					>{label}</Slider.Label
-				>
+				<Slider.Label class="text-sm leading-none font-medium" data-slot="slider-label">
+					{label}
+				</Slider.Label>
 			{/if}
 			{#if showValue}
 				<Slider.ValueText class="text-sm text-muted tabular-nums" data-slot="slider-value" />
