@@ -4,8 +4,9 @@
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import FloatingPanel from './FloatingPanel.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('FloatingPanel', () => {
 	it('opens without a trigger, named by its title, and closes', async () => {
@@ -24,14 +25,15 @@ describe('FloatingPanel', () => {
 	});
 
 	it('shows the close label as the close button tooltip', async () => {
-		const { findByRole, getByRole } = render(FloatingPanel, {
+		const { findByRole } = render(FloatingPanel, {
 			open: true,
 			title: 'Settings',
 			closeLabel: 'Close the settings'
 		});
-		await fireEvent.focus(await findByRole('button', { name: 'Close the settings' }));
-		await waitFor(() =>
-			expect(getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Close the settings')
+		await expectTooltip(
+			await findByRole('button', { name: 'Close the settings' }),
+			'Close the settings',
+			'pointer'
 		);
 	});
 });

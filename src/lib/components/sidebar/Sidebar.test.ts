@@ -34,9 +34,11 @@ describe('Sidebar', () => {
 		const collapsed = render(SidebarFixture, { collapsed: true });
 		await user.tab();
 		expect(document.activeElement).toBe(collapsed.getByRole('link', { name: 'Home' }));
-		await waitFor(() =>
-			expect(collapsed.getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Home')
-		);
+		const home = collapsed.getByRole('link', { name: 'Home' });
+		await waitFor(() => {
+			const id = home.getAttribute('aria-describedby');
+			expect(id && document.getElementById(id)?.textContent?.trim()).toBe('Home');
+		});
 		collapsed.unmount();
 
 		const expanded = render(SidebarFixture);

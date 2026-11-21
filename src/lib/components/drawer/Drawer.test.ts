@@ -4,8 +4,9 @@
  * @module
  */
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { render } from '@testing-library/svelte';
 import Drawer from './Drawer.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Drawer', () => {
 	it('is named by its title and described by its description', async () => {
@@ -24,14 +25,15 @@ describe('Drawer', () => {
 	});
 
 	it('shows the close label as the close button tooltip', async () => {
-		const { findByRole, getByRole } = render(Drawer, {
+		const { findByRole } = render(Drawer, {
 			open: true,
 			title: 'Filters',
 			closeLabel: 'Close the filters'
 		});
-		await fireEvent.focus(await findByRole('button', { name: 'Close the filters' }));
-		await waitFor(() =>
-			expect(getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Close the filters')
+		await expectTooltip(
+			await findByRole('button', { name: 'Close the filters' }),
+			'Close the filters',
+			'pointer'
 		);
 	});
 

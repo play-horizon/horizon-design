@@ -5,17 +5,9 @@
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import Popover from './Popover.svelte';
-
-/** Hovers `button` and returns the text of the tooltip that opens and describes it. */
-async function hoverTooltip(button: HTMLElement): Promise<string | undefined> {
-	await fireEvent.pointerMove(button, { pointerType: 'mouse' });
-	await waitFor(() => expect(button.getAttribute('aria-describedby')).toBeTruthy());
-	return document
-		.getElementById(button.getAttribute('aria-describedby') ?? '')
-		?.textContent?.trim();
-}
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Popover', () => {
 	it('opens from a button and names the panel by its title', async () => {
@@ -48,7 +40,7 @@ describe('Popover', () => {
 			trigger: createRawSnippet(() => ({ render: () => '<span aria-hidden="true">#</span>' }))
 		});
 		const trigger = getByRole('button', { name: 'Show filters' });
-		expect(await hoverTooltip(trigger)).toBe('Show filters');
+		await expectTooltip(trigger, 'Show filters');
 		await fireEvent.click(trigger);
 		expect(await findByRole('dialog', { name: 'Filters' })).toBeTruthy();
 		expect(trigger.getAttribute('aria-expanded')).toBe('true');

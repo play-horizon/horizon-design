@@ -5,17 +5,9 @@
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import NumberInput from './NumberInput.svelte';
-
-/** Hovers `button` and returns the text of the tooltip that opens and describes it. */
-async function hoverTooltip(button: HTMLElement): Promise<string | undefined> {
-	await fireEvent.pointerMove(button, { pointerType: 'mouse' });
-	await waitFor(() => expect(button.getAttribute('aria-describedby')).toBeTruthy());
-	return document
-		.getElementById(button.getAttribute('aria-describedby') ?? '')
-		?.textContent?.trim();
-}
+import { expectTooltip } from '../../../test/tooltip';
 
 const translations = {
 	incrementLabel: 'Increase',
@@ -68,7 +60,7 @@ describe('NumberInput', () => {
 
 	it('shows each step button by its name as a tooltip', async () => {
 		const { getByRole } = render(NumberInput, { label: 'Quantity', translations });
-		expect(await hoverTooltip(getByRole('button', { name: 'Increase' }))).toBe('Increase');
-		expect(await hoverTooltip(getByRole('button', { name: 'Decrease' }))).toBe('Decrease');
+		await expectTooltip(getByRole('button', { name: 'Increase' }), 'Increase');
+		await expectTooltip(getByRole('button', { name: 'Decrease' }), 'Decrease');
 	});
 });

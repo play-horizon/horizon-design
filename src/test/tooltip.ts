@@ -8,10 +8,18 @@ import { expect } from 'vitest';
 import { waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 
-/** Tabs to or hovers `trigger`, and resolves once the tooltip it is described by shows `text`. */
-export async function expectTooltip(trigger: HTMLElement, text: string): Promise<void> {
+/**
+ * Tabs to `trigger` (or hovers it, when it isn't in the tab order or `by` says `pointer`, as inside
+ * an open dialog, whose focus trap jsdom can't tab through), and resolves once the tooltip it is
+ * described by shows `text`.
+ */
+export async function expectTooltip(
+	trigger: HTMLElement,
+	text: string,
+	by: 'keyboard' | 'pointer' = 'keyboard'
+): Promise<void> {
 	const user = userEvent.setup();
-	if (trigger.tabIndex < 0) {
+	if (by === 'pointer' || trigger.tabIndex < 0) {
 		await user.hover(trigger);
 	} else {
 		for (let step = 0; step < 50 && document.activeElement !== trigger; step++) await user.tab();

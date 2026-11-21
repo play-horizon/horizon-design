@@ -5,18 +5,10 @@
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import Pagination from './Pagination.svelte';
 import PaginationFixture from './Pagination.test.svelte';
-
-/** Hovers `button` and returns the text of the tooltip that opens and describes it. */
-async function hoverTooltip(button: HTMLElement): Promise<string | undefined> {
-	await fireEvent.pointerMove(button, { pointerType: 'mouse' });
-	await waitFor(() => expect(button.getAttribute('aria-describedby')).toBeTruthy());
-	return document
-		.getElementById(button.getAttribute('aria-describedby') ?? '')
-		?.textContent?.trim();
-}
+import { expectTooltip } from '../../../test/tooltip';
 
 const translations = {
 	rootLabel: 'Pages',
@@ -86,7 +78,7 @@ describe('Pagination', () => {
 	it('shows the built-in arrows by their names as tooltips', async () => {
 		const { getByRole } = render(Pagination, { count: 100, defaultPage: 5, translations });
 		const previous = getByRole('button', { name: 'Previous page' });
-		expect(await hoverTooltip(previous)).toBe('Previous page');
-		expect(await hoverTooltip(getByRole('button', { name: 'Next page' }))).toBe('Next page');
+		await expectTooltip(previous, 'Previous page');
+		await expectTooltip(getByRole('button', { name: 'Next page' }), 'Next page');
 	});
 });

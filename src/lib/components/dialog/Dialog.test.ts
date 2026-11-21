@@ -5,8 +5,9 @@
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import Dialog from './Dialog.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Dialog', () => {
 	it('opens from a trigger that is a real button', async () => {
@@ -32,15 +33,12 @@ describe('Dialog', () => {
 	});
 
 	it('shows the close label as the close button tooltip', async () => {
-		const { findByRole, getByRole } = render(Dialog, {
+		const { findByRole } = render(Dialog, {
 			open: true,
 			title: 'Paused',
 			closeLabel: 'Close'
 		});
-		await fireEvent.focus(await findByRole('button', { name: 'Close' }));
-		await waitFor(() =>
-			expect(getByRole('tooltip', { hidden: true }).textContent?.trim()).toBe('Close')
-		);
+		await expectTooltip(await findByRole('button', { name: 'Close' }), 'Close', 'pointer');
 	});
 
 	it('takes the frosted surface instead of the opaque fill', async () => {

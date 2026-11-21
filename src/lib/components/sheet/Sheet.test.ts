@@ -6,17 +6,9 @@
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
-import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import Sheet from './Sheet.svelte';
-
-/** Hovers `button` and returns the text of the tooltip that opens and describes it. */
-async function hoverTooltip(button: HTMLElement): Promise<string | undefined> {
-	await fireEvent.pointerMove(button, { pointerType: 'mouse' });
-	await waitFor(() => expect(button.getAttribute('aria-describedby')).toBeTruthy());
-	return document
-		.getElementById(button.getAttribute('aria-describedby') ?? '')
-		?.textContent?.trim();
-}
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Sheet', () => {
 	it('opens from a button, named by its title, with a named close button', async () => {
@@ -40,12 +32,12 @@ describe('Sheet', () => {
 			trigger: createRawSnippet(() => ({ render: () => '<span aria-hidden="true">=</span>' }))
 		});
 		const trigger = getByRole('button', { name: 'Open the menu' });
-		expect(await hoverTooltip(trigger)).toBe('Open the menu');
+		await expectTooltip(trigger, 'Open the menu');
 
 		await fireEvent.click(trigger);
 		const sheet = await findByRole('dialog', { name: 'Menu' });
 		const close = getByRole('button', { name: 'Close the menu' });
 		expect(sheet.contains(close)).toBe(true);
-		expect(await hoverTooltip(close)).toBe('Close the menu');
+		await expectTooltip(close, 'Close the menu', 'pointer');
 	});
 });
