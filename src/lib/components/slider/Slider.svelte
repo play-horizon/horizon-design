@@ -2,7 +2,9 @@
 @component
 A slider to pick a value, or a range with one thumb per value (Ark Slider). `value` binds the
 values; without it, Ark's `defaultValue` sets the first ones, and their count sets the thumbs'.
-`label` names the thumbs; without it, give them names with Ark's `aria-label`.
+`label` names the thumbs; without it, give them names with Ark's `aria-label`. Ark's
+`orientation="vertical"` stands it up, 160 px tall or the height of the root's classes;
+`disabled` dims it and `readOnly` keeps its values.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -36,7 +38,10 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 </script>
 
 <Slider.Root
-	class={cn('relative flex w-full touch-none flex-col gap-2 select-none', className)}
+	class={cn(
+		'relative flex w-full touch-none flex-col gap-2 select-none data-disabled:opacity-50 data-[orientation=vertical]:w-auto',
+		className
+	)}
 	data-slot="slider"
 	{value}
 	onValueChange={(details) => {
@@ -46,11 +51,11 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 	{...rest}
 >
 	{#if label || showValue}
-		<div class="flex items-center justify-between">
+		<div class="flex items-center justify-between gap-2">
 			{#if label}
-				<Slider.Label class="text-sm leading-none font-medium" data-slot="slider-label"
-					>{label}</Slider.Label
-				>
+				<Slider.Label class="text-sm leading-none font-medium" data-slot="slider-label">
+					{label}
+				</Slider.Label>
 			{/if}
 			{#if showValue}
 				<Slider.ValueText class="text-sm text-muted tabular-nums" data-slot="slider-value" />
@@ -58,16 +63,22 @@ values; without it, Ark's `defaultValue` sets the first ones, and their count se
 		</div>
 	{/if}
 	{@render children?.()}
-	<Slider.Control class="relative flex w-full items-center">
-		<Slider.Track class="relative h-1.5 w-full grow overflow-hidden rounded-full bg-border">
-			<Slider.Range class="absolute h-full bg-primary" />
+	<Slider.Control
+		class="relative flex w-full items-center data-[orientation=vertical]:min-h-40 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-1 data-[orientation=vertical]:flex-col"
+	>
+		<Slider.Track
+			class="relative h-1.5 w-full grow overflow-hidden rounded-full bg-border data-[orientation=vertical]:h-auto data-[orientation=vertical]:w-1.5"
+		>
+			<Slider.Range
+				class="absolute h-full bg-primary data-[orientation=vertical]:h-auto data-[orientation=vertical]:w-full"
+			/>
 		</Slider.Track>
 		<Slider.Context>
 			{#snippet render(api)}
 				{#each api().value.map((_, index) => index) as index (index)}
 					<Slider.Thumb
 						{index}
-						class="block size-4 rounded-full border border-primary bg-paper shadow-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none data-disabled:opacity-50"
+						class="block size-4 rounded-full border border-primary bg-paper shadow-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none"
 					>
 						<Slider.HiddenInput />
 					</Slider.Thumb>

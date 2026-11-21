@@ -1,6 +1,7 @@
 <!--
 @component
-Docs: GameHero. A game page's banner with its icon, name, creator and tags.
+Docs: GameHero. A playground over every prop: a game page's banner with its icon, name, creator
+and tags, and a Back button of the `art` variant, readable over the art when hovered.
 -->
 <script lang="ts">
 	import { GameHero } from '#lib/components/game-hero/index.js';
@@ -9,14 +10,23 @@ Docs: GameHero. A game page's banner with its icon, name, creator and tags.
 	import { Button } from '#lib/components/button/index.js';
 	import MingcuteArrowLeftLine from '~icons/mingcute/arrow-left-line';
 	import { art } from '../examples';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, choice, text } from '../playground/controls';
 </script>
 
-<div class="overflow-hidden rounded-xl border border-border bg-background pb-6">
-	<GameHero name="Skyline Obby" thumbnail={art.skyline} icon={art.icon}>
+<Playground
+	controls={{
+		name: text('Skyline Obby'),
+		thumbnail: choice(['skyline', 'frost', 'neon', 'woods', 'none']),
+		icon: boolean(true),
+		back: boolean(true),
+		byline: boolean(true),
+		tags: boolean(true)
+	}}
+>
+	{#snippet example(values)}
 		{#snippet top()}
-			<Button size="sm" class="border-transparent bg-art-scrim text-on-art">
-				<MingcuteArrowLeftLine aria-hidden="true" />Back
-			</Button>
+			<Button size="sm" variant="art"><MingcuteArrowLeftLine aria-hidden="true" />Back</Button>
 		{/snippet}
 		{#snippet byline()}
 			<Avatar size="xs" fallback="LN" />
@@ -27,5 +37,15 @@ Docs: GameHero. A game page's banner with its icon, name, creator and tags.
 			<Badge size="sm">platformer</Badge>
 			<Badge size="sm">social</Badge>
 		{/snippet}
-	</GameHero>
-</div>
+		<div class="w-full overflow-hidden rounded-xl border border-border bg-background pb-6">
+			<GameHero
+				name={values.name}
+				thumbnail={values.thumbnail === 'none' ? undefined : art[values.thumbnail]}
+				icon={values.icon ? art.icon : undefined}
+				top={values.back ? top : undefined}
+				byline={values.byline ? byline : undefined}
+				tags={values.tags ? tags : undefined}
+			/>
+		</div>
+	{/snippet}
+</Playground>

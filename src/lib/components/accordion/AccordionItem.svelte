@@ -1,6 +1,7 @@
 <!--
 @component
-One section of an `Accordion`: its trigger (text or snippet) and its collapsible content.
+One section of an `Accordion`: its trigger (text or snippet) and its collapsible content. A
+disabled section, or a section of a disabled accordion, has a faded trigger.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -35,7 +36,7 @@ One section of an `Accordion`: its trigger (text or snippet) and its collapsible
 	{...rest}
 >
 	<Accordion.ItemTrigger
-		class="flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary"
+		class="flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
 		data-slot="accordion-trigger"
 	>
 		{#if typeof trigger === 'string'}

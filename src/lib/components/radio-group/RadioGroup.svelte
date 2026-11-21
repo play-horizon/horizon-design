@@ -2,7 +2,9 @@
 @component
 A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or Ark's
 `RadioGroup.Item` parts in `children`. `value` binds the chosen option; without it, Ark's
-`defaultValue` sets the first one. Without `label`, name the group with an `aria-label`.
+`defaultValue` sets the first one. Without `label`, name the group with an `aria-label`. Ark's
+`orientation="horizontal"` lays the options out in a row, and its `invalid` turns the circles
+danger.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -48,11 +50,11 @@ A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or
 		[key: string]: unknown;
 	} = $props();
 
-	const sz = $derived(sizes[size]);
+	const sizeClasses = $derived(sizes[size]);
 </script>
 
 <RadioGroup.Root
-	class={cn('flex flex-col gap-3', className)}
+	class={cn('group/radio-group flex flex-col gap-3', className)}
 	data-slot="radio-group"
 	{value}
 	onValueChange={(details) => {
@@ -62,40 +64,47 @@ A group of radio buttons to choose one option (Ark RadioGroup): from `items`, or
 	{...rest}
 >
 	{#if label}
-		<RadioGroup.Label class={cn('leading-none font-medium', sz.label)} data-slot="radio-group-label"
-			>{label}</RadioGroup.Label
+		<RadioGroup.Label
+			class={cn('leading-none font-medium', sizeClasses.label)}
+			data-slot="radio-group-label"
 		>
+			{label}
+		</RadioGroup.Label>
 	{/if}
-	{#if items}
-		{#each items as item (item.value)}
-			<RadioGroup.Item
-				value={item.value}
-				disabled={item.disabled}
-				class="flex items-center gap-2 data-disabled:cursor-not-allowed data-disabled:opacity-50"
-				data-slot="radio-group-item"
-			>
-				<RadioGroup.ItemControl
-					class={cn(
-						'group relative aspect-square rounded-full border border-border bg-sunken transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary',
-						sz.control
-					)}
+	<div
+		class="flex flex-col gap-3 group-data-[orientation=horizontal]/radio-group:flex-row group-data-[orientation=horizontal]/radio-group:flex-wrap group-data-[orientation=horizontal]/radio-group:gap-x-5"
+	>
+		{#if items}
+			{#each items as item (item.value)}
+				<RadioGroup.Item
+					value={item.value}
+					disabled={item.disabled}
+					class="flex items-center gap-2 data-disabled:cursor-not-allowed data-disabled:opacity-50"
+					data-slot="radio-group-item"
 				>
-					<div
+					<RadioGroup.ItemControl
 						class={cn(
-							'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-paper transition-transform group-data-[state=checked]:scale-100',
-							sz.dot
+							'group relative aspect-square rounded-full border border-border bg-sunken transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-invalid:border-danger data-[state=checked]:border-primary data-[state=checked]:bg-primary data-invalid:data-[state=checked]:bg-danger',
+							sizeClasses.control
 						)}
-					></div>
-				</RadioGroup.ItemControl>
-				{#if typeof item.label === 'string'}
-					<span class={sz.label}>{item.label}</span>
-				{:else}
-					{@render item.label()}
-				{/if}
-				<RadioGroup.ItemHiddenInput />
-			</RadioGroup.Item>
-		{/each}
-	{:else}
-		{@render children?.()}
-	{/if}
+					>
+						<div
+							class={cn(
+								'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-paper transition-transform group-data-[state=checked]:scale-100',
+								sizeClasses.dot
+							)}
+						></div>
+					</RadioGroup.ItemControl>
+					{#if typeof item.label === 'string'}
+						<span class={sizeClasses.label}>{item.label}</span>
+					{:else}
+						{@render item.label()}
+					{/if}
+					<RadioGroup.ItemHiddenInput />
+				</RadioGroup.Item>
+			{/each}
+		{:else}
+			{@render children?.()}
+		{/if}
+	</div>
 </RadioGroup.Root>

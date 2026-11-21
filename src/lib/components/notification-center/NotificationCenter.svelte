@@ -112,7 +112,7 @@ text translated and every time formatted.
 							{#if item.unread}<span class="sr-only">({unreadLabel})</span>{/if}
 						</p>
 						{#if item.body}<p class="mt-0.5 text-xs text-muted">{item.body}</p>{/if}
-						<p class="mt-0.5 text-xs text-faint">{item.time}</p>
+						<p class="mt-0.5 text-xs text-muted">{item.time}</p>
 						{#if actions}
 							<div class="relative z-1 mt-2 flex flex-wrap gap-1.5">{@render actions(item)}</div>
 						{/if}

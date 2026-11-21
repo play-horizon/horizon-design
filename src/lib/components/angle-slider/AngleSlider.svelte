@@ -3,6 +3,7 @@
 A circular control that picks an angle in degrees (Ark AngleSlider), from 0 to 359, with 0 at the
 top and angles growing clockwise, and the angle written under it as `valueText` formats it.
 `label` is its accessible name and `valueText` its spoken value; the arrow keys turn it by `step`.
+Disabled, it is faded; invalid, its ring is the danger colour.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -39,13 +40,16 @@ top and angles growing clockwise, and the angle written under it as `valueText` 
 		onValueChange?: (details: { value: number }) => void;
 		/** Content under the angle, such as presets. */
 		children?: Snippet;
-		/** Other props of Ark's `AngleSlider.Root`, such as `defaultValue` and `disabled`. */
+		/**
+		 * Other props of Ark's `AngleSlider.Root`, such as `defaultValue`, `disabled`, `readOnly` and
+		 * `invalid`.
+		 */
 		[key: string]: unknown;
 	} = $props();
 </script>
 
 <AngleSlider.Root
-	class={cn('flex flex-col items-center gap-3', className)}
+	class={cn('flex flex-col items-center gap-3 data-disabled:opacity-50', className)}
 	data-slot="angle-slider"
 	{step}
 	{value}
@@ -60,12 +64,12 @@ top and angles growing clockwise, and the angle written under it as `valueText` 
 		{#snippet render(slider)}
 			{@const text = valueText(slider().value)}
 			<AngleSlider.Control
-				class="relative rounded-full border-2 border-border bg-hover"
+				class="relative rounded-full border-2 border-border bg-hover data-invalid:border-danger"
 				style="width: {size}px; height: {size}px;"
 			>
 				<!-- Zag announces a maximum of 360, but clamps the angle to 359. -->
 				<AngleSlider.Thumb
-					class="absolute inset-0 cursor-grab rounded-full active:cursor-grabbing"
+					class="absolute inset-0 cursor-grab rounded-full active:cursor-grabbing data-disabled:cursor-not-allowed data-readonly:cursor-default"
 					aria-valuemax={359}
 					aria-valuetext={text}
 				>

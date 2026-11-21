@@ -1,7 +1,7 @@
 /**
  * Tests of `Editable`: its parts take the accessible names passed in `translations` rather than
- * Ark's English defaults (the field its `label` when it has one), and the bound value follows the
- * typing alongside `onValueChange`.
+ * Ark's English defaults (the field its `label` when it has one), a read-only one leaves its state
+ * to the field, and the bound value follows the typing alongside `onValueChange`.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -33,6 +33,13 @@ describe('Editable', () => {
 
 		const unlabelled = render(Editable, { translations, defaultValue: 'Sam' });
 		expect(nameOf(unlabelled.container.querySelector('input'))).toBe('Display name');
+	});
+
+	it('marks the field read-only, not the preview, which ARIA forbids', () => {
+		const { container } = render(Editable, { translations, defaultValue: 'Sam', readOnly: true });
+		const preview = container.querySelector('[data-slot="editable-preview"]');
+		expect(preview?.hasAttribute('aria-readonly')).toBe(false);
+		expect(container.querySelector('input')?.readOnly).toBe(true);
 	});
 
 	it('updates the bound value and calls onValueChange', async () => {

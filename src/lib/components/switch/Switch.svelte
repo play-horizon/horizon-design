@@ -7,39 +7,18 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 	import { Switch } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
 
-	type SizeConfig = {
-		control: string;
-		thumb: string;
-		checkedTranslate: string;
-		label: string;
-	};
+	/** A size's track, in pixels, and its label's text size. */
+	type SizeConfig = { width: number; height: number; label: string };
 
 	const sizes: Record<'sm' | 'md' | 'lg' | 'xl', SizeConfig> = {
-		sm: {
-			control: 'h-3.5 w-6',
-			thumb: 'size-2.5',
-			checkedTranslate: 'data-[state=checked]:translate-x-2.5',
-			label: 'text-xs'
-		},
-		md: {
-			control: 'h-4.25 w-7.5',
-			thumb: 'size-3.25',
-			checkedTranslate: 'data-[state=checked]:translate-x-3.25',
-			label: 'text-sm'
-		},
-		lg: {
-			control: 'h-5 w-9',
-			thumb: 'size-4',
-			checkedTranslate: 'data-[state=checked]:translate-x-4',
-			label: 'text-base'
-		},
-		xl: {
-			control: 'h-7 w-13',
-			thumb: 'size-6',
-			checkedTranslate: 'data-[state=checked]:translate-x-6',
-			label: 'text-lg'
-		}
+		sm: { width: 24, height: 14, label: 'text-xs' },
+		md: { width: 30, height: 17, label: 'text-sm' },
+		lg: { width: 36, height: 20, label: 'text-base' },
+		xl: { width: 52, height: 28, label: 'text-lg' }
 	};
+
+	/** The track's border, in pixels: the gap around the thumb. */
+	const inset = 2;
 
 	let {
 		class: className = '',
@@ -62,9 +41,9 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		label?: string;
 		/** Whether the switch is on (bindable); unset, it starts at Ark's `defaultChecked`. */
 		checked?: boolean;
-		/** An icon on the thumb while the switch is on. */
+		/** An icon on the thumb while the switch is on, sized and centred by the switch. */
 		checkedContent?: Snippet;
-		/** An icon on the thumb while the switch is off. */
+		/** An icon on the thumb while the switch is off, sized and centred by the switch. */
 		uncheckedContent?: Snippet;
 		/** A richer label, in place of `label`. */
 		children?: Snippet;
@@ -72,7 +51,13 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		[key: string]: unknown;
 	} = $props();
 
-	const sz = $derived(sizes[size]);
+	const sizing = $derived(sizes[size]);
+	// Every length follows from the track, so each size is right by construction: the thumb fills
+	// the track's height inside its border, travels the rest of its width (the same gap at both
+	// ends), and holds an icon of 60% of its size, centred.
+	const thumb = $derived(sizing.height - 2 * inset);
+	const travel = $derived(sizing.width - sizing.height);
+	const icon = $derived(Math.round(thumb * 0.6));
 </script>
 
 <Switch.Root
@@ -90,26 +75,26 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 			{
 				'data-[state=checked]:bg-primary': variant === 'default',
 				'data-[state=checked]:bg-fg-2': variant === 'secondary'
-			},
-			sz.control
+			}
 		)}
+		style="width: {sizing.width}px; height: {sizing.height}px; --switch-travel: {travel}px; --switch-icon: {icon}px;"
 	>
 		<Switch.Thumb
 			class={cn(
-				'group pointer-events-none flex items-center justify-center rounded-full bg-paper shadow-sm ring-0 transition-transform duration-150 ease-standard',
+				'group pointer-events-none relative flex items-center justify-center rounded-full bg-paper shadow-sm ring-0 transition-transform duration-150 ease-standard',
 				'data-[state=unchecked]:translate-x-0',
 				// The neutral checked track is the text colour, light in the dark theme, where a white
 				// thumb would hardly show: the thumb takes the page colour, which contrasts with the
 				// track in both themes.
 				variant === 'secondary' && 'data-[state=checked]:bg-background',
-				sz.thumb,
-				sz.checkedTranslate
+				'data-[state=checked]:translate-x-(--switch-travel)'
 			)}
+			style="width: {thumb}px; height: {thumb}px;"
 		>
 			{#if checkedContent}
 				<span
 					class={cn(
-						'absolute scale-50 opacity-0 transition-all duration-200 group-data-[state=checked]:scale-100 group-data-[state=checked]:opacity-100',
+						'absolute inset-0 flex scale-50 items-center justify-center opacity-0 transition-all duration-200 group-data-[state=checked]:scale-100 group-data-[state=checked]:opacity-100 [&_svg]:size-(--switch-icon)',
 						{
 							'text-primary': variant === 'default',
 							'text-muted': variant === 'secondary'
@@ -121,7 +106,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 			{/if}
 			{#if uncheckedContent}
 				<span
-					class="absolute scale-50 text-muted opacity-0 transition-all duration-200 group-data-[state=unchecked]:scale-100 group-data-[state=unchecked]:opacity-100"
+					class="absolute inset-0 flex scale-50 items-center justify-center text-muted opacity-0 transition-all duration-200 group-data-[state=unchecked]:scale-100 group-data-[state=unchecked]:opacity-100 [&_svg]:size-(--switch-icon)"
 				>
 					{@render uncheckedContent()}
 				</span>
@@ -129,7 +114,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		</Switch.Thumb>
 	</Switch.Control>
 	{#if label || children}
-		<Switch.Label class={cn('leading-none font-medium', sz.label)}>
+		<Switch.Label class={cn('leading-none font-medium', sizing.label)}>
 			{#if children}
 				{@render children()}
 			{:else}

@@ -1,7 +1,8 @@
 <!--
 @component
 A dropzone that takes files by drop or by browsing (Ark FileUpload); `prompt` and `hint` are its
-texts, and `prompt` names it for assistive technology.
+texts, and together name it for assistive technology, as they read on screen. A `disabled`
+dropzone is dimmed.
 -->
 <script lang="ts">
 	import { FileUpload } from '@ark-ui/svelte';
@@ -22,9 +23,9 @@ texts, and `prompt` names it for assistive technology.
 		class?: string;
 		/** The visible label above the dropzone. */
 		label?: string;
-		/** The dropzone's main text and accessible name, such as "Drop files here or click to browse". */
+		/** The dropzone's main text, the start of its accessible name, such as "Drop files here or click to browse". */
 		prompt: string;
-		/** A second line under the prompt, such as the accepted formats. */
+		/** A second line under the prompt, such as the accepted formats; the end of its accessible name. */
 		hint?: string;
 		/** The accepted file types, as in the file input's `accept` (`image/png,image/webp`). */
 		accept?: string;
@@ -43,7 +44,6 @@ texts, and `prompt` names it for assistive technology.
 	{accept}
 	{maxFiles}
 	{maxFileSize}
-	translations={{ dropzone: prompt }}
 	{...rest}
 >
 	{#if label}
@@ -51,8 +51,10 @@ texts, and `prompt` names it for assistive technology.
 			{label}
 		</FileUpload.Label>
 	{/if}
+	<!-- Named by its text, as it reads, rather than by Ark's label, which would leave the hint out. -->
 	<FileUpload.Dropzone
-		class="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-surface p-8 text-center transition-colors outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-primary data-dragging:border-primary data-dragging:bg-primary-subtle"
+		aria-label={null}
+		class="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-surface p-8 text-center transition-colors outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none data-disabled:opacity-50 data-dragging:border-primary data-dragging:bg-primary-subtle"
 		data-slot="file-upload-dropzone"
 	>
 		<MingcuteFileUploadLine class="size-8 text-muted" aria-hidden="true" />
@@ -62,6 +64,6 @@ texts, and `prompt` names it for assistive technology.
 				<p class="mt-1 text-xs text-muted">{hint}</p>
 			{/if}
 		</div>
-		<FileUpload.HiddenInput />
 	</FileUpload.Dropzone>
+	<FileUpload.HiddenInput />
 </FileUpload.Root>

@@ -1,13 +1,14 @@
 <!--
 @component
 A circular control that picks an angle, from 0 to 359, along a ring that fills clockwise from the
-top up to its thumb (Ark AngleSlider), with the value written in its centre as `valueText` formats
+top, with a round start, up to its thumb (Ark AngleSlider), with the value written in its centre as `valueText` formats
 it. `label` is its accessible name and `valueText` its spoken value; the arrow keys move it by
 `step`.
 -->
 <script lang="ts">
 	import { AngleSlider } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
+	import Ring from '../ring/Ring.svelte';
 
 	let {
 		class: className = '',
@@ -68,22 +69,15 @@ it. `label` is its accessible name and `valueText` its spoken value; the arrow k
 >
 	<AngleSlider.Label class="sr-only">{label}</AngleSlider.Label>
 	<AngleSlider.Context>
-		{#snippet render(ctx)}
-			{@const api = ctx()}
+		{#snippet render(context)}
+			{@const api = context()}
 			{@const turn = api.value / 360}
 			{@const text = valueText(api.value)}
 			<AngleSlider.Control
 				class="group/circular-slider-control absolute inset-0"
 				data-slot="circular-slider-control"
 			>
-				<!-- A conic gradient drawn as a ring by a radial mask, which reads only the alpha of its colours. -->
-				<div
-					aria-hidden="true"
-					class="pointer-events-none absolute inset-0 rounded-full"
-					style:background="conic-gradient(var(--primary) {turn}turn, var(--hover) 0)"
-					style:mask="radial-gradient(farthest-side, transparent calc(100% - {thickness}px - 0.5px),
-					currentColor calc(100% - {thickness}px))"
-				></div>
+				<Ring {turn} {thickness} />
 
 				<!-- Zag announces a maximum of 360, but clamps the value to 359. -->
 				<AngleSlider.Thumb

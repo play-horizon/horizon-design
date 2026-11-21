@@ -1,5 +1,5 @@
 /**
- * Tests of `Checkbox`: the indeterminate state draws its dash, and checking it both reports the
+ * Tests of `Checkbox`: the indeterminate state draws its dash (one horizontal bar), and checking it both reports the
  * change and updates the box when the app listens to `onCheckedChange`.
  * @module
  */
@@ -12,6 +12,9 @@ describe('Checkbox', () => {
 		const { container } = render(Checkbox, { checked: 'indeterminate', label: 'All games' });
 		const indicators = [...container.querySelectorAll('[data-part="indicator"]')];
 		expect(indicators.map((indicator) => indicator.hasAttribute('hidden'))).toEqual([true, false]);
+		// Mingcute's minimize-fill: one bar, 3 units thick like the check, across the 24-unit box.
+		const dash = indicators[1].querySelector('path[fill="currentColor"]')?.getAttribute('d');
+		expect(dash?.startsWith('M19.27 10.524')).toBe(true);
 	});
 
 	it('reports a check and stays checked', async () => {

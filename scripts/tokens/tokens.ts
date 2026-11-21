@@ -43,7 +43,8 @@ export const palette = {
 	'green-400': 'oklch(0.72 0.15 162.5)',
 	'green-600': 'oklch(0.506 0.109 162.6)',
 	'amber-400': 'oklch(0.79 0.16 75)',
-	'amber-600': 'oklch(0.54 0.116 70)',
+	'gold-300': 'oklch(0.84 0.17 84)',
+	'gold-600': 'oklch(0.51 0.104 84)',
 	'sky-400': 'oklch(0.754 0.139 232.7)',
 	'sky-600': 'oklch(0.52 0.13 245)',
 	'violet-400': 'oklch(0.7 0.16 300)',
@@ -106,6 +107,7 @@ export const colorTokenDocs = {
 	paper: 'Always white: switch and slider thumbs, QR code backgrounds.',
 	'on-art': 'Text and icons drawn over game art, in both themes.',
 	'art-scrim': 'Translucent pills drawn over game art, in both themes.',
+	'art-scrim-hover': 'A hovered translucent pill over game art, in both themes.',
 	'avatar-1': 'Avatar fallback tone 1.',
 	'avatar-2': 'Avatar fallback tone 2.',
 	'avatar-3': 'Avatar fallback tone 3.',
@@ -138,11 +140,12 @@ const shared = {
 	paper: 'navy-0',
 	'on-art': 'navy-0',
 	'art-scrim': 'oklch(0.15 0.02 268 / 0.72)',
-	'avatar-1': 'oklch(0.6 0.17 264)',
-	'avatar-2': 'oklch(0.6 0.135 160)',
-	'avatar-3': 'oklch(0.64 0.16 45)',
+	'art-scrim-hover': 'oklch(0.15 0.02 268 / 0.86)',
+	'avatar-1': 'oklch(0.56 0.17 264)',
+	'avatar-2': 'oklch(0.54 0.12 160)',
+	'avatar-3': 'oklch(0.56 0.15 45)',
 	'avatar-4': 'oklch(0.58 0.18 330)',
-	'avatar-5': 'oklch(0.6 0.102 200)'
+	'avatar-5': 'oklch(0.54 0.09 200)'
 } as const satisfies Partial<Record<ColorToken, ColorValue>>;
 
 /** The semantic colour tokens of each theme. */
@@ -220,9 +223,11 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		success: 'green-600',
 		'success-subtle': ['green-600', 0.1],
 		'success-border': ['green-600', 0.4],
-		warning: 'amber-600',
-		'warning-subtle': ['amber-400', 0.22],
-		'warning-border': ['amber-600', 0.45],
+		// A gold, not the dark theme's amber darkened (which reads brown): as text it keeps 4.5:1
+		// on every light surface and on its own tint.
+		warning: 'gold-600',
+		'warning-subtle': ['gold-300', 0.2],
+		'warning-border': ['gold-600', 0.45],
 		info: 'sky-600',
 		'info-subtle': ['sky-600', 0.09],
 		'info-border': ['sky-600', 0.4],

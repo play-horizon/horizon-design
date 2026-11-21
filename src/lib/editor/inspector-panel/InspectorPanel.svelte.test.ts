@@ -1,6 +1,7 @@
 /**
  * Tests of `InspectorPanel`: opening and closing cards, moving the focus between headers,
- * reordering with the keyboard and by drag, and the ids it reports.
+ * reordering with the keyboard and by drag, the ids it reports, and the remove buttons (named and
+ * with a tooltip, hidden on unremovable cards, the focus kept after the app removes the card).
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -8,6 +9,7 @@ import { tick } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { dragOver, drop, startDrag } from '../../../test/drag';
 import InspectorPanel from './InspectorPanel.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const cards = [
 	{ id: 'transform', title: 'Transform' },
@@ -118,5 +120,113 @@ describe('InspectorPanel', () => {
 		await drop(elsewhere, { clientX: 500, clientY: 500 }, drag);
 		expect(onCardsChange).not.toHaveBeenCalled();
 		elsewhere.remove();
+	});
+
+	it('offers no remove buttons without onRemove', () => {
+		const { container } = setup();
+		expect(container.querySelector('[data-slot="inspector-panel-remove"]')).toBeNull();
+	});
+
+	it('reports a removal, and focuses the next header once the app removes the card', async () => {
+		const shown = $state({ cards: [...cards, { id: 'name', title: 'Name', removable: false }] });
+		const onRemove = vi.fn((card: { id: string }) => {
+			shown.cards = shown.cards.filter((c) => c.id !== card.id);
+		});
+		const { getByRole, queryByRole } = render(InspectorPanel, {
+			props: {
+				get cards() {
+					return shown.cards;
+				},
+				set cards(next) {
+					shown.cards = next;
+				},
+				onRemove,
+				removeLabel: (card: { title: string }) => `Remove ${card.title}`
+			}
+		});
+		expect(queryByRole('button', { name: 'Remove Name' })).toBeNull();
+		const remove = getByRole('button', { name: 'Remove Mesh' });
+		await expectTooltip(remove, 'Remove Mesh');
+
+		await fireEvent.click(remove);
+		await tick();
+		await tick();
+		expect(onRemove).toHaveBeenCalledWith(expect.objectContaining({ id: 'mesh' }));
+		expect(queryByRole('button', { name: 'Mesh' })).toBeNull();
+		expect(document.activeElement).toBe(getByRole('button', { name: 'Collider' }));
+	});
+
+	it('leaves the focus to an app that removes the card later, after asking', async () => {
+		const shown = $state({ cards: [...cards] });
+		let confirm: (() => void) | undefined;
+		const { getByRole } = render(InspectorPanel, {
+			props: {
+				get cards() {
+					return shown.cards;
+				},
+				onRemove: (card: { id: string }) => {
+					confirm = () => (shown.cards = shown.cards.filter((c) => c.id !== card.id));
+				},
+				removeLabel: (card: { title: string }) => `Remove ${card.title}`
+			}
+		});
+		await fireEvent.click(getByRole('button', { name: 'Remove Transform' }));
+		await tick();
+		// The question took the focus away, and the user answers it later.
+		(document.activeElement as HTMLElement | null)?.blur();
+		confirm?.();
+		await tick();
+		expect(document.activeElement).toBe(document.body);
+	});
+
+	it('refocuses after a removal in place, as by splice', async () => {
+		const shown = $state({ cards: [...cards] });
+		const { getByRole } = render(InspectorPanel, {
+			props: {
+				get cards() {
+					return shown.cards;
+				},
+				onRemove: (card: { id: string }) => {
+					shown.cards.splice(
+						shown.cards.findIndex((c) => c.id === card.id),
+						1
+					);
+				},
+				removeLabel: (card: { title: string }) => `Remove ${card.title}`
+			}
+		});
+		const remove = getByRole('button', { name: 'Remove Mesh' });
+		remove.focus();
+		await fireEvent.click(remove);
+		await tick();
+		expect(document.activeElement).toBe(getByRole('button', { name: 'Collider' }));
+	});
+
+	it('takes no focus back after a removal the app declined', async () => {
+		const shown = $state({ cards: [...cards] });
+		const outside = document.createElement('button');
+		document.body.append(outside);
+		const { getByRole } = render(InspectorPanel, {
+			props: {
+				get cards() {
+					return shown.cards;
+				},
+				// The app asks, and the user says no: nothing is removed.
+				onRemove: () => {},
+				removeLabel: (card: { title: string }) => `Remove ${card.title}`
+			}
+		});
+		await fireEvent.click(getByRole('button', { name: 'Remove Transform' }));
+		outside.focus();
+		// Later, the selection changes and the inspector shows other cards.
+		shown.cards = [{ id: 'light', title: 'Light' }];
+		await tick();
+		expect(document.activeElement).toBe(outside);
+		// Nor once the focus is on the body, as after a click on a canvas.
+		outside.blur();
+		shown.cards = [...cards];
+		await tick();
+		expect(document.activeElement).toBe(document.body);
+		outside.remove();
 	});
 });

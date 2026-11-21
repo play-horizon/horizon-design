@@ -1,13 +1,16 @@
 /**
  * Tests of `Combobox`: typing keeps the options whose label contains the text, ignoring case
  * and accents, and shows `emptyText` when none does; Ark announces the options found only in
- * the messages `translations` gives.
+ * the messages `translations` gives; the open button shows its name in a tooltip; and
+ * `openOnClick` opens the options from a press on the field, which keeps the focus for typing.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import type { ComponentProps } from 'svelte';
+import userEvent from '@testing-library/user-event';
 import Combobox from './Combobox.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const items = [
 	{ label: 'Café racer', value: 'cafe' },
@@ -75,5 +78,51 @@ describe('Combobox', () => {
 		});
 		await type(input, 'ra');
 		expect(await announcements()).toEqual(['2 modes']);
+	});
+
+	it('names the open button in its tooltip', async () => {
+		const { getByRole } = setup();
+		await expectTooltip(getByRole('button', { name: 'Show modes' }), 'Show modes');
+	});
+
+	it('opens the options from a press on the field only with openOnClick', async () => {
+		const content = () => document.querySelector('[data-slot="combobox-content"]');
+		const user = userEvent.setup();
+		const closed = setup();
+		await user.click(closed.input);
+		expect(content()?.getAttribute('data-state')).toBe('closed');
+		closed.unmount();
+
+		const { getByRole } = render(Combobox, {
+			items,
+			label: 'Mode',
+			emptyText: 'No match',
+			translations: { triggerLabel: 'Show modes' },
+			openOnClick: true
+		});
+		const input = getByRole('combobox', { name: 'Mode' }) as HTMLInputElement;
+		await user.click(input);
+		await waitFor(() => expect(content()?.getAttribute('data-state')).toBe('open'));
+		expect(document.querySelectorAll('[data-slot="combobox-item"]')).toHaveLength(3);
+		await user.keyboard('ral');
+		expect(document.activeElement).toBe(input);
+		expect(
+			[...document.querySelectorAll('[data-slot="combobox-item"]')].map((item) =>
+				item.textContent?.trim()
+			)
+		).toEqual(['Rally']);
+	});
+
+	it('keeps its open button its own: Ark finds it and opens the options from it', async () => {
+		const { getByRole } = setup();
+		const button = getByRole('button', { name: 'Show modes' });
+		expect(button.getAttribute('data-scope')).toBe('combobox');
+		expect(button.getAttribute('data-part')).toBe('trigger');
+		await fireEvent.click(button);
+		await waitFor(() =>
+			expect(
+				document.querySelector('[data-slot="combobox-content"]')?.getAttribute('data-state')
+			).toBe('open')
+		);
 	});
 });

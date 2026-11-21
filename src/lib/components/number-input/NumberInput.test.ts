@@ -1,11 +1,13 @@
 /**
  * Tests of `NumberInput`: Ark's `defaultValue` sets the first value, an `onValueChange` of the
- * app runs without breaking the bound `value`, and every string announced comes from the app.
+ * app runs without breaking the bound `value`, every string announced comes from the app, and the
+ * step buttons show their names as tooltips.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 import NumberInput from './NumberInput.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const translations = {
 	incrementLabel: 'Increase',
@@ -54,5 +56,11 @@ describe('NumberInput', () => {
 		await fireEvent.pointerDown(getByRole('button', { name: 'Increase' }), { button: 0 });
 		expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ value: '6' }));
 		expect(bound).toBe('6');
+	});
+
+	it('shows each step button by its name as a tooltip', async () => {
+		const { getByRole } = render(NumberInput, { label: 'Quantity', translations });
+		await expectTooltip(getByRole('button', { name: 'Increase' }), 'Increase');
+		await expectTooltip(getByRole('button', { name: 'Decrease' }), 'Decrease');
 	});
 });

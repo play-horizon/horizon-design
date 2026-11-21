@@ -1,11 +1,12 @@
 /**
- * Tests of `Drawer`: its title and description name and describe it, its close button is named,
- * and it is swiped toward the right edge it slides in from.
+ * Tests of `Drawer`: its title and description name and describe it, its close button is named
+ * and tooltipped by `closeLabel`, and it is swiped toward the right edge it slides in from.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/svelte';
 import Drawer from './Drawer.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Drawer', () => {
 	it('is named by its title and described by its description', async () => {
@@ -21,6 +22,19 @@ describe('Drawer', () => {
 			'Narrow the list of games.'
 		);
 		expect(await findByRole('button', { name: 'Close' })).toBeTruthy();
+	});
+
+	it('shows the close label as the close button tooltip', async () => {
+		const { findByRole } = render(Drawer, {
+			open: true,
+			title: 'Filters',
+			closeLabel: 'Close the filters'
+		});
+		await expectTooltip(
+			await findByRole('button', { name: 'Close the filters' }),
+			'Close the filters',
+			'pointer'
+		);
 	});
 
 	it('is swiped toward the right edge it slides in from', async () => {

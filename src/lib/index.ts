@@ -6,7 +6,13 @@
  * @module
  */
 export { cn } from './utils';
-export { theme, THEME_STORAGE_KEY, type ThemeMode, type ThemeInitOptions } from './theme.svelte';
+export { isApplePlatform, type PlatformSource } from './platform';
+export {
+	theme,
+	THEME_STORAGE_KEY,
+	type ThemeMode,
+	type ThemeInitializeOptions
+} from './theme.svelte';
 export { slidePage, prefersReducedMotion, type SlideDirection } from './motion/page-transition';
 export type { Theme, ColorToken, TokenValue } from './generated/tokens';
 
@@ -52,6 +58,7 @@ export * from './components/game-card';
 export * from './components/game-hero';
 export * from './components/hint';
 export * from './components/hover-card';
+export * from './components/icon-button';
 export * from './components/image-cropper';
 export * from './components/input';
 export * from './components/input-group';
@@ -90,7 +97,6 @@ export * from './components/steps';
 export * from './components/swap';
 export * from './components/switch';
 export * from './components/table';
-export * from './components/tabs';
 export * from './components/tag-picker';
 export * from './components/textarea';
 export * from './components/theme-switch';

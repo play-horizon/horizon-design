@@ -2,7 +2,8 @@
 @component
 A pad to draw a signature or a sketch (Ark SignaturePad), with a clear button once something is
 drawn. `label` shows above the pad and names it, `roleDescription` is the role it is announced as,
-and `clearLabel` names the clear button. In a form, Ark's `name` submits the drawn paths as JSON.
+and `clearLabel` names the clear button. Ark's `disabled` dims the pad and `readOnly` keeps it as
+it is; in a form, Ark's `name` submits the drawn paths as JSON.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -41,7 +42,7 @@ and `clearLabel` names the clear button. In a form, Ark's `name` submits the dra
 	<SignaturePad.Label class="text-sm font-medium text-fg">{label}</SignaturePad.Label>
 	<SignaturePad.Control
 		aria-roledescription={roleDescription}
-		class="relative h-40 w-full cursor-crosshair overflow-hidden rounded-xl border border-border bg-surface"
+		class="relative h-40 w-full cursor-crosshair overflow-hidden rounded-xl border border-border bg-surface data-disabled:cursor-not-allowed data-disabled:opacity-50"
 	>
 		<!-- Ark gives the drawing a fixed English <title>; the control already names the pad, so the
 		     drawing is hidden from assistive technology. -->

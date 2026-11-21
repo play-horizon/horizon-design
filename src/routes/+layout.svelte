@@ -17,20 +17,20 @@ library's own `slidePage`, as the apps use it).
 	import { Input } from '#lib/components/input/index.js';
 	import { SkipNav } from '#lib/components/skip-nav/index.js';
 	import MingcuteSearchLine from '~icons/mingcute/search-line';
-	import { navGroups, pageOrder } from './nav';
-	import pkg from '../../package.json';
+	import { navigationGroups, pageOrder } from './navigation';
+	import packageJson from '../../package.json';
 
 	let { children } = $props();
 	let search = $state('');
 
-	onMount(() => theme.init());
+	onMount(() => theme.initialize());
 
 	const current = $derived(page.params.section ?? '');
 
 	const groups = $derived.by(() => {
 		const query = search.trim().toLowerCase();
-		if (!query) return navGroups;
-		return navGroups
+		if (!query) return navigationGroups;
+		return navigationGroups
 			.map((g) => ({ ...g, items: g.items.filter((i) => i.label.toLowerCase().includes(query)) }))
 			.filter((g) => g.items.length > 0);
 	});
@@ -62,7 +62,7 @@ library's own `slidePage`, as the apps use it).
 			<img src={asset('favicon.svg')} alt="" class="size-6.5 rounded-md" />
 			<span class="text-md">horizon-design</span>
 		</a>
-		<span class="font-mono text-xs text-faint">v{pkg.version}</span>
+		<span class="font-mono text-xs text-faint">v{packageJson.version}</span>
 		<ThemeSwitch
 			class="ml-auto"
 			labels={{ group: 'Theme', system: 'System', dark: 'Dark', light: 'Light' }}

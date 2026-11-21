@@ -1,12 +1,13 @@
 <!--
 @component
-A ring that fills with progress, with an optional value in its centre and a label under it. It
+A ring that fills with progress, with round ends, an optional value in its centre and a label under it. It
 is a `progressbar` named by `label`; `valueText`, the value formatted by the app (such as "72%"),
 is shown in the centre and announced instead of the raw number.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '#lib/utils.js';
+	import Ring from '../ring/Ring.svelte';
 
 	let {
 		class: className = '',
@@ -61,14 +62,7 @@ is shown in the centre and announced instead of the raw number.
 		data-slot="circular-progress"
 		{...rest}
 	>
-		<!-- A conic gradient drawn as a ring by a radial mask, which reads only the alpha of its colours. -->
-		<div
-			aria-hidden="true"
-			class="absolute inset-0 rounded-full"
-			style:background="conic-gradient(var(--primary) {progress}turn, var(--hover) 0)"
-			style:mask="radial-gradient(farthest-side, transparent calc(100% - {strokeWidth}px - 0.5px),
-			currentColor calc(100% - {strokeWidth}px))"
-		></div>
+		<Ring turn={progress} thickness={strokeWidth} />
 		<div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
 			{#if children}
 				{@render children()}

@@ -1,7 +1,8 @@
 <!--
 @component
 Resizable panels separated by draggable handles (Ark Splitter): `SplitterPanel`s with a
-`SplitterResizeTrigger` between each two.
+`SplitterResizeTrigger` between each two. They stand in a row, or in a column with Ark's
+`orientation="vertical"`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -25,6 +26,11 @@ Resizable panels separated by draggable handles (Ark Splitter): `SplitterPanel`s
 	} = $props();
 </script>
 
-<Splitter.Root {panels} class={cn('flex h-full w-full', className)} data-slot="splitter" {...rest}>
+<Splitter.Root
+	{panels}
+	class={cn('flex h-full w-full data-[orientation=vertical]:flex-col', className)}
+	data-slot="splitter"
+	{...rest}
+>
 	{@render children?.()}
 </Splitter.Root>

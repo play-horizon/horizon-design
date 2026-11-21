@@ -10,9 +10,9 @@ import { vi } from 'vitest';
 class TestDragEvent extends MouseEvent {
 	readonly dataTransfer: DataTransfer | null;
 
-	constructor(type: string, init: DragEventInit = {}) {
-		super(type, init);
-		this.dataTransfer = init.dataTransfer ?? null;
+	constructor(type: string, options: DragEventInit = {}) {
+		super(type, options);
+		this.dataTransfer = options.dataTransfer ?? null;
 	}
 }
 

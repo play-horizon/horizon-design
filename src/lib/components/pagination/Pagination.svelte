@@ -2,7 +2,8 @@
 @component
 Page links with previous and next (Ark Pagination). `page` binds the current page; without it,
 Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (`rootLabel`,
-`prevTriggerLabel`, `nextTriggerLabel`, `itemLabel`).
+`prevTriggerLabel`, `nextTriggerLabel`, `itemLabel`); the previous and next arrows show their
+names as tooltips too.
 
 `children` replaces the built-in controls with the app's own, composed from the parts:
 `PaginationPrevTrigger`, `PaginationNextTrigger`, `PaginationItem` (one page link),
@@ -81,7 +82,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 	{:else}
 		<Pagination.Context>
 			{#snippet render(api)}
-				<PaginationPrevTrigger class="text-muted">
+				<PaginationPrevTrigger class="text-muted" label={translations.prevTriggerLabel}>
 					<MingcuteLeftLine class="size-4" aria-hidden="true" />
 				</PaginationPrevTrigger>
 
@@ -93,7 +94,7 @@ Ark's `defaultPage` sets the first one. Ark's `translations` name its controls (
 					{/if}
 				{/each}
 
-				<PaginationNextTrigger class="text-muted">
+				<PaginationNextTrigger class="text-muted" label={translations.nextTriggerLabel}>
 					<MingcuteRightLine class="size-4" aria-hidden="true" />
 				</PaginationNextTrigger>
 			{/snippet}

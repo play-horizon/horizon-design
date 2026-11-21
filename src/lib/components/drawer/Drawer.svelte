@@ -1,14 +1,15 @@
 <!--
 @component
 A panel that slides in from the end edge of the window (Ark Drawer), with a title, content and
-footer; `title` names it and `closeLabel` names its close button. It is swiped toward that edge to
+footer; `title` names it and `closeLabel` names its close button and is its tooltip. It is swiped toward that edge to
 dismiss it.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Drawer, type DrawerOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
@@ -24,6 +25,7 @@ dismiss it.
 		class: className = '',
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The content of the button that opens the drawer; no trigger when unset. */
@@ -40,7 +42,7 @@ dismiss it.
 		footer?: Snippet;
 		/** Whether to show the close button at the top right. */
 		showClose?: boolean;
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's accessible name and tooltip, such as "Close". */
 		closeLabel: string;
 		/** A translucent, blurred surface: for overlays above busy content only. */
 		frosted?: boolean;
@@ -50,12 +52,20 @@ dismiss it.
 		open?: boolean;
 		/** Called with the new state when the drawer opens or closes. */
 		onOpenChange?: (details: DrawerOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Drawer.Root>['ids'];
 		/** Other props of Ark's `Drawer.Root`, such as `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// The close button's id, shared by Ark's dialog (which focuses it first in an alert dialog) and
+	// its tooltip, which both find it by id.
+	const uid = $props.id();
+	const closeTriggerId = `${uid}-close`;
 </script>
 
 <Drawer.Root
+	ids={{ ...appIds, closeTrigger: closeTriggerId }}
 	swipeDirection="end"
 	{open}
 	onOpenChange={(details) => {
@@ -83,13 +93,18 @@ dismiss it.
 				data-slot="drawer-content"
 			>
 				{#if showClose}
-					<Drawer.CloseTrigger
-						class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
-						aria-label={closeLabel}
-						data-slot="drawer-close"
-					>
-						<MingcuteCloseLine class="size-4" aria-hidden="true" />
-					</Drawer.CloseTrigger>
+					<Tooltip content={closeLabel} triggerId={closeTriggerId}>
+						{#snippet trigger(props)}
+							<Drawer.CloseTrigger
+								{...props}
+								class="absolute top-3.5 right-3.5 inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors outline-none hover:bg-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-primary"
+								aria-label={closeLabel}
+								data-slot="drawer-close"
+							>
+								<MingcuteCloseLine class="size-4" aria-hidden="true" />
+							</Drawer.CloseTrigger>
+						{/snippet}
+					</Tooltip>
 				{/if}
 				<div class="flex flex-col space-y-1.5 p-6 pb-0" data-slot="drawer-header">
 					<Drawer.Title class="text-[1.0625rem] font-bold" data-slot="drawer-title">

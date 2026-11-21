@@ -1,7 +1,8 @@
 <!--
 @component
 A window-like frame around content, such as a code sample or a screenshot: a bordered surface
-with, when `title` is set, a title bar showing the title between three window dots.
+with, when `title` is set, a title bar: the title at its start and three window controls at its
+end, where Windows and Linux put them (the close control, red, last).
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -33,13 +34,16 @@ with, when `title` is set, a title bar showing the title between three window do
 	{...rest}
 >
 	{#if title}
-		<div class="flex items-center gap-2 border-b border-border bg-hover px-4 py-2.5">
-			<div class="flex items-center gap-1.5" aria-hidden="true">
-				<span class="size-3 rounded-full bg-danger/60"></span>
-				<span class="size-3 rounded-full bg-warning/60"></span>
+		<div
+			class="flex items-center gap-2 border-b border-border bg-hover px-4 py-2.5"
+			data-slot="frame-title-bar"
+		>
+			<span class="min-w-0 flex-1 truncate text-xs text-muted">{title}</span>
+			<div class="flex items-center gap-1.5" aria-hidden="true" data-slot="frame-controls">
 				<span class="size-3 rounded-full bg-success/60"></span>
+				<span class="size-3 rounded-full bg-warning/60"></span>
+				<span class="size-3 rounded-full bg-danger/60"></span>
 			</div>
-			<span class="flex-1 text-center text-xs text-muted">{title}</span>
 		</div>
 	{/if}
 	<div class="flex-1 overflow-auto">

@@ -1,7 +1,8 @@
 <!--
 @component
 A list of options to choose one or several from (Ark Listbox), named by its `label`; `value`
-binds the chosen options.
+binds the chosen options. A horizontal `orientation` lays the options out in a row, and an option
+with `disabled` can't be chosen.
 -->
 <script lang="ts" module>
 	/** One option of a `Listbox`. */
@@ -10,6 +11,8 @@ binds the chosen options.
 		label: string;
 		/** Its stable id, what `value` holds. */
 		value: string;
+		/** Whether it can't be chosen. */
+		disabled?: boolean;
 	}
 </script>
 
@@ -64,12 +67,12 @@ binds the chosen options.
 >
 	<Listbox.Label class="text-sm font-medium text-fg">{label}</Listbox.Label>
 	<Listbox.Content
-		class="max-h-60 overflow-auto rounded-xl border border-border bg-raised p-1 shadow-lg"
+		class="max-h-60 overflow-auto rounded-xl border border-border bg-raised p-1 shadow-lg data-[orientation=horizontal]:flex data-[orientation=horizontal]:gap-1"
 	>
 		{#each items as item (item.value)}
 			<Listbox.Item
 				{item}
-				class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-hover data-highlighted:bg-hover data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary"
+				class="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-hover data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-hover data-[state=checked]:bg-primary-subtle data-[state=checked]:text-fg"
 				data-slot="listbox-item"
 			>
 				<Listbox.ItemText>

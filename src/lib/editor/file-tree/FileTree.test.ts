@@ -45,11 +45,11 @@ function setup() {
 		onExpandedChange
 	});
 	const row = (value: string) => {
-		const el = result.container.querySelector<HTMLElement>(
+		const element = result.container.querySelector<HTMLElement>(
 			`[data-part="item"][data-value="${value}"], [data-part="branch-control"][data-value="${value}"]`
 		);
-		if (!el) throw new Error(`no row ${value}`);
-		return el;
+		if (!element) throw new Error(`no row ${value}`);
+		return element;
 	};
 	return { ...result, row, onSelectionChange, onExpandedChange };
 }
@@ -175,8 +175,8 @@ describe('FileTree', () => {
 			expandedValue: ['docs']
 		});
 		const parts = (part: string) =>
-			[...container.querySelectorAll(`[data-part="${part}"]`)].map((el) =>
-				el.getAttribute('data-value')
+			[...container.querySelectorAll(`[data-part="${part}"]`)].map((element) =>
+				element.getAttribute('data-value')
 			);
 		expect(parts('branch-control')).toEqual(['docs', 'remote']);
 		expect(parts('item')).toEqual(['guide', 'readme']);

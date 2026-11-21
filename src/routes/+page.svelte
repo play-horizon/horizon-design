@@ -1,6 +1,7 @@
 <!--
 @component
-The docs site's foundations page: every colour token side by side in both themes with its hex and OKLCH values,
+The docs site's foundations page: the library's version and how many components each entry point
+holds (counted from the navigation), every colour token side by side in both themes with its hex and OKLCH values,
 the type scale, radius, elevation, and the page motion (theme crossfade, navigation slide).
 -->
 <script lang="ts">
@@ -8,6 +9,13 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 	import { theme } from '#lib/theme.svelte.js';
 	import { slidePage } from '#lib/motion/page-transition.js';
 	import { Button } from '#lib/components/button/index.js';
+	import { navigationGroups } from './navigation';
+	import packageJson from '../../package.json';
+
+	const count = (kit: 'general' | 'editor') =>
+		navigationGroups
+			.filter((group) => group.kit === kit)
+			.reduce((sum, group) => sum + group.items.length, 0);
 
 	const tokens = Object.keys(tokenValues.dark) as ColorToken[];
 	const themes = ['dark', 'light'] as const;
@@ -54,6 +62,12 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 
 <p class="section-tag">Foundations</p>
 <h1 class="text-3xl font-bold">Tokens and motion</h1>
+<p class="mt-2 max-w-2xl text-fg-2" data-testid="library-summary">
+	horizon-design {packageJson.version}: {count('general')} components in <code>horizon-design</code>
+	and
+	{count('editor')} for the Editor in <code>horizon-design/editor</code>, each with a playground of
+	its props and every variant on its page.
+</p>
 <p class="mt-2 max-w-2xl text-fg-2">
 	One OKLCH palette, mapped onto semantic tokens per theme. Components use only these tokens, so
 	both themes stay consistent. <code>horizon-design/tokens</code> exports each one as data, for colours
@@ -68,7 +82,7 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 			class="rounded-xl border border-border bg-background p-3 text-fg"
 			data-testid="swatches-{name}"
 		>
-			<p class="mb-2 text-2xs font-bold tracking-overline text-faint uppercase">{name}</p>
+			<p class="mb-2 text-2xs font-bold tracking-overline text-muted uppercase">{name}</p>
 			<div class="grid gap-1">
 				{#each tokens as token (token)}
 					<div class="flex items-center gap-2.5 text-xs">
@@ -79,8 +93,10 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 						<span class="font-mono">{token}</span>
 						<span
 							class="ml-auto font-mono text-muted select-text"
-							title={tokenValues[name][token].oklch}>{tokenValues[name][token].hex}</span
+							title={tokenValues[name][token].oklch}
 						>
+							{tokenValues[name][token].hex}
+						</span>
 					</div>
 				{/each}
 			</div>

@@ -1,7 +1,8 @@
 <!--
 @component
 A surface that groups related content: an optional title and description, the content, and an
-optional footer.
+optional footer. The title is a heading of `headingLevel` (3 by default, a card inside a section
+of the page), so the page's outline stays in order.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -10,6 +11,7 @@ optional footer.
 	let {
 		class: className = '',
 		title,
+		headingLevel = 3,
 		description,
 		children,
 		footer,
@@ -19,6 +21,8 @@ optional footer.
 		class?: string;
 		/** The card's title, at its top. */
 		title?: string;
+		/** The title's heading level: 3 for a card inside a section, 2 for one right under the page's title. */
+		headingLevel?: 2 | 3 | 4 | 5 | 6;
 		/** A line under the title. */
 		description?: string;
 		/** The card's content. */
@@ -41,7 +45,9 @@ optional footer.
 	{#if title || description}
 		<div class="flex flex-col gap-1 px-4 pt-3.5" data-slot="card-header">
 			{#if title}
-				<h3 class="text-md font-bold" data-slot="card-title">{title}</h3>
+				<svelte:element this={`h${headingLevel}`} class="text-md font-bold" data-slot="card-title">
+					{title}
+				</svelte:element>
 			{/if}
 			{#if description}
 				<p class="text-sm text-muted" data-slot="card-description">{description}</p>

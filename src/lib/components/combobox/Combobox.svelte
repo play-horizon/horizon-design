@@ -3,11 +3,12 @@
 A text field that filters a list of options to choose from (Ark Combobox): typing keeps the
 options whose label contains the text, ignoring case and accents, and `emptyText` shows when none
 does. `label`, required, names the field, and Ark `translations` name the open button
-(`triggerLabel`). Ark announces the number of matching options to screen readers only when
+(`triggerLabel`, also its tooltip). `openOnClick` opens the options as soon as the field is pressed. Ark announces the number of matching options to screen readers only when
 `translations` gives the messages (`resultsCount`, `noResults`, `loading`): it has no English of its
 own to fall back on here.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import {
 		Combobox,
 		createListCollection,
@@ -19,6 +20,7 @@ own to fall back on here.
 	import { cn } from '#lib/utils.js';
 	import MingcuteSelectorVerticalLine from '~icons/mingcute/selector-vertical-line';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	type ArkTranslations = NonNullable<
 		ComboboxRootProps<{ label: string; value: string }>['translations']
@@ -29,9 +31,11 @@ own to fall back on here.
 		label,
 		placeholder = '',
 		emptyText,
+		openOnClick = false,
 		onInputValueChange,
 		translations,
 		class: className = '',
+		ids: appIds,
 		...rest
 	}: {
 		/** The options: the text shown and the value chosen, unique. */
@@ -42,6 +46,11 @@ own to fall back on here.
 		placeholder?: string;
 		/** Shown when no option matches, such as "No results found." */
 		emptyText: string;
+		/**
+		 * Opens the options as soon as the field is pressed, not only once the user types or from
+		 * the open button; the field keeps the focus, so typing to search starts at once.
+		 */
+		openOnClick?: boolean;
 		/** Called with the field's text when it changes. */
 		onInputValueChange?: (details: ComboboxInputValueChangeDetails) => void;
 		/**
@@ -52,6 +61,8 @@ own to fall back on here.
 			Pick<ArkTranslations, 'resultsCount' | 'noResults' | 'loading'>;
 		/** Classes merged onto the root. */
 		class?: string;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Combobox.Root>['ids'];
 		/** Other props of Ark's `Combobox.Root`, such as `value`, `onValueChange` and `multiple`. */
 		[key: string]: unknown;
 	} = $props();
@@ -64,6 +75,10 @@ own to fall back on here.
 		noResults: translations.noResults ?? '',
 		loading: translations.loading ?? ''
 	});
+
+	// The open button's id, shared by Ark's combobox and its tooltip, which both find it by id.
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
 
 	const filters = useFilter({ sensitivity: 'base' });
 	let query = $state('');
@@ -80,6 +95,8 @@ own to fall back on here.
 
 <Combobox.Root
 	{collection}
+	{openOnClick}
+	ids={{ ...appIds, trigger: triggerId }}
 	onInputValueChange={changeInput}
 	translations={arkTranslations}
 	class={cn('flex flex-col gap-1.5', className)}
@@ -95,9 +112,16 @@ own to fall back on here.
 			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
 			data-slot="combobox-input"
 		/>
-		<Combobox.Trigger class="absolute top-1/2 right-2 -translate-y-1/2 text-muted">
-			<MingcuteSelectorVerticalLine class="size-4" aria-hidden="true" />
-		</Combobox.Trigger>
+		<Tooltip content={translations.triggerLabel} {triggerId}>
+			{#snippet trigger(props)}
+				<Combobox.Trigger
+					{...props}
+					class="absolute top-1/2 right-2 -translate-y-1/2 text-muted transition-colors hover:text-fg"
+				>
+					<MingcuteSelectorVerticalLine class="size-4" aria-hidden="true" />
+				</Combobox.Trigger>
+			{/snippet}
+		</Tooltip>
 	</Combobox.Control>
 	<Portal>
 		<Combobox.Positioner>

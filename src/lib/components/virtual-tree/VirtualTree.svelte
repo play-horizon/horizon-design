@@ -16,8 +16,9 @@ view, and the focused row stays rendered while scrolled out, so the focus is nev
 branch closes over it, the tab stop moves to that branch.
 
 `row` renders a row's content (icon, name, badges) from the node and its state; the tree draws
-the indentation, the disclosure caret, the selection, and the rename field, after `row`, while the
-node is renamed (`row` leaves the name out then: `state.renaming`).
+the indentation, the disclosure caret, the selection (a tinted background, nothing more), and the
+rename field, after `row`, while the node is renamed (`row` leaves the name out then:
+`state.renaming`).
 -->
 <script lang="ts" generics="T extends TreeNode">
 	import { flushSync, type Snippet } from 'svelte';
@@ -152,12 +153,12 @@ node is renamed (`row` leaves the name out then: `state.renaming`).
 	const focusIndex = $derived(
 		shownFocus === null
 			? 0
-			: visible.findIndex((e) => collection.getNodeValue(e.node) === shownFocus)
+			: visible.findIndex((entry) => collection.getNodeValue(entry.node) === shownFocus)
 	);
 
 	/** The values of the rows on screen (every branch above them open), top to bottom. */
 	export function visibleValues(): string[] {
-		return visible.map((e) => collection.getNodeValue(e.node));
+		return visible.map((entry) => collection.getNodeValue(entry.node));
 	}
 
 	/** Scrolls the row of `value` into view and focuses it; nothing when the row isn't on screen. */
@@ -230,7 +231,7 @@ node is renamed (`row` leaves the name out then: `state.renaming`).
 	aria-labelledby={undefined}
 	items={visible}
 	{itemHeight}
-	key={(e) => collection.getNodeValue(e.node)}
+	key={(entry) => collection.getNodeValue(entry.node)}
 	keepIndex={focusIndex >= 0 && visible.length > 0 ? focusIndex : undefined}
 	tabindex={visible.length === 0 ? 0 : -1}
 	class={cn('rounded-md outline-none focus-visible:ring-2 focus-visible:ring-primary', className)}
@@ -261,7 +262,7 @@ node is renamed (`row` leaves the name out then: `state.renaming`).
 	<div
 		{...props}
 		{@attach attachRow?.(entry.node)}
-		class="relative flex h-full cursor-default items-center gap-1.5 rounded-md pr-2 text-sm whitespace-nowrap text-fg-2 outline-none hover:bg-hover focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset data-selected:bg-primary-subtle data-selected:text-fg data-selected:shadow-[inset_2px_0_0_var(--primary)]"
+		class="relative flex h-full cursor-default items-center gap-1.5 rounded-md pr-2 text-sm whitespace-nowrap text-fg-2 outline-none hover:bg-hover focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset data-selected:bg-primary-subtle data-selected:text-fg"
 		style:padding-left="{(state.depth - 1) * indent + 4}px"
 		onkeydown={(event) => onRowKeyDown(event, entry.node)}
 		ondblclick={() => onActivate?.(entry.node)}

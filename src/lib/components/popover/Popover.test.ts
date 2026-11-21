@@ -1,12 +1,14 @@
 /**
- * Tests of `Popover`: its trigger is a real button, and its title and description name and
- * describe the open panel.
+ * Tests of `Popover`: its trigger is a real button, its title and description name and describe
+ * the open panel, an icon-only trigger is named by its `triggerLabel`, shown as a tooltip, and the
+ * app's own Ark `ids` merge with the trigger's, which the tooltip shares.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { createRawSnippet } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import Popover from './Popover.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 describe('Popover', () => {
 	it('opens from a button and names the panel by its title', async () => {
@@ -30,5 +32,33 @@ describe('Popover', () => {
 	it('starts open from defaultOpen when open is not bound', async () => {
 		const { findByRole } = render(Popover, { title: 'Layer size', defaultOpen: true });
 		expect(await findByRole('dialog', { name: 'Layer size' })).toBeTruthy();
+	});
+
+	it('names an icon-only trigger by its triggerLabel, shown as a tooltip', async () => {
+		const { getByRole, findByRole } = render(Popover, {
+			title: 'Filters',
+			triggerLabel: 'Show filters',
+			trigger: createRawSnippet(() => ({ render: () => '<span aria-hidden="true">#</span>' }))
+		});
+		const trigger = getByRole('button', { name: 'Show filters' });
+		await expectTooltip(trigger, 'Show filters');
+		await fireEvent.click(trigger);
+		expect(await findByRole('dialog', { name: 'Filters' })).toBeTruthy();
+		expect(trigger.getAttribute('aria-expanded')).toBe('true');
+	});
+
+	it("merges the app's ids with the trigger's, which the tooltip shares", async () => {
+		const { getByRole, findByRole } = render(Popover, {
+			title: 'Filters',
+			triggerLabel: 'Show filters',
+			ids: { content: 'filters-panel' },
+			trigger: createRawSnippet(() => ({ render: () => '<span aria-hidden="true">#</span>' }))
+		});
+		const trigger = getByRole('button', { name: 'Show filters' });
+		expect(trigger.id).not.toBe('');
+		await fireEvent.click(trigger);
+		const panel = await findByRole('dialog', { name: 'Filters' });
+		expect(panel.id).toBe('filters-panel');
+		expect(trigger.getAttribute('aria-controls')).toBe('filters-panel');
 	});
 });

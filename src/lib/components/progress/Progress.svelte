@@ -44,9 +44,9 @@ bar for assistive technology; without one, the bar is named by its value.
 	{#if label || showValue}
 		<div class="flex items-center justify-between gap-2">
 			{#if label}
-				<Progress.Label class="text-sm font-medium" data-slot="progress-label"
-					>{label}</Progress.Label
-				>
+				<Progress.Label class="text-sm font-medium" data-slot="progress-label">
+					{label}
+				</Progress.Label>
 			{/if}
 			{#if showValue}
 				<Progress.ValueText

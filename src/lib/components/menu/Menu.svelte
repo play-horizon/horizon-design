@@ -1,25 +1,34 @@
 <!--
 @component
-A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent surface.
+A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent surface. A trigger
+that shows only an icon takes a `triggerLabel`: its accessible name and its tooltip.
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { Menu, type MenuOpenChangeDetails } from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
-		trigger,
+		trigger: triggerContent,
+		triggerLabel,
 		triggerClass = '',
 		children,
 		contentClass = '',
 		frosted = false,
 		open = $bindable(),
 		onOpenChange,
+		ids: appIds,
 		...rest
 	}: {
 		/** The content of the button that opens the menu; no trigger when unset. */
 		trigger?: Snippet;
+		/**
+		 * The trigger's action, translated, such as "More actions", for a trigger that shows only an
+		 * icon: its accessible name and its tooltip. Unset, the trigger's content names it.
+		 */
+		triggerLabel?: string;
 		/** Classes of the trigger button, such as `buttonVariants(…)`. */
 		triggerClass?: string;
 		/** The menu's items: `MenuItem`, `MenuGroup` and `MenuSeparator`. */
@@ -32,12 +41,18 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 		open?: boolean;
 		/** Called with the new state when the menu opens or closes. */
 		onOpenChange?: (details: MenuOpenChangeDetails) => void;
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof Menu.Root>['ids'];
 		/** Other props of Ark's `Menu.Root`, such as `onSelect` or `positioning`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// The tooltip and the menu share the trigger, so both must know it by the same id.
+	const triggerId = $props.id();
 </script>
 
 <Menu.Root
+	ids={{ ...appIds, trigger: triggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -45,9 +60,22 @@ A dropdown menu opened by its trigger (Ark Menu); `frosted` for a translucent su
 	}}
 	{...rest}
 >
-	{#if trigger}
+	{#if triggerContent && triggerLabel}
+		<Tooltip content={triggerLabel} {triggerId}>
+			{#snippet trigger(props)}
+				<Menu.Trigger
+					{...props}
+					aria-label={triggerLabel}
+					class={triggerClass || undefined}
+					data-slot="menu-trigger"
+				>
+					{@render triggerContent()}
+				</Menu.Trigger>
+			{/snippet}
+		</Tooltip>
+	{:else if triggerContent}
 		<Menu.Trigger class={triggerClass || undefined} data-slot="menu-trigger">
-			{@render trigger()}
+			{@render triggerContent()}
 		</Menu.Trigger>
 	{/if}
 	<Portal>

@@ -1,9 +1,13 @@
 <!--
 @component
 An asset in a list (a store listing, an entry of My assets or of a game's assets): its square
-thumbnail, its name (the card's link or button), its kind, a `meta` line (votes, the rig profile)
-and `actions` (Add to my assets). The link covers the whole card; the actions stay their own
-buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a neutral fill.
+thumbnail, its name, its kind, a `meta` line (votes, the rig profile) and `actions` (Add to my
+assets). Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a neutral fill.
+
+It is interactive only when given something to do: with `href`, its name is a link; with `onclick`,
+a button; with `selectable` too, a toggle whose pressed state is `selected`, for pickers. The link
+or button then covers the whole card (pointer cursor, hover fill, focus ring, Enter, and Space for
+a button), and the actions stay their own buttons. With none of them, it is a plain display.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -19,6 +23,7 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 		placeholder,
 		meta,
 		actions,
+		selectable = false,
 		selected = false,
 		class: className = ''
 	}: {
@@ -28,7 +33,7 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 		kind: string;
 		/** Where the card leads. */
 		href?: string;
-		/** Called when the card is chosen, when it has no `href`. */
+		/** Called when the card is pressed, when it has no `href`. */
 		onclick?: () => void;
 		/** The square thumbnail's URL. */
 		thumbnail?: string;
@@ -38,23 +43,29 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 		meta?: Snippet;
 		/** Buttons of the card, such as Add to my assets. */
 		actions?: Snippet;
-		/** Marks the card as the chosen one in a picker. */
+		/** Makes the card a toggle, pressed while `selected`, for a picker; it needs `onclick`. */
+		selectable?: boolean;
+		/** Whether a `selectable` card is the chosen one. */
 		selected?: boolean;
 		/** Classes merged onto the card. */
 		class?: string;
 	} = $props();
 
 	const stretched =
-		'outline-none after:absolute after:inset-0 after:z-1 after:rounded-lg focus-visible:after:ring-2 focus-visible:after:ring-primary';
+		'cursor-pointer outline-none after:absolute after:inset-0 after:z-1 after:rounded-lg focus-visible:after:ring-2 focus-visible:after:ring-primary';
+	const interactive = $derived(Boolean(href || onclick));
+	const chosen = $derived(selectable && selected);
 </script>
 
 <div
 	class={cn(
-		'group relative grid min-w-0 content-start gap-2 rounded-lg border border-border bg-surface p-2 transition-colors hover:bg-hover',
-		selected && 'border-primary ring-3 ring-primary/20',
+		'group relative grid min-w-0 content-start gap-2 rounded-lg border border-border bg-surface p-2 transition-colors',
+		interactive && 'hover:bg-hover',
+		chosen && 'border-primary ring-3 ring-primary/20',
 		className
 	)}
 	data-slot="asset-card"
+	data-interactive={interactive || undefined}
 >
 	<div
 		class="relative grid aspect-square place-items-center overflow-hidden rounded-md bg-sunken text-faint [&_svg]:size-8"
@@ -69,15 +80,17 @@ buttons. Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a 
 		{#if href}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- the app passes an href it has already resolved -->
 			<a {href} class={cn(stretched, 'truncate text-sm font-semibold text-fg')}>{name}</a>
-		{:else}
+		{:else if onclick}
 			<button
 				type="button"
 				class={cn(stretched, 'truncate text-left text-sm font-semibold text-fg')}
-				aria-pressed={onclick ? selected : undefined}
+				aria-pressed={selectable ? selected : undefined}
 				{onclick}
 			>
 				{name}
 			</button>
+		{:else}
+			<span class="truncate text-sm font-semibold text-fg">{name}</span>
 		{/if}
 		<div class="flex min-w-0 items-center gap-1.5 text-xs text-muted">
 			<Badge size="sm">{kind}</Badge>

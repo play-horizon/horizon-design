@@ -1,38 +1,37 @@
 <!--
 @component
-A data table from columns and rows.
+A data table from `columns` and `rows`. A column shows each row's field named by its `key` as
+text, or renders its `cell` snippet with the row, for richer content such as a status or a
+button. `rowKey` gives each row's stable key.
 -->
-<script lang="ts">
+<script lang="ts" module>
 	import type { Snippet } from 'svelte';
-	import { cn } from '#lib/utils.js';
 
 	/** One column of the table. */
-	interface Column {
-		/** The key of each row's value in this column, unique among the columns. */
+	export interface TableColumn<Row> {
+		/** The column's key, unique among the columns; without `cell`, the row's field shown. */
 		key: string;
 		/** The column's header, translated. */
 		label: string;
+		/** Renders the column's cell of a row, in place of the field's text. */
+		cell?: Snippet<[Row]>;
 	}
+</script>
 
-	/** A cell: text, or a snippet for richer content. */
-	type CellValue = string | Snippet;
-
-	/** One row: its cells by column key. */
-	interface Row {
-		[key: string]: CellValue;
-	}
+<script lang="ts" generics="Row extends Record<string, unknown>">
+	import { cn } from '#lib/utils.js';
 
 	let {
-		columns = [],
-		rows = [],
+		columns,
+		rows,
 		rowKey,
 		class: className = '',
 		...rest
 	}: {
 		/** The columns, in order. */
-		columns?: Column[];
+		columns: readonly TableColumn<Row>[];
 		/** The rows, in order. */
-		rows?: Row[];
+		rows: readonly Row[];
 		/** A stable, unique key of a row, such as its id. */
 		rowKey: (row: Row) => string;
 		/** Classes merged onto the `<table>`. */
@@ -40,10 +39,6 @@ A data table from columns and rows.
 		/** Other attributes of the `<table>`. */
 		[key: string]: unknown;
 	} = $props();
-
-	function isSnippet(v: CellValue): v is Snippet {
-		return typeof v === 'function';
-	}
 </script>
 
 <div class="w-full overflow-auto">
@@ -53,12 +48,12 @@ A data table from columns and rows.
 				class="border-b border-border transition-colors hover:bg-hover data-[state=selected]:bg-hover"
 				data-slot="table-row"
 			>
-				{#each columns as col (col.key)}
+				{#each columns as column (column.key)}
 					<th
 						class="h-10 px-3 text-left align-middle text-xs font-medium text-muted"
 						data-slot="table-head"
 					>
-						{col.label}
+						{column.label}
 					</th>
 				{/each}
 			</tr>
@@ -69,12 +64,12 @@ A data table from columns and rows.
 					class="border-b border-border transition-colors hover:bg-hover data-[state=selected]:bg-hover"
 					data-slot="table-row"
 				>
-					{#each columns as col (col.key)}
+					{#each columns as column (column.key)}
 						<td class="p-3 align-middle text-sm" data-slot="table-cell">
-							{#if isSnippet(row[col.key])}
-								{@render (row[col.key] as Snippet)()}
+							{#if column.cell}
+								{@render column.cell(row)}
 							{:else}
-								{row[col.key] ?? ''}
+								{row[column.key] ?? ''}
 							{/if}
 						</td>
 					{/each}

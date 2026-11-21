@@ -58,7 +58,10 @@ and, without a visible `label`, the field for assistive technology (a `label` na
 			{label}
 		</Editable.Label>
 	{/if}
+	<!-- Ark marks the preview `aria-readonly`, which ARIA forbids on its generic element; the field
+	     carries the read-only state, and a read-only preview isn't focusable. -->
 	<Editable.Preview
+		aria-readonly={null}
 		class="flex min-h-8 cursor-text items-center rounded-lg border border-transparent px-3 py-1.5 text-sm transition-colors hover:border-border hover:bg-sunken"
 		data-slot="editable-preview"
 	/>

@@ -1,12 +1,15 @@
 /**
- * Tests of `ColorPicker`: every control takes its accessible name from `labels`, and the area and
- * sliders announce their role and values from `labels` rather than from Ark's English.
+ * Tests of `ColorPicker`: every control takes its accessible name from `labels`, the area and
+ * sliders announce their role and values from `labels` rather than from Ark's English, the hex
+ * fields show and take 8 digits (FF when no alpha is typed), the colour is written in each of
+ * `formats`, and the presets sit on one line, or nowhere when there are none.
  * @module
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import { parseColor } from '@ark-ui/svelte';
 import ColorPicker from './ColorPicker.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const labels = {
 	trigger: 'Choose a colour',
@@ -18,7 +21,8 @@ const labels = {
 	alpha: 'Opacity',
 	alphaValue: (alpha: number) => `${alpha * 100} percent`,
 	hex: 'Hex',
-	swatch: (color: string) => `Use ${color}`
+	swatch: (color: string) => `Use ${color}`,
+	formats: 'Colour values'
 };
 
 describe('ColorPicker', () => {
@@ -61,5 +65,63 @@ describe('ColorPicker', () => {
 		await fireEvent.click(getByRole('button', { name: 'Choose a colour' }));
 		const area = await waitFor(() => getByRole('slider', { name: 'Saturation and brightness' }));
 		expect(area.getAttribute('aria-valuetext')).toBe('S 50 B 40');
+	});
+
+	it('shows 8 hex digits and reads a typed 6-digit hex as opaque', async () => {
+		const onValueChange = vi.fn();
+		const { getAllByLabelText } = render(ColorPicker, {
+			labels,
+			defaultValue: parseColor('#3b82f680'),
+			onValueChange
+		});
+		const [field] = getAllByLabelText('Hex') as HTMLInputElement[];
+		expect(field.value).toBe('#3B82F680');
+
+		field.value = '22c55e';
+		await fireEvent.change(field);
+		expect(onValueChange.mock.lastCall?.[0].value.toString('hexa')).toBe('#22C55EFF');
+		expect(field.value).toBe('#22C55EFF');
+
+		field.value = 'not a colour';
+		await fireEvent.change(field);
+		expect(field.value).toBe('#22C55EFF');
+	});
+
+	it('writes the colour in each format, and offers its presets on one line', async () => {
+		const { getByRole } = render(ColorPicker, {
+			labels,
+			defaultValue: parseColor('#ff000080'),
+			swatches: ['#000000', '#ffffff']
+		});
+		await fireEvent.click(getByRole('button', { name: 'Choose a colour' }));
+		const values = await waitFor(() => getByRole('list', { name: 'Colour values' }));
+		expect([...values.querySelectorAll('li')].map((item) => item.textContent)).toEqual([
+			'#FF000080',
+			'rgba(255, 0, 0, 0.5)',
+			'hsla(0, 100%, 50%, 0.5)'
+		]);
+		const swatches = document.querySelector('[data-slot="color-picker-swatches"]');
+		expect(swatches?.classList.contains('grid-flow-col')).toBe(true);
+	});
+
+	it('leaves out the values and the presets when given none', async () => {
+		const { getByRole, queryByRole } = render(ColorPicker, { labels, formats: [] });
+		await fireEvent.click(getByRole('button', { name: 'Choose a colour' }));
+		await waitFor(() => getByRole('dialog', { name: 'Choose a colour' }));
+		expect(queryByRole('list', { name: 'Colour values' })).toBeNull();
+		expect(document.querySelector('[data-slot="color-picker-swatches"]')).toBeNull();
+	});
+
+	it('names its swatch button in a tooltip', async () => {
+		const { getByRole } = render(ColorPicker, { labels });
+		await expectTooltip(getByRole('button', { name: 'Choose a colour' }), 'Choose a colour');
+	});
+
+	it('keeps its swatch button its own, under the tooltip', () => {
+		const { getByRole } = render(ColorPicker, { labels });
+		const button = getByRole('button', { name: 'Choose a colour' });
+		expect(button.getAttribute('data-scope')).toBe('color-picker');
+		expect(button.getAttribute('data-part')).toBe('trigger');
+		expect(button.getAttribute('aria-controls')).toBeTruthy();
 	});
 });

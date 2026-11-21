@@ -2,7 +2,7 @@
 @component
 A select field with a dropdown list of options (Ark Select); `value` binds the chosen values
 (without it, Ark's `defaultValue` sets the first ones) and `placeholder` shows while none is
-chosen. `label`, required, names the field.
+chosen. `label`, required, names the field. Ark's `invalid` turns the field's border danger.
 -->
 <script lang="ts">
 	import { Select, createListCollection, type SelectValueChangeDetails } from '@ark-ui/svelte';
@@ -64,7 +64,7 @@ chosen. `label`, required, names the field.
 	<Select.Control class="isolate">
 		<Select.Trigger
 			class={cn(
-				'flex h-9 w-full items-center justify-between rounded-lg border border-border bg-sunken px-3 py-2 text-sm text-fg shadow-sm transition-colors outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-muted',
+				'flex h-9 w-full items-center justify-between rounded-lg border border-border bg-sunken px-3 py-2 text-sm text-fg shadow-sm transition-colors outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger data-placeholder-shown:text-muted',
 				triggerClass
 			)}
 			data-slot="select-trigger"

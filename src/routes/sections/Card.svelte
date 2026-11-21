@@ -1,6 +1,8 @@
 <!--
 @component
-Docs: Card. Live examples of the Card component.
+Docs: Card. A playground over every part (the title, the description, the content, the footer),
+then cards with every part, with a header and content only, with content only, and two cards
+built for an app: a stat and a person.
 -->
 <script lang="ts">
 	import { Avatar } from '#lib/components/avatar/index.js';
@@ -10,51 +12,81 @@ Docs: Card. Live examples of the Card component.
 	import { Progress } from '#lib/components/progress/index.js';
 	import { Status } from '#lib/components/status/index.js';
 	import MingcuteArrowUpLine from '~icons/mingcute/arrow-up-line';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, text } from '../playground/controls';
 </script>
 
-<section id="card">
-	<div class="grid gap-4 md:grid-cols-3">
-		<Card title="Simple Card" description="A basic card with header and footer.">
-			<p class="text-sm text-muted">Card body content renders here with full styling support.</p>
-			{#snippet footer()}
-				<Button size="sm" variant="default">Cancel</Button>
-				<Button size="sm">Confirm</Button>
-			{/snippet}
-		</Card>
+{#snippet actions()}
+	<Button size="sm" variant="default">Cancel</Button>
+	<Button size="sm" variant="primary">Confirm</Button>
+{/snippet}
 
-		<Card title="Stats Card" description="Dashboard overview">
+<div class="grid gap-4">
+	<Playground
+		description="An empty title or description is left out."
+		controls={{
+			title: text('Invite a friend'),
+			description: text('They join your next session.'),
+			content: boolean(true),
+			footer: boolean(true)
+		}}
+	>
+		{#snippet example(values)}
+			<Card
+				class="w-full max-w-sm"
+				title={values.title}
+				description={values.description}
+				footer={values.footer ? actions : undefined}
+			>
+				{#if values.content}
+					<p class="text-sm text-muted">Invites expire after seven days.</p>
+				{/if}
+			</Card>
+		{/snippet}
+	</Playground>
+	<div class="grid gap-4 md:grid-cols-3">
+		<Card title="Every part" description="A title, a description, content and a footer.">
+			<p class="text-sm text-muted">The footer holds the card's buttons.</p>
+			{#snippet footer()}{@render actions()}{/snippet}
+		</Card>
+		<Card title="Header and content">
+			<p class="text-sm text-muted">Without a footer.</p>
+		</Card>
+		<Card>
+			<p class="text-sm text-muted">Content only, without a header or footer.</p>
+		</Card>
+		<Card title="Players" description="This week">
 			<div class="space-y-3">
 				<div class="text-3xl font-bold text-primary">42,890</div>
 				<div class="flex items-center gap-1.5 text-xs text-success">
 					<MingcuteArrowUpLine class="size-3.5" aria-hidden="true" />
-					<span>+12.5% from last month</span>
+					<span>+12.5% from last week</span>
 				</div>
-				<Progress value={72} />
+				<Progress value={72} label="Weekly goal" />
 			</div>
 		</Card>
-
-		<Card title="User Card">
+		<Card title="Member">
 			<div class="space-y-4">
 				<div class="flex items-center gap-3">
 					<div class="relative">
-						<Avatar size="md" fallback="JD" />
+						<Avatar size="md" fallback="SI" alt="Sam Ito" />
 						<span class="absolute right-0 bottom-0">
-							<Status variant="online" class="ring-2 ring-background" />
+							<Status variant="online" class="ring-2 ring-surface" />
 						</span>
 					</div>
 					<div>
-						<p class="text-sm font-semibold">John Doe</p>
-						<p class="text-xs text-muted">john@example.com</p>
+						<p class="text-sm font-semibold">Sam Ito</p>
+						<p class="text-xs text-muted">sam@example.com</p>
 					</div>
 				</div>
 				<div class="flex gap-2">
-					<Badge variant="neutral">Admin</Badge>
-					<Badge variant="neutral">Pro</Badge>
+					<Badge>Owner</Badge>
+					<Badge variant="accent">Pro</Badge>
 				</div>
 			</div>
 			{#snippet footer()}
-				<Button size="sm" class="w-full" variant="default">View Profile</Button>
+				<Button size="sm" class="w-full">View profile</Button>
 			{/snippet}
 		</Card>
 	</div>
-</section>
+</div>

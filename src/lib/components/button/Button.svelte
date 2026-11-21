@@ -1,7 +1,7 @@
 <!--
 @component
 A button. `variant` sets its look (default, primary for the one main action, tint, ghost, danger,
-danger-solid, link) and `size` its height (xs 22 px to lg 40 px; `icon-*` for square icon-only
+danger-solid, art over game art, link) and `size` its height (xs 22 px to lg 40 px; `icon-*` for square icon-only
 buttons, which need an `aria-label`). `loading` shows a spinner, disables it and sets
 `aria-busy`.
 -->

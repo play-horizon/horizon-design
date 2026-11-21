@@ -1,10 +1,13 @@
 <!--
 @component
 A date field with a calendar popover (Ark DatePicker). `label` names the field; `placeholder` and
-`translations` (the names of the controls and the roles the popover and its tables are announced
-as) are passed in.
+`translations` (the names of the controls, which the icon buttons show in a tooltip too, and the
+roles the popover and its tables are announced as) are passed in. The popover's calendar is
+`Calendar`'s: six weeks, and month and year views of the same size. `openOnClick` opens it as soon
+as the field is pressed.
 -->
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
 	import type {
 		DatePickerDateView,
@@ -14,8 +17,9 @@ as) are passed in.
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
 	import MingcuteCalendarLine from '~icons/mingcute/calendar-line';
-	import MingcuteLeftLine from '~icons/mingcute/left-line';
-	import MingcuteRightLine from '~icons/mingcute/right-line';
+	import CalendarViews from '../calendar/CalendarViews.svelte';
+	import { calendarTriggerIds } from '../calendar/trigger-ids';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
 		class: className = '',
@@ -23,7 +27,9 @@ as) are passed in.
 		placeholder = '',
 		value = $bindable(),
 		onValueChange,
+		openOnClick = false,
 		translations,
+		ids: appIds,
 		...rest
 	}: {
 		/** Classes merged onto the root. */
@@ -36,6 +42,11 @@ as) are passed in.
 		value?: DateValue[];
 		/** Called with the new dates when they change. */
 		onValueChange?: (details: DatePickerValueChangeDetails) => void;
+		/**
+		 * Opens the calendar as soon as the field is pressed, not only from the calendar button or
+		 * the arrow keys; the field keeps the focus, so typing a date starts at once.
+		 */
+		openOnClick?: boolean;
 		/**
 		 * The accessible names Ark gives the controls: the calendar button (`trigger(open)`), the
 		 * popover (`content`), each day (`dayCell(state)`, from its formatted `valueText`), the
@@ -52,6 +63,8 @@ as) are passed in.
 			contentRoleDescription: string;
 			tableRoleDescription: (view: DatePickerDateView) => string;
 		};
+		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
+		ids?: ComponentProps<typeof DatePicker.Root>['ids'];
 		/**
 		 * Other props of Ark's `DatePicker.Root`: `selectionMode` (`single`, `multiple` or
 		 * `range`), `locale`, `min` and `max`.
@@ -62,17 +75,20 @@ as) are passed in.
 	const { contentRoleDescription, tableRoleDescription, ...arkTranslations } =
 		$derived(translations);
 
-	const cellClass =
-		'flex size-8 items-center justify-center rounded-lg text-sm transition-colors hover:bg-hover data-today:font-semibold data-selected:bg-primary data-selected:text-on-primary data-outside-range:opacity-30 data-disabled:pointer-events-none data-disabled:opacity-30';
-
-	const navBtnClass =
-		'inline-flex items-center justify-center size-7 rounded-lg text-muted hover:bg-hover hover:text-fg transition-colors';
+	// The ids of the buttons that have a tooltip, shared by Ark's date picker and the tooltips,
+	// which both find them by id.
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+	const ids = calendarTriggerIds(uid);
 </script>
 
 <DatePicker.Root
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="date-picker"
 	{value}
+	{openOnClick}
+	fixedWeeks
+	ids={{ ...appIds, trigger: triggerId, ...ids }}
 	translations={arkTranslations}
 	onValueChange={(details) => {
 		value = details.value;
@@ -86,143 +102,34 @@ as) are passed in.
 			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 pr-9 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
 			{placeholder}
 		/>
-		<DatePicker.Trigger
-			class="absolute top-1/2 right-2 -translate-y-1/2 text-muted transition-colors hover:text-fg"
-		>
-			<MingcuteCalendarLine class="size-4" aria-hidden="true" />
-		</DatePicker.Trigger>
+		<DatePicker.Context>
+			{#snippet render(api)}
+				<Tooltip content={arkTranslations.trigger(api().open)} {triggerId}>
+					{#snippet trigger(props)}
+						<DatePicker.Trigger
+							{...props}
+							class="absolute top-1/2 right-2 -translate-y-1/2 text-muted transition-colors hover:text-fg"
+						>
+							<MingcuteCalendarLine class="size-4" aria-hidden="true" />
+						</DatePicker.Trigger>
+					{/snippet}
+				</Tooltip>
+			{/snippet}
+		</DatePicker.Context>
 	</DatePicker.Control>
 	<Portal>
 		<DatePicker.Positioner>
 			<DatePicker.Content
 				aria-roledescription={contentRoleDescription}
-				class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
+				class="z-50 w-fit rounded-xl border border-border bg-raised p-3 shadow-lg outline-none [--cell-size:--spacing(9)] data-[state=closed]:animate-zoom-out data-[state=open]:animate-zoom-in"
 				data-slot="date-picker-content"
 			>
-				<DatePicker.View view="day">
-					<div class="mb-3 flex items-center justify-between">
-						<DatePicker.PrevTrigger class={navBtnClass}>
-							<MingcuteLeftLine class="size-4" aria-hidden="true" />
-						</DatePicker.PrevTrigger>
-						<DatePicker.ViewTrigger
-							class="text-sm font-medium text-fg transition-colors hover:text-primary"
-						>
-							<DatePicker.RangeText />
-						</DatePicker.ViewTrigger>
-						<DatePicker.NextTrigger class={navBtnClass}>
-							<MingcuteRightLine class="size-4" aria-hidden="true" />
-						</DatePicker.NextTrigger>
-					</div>
-					<DatePicker.Context>
-						{#snippet render(api)}
-							<DatePicker.Table
-								class="w-full border-collapse"
-								aria-roledescription={tableRoleDescription('day')}
-							>
-								<DatePicker.TableHead>
-									<DatePicker.TableRow>
-										{#each api().weekDays as weekDay (weekDay.long)}
-											<DatePicker.TableHeader
-												class="h-8 w-8 pb-2 text-center text-xs font-medium text-muted"
-											>
-												{weekDay.short}
-											</DatePicker.TableHeader>
-										{/each}
-									</DatePicker.TableRow>
-								</DatePicker.TableHead>
-								<DatePicker.TableBody>
-									{#each api().weeks as week (week[0].toString())}
-										<DatePicker.TableRow>
-											{#each week as day (day.toString())}
-												<DatePicker.TableCell value={day}>
-													<DatePicker.TableCellTrigger class={cellClass}>
-														{day.day}
-													</DatePicker.TableCellTrigger>
-												</DatePicker.TableCell>
-											{/each}
-										</DatePicker.TableRow>
-									{/each}
-								</DatePicker.TableBody>
-							</DatePicker.Table>
-						{/snippet}
-					</DatePicker.Context>
-				</DatePicker.View>
-
-				<DatePicker.View view="month">
-					<div class="mb-3 flex items-center justify-between">
-						<DatePicker.PrevTrigger class={navBtnClass}>
-							<MingcuteLeftLine class="size-4" aria-hidden="true" />
-						</DatePicker.PrevTrigger>
-						<DatePicker.ViewTrigger
-							class="text-sm font-medium text-fg transition-colors hover:text-primary"
-						>
-							<DatePicker.RangeText />
-						</DatePicker.ViewTrigger>
-						<DatePicker.NextTrigger class={navBtnClass}>
-							<MingcuteRightLine class="size-4" aria-hidden="true" />
-						</DatePicker.NextTrigger>
-					</div>
-					<DatePicker.Context>
-						{#snippet render(api)}
-							<DatePicker.Table
-								class="w-full border-collapse"
-								aria-roledescription={tableRoleDescription('month')}
-							>
-								<DatePicker.TableBody>
-									{#each api().getMonthsGrid() as months (months[0].value)}
-										<DatePicker.TableRow>
-											{#each months as month (month.value)}
-												<DatePicker.TableCell value={month.value}>
-													<DatePicker.TableCellTrigger class={cn(cellClass, 'w-16')}>
-														{month.label}
-													</DatePicker.TableCellTrigger>
-												</DatePicker.TableCell>
-											{/each}
-										</DatePicker.TableRow>
-									{/each}
-								</DatePicker.TableBody>
-							</DatePicker.Table>
-						{/snippet}
-					</DatePicker.Context>
-				</DatePicker.View>
-
-				<DatePicker.View view="year">
-					<div class="mb-3 flex items-center justify-between">
-						<DatePicker.PrevTrigger class={navBtnClass}>
-							<MingcuteLeftLine class="size-4" aria-hidden="true" />
-						</DatePicker.PrevTrigger>
-						<DatePicker.ViewTrigger
-							class="text-sm font-medium text-fg transition-colors hover:text-primary"
-						>
-							<DatePicker.RangeText />
-						</DatePicker.ViewTrigger>
-						<DatePicker.NextTrigger class={navBtnClass}>
-							<MingcuteRightLine class="size-4" aria-hidden="true" />
-						</DatePicker.NextTrigger>
-					</div>
-					<DatePicker.Context>
-						{#snippet render(api)}
-							<DatePicker.Table
-								class="w-full border-collapse"
-								aria-roledescription={tableRoleDescription('year')}
-							>
-								<DatePicker.TableBody>
-									{#each api().getYearsGrid() as years (years[0].value)}
-										<DatePicker.TableRow>
-											{#each years as year (year.value)}
-												<DatePicker.TableCell value={year.value}>
-													<DatePicker.TableCellTrigger class={cn(cellClass, 'w-12')}>
-														{year.label}
-													</DatePicker.TableCellTrigger>
-												</DatePicker.TableCell>
-											{/each}
-										</DatePicker.TableRow>
-									{/each}
-								</DatePicker.TableBody>
-							</DatePicker.Table>
-						{/snippet}
-					</DatePicker.Context>
-				</DatePicker.View>
+				<CalendarViews
+					{ids}
+					translations={arkTranslations}
+					{tableRoleDescription}
+					maxView={rest.maxView as DatePickerDateView | undefined}
+				/>
 			</DatePicker.Content>
 		</DatePicker.Positioner>
 	</Portal>

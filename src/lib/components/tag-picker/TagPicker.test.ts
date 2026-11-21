@@ -1,5 +1,6 @@
 /**
- * Tests of `TagPicker`: choosing and un-choosing tags, and the limit.
+ * Tests of `TagPicker`: choosing and un-choosing tags, a chosen tag shown by its colour only (no
+ * icon, no bolder text), and the limit.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -19,6 +20,18 @@ describe('TagPicker', () => {
 
 		await fireEvent.click(getByRole('button', { name: 'racing' }));
 		expect(onChange).toHaveBeenLastCalledWith(['obby']);
+	});
+
+	it('shows a chosen tag by its colour only', () => {
+		const { getByRole } = render(TagPicker, { options, label: 'Tags', value: ['obby'] });
+		const chosen = getByRole('button', { name: 'obby' });
+		const other = getByRole('button', { name: 'racing' });
+		expect(chosen.querySelector('svg')).toBeNull();
+		expect(chosen.classList.contains('text-primary')).toBe(true);
+		expect(chosen.classList.contains('bg-primary-subtle')).toBe(true);
+		const weight = (button: HTMLElement) =>
+			[...button.classList].filter((name) => name.startsWith('font-'));
+		expect(weight(chosen)).toEqual(weight(other));
 	});
 
 	it('disables the other tags once the limit is reached', async () => {

@@ -1,11 +1,13 @@
 /**
  * Tests of the token pipeline: the OKLCH → hex conversion (colorjs.io), every OKLCH colour of the library
  * inside sRGB, the values the library exports (`horizon-design/tokens`) against hand-computed
- * ones, and those values against the CSS variables of each theme in the generated theme CSS.
+ * ones, those values against the CSS variables of each theme in the generated theme CSS, and the
+ * WCAG contrast of the text the kit draws on its fills.
  * @module
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import Color from 'colorjs.io';
 import { describe, expect, it } from 'vitest';
 import { tokenValues } from '../../src/lib/generated/tokens.ts';
 import { oklchToHex } from './generate.ts';
@@ -134,6 +136,62 @@ describe('the sRGB gamut', () => {
 			for (const color of oklchLiterals(readFileSync(file, 'utf8'))) {
 				expect(() => oklchToHex(color), `${color} in ${file}`).not.toThrow();
 			}
+		}
+	});
+});
+
+/** `color` (translucent or not) laid over the opaque `backdrop`, as the screen shows it. */
+function over(color: string, backdrop: string): Color {
+	const top = new Color(color).to('srgb');
+	const under = new Color(backdrop).to('srgb');
+	const alpha = top.alpha;
+	return new Color(
+		'srgb',
+		// A channel is null only for a missing (`none`) component, which no token has: read it as 0.
+		top.coords.map(
+			(channel, index) => (channel ?? 0) * alpha + (under.coords[index] ?? 0) * (1 - alpha)
+		) as [number, number, number]
+	);
+}
+
+/** The WCAG 2 contrast of `text` on `fill` (laid over `backdrop` when translucent). */
+function contrast(text: string, fill: string, backdrop = fill): number {
+	return new Color(text).contrast(over(fill, backdrop), 'WCAG21');
+}
+
+describe('contrast', () => {
+	const value = (theme: Theme, token: keyof typeof colorTokenDocs) =>
+		toOklchText(colors[theme][token]);
+
+	it('keeps warning text at 4.5:1 on every surface and on its own tint, in both themes', () => {
+		for (const theme of themes) {
+			for (const surface of ['background', 'surface', 'raised', 'sunken'] as const) {
+				const backdrop = value(theme, surface);
+				const label = `${theme} warning on ${surface}`;
+				expect(contrast(value(theme, 'warning'), backdrop), label).toBeGreaterThanOrEqual(4.5);
+				expect(
+					contrast(value(theme, 'warning'), value(theme, 'warning-subtle'), backdrop),
+					`${label}'s tint`
+				).toBeGreaterThanOrEqual(4.5);
+			}
+		}
+	});
+
+	it('keeps the initials on every avatar tone at 4.5:1', () => {
+		for (const tone of [1, 2, 3, 4, 5] as const) {
+			expect(
+				contrast(value('dark', 'on-art'), value('dark', `avatar-${tone}`)),
+				`avatar-${tone}`
+			).toBeGreaterThanOrEqual(4.5);
+		}
+	});
+
+	it('keeps text on the scrims over game art at 4.5:1, even over white art', () => {
+		for (const scrim of ['art-scrim', 'art-scrim-hover'] as const) {
+			expect(
+				contrast(value('light', 'on-art'), value('light', scrim), 'oklch(1 0 0)'),
+				scrim
+			).toBeGreaterThanOrEqual(4.5);
 		}
 	});
 });

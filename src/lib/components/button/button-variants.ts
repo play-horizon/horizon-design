@@ -23,6 +23,8 @@ const variants = {
 	danger: 'bg-danger-subtle border-danger-border text-danger hover:bg-danger/20',
 	/** The confirming action of a destructive dialog. */
 	'danger-solid': 'bg-danger border-danger text-on-danger font-semibold hover:opacity-90',
+	/** An action over game art, such as a game page's Back: a dark translucent pill in both themes. */
+	art: 'bg-art-scrim border-transparent text-on-art hover:bg-art-scrim-hover',
 	/** Text that acts like a link. */
 	link: 'border-transparent text-primary underline-offset-4 hover:underline'
 } as const;

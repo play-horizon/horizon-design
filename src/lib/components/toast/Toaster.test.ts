@@ -1,11 +1,12 @@
 /**
- * Tests of `Toaster`: its region and each toast's close button are named by the app's labels, and
- * a loading toast shows a spinner.
+ * Tests of `Toaster`: its region and each toast's close button are named by the app's labels, the
+ * close button's tooltip says its name, and a loading toast shows a spinner.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { flushSync } from 'svelte';
-import { render } from '@testing-library/svelte';
+import { render, waitFor } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 import { createToaster } from '@ark-ui/svelte';
 import Toaster from './Toaster.svelte';
 
@@ -38,5 +39,18 @@ describe('Toaster', () => {
 		expect(loading.querySelector('[data-slot="spinner"]')).not.toBeNull();
 		expect(loading.className).toContain('border-border');
 		expect(saved.querySelector('[data-slot="spinner"]')).toBeNull();
+	});
+
+	it("shows the close button's name as its tooltip", async () => {
+		const user = userEvent.setup();
+		const toaster = createToaster({ placement: 'bottom-end' });
+		const { findByRole, getByRole } = render(Toaster, {
+			toaster,
+			label: 'Notifications',
+			closeLabel: 'Dismiss'
+		});
+		flushSync(() => toaster.create({ title: 'Saved', type: 'success' }));
+		await user.hover(await findByRole('button', { name: 'Dismiss' }));
+		await waitFor(() => expect(getByRole('tooltip').textContent?.trim()).toBe('Dismiss'));
 	});
 });

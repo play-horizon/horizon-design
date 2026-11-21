@@ -4,7 +4,7 @@ A person's avatar: their image, or their initials on a coloured disc while it lo
 is none. With `alt` (the person's name) it is one image of that name for assistive technology;
 without, it is decorative, for when the name is written next to it. The disc's colour is one of
 five avatar tones: `tone`, or one picked from the initials so the same person always gets the
-same colour.
+same colour. It has the same size with or without an image, at every `size`.
 -->
 <script lang="ts">
 	import { Avatar } from '@ark-ui/svelte';
@@ -62,7 +62,13 @@ same colour.
 	{...rest}
 >
 	{#if src}
-		<Avatar.Image {src} alt="" class="size-full object-cover" data-slot="avatar-image" />
+		<!-- Laid over the disc, so an image of any intrinsic size never changes the avatar's size. -->
+		<Avatar.Image
+			{src}
+			alt=""
+			class="absolute inset-0 size-full object-cover"
+			data-slot="avatar-image"
+		/>
 	{/if}
 	<Avatar.Fallback
 		class={cn(
