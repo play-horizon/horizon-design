@@ -1,13 +1,13 @@
 <!--
 @component
 A checkbox with its label (Ark Checkbox); `checked` binds true, false or indeterminate, drawn
-as a check or a dash.
+as a check or a dash (a rounded bar as thick as the check).
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Checkbox, type CheckboxCheckedChangeDetails } from '@ark-ui/svelte';
 	import MingcuteCheckFill from '~icons/mingcute/check-fill';
-	import MingcuteSubtractFill from '~icons/mingcute/subtract-fill';
+	import MingcuteMinimizeFill from '~icons/mingcute/minimize-fill';
 	import { cn } from '#lib/utils.js';
 
 	type SizeConfig = { control: string; icon: number; label: string };
@@ -69,7 +69,7 @@ as a check or a dash.
 			<MingcuteCheckFill width={sz.icon} height={sz.icon} aria-hidden="true" />
 		</Checkbox.Indicator>
 		<Checkbox.Indicator indeterminate class="flex items-center justify-center text-current">
-			<MingcuteSubtractFill width={sz.icon} height={sz.icon} aria-hidden="true" />
+			<MingcuteMinimizeFill width={sz.icon} height={sz.icon} aria-hidden="true" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 	{#if label || children}
