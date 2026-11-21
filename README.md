@@ -468,7 +468,7 @@ view"`): write that text to follow the date.
 
 ## Developing
 
-Requirements: Node 24.2 or later (the token generator uses `import.meta.main`) and pnpm 12 (`.node-version`, `packageManager`).
+Requirements: Node 26 and pnpm 12 (`.node-version`, `packageManager`).
 
 ```sh
 pnpm install

@@ -17,7 +17,7 @@ accessibility fixes, docs and new components are welcome.
 
 ## Setup
 
-Requirements: Node.js 24 and pnpm 12 (the versions CI uses, from `.node-version` and
+Requirements: Node.js 26 and pnpm 12 (the versions CI uses, from `.node-version` and
 `packageManager`).
 
 ```sh
