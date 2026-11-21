@@ -1,7 +1,8 @@
 <!--
 @component
 The browser's own select, styled like the other fields; `value` binds the chosen option. Name it
-with a `<label for>` or an `aria-label`, both passed to the `<select>`.
+with a `<label for>` or an `aria-label`, both passed to the `<select>`; `aria-invalid` turns the
+border danger.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -28,7 +29,7 @@ with a `<label for>` or an `aria-label`, both passed to the `<select>`.
 <div class="relative w-full">
 	<select
 		class={cn(
-			'flex h-control-md w-full appearance-none rounded-lg border border-border bg-sunken px-2.5 pr-8 text-sm text-fg transition-colors outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50',
+			'flex h-control-md w-full appearance-none rounded-lg border border-border bg-sunken px-2.5 pr-8 text-sm text-fg transition-colors outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger aria-invalid:focus-visible:ring-danger/20',
 			className
 		)}
 		data-slot="native-select"
