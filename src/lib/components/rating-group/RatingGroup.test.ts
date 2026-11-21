@@ -1,6 +1,7 @@
 /**
  * Tests of `RatingGroup`: the label names the group, `translations` name each star and give the
- * role it is announced as, and Ark's `defaultValue` sets the first rating.
+ * role it is announced as, Ark's `defaultValue` sets the first rating, and a half rating marks
+ * its star half filled.
  * @module
  */
 import { describe, expect, it } from 'vitest';
@@ -34,5 +35,21 @@ describe('RatingGroup', () => {
 		]);
 		expect(document.querySelectorAll('[aria-roledescription]')).toHaveLength(4);
 		expect(getByRole('radio', { name: '3 of 4' }).getAttribute('aria-checked')).toBe('true');
+	});
+
+	it('marks the star of a half rating', () => {
+		const { getAllByRole } = render(RatingGroup, {
+			label: 'Your score',
+			allowHalf: true,
+			defaultValue: 2.5,
+			translations: { ratingValueText: (index: number) => `${index}`, roleDescription: 'score' }
+		});
+		expect(getAllByRole('radio').map((star) => star.hasAttribute('data-half'))).toEqual([
+			false,
+			false,
+			true,
+			false,
+			false
+		]);
 	});
 });
