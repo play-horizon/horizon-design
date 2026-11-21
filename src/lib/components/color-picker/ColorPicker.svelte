@@ -1,9 +1,12 @@
 <!--
 @component
 Picks a colour: a hex field and a swatch trigger opening an area, hue and alpha sliders and
-fields (Ark ColorPicker); swatches are passed in. `labels` names every control for assistive
-technology and gives the values the sliders announce; the trigger takes the visible `label` when
-there is one.
+fields (Ark ColorPicker). The hex fields show 8 digits, the alpha always written (`FF` when
+opaque), and take 3, 4, 6 or 8 digits (opaque without alpha digits). Under the controls, the colour
+is written in each of `formats` at once (hex, `rgba()` and `hsla()` by default), and under them the
+`swatches`, preset colours on a single line; no swatches, no row. `labels` names every control
+for assistive technology and gives the values the sliders announce; the trigger takes the visible
+`label` when there is one.
 -->
 <script lang="ts">
 	import {
@@ -13,6 +16,7 @@ there is one.
 	} from '@ark-ui/svelte';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
+	import { formatColor, parseHex, type ColorFormat } from './formats';
 
 	let {
 		class: className = '',
@@ -21,6 +25,9 @@ there is one.
 		value = $bindable(),
 		onValueChange,
 		swatches = [],
+		formats = ['hexa', 'rgba', 'hsla'],
+		disabled = false,
+		readOnly = false,
 		...rest
 	}: {
 		/** Classes merged onto the root. */
@@ -52,14 +59,22 @@ there is one.
 			hex: string;
 			/** A preset swatch, from its colour string, such as `Use ${color}`. */
 			swatch: (color: string) => string;
+			/** The list of the colour's values in `formats`, such as "Colour values". */
+			formats: string;
 		};
 		/** The colour (bindable), from `parseColor`; when unset, `defaultValue` gives the first one. */
 		value?: Color;
 		/** Called with the new colour while it changes. */
 		onValueChange?: (details: ColorPickerValueChangeDetails) => void;
-		/** Preset colours offered under the picker, as CSS colour strings; none when empty. */
+		/** Preset colours offered on one line under the picker, as CSS colour strings; none when empty. */
 		swatches?: readonly string[];
-		/** Other props of Ark's `ColorPicker.Root`, such as `defaultValue`, `disabled` and `name`. */
+		/** The formats the colour is written in under the controls, in order; none when empty. */
+		formats?: readonly ColorFormat[];
+		/** Turns every control off. */
+		disabled?: boolean;
+		/** Shows the colour without letting it change. */
+		readOnly?: boolean;
+		/** Other props of Ark's `ColorPicker.Root`, such as `defaultValue` and `name`. */
 		[key: string]: unknown;
 	} = $props();
 
@@ -67,12 +82,47 @@ there is one.
 	function toAreaColor(color: Color, format: string): Color {
 		return color.toFormat(format.startsWith('hsl') ? 'hsla' : 'hsba');
 	}
+
+	/** Takes the typed hex when it reads as a colour; otherwise puts the current one back. */
+	function commitHex(input: HTMLInputElement, current: Color, setValue: (color: Color) => void) {
+		const typed = parseHex(input.value);
+		if (typed) setValue(typed);
+		input.value = formatColor(typed ?? current, 'hexa');
+	}
 </script>
+
+{#snippet hexField(className: string)}
+	<ColorPicker.Context>
+		{#snippet render(api)}
+			<input
+				type="text"
+				aria-label={labels.hex}
+				spellcheck="false"
+				autocomplete="off"
+				maxlength={9}
+				class={cn(
+					'flex w-full rounded-lg border border-border bg-sunken font-mono text-fg outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50',
+					className
+				)}
+				data-slot="color-picker-hex"
+				value={formatColor(api().value, 'hexa')}
+				{disabled}
+				readonly={readOnly}
+				onchange={(event) => commitHex(event.currentTarget, api().value, api().setValue)}
+				onkeydown={(event) => {
+					if (event.key === 'Enter') commitHex(event.currentTarget, api().value, api().setValue);
+				}}
+			/>
+		{/snippet}
+	</ColorPicker.Context>
+{/snippet}
 
 <ColorPicker.Root
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="color-picker"
 	{value}
+	{disabled}
+	{readOnly}
 	onValueChange={(details) => {
 		value = details.value;
 		onValueChange?.(details);
@@ -83,11 +133,7 @@ there is one.
 		<ColorPicker.Label class="text-sm font-medium text-fg">{label}</ColorPicker.Label>
 	{/if}
 	<ColorPicker.Control class="flex items-center gap-2">
-		<ColorPicker.ChannelInput
-			channel="hex"
-			aria-label={labels.hex}
-			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 font-mono text-sm text-fg shadow-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-		/>
+		{@render hexField('h-8 px-3 py-1 text-sm shadow-sm')}
 		<ColorPicker.Trigger
 			aria-label={labels.trigger}
 			class="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-border shadow-sm transition-colors hover:opacity-90"
@@ -146,11 +192,7 @@ there is one.
 				</ColorPicker.Context>
 
 				<div class="flex gap-2">
-					<ColorPicker.ChannelInput
-						channel="hex"
-						aria-label={labels.hex}
-						class="flex h-7 w-full rounded-md border border-border bg-sunken px-2 font-mono text-xs text-fg outline-none focus-visible:ring-1 focus-visible:ring-primary"
-					/>
+					{@render hexField('h-7 rounded-md px-2 text-xs')}
 					<ColorPicker.ChannelInput
 						channel="alpha"
 						aria-label={labels.alpha}
@@ -158,13 +200,33 @@ there is one.
 					/>
 				</div>
 
+				{#if formats.length > 0}
+					<ColorPicker.Context>
+						{#snippet render(api)}
+							<ul
+								aria-label={labels.formats}
+								class="grid gap-1 border-t border-border pt-3 font-mono text-xs text-fg-2"
+								data-slot="color-picker-formats"
+							>
+								{#each formats as format (format)}
+									<li class="truncate select-text">{formatColor(api().value, format)}</li>
+								{/each}
+							</ul>
+						{/snippet}
+					</ColorPicker.Context>
+				{/if}
+
 				{#if swatches.length > 0}
-					<ColorPicker.SwatchGroup class="flex flex-wrap gap-1.5">
+					<!-- One line whatever their number: the swatches share its width. -->
+					<ColorPicker.SwatchGroup
+						class="grid auto-cols-fr grid-flow-col gap-1.5"
+						data-slot="color-picker-swatches"
+					>
 						{#each swatches as color (color)}
 							<ColorPicker.SwatchTrigger
 								value={color}
 								aria-label={labels.swatch(color)}
-								class="size-6 rounded-md border border-border shadow-sm transition-transform hover:scale-110"
+								class="aspect-square max-h-7 w-full rounded-md border border-border shadow-sm transition-transform hover:scale-110"
 							>
 								<ColorPicker.Swatch value={color} class="size-full rounded-md" />
 							</ColorPicker.SwatchTrigger>
