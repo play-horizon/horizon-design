@@ -83,9 +83,11 @@ component gives its trigger, `triggerId`, set through that component's `ids` (Ar
 	{/if}
 	<Portal>
 		<Tooltip.Positioner>
+			<!-- Above every layer, the toasts' (Ark's highest z-index) included: a tooltip names the
+			     control it shows on, wherever that control sits. -->
 			<Tooltip.Content
 				class={cn(
-					'z-50 animate-fade-in rounded-lg border border-border bg-raised px-3 py-1.5 text-xs text-fg shadow-lg',
+					'z-2147483647 animate-fade-in rounded-lg border border-border bg-raised px-3 py-1.5 text-xs text-fg shadow-lg',
 					contentClass
 				)}
 				data-slot="tooltip-content"
