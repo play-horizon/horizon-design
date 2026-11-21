@@ -24,5 +24,6 @@ describe('ThemeSwitch', () => {
 		expect(getByRole('button', { name: 'Light' }).getAttribute('aria-pressed')).toBe('true');
 		expect(getByRole('button', { name: 'System' }).getAttribute('aria-pressed')).toBe('false');
 		expect(document.documentElement.dataset.theme).toBe('light');
+		expect(getByRole('group').querySelector('[data-slot="theme-switch-indicator"]')).toBeTruthy();
 	});
 });

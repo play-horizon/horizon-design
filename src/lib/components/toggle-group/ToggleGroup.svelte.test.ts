@@ -1,6 +1,6 @@
 /**
- * Tests of `ToggleGroup`: its items' names, and pressing one updates the bound value alongside
- * an `onValueChange` callback.
+ * Tests of `ToggleGroup`: its items' names, pressing one updates the bound value alongside an
+ * `onValueChange` callback, and only a single-choice group has the sliding indicator.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -39,5 +39,15 @@ describe('ToggleGroup', () => {
 		expect(bound.value).toEqual(['italic']);
 		expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ value: ['italic'] }));
 		expect(getByRole('button', { name: 'Italic' }).getAttribute('aria-pressed')).toBe('true');
+	});
+
+	it('slides one indicator in a single-choice group, and raises items in place otherwise', () => {
+		const single = render(ToggleGroup, { props: { items, 'aria-label': 'Align' } });
+		expect(single.container.querySelector('[data-slot="toggle-group-indicator"]')).toBeTruthy();
+		single.unmount();
+		const multiple = render(ToggleGroup, {
+			props: { items, multiple: true, 'aria-label': 'Style' }
+		});
+		expect(multiple.container.querySelector('[data-slot="toggle-group-indicator"]')).toBeNull();
 	});
 });
