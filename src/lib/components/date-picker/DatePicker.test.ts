@@ -1,12 +1,14 @@
 /**
  * Tests of `DatePicker`: the label names the field, every string announced comes from the app
- * rather than from Ark's English defaults, and picking a day binds `value` and fills the field.
+ * rather than from Ark's English defaults, picking a day binds `value` and fills the field, and the
+ * calendar button shows its name in a tooltip.
  * @module
  */
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 import { parseDate, type DateValue } from '@ark-ui/svelte/date-picker';
 import DatePicker from './DatePicker.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const translations = {
 	trigger: (open: boolean) => (open ? 'Hide days' : 'Show days'),
@@ -83,5 +85,10 @@ describe('DatePicker', () => {
 		expect((getByRole('textbox', { name: 'Release date' }) as HTMLInputElement).value).toBe(
 			'15/03/2026'
 		);
+	});
+
+	it('names the calendar button in its tooltip', async () => {
+		const { getByRole } = render(DatePicker, { label: 'Release date', translations });
+		await expectTooltip(getByRole('button', { name: 'Show days' }), 'Show days');
 	});
 });
