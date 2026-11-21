@@ -153,12 +153,12 @@ rename field, after `row`, while the node is renamed (`row` leaves the name out 
 	const focusIndex = $derived(
 		shownFocus === null
 			? 0
-			: visible.findIndex((e) => collection.getNodeValue(e.node) === shownFocus)
+			: visible.findIndex((entry) => collection.getNodeValue(entry.node) === shownFocus)
 	);
 
 	/** The values of the rows on screen (every branch above them open), top to bottom. */
 	export function visibleValues(): string[] {
-		return visible.map((e) => collection.getNodeValue(e.node));
+		return visible.map((entry) => collection.getNodeValue(entry.node));
 	}
 
 	/** Scrolls the row of `value` into view and focuses it; nothing when the row isn't on screen. */
@@ -231,7 +231,7 @@ rename field, after `row`, while the node is renamed (`row` leaves the name out 
 	aria-labelledby={undefined}
 	items={visible}
 	{itemHeight}
-	key={(e) => collection.getNodeValue(e.node)}
+	key={(entry) => collection.getNodeValue(entry.node)}
 	keepIndex={focusIndex >= 0 && visible.length > 0 ? focusIndex : undefined}
 	tabindex={visible.length === 0 ? 0 : -1}
 	class={cn('rounded-md outline-none focus-visible:ring-2 focus-visible:ring-primary', className)}

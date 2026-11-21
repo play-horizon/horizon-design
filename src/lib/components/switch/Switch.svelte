@@ -51,12 +51,12 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		[key: string]: unknown;
 	} = $props();
 
-	const sz = $derived(sizes[size]);
+	const sizing = $derived(sizes[size]);
 	// Every length follows from the track, so each size is right by construction: the thumb fills
 	// the track's height inside its border, travels the rest of its width (the same gap at both
 	// ends), and holds an icon of 60% of its size, centred.
-	const thumb = $derived(sz.height - 2 * inset);
-	const travel = $derived(sz.width - sz.height);
+	const thumb = $derived(sizing.height - 2 * inset);
+	const travel = $derived(sizing.width - sizing.height);
 	const icon = $derived(Math.round(thumb * 0.6));
 </script>
 
@@ -77,7 +77,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 				'data-[state=checked]:bg-fg-2': variant === 'secondary'
 			}
 		)}
-		style="width: {sz.width}px; height: {sz.height}px; --switch-travel: {travel}px; --switch-icon: {icon}px;"
+		style="width: {sizing.width}px; height: {sizing.height}px; --switch-travel: {travel}px; --switch-icon: {icon}px;"
 	>
 		<Switch.Thumb
 			class={cn(
@@ -114,7 +114,7 @@ An on/off switch with its label (Ark Switch); `checked` binds its state.
 		</Switch.Thumb>
 	</Switch.Control>
 	{#if label || children}
-		<Switch.Label class={cn('leading-none font-medium', sz.label)}>
+		<Switch.Label class={cn('leading-none font-medium', sizing.label)}>
 			{#if children}
 				{@render children()}
 			{:else}

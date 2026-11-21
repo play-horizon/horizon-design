@@ -54,11 +54,11 @@ function setup(props: Partial<ComponentProps<typeof HierarchyView>> = {}) {
 	const tree = result.getByRole('tree', { name: 'Scene hierarchy' });
 	/** A row: the element that takes the focus, the clicks and the drags. */
 	const row = (value: string) => {
-		const el = tree.querySelector<HTMLElement>(
+		const element = tree.querySelector<HTMLElement>(
 			`[data-value="${value}"]:is([data-part="item"], [data-part="branch-control"])`
 		);
-		if (!el) throw new Error(`no row ${value}`);
-		return el;
+		if (!element) throw new Error(`no row ${value}`);
+		return element;
 	};
 	const item = (value: string) => row(value).closest<HTMLElement>('[role="treeitem"]')!;
 	/** Tabs into the tree: its one tab stop takes the focus. */
@@ -67,13 +67,13 @@ function setup(props: Partial<ComponentProps<typeof HierarchyView>> = {}) {
 		await tick();
 	};
 	/** A click as a browser makes it: the press focuses the row, then the click lands. */
-	const click = async (value: string, init: MouseEventInit = {}) => {
+	const click = async (value: string, options: MouseEventInit = {}) => {
 		row(value).focus();
-		await fireEvent.click(row(value), init);
+		await fireEvent.click(row(value), options);
 	};
 	const cursor = () => (document.activeElement as HTMLElement | null)?.dataset.value;
-	const press = async (key: string, init: KeyboardEventInit = {}) => {
-		await fireEvent.keyDown(document.activeElement ?? document.body, { key, ...init });
+	const press = async (key: string, options: KeyboardEventInit = {}) => {
+		await fireEvent.keyDown(document.activeElement ?? document.body, { key, ...options });
 		await frame();
 	};
 	const lastData = () => shape(onDataChange.mock.lastCall![0]);
@@ -285,8 +285,8 @@ describe('HierarchyView', () => {
 
 	describe('drag and drop', () => {
 		/** Lays a row out at `top` (20 px high, 200 px wide), for the drop hitbox. */
-		function layOut(el: HTMLElement, top: number) {
-			el.getBoundingClientRect = () => new DOMRect(0, top, 200, 20);
+		function layOut(element: HTMLElement, top: number) {
+			element.getBoundingClientRect = () => new DOMRect(0, top, 200, 20);
 		}
 
 		it('changes nothing, selection included, when a drag ends without a drop', async () => {

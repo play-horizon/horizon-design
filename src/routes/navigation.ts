@@ -6,20 +6,20 @@
  */
 
 /** One component page. */
-export interface NavItem {
+export interface NavigationItem {
 	id: string;
 	label: string;
 }
 
 /** A sidebar group of component pages. */
-export interface NavGroup {
+export interface NavigationGroup {
 	group: string;
 	kit: 'general' | 'editor';
-	items: NavItem[];
+	items: NavigationItem[];
 }
 
 /** The sidebar, group by group. */
-export const navGroups: NavGroup[] = [
+export const navigationGroups: NavigationGroup[] = [
 	{
 		group: 'Actions',
 		kit: 'general',
@@ -170,4 +170,7 @@ export const navGroups: NavGroup[] = [
 ];
 
 /** Every component page in sidebar order, the foundations page (`''`) first. */
-export const pageOrder: string[] = ['', ...navGroups.flatMap((g) => g.items.map((i) => i.id))];
+export const pageOrder: string[] = [
+	'',
+	...navigationGroups.flatMap((g) => g.items.map((i) => i.id))
+];

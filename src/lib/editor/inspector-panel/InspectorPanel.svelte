@@ -147,11 +147,11 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 		focusHeader(next[to].id);
 	}
 
-	function handleHeaderKeydown(e: KeyboardEvent, index: number) {
+	function handleHeaderKeydown(event: KeyboardEvent, index: number) {
 		const last = cards.length - 1;
-		if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
-			e.preventDefault();
-			void moveCard(index, e.key === 'ArrowUp' ? -1 : 1);
+		if (event.shiftKey && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+			event.preventDefault();
+			void moveCard(index, event.key === 'ArrowUp' ? -1 : 1);
 			return;
 		}
 		const targets: Record<string, number> = {
@@ -160,9 +160,9 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 			Home: 0,
 			End: last
 		};
-		const target = targets[e.key];
+		const target = targets[event.key];
 		if (target === undefined) return;
-		e.preventDefault();
+		event.preventDefault();
 		focusHeader(cards[target]?.id);
 	}
 
@@ -268,7 +268,7 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 					aria-keyshortcuts="Shift+ArrowUp Shift+ArrowDown"
 					class="flex min-w-0 flex-1 cursor-default items-center gap-1.5 rounded-sm px-2 py-1.5 text-left"
 					onclick={() => toggleExpanded(card.id)}
-					onkeydown={(e) => handleHeaderKeydown(e, i)}
+					onkeydown={(event) => handleHeaderKeydown(event, i)}
 				>
 					<MingcuteRightLine
 						aria-hidden="true"

@@ -69,8 +69,8 @@ it. `label` is its accessible name and `valueText` its spoken value; the arrow k
 >
 	<AngleSlider.Label class="sr-only">{label}</AngleSlider.Label>
 	<AngleSlider.Context>
-		{#snippet render(ctx)}
-			{@const api = ctx()}
+		{#snippet render(context)}
+			{@const api = context()}
 			{@const turn = api.value / 360}
 			{@const text = valueText(api.value)}
 			<AngleSlider.Control

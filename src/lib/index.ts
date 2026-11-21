@@ -7,7 +7,12 @@
  */
 export { cn } from './utils';
 export { isApplePlatform, type PlatformSource } from './platform';
-export { theme, THEME_STORAGE_KEY, type ThemeMode, type ThemeInitOptions } from './theme.svelte';
+export {
+	theme,
+	THEME_STORAGE_KEY,
+	type ThemeMode,
+	type ThemeInitializeOptions
+} from './theme.svelte';
 export { slidePage, prefersReducedMotion, type SlideDirection } from './motion/page-transition';
 export type { Theme, ColorToken, TokenValue } from './generated/tokens';
 

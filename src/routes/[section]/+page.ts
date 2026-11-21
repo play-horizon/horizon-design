@@ -5,7 +5,7 @@
  */
 import { error } from '@sveltejs/kit';
 import type { Component } from 'svelte';
-import { navGroups } from '../nav';
+import { navigationGroups } from '../navigation';
 import type { EntryGenerator, PageLoad } from './$types';
 
 const sections = import.meta.glob<{ default: Component }>('../sections/*.svelte');
@@ -16,10 +16,10 @@ function fileOf(id: string): string {
 }
 
 export const entries: EntryGenerator = () =>
-	navGroups.flatMap((group) => group.items.map((item) => ({ section: item.id })));
+	navigationGroups.flatMap((group) => group.items.map((item) => ({ section: item.id })));
 
 export const load: PageLoad = async ({ params }) => {
-	const group = navGroups.find((g) => g.items.some((i) => i.id === params.section));
+	const group = navigationGroups.find((g) => g.items.some((i) => i.id === params.section));
 	const item = group?.items.find((i) => i.id === params.section);
 	const loader = sections[fileOf(params.section)];
 	if (!group || !item || !loader) error(404, `No component page "${params.section}"`);

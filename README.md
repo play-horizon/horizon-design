@@ -50,7 +50,7 @@ Import the stylesheet after Tailwind, in the app's root CSS:
 
 The stylesheet tells Tailwind to scan the library's components itself.
 
-Then initialise the theme once, in the root layout (`theme.init` returns the function that removes
+Then initialize the theme once, in the root layout (`theme.initialize` returns the function that removes
 its listeners, which `onMount` calls when the layout unmounts):
 
 ```svelte
@@ -58,7 +58,7 @@ its listeners, which `onMount` calls when the layout unmounts):
 	import { onMount } from 'svelte';
 	import { theme } from 'horizon-design';
 
-	onMount(() => theme.init());
+	onMount(() => theme.initialize());
 </script>
 ```
 
@@ -146,12 +146,12 @@ import { theme, slidePage } from 'horizon-design';
 theme.mode; // 'system' | 'dark' | 'light': the choice (reactive, read-only: change it with theme.set)
 theme.resolved; // 'dark' | 'light': the theme in effect, following the OS while the mode is system (reactive)
 theme.set('light'); // saves the mode and crossfades the whole page into it; resolves once the crossfade ends
-theme.init({ blockContextMenu: true }); // applies the theme, follows the OS, blocks the browser's context menu only when asked; returns the function that stops it
+theme.initialize({ blockContextMenu: true }); // applies the theme, follows the OS, blocks the browser's context menu only when asked; returns the function that stops it
 ```
 
 The mode is saved in `localStorage` under `THEME_STORAGE_KEY`. Without storage (disabled, or
 server rendering) the mode starts as system, and a choice lasts until the page is closed; on the
-server, where there is no OS theme, `resolved` is dark. Calling `theme.init` again replaces the
+server, where there is no OS theme, `resolved` is dark. Calling `theme.initialize` again replaces the
 listeners of the previous call.
 
 Switching themes crossfades the whole page, and navigating slides the screen in the direction of
@@ -427,6 +427,8 @@ Svelte port is younger and less proven. The keyboard does the same moves (Shift+
   `{#if value === 'overview'}…{/if}`. Its items are `{ value, label, disabled? }` (a tab's
   `content` snippet has no counterpart), and it is a radio group for assistive technology, not a tab
   list.
+- **Names are spelled out**: `theme.init()` is `theme.initialize()`, and its options type
+  `ThemeInitOptions` is `ThemeInitializeOptions`.
 
 ## Developing
 
@@ -449,7 +451,7 @@ pnpm build   # the docs site (build/) and the package (dist/)
 - `src/lib/theme.svelte.ts` and `src/lib/motion/`: the theme controller and page motion.
 - `scripts/tokens/`: the token source and the generator, which converts OKLCH to hex with [colorjs.io](https://colorjs.io) when the library is built.
 - `src/routes/`: the docs site, one page per component (`sections/<Name>.svelte`), listed in
-  `src/routes/nav.ts`.
+  `src/routes/navigation.ts`.
 
 Every new component gets a docs page with live examples and component tests. Publishing: a push
 to `main` that bumps the version publishes to npm and deploys the docs site.

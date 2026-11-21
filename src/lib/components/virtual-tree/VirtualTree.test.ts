@@ -54,25 +54,25 @@ function setup(props: Record<string, unknown> = {}) {
 		row,
 		...props
 	});
-	const treeEl = result.getByRole('tree', { name: 'Hierarchy' });
+	const treeElement = result.getByRole('tree', { name: 'Hierarchy' });
 	/** A row: an item, or a branch's control (the element that takes the focus). */
 	const rowOf = (value: string) => {
-		const el = treeEl.querySelector<HTMLElement>(
+		const element = treeElement.querySelector<HTMLElement>(
 			`[data-value="${value}"]:is([data-part="item"], [data-part="branch-control"])`
 		);
-		if (!el) throw new Error(`no row ${value}`);
-		return el;
+		if (!element) throw new Error(`no row ${value}`);
+		return element;
 	};
-	const press = async (key: string, init: KeyboardEventInit = {}) => {
-		await fireEvent.keyDown(document.activeElement ?? document.body, { key, ...init });
+	const press = async (key: string, options: KeyboardEventInit = {}) => {
+		await fireEvent.keyDown(document.activeElement ?? document.body, { key, ...options });
 		await frame();
 	};
 	const focused = () => (document.activeElement as HTMLElement | null)?.dataset.value;
 	const selected = () =>
-		[...treeEl.querySelectorAll('[aria-selected="true"]')].map((el) =>
-			el.getAttribute('data-value')
+		[...treeElement.querySelectorAll('[aria-selected="true"]')].map((element) =>
+			element.getAttribute('data-value')
 		);
-	return { ...result, treeEl, rowOf, press, focused, selected };
+	return { ...result, treeElement, rowOf, press, focused, selected };
 }
 
 describe('VirtualTree', () => {
@@ -90,9 +90,9 @@ describe('VirtualTree', () => {
 	});
 
 	it('has one tab stop, on the first row until a row takes the focus', async () => {
-		const { treeEl, rowOf } = setup({ expandedValue: ['a'] });
-		const stops = () => [...treeEl.querySelectorAll('[tabindex="0"]')];
-		expect(treeEl.tabIndex).toBe(-1);
+		const { treeElement, rowOf } = setup({ expandedValue: ['a'] });
+		const stops = () => [...treeElement.querySelectorAll('[tabindex="0"]')];
+		expect(treeElement.tabIndex).toBe(-1);
 		expect(stops()).toEqual([rowOf('a')]);
 		rowOf('a2').focus();
 		await tick();
@@ -100,8 +100,8 @@ describe('VirtualTree', () => {
 	});
 
 	it('makes an empty tree a tab stop itself', () => {
-		const { treeEl } = setup({ collection: tree([]) });
-		expect(treeEl.tabIndex).toBe(0);
+		const { treeElement } = setup({ collection: tree([]) });
+		expect(treeElement.tabIndex).toBe(0);
 	});
 
 	it('opens, enters and moves with the keyboard, and activates with Enter', async () => {
@@ -140,15 +140,15 @@ describe('VirtualTree', () => {
 	it('reaches rows out of view with the arrows and typeahead, scrolling them in', async () => {
 		const leaves = Array.from({ length: 100 }, (_, i) => ({ id: `n${i}`, name: `Item ${i}` }));
 		leaves[80] = { id: 'zebra', name: 'Zebra' };
-		const { treeEl, rowOf, press, focused } = setup({ collection: tree(leaves) });
+		const { treeElement, rowOf, press, focused } = setup({ collection: tree(leaves) });
 		rowOf('n0').focus();
 		await press('End');
 		expect(focused()).toBe('n99');
 		// Row 99 at 26 px a row, brought just into a view of no height (jsdom has no layout).
-		expect(treeEl.scrollTop).toBe(2600);
+		expect(treeElement.scrollTop).toBe(2600);
 		await press('z');
 		expect(focused()).toBe('zebra');
-		expect(treeEl.scrollTop).toBe(80 * 26);
+		expect(treeElement.scrollTop).toBe(80 * 26);
 	});
 
 	it('finds names with spaces by typing, and cycles with a repeated character', async () => {
@@ -220,11 +220,11 @@ describe('VirtualTree', () => {
 
 	it('keeps the focused row in the page once scrolled out of view', async () => {
 		const leaves = Array.from({ length: 100 }, (_, i) => ({ id: `n${i}`, name: `n${i}` }));
-		const { treeEl, rowOf, press } = setup({ collection: tree(leaves) });
+		const { treeElement, rowOf, press } = setup({ collection: tree(leaves) });
 		rowOf('n0').focus();
 		await press('ArrowDown');
-		treeEl.scrollTop = 2600; // row 100 at 26 px a row: n1 is far out of view
-		await fireEvent.scroll(treeEl);
+		treeElement.scrollTop = 2600; // row 100 at 26 px a row: n1 is far out of view
+		await fireEvent.scroll(treeElement);
 		expect(document.activeElement).toBe(rowOf('n1'));
 		expect(rowOf('n1').isConnected).toBe(true);
 	});

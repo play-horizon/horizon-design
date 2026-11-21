@@ -4,7 +4,7 @@
  * system. The resolved theme is applied as `data-theme` on `<html>`; changing the mode crossfades
  * the whole page.
  *
- * Apps call `theme.init()` once in the root layout, and set `data-theme` before the first paint
+ * Apps call `theme.initialize()` once in the root layout, and set `data-theme` before the first paint
  * with the inline script the README gives, so the page never flashes the other theme.
  * @module
  */
@@ -16,8 +16,8 @@ import { crossfadePage } from './motion/page-transition';
 /** The user's choice: follow the OS, or one theme. */
 export type ThemeMode = 'system' | 'dark' | 'light';
 
-/** Options of `theme.init()`. */
-export interface ThemeInitOptions {
+/** Options of `theme.initialize()`. */
+export interface ThemeInitializeOptions {
 	/**
 	 * Blocks the browser's own context menu on the whole page, for desktop apps that show only
 	 * their own menus. Off by default.
@@ -63,7 +63,7 @@ class ThemeController {
 	// Server rendering has no OS theme: dark, the default theme, stands in for it.
 	#systemDark = new MediaQuery(SYSTEM_DARK_QUERY, true);
 
-	#stopInit: (() => void) | undefined;
+	#stopInitialize: (() => void) | undefined;
 
 	/** The chosen mode (reactive). Change it with `set`, which saves it and crossfades the page. */
 	get mode(): ThemeMode {
@@ -82,8 +82,8 @@ class ThemeController {
 	 * it added. Calling it again replaces the previous call's listeners, so the page is never
 	 * listened to twice and the latest `blockContextMenu` applies.
 	 */
-	init({ blockContextMenu = false }: ThemeInitOptions = {}): () => void {
-		this.#stopInit?.();
+	initialize({ blockContextMenu = false }: ThemeInitializeOptions = {}): () => void {
+		this.#stopInitialize?.();
 		applyTheme(this.resolved);
 		const systemDark = matchMedia(SYSTEM_DARK_QUERY);
 		const followSystem = () => {
@@ -97,9 +97,9 @@ class ThemeController {
 		const stop = () => {
 			systemDark.removeEventListener('change', followSystem);
 			window.removeEventListener('contextmenu', blockMenu);
-			if (this.#stopInit === stop) this.#stopInit = undefined;
+			if (this.#stopInitialize === stop) this.#stopInitialize = undefined;
 		};
-		this.#stopInit = stop;
+		this.#stopInitialize = stop;
 		return stop;
 	}
 

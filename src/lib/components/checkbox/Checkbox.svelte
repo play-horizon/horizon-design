@@ -43,7 +43,7 @@ as a check or a dash (a rounded bar as thick as the check).
 		[key: string]: unknown;
 	} = $props();
 
-	const sz = $derived(sizes[size]);
+	const sizing = $derived(sizes[size]);
 </script>
 
 <Checkbox.Root
@@ -62,18 +62,18 @@ as a check or a dash (a rounded bar as thick as the check).
 	<Checkbox.Control
 		class={cn(
 			'peer shrink-0 border border-border bg-sunken shadow-sm transition-colors outline-none data-focus-visible:ring-2 data-focus-visible:ring-primary data-focus-visible:ring-offset-2 data-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-on-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-on-primary',
-			sz.control
+			sizing.control
 		)}
 	>
 		<Checkbox.Indicator class="flex items-center justify-center text-current">
-			<MingcuteCheckFill width={sz.icon} height={sz.icon} aria-hidden="true" />
+			<MingcuteCheckFill width={sizing.icon} height={sizing.icon} aria-hidden="true" />
 		</Checkbox.Indicator>
 		<Checkbox.Indicator indeterminate class="flex items-center justify-center text-current">
-			<MingcuteMinimizeFill width={sz.icon} height={sz.icon} aria-hidden="true" />
+			<MingcuteMinimizeFill width={sizing.icon} height={sizing.icon} aria-hidden="true" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 	{#if label || children}
-		<Checkbox.Label class={cn('leading-none font-medium', sz.label)}>
+		<Checkbox.Label class={cn('leading-none font-medium', sizing.label)}>
 			{#if children}
 				{@render children()}
 			{:else}
