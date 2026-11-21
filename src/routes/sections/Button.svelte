@@ -1,16 +1,27 @@
 <!--
 @component
-Docs: Button. Every variant and size, icon-only buttons, a link styled as a button, and the
-loading and disabled states.
+Docs: Button. A playground over every prop, then every variant and size, a link styled as a
+button, and the loading and disabled states.
 -->
 <script lang="ts">
 	import { Button, buttonVariants } from '#lib/components/button/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import MingcuteAddLine from '~icons/mingcute/add-line';
 	import MingcutePlayFill from '~icons/mingcute/play-fill';
-	import MingcuteSearchLine from '~icons/mingcute/search-line';
-	import MingcuteMore1Line from '~icons/mingcute/more-1-line';
 	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, choice, text } from '../playground/controls';
+
+	const variants = [
+		'default',
+		'primary',
+		'tint',
+		'ghost',
+		'danger',
+		'danger-solid',
+		'link'
+	] as const;
+	const sizes = ['xs', 'sm', 'md', 'lg'] as const;
 
 	let loading = $state(false);
 
@@ -21,6 +32,30 @@ loading and disabled states.
 </script>
 
 <div class="grid gap-4">
+	<Playground
+		controls={{
+			label: text('Play'),
+			variant: choice(variants, 'primary'),
+			size: choice(sizes, 'md'),
+			icon: boolean(true),
+			pill: boolean(),
+			loading: boolean(),
+			disabled: boolean()
+		}}
+	>
+		{#snippet example(values)}
+			<Button
+				variant={values.variant}
+				size={values.size}
+				pill={values.pill}
+				loading={values.loading}
+				disabled={values.disabled}
+			>
+				{#if values.icon}<MingcutePlayFill aria-hidden="true" />{/if}
+				{values.label}
+			</Button>
+		{/snippet}
+	</Playground>
 	<Card title="Variants" description="Primary is for the one main action of a screen.">
 		<div class="flex flex-wrap items-center gap-2">
 			<Button variant="primary"><MingcutePlayFill aria-hidden="true" />Play</Button>
@@ -38,20 +73,6 @@ loading and disabled states.
 			<Button size="sm">Small</Button>
 			<Button size="md">Medium</Button>
 			<Button size="lg" variant="primary"><MingcutePlayFill aria-hidden="true" />Large</Button>
-		</div>
-	</Card>
-	<Card title="Icon buttons" description="An icon-only button needs an aria-label.">
-		<div class="flex flex-wrap items-center gap-2">
-			<Button size="icon-xs" variant="ghost" aria-label="Search"
-				><MingcuteSearchLine aria-hidden="true" /></Button
-			>
-			<Button size="icon-sm" aria-label="More"><MingcuteMore1Line aria-hidden="true" /></Button>
-			<Button size="icon-md" variant="tint" aria-label="Add"
-				><MingcuteAddLine aria-hidden="true" /></Button
-			>
-			<Button size="icon-lg" variant="primary" aria-label="Play"
-				><MingcutePlayFill aria-hidden="true" /></Button
-			>
 		</div>
 	</Card>
 	<Card title="States and links">
