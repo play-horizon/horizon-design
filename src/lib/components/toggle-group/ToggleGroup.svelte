@@ -3,12 +3,13 @@
 A row of toggles of which one or several stay pressed (Ark ToggleGroup); `value` binds the
 pressed items' values. With one choice (`multiple` unset), a raised highlight slides to the pressed
 item; with `multiple`, each pressed item is raised in place. The group takes its accessible name through `aria-label`, and an item
-whose content is only an icon through its `label`.
+whose content is only an icon through its `label`, which its tooltip shows too.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ToggleGroup } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import { slidingIndicator, slidingIndicatorClasses } from '#lib/motion/sliding-indicator.js';
 
 	/** One toggle of the group. */
@@ -17,7 +18,10 @@ whose content is only an icon through its `label`.
 		value: string;
 		/** Its content: an icon, a label, or both. */
 		content: Snippet;
-		/** Its accessible name, translated: needed when the content is only an icon. */
+		/**
+		 * Its accessible name, translated, also shown in a tooltip: needed when the content is only
+		 * an icon, and only then.
+		 */
 		label?: string;
 	}
 
@@ -39,6 +43,14 @@ whose content is only an icon through its `label`.
 		/** Other props of Ark's `ToggleGroup.Root`, such as `aria-label` or `onValueChange`. */
 		[key: string]: unknown;
 	} = $props();
+
+	const itemClass = $derived(
+		cn(
+			'relative inline-flex h-7 items-center justify-center rounded-md border border-transparent px-3 text-sm font-medium text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary data-[state=on]:text-fg',
+			multiple &&
+				'data-[state=on]:border-border data-[state=on]:bg-background data-[state=on]:shadow-sm'
+		)
+	);
 </script>
 
 <!-- Without `multiple`, one highlight slides between the items; with it, a pressed item is raised
@@ -62,17 +74,24 @@ whose content is only an icon through its `label`.
 		></span>
 	{/if}
 	{#each items as item (item.value)}
-		<ToggleGroup.Item
-			value={item.value}
-			aria-label={item.label}
-			class={cn(
-				'relative inline-flex h-7 items-center justify-center rounded-md border border-transparent px-3 text-sm font-medium text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary data-[state=on]:text-fg',
-				multiple &&
-					'data-[state=on]:border-border data-[state=on]:bg-background data-[state=on]:shadow-sm'
-			)}
-			data-slot="toggle-group-item"
-		>
-			{@render item.content()}
-		</ToggleGroup.Item>
+		{#if item.label}
+			<Tooltip content={item.label}>
+				{#snippet trigger(props)}
+					<ToggleGroup.Item
+						{...props}
+						value={item.value}
+						aria-label={item.label}
+						class={itemClass}
+						data-slot="toggle-group-item"
+					>
+						{@render item.content()}
+					</ToggleGroup.Item>
+				{/snippet}
+			</Tooltip>
+		{:else}
+			<ToggleGroup.Item value={item.value} class={itemClass} data-slot="toggle-group-item">
+				{@render item.content()}
+			</ToggleGroup.Item>
+		{/if}
 	{/each}
 </ToggleGroup.Root>

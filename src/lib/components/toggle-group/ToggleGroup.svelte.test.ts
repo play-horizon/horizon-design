@@ -1,12 +1,14 @@
 /**
  * Tests of `ToggleGroup`: its items' names, pressing one updates the bound value alongside an
- * `onValueChange` callback, and only a single-choice group has the sliding indicator.
+ * `onValueChange` callback, only a single-choice group has the sliding indicator, and an icon item's
+ * label is its tooltip.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
 import { createRawSnippet } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import ToggleGroup from './ToggleGroup.svelte';
+import { expectTooltip } from '../../../test/tooltip';
 
 const icon = createRawSnippet(() => ({ render: () => '<span aria-hidden="true"></span>' }));
 
@@ -49,5 +51,18 @@ describe('ToggleGroup', () => {
 			props: { items, multiple: true, 'aria-label': 'Style' }
 		});
 		expect(multiple.container.querySelector('[data-slot="toggle-group-indicator"]')).toBeNull();
+	});
+
+	it('shows the label of an icon item in its tooltip', async () => {
+		const { getByRole } = render(ToggleGroup, { props: { items, 'aria-label': 'Text style' } });
+		await expectTooltip(getByRole('radio', { name: 'Bold' }), 'Bold');
+	});
+
+	it('keeps the pressed state of an item that has a tooltip', () => {
+		const { getByRole } = render(ToggleGroup, {
+			props: { items, value: ['italic'], 'aria-label': 'Text style' }
+		});
+		expect(getByRole('radio', { name: 'Italic' }).getAttribute('data-state')).toBe('on');
+		expect(getByRole('radio', { name: 'Bold' }).getAttribute('data-state')).toBe('off');
 	});
 });
