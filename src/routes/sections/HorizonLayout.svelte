@@ -1,6 +1,9 @@
 <!--
 @component
-Docs: HorizonLayout. Live examples of the HorizonLayout component.
+Docs: HorizonLayout. A playground over the layout's behaviour (resizing, dragging, the tab bar,
+the minimum sizes and depth, the toolbar controls) and the restore button's label, on a layout
+of two splits and a floating panel whose toolbars pop a view out or maximise it; then a layout
+showing a maximised view with its restore button.
 -->
 <script lang="ts">
 	import { Alert } from '#lib/components/alert/index.js';
@@ -22,6 +25,10 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 	import MingcuteHeartLine from '~icons/mingcute/heart-line';
 	import MingcuteSettings2Line from '~icons/mingcute/settings-2-line';
 	import MingcuteStarLine from '~icons/mingcute/star-line';
+	import { Card } from '#lib/components/card/index.js';
+	import { IconButton } from '#lib/components/icon-button/index.js';
+	import Playground from '../playground/Playground.svelte';
+	import { boolean, choice, number, text } from '../playground/controls';
 	import { SvelteMap } from 'svelte/reactivity';
 	import HorizonLayout from '#lib/editor/horizon-layout/HorizonLayout.svelte';
 	import {
@@ -62,6 +69,23 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 		['notes', { title: 'Notes', snippet: layoutNotesPanel }]
 	]);
 
+	let maximizedConfig: LayoutConfig = $state({
+		root: {
+			direction: 'horizontal',
+			views: [
+				{ tabs: ['scene'], activeTabIndex: 0 },
+				{ tabs: ['console'], activeTabIndex: 0 }
+			],
+			splitPoints: [0.5]
+		},
+		maximizedView: 'scene'
+	});
+
+	const maximizedViews = new SvelteMap<Id, View>([
+		['scene', { title: 'Scene', snippet: maximizedScenePanel }],
+		['console', { title: 'Console', snippet: maximizedConsolePanel }]
+	]);
+
 	/** Moves a view into a window of its own. */
 	function popOut(id: Id) {
 		removeView(layoutConfig, id);
@@ -75,26 +99,20 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 </script>
 
 {#snippet layoutPopOutBtn(activeViewId: Id)}
-	<button
-		class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
-		onclick={() => popOut(activeViewId)}
-		aria-label="Pop out"
-		title="Pop out"
-	>
-		<MingcuteExternalLinkLine class="size-3.5" aria-hidden="true" />
-	</button>
+	<IconButton label="Pop out" size="xs" onclick={() => popOut(activeViewId)}>
+		<MingcuteExternalLinkLine aria-hidden="true" />
+	</IconButton>
 {/snippet}
 
 {#snippet layoutMaximizeBtn(activeViewId: Id)}
 	{#if layoutConfig.maximizedView !== activeViewId}
-		<button
-			class="inline-flex size-6 items-center justify-center rounded-md text-muted transition-colors hover:bg-hover hover:text-fg"
+		<IconButton
+			label="Maximize"
+			size="xs"
 			onclick={() => (layoutConfig.maximizedView = activeViewId)}
-			aria-label="Maximize"
-			title="Maximize"
 		>
-			<MingcuteFullscreenLine class="size-3.5" aria-hidden="true" />
-		</button>
+			<MingcuteFullscreenLine aria-hidden="true" />
+		</IconButton>
 	{/if}
 {/snippet}
 
@@ -103,11 +121,11 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 		<div>
 			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Variants</p>
 			<div class="flex flex-wrap gap-2">
+				<Button variant="primary" size="sm">Primary</Button>
 				<Button size="sm">Default</Button>
-				<Button variant="default" size="sm">Outline</Button>
-				<Button variant="default" size="sm">Secondary</Button>
+				<Button variant="tint" size="sm">Tint</Button>
 				<Button variant="ghost" size="sm">Ghost</Button>
-				<Button variant="danger" size="sm">Destructive</Button>
+				<Button variant="danger" size="sm">Danger</Button>
 				<Button variant="link" size="sm">Link</Button>
 			</div>
 		</div>
@@ -125,16 +143,16 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 				Icon buttons
 			</p>
 			<div class="flex flex-wrap items-center gap-2">
-				<Button size="icon-md" aria-label="Star"><MingcuteStarLine aria-hidden="true" /></Button>
-				<Button variant="default" size="icon-md" aria-label="Like">
+				<IconButton label="Star" variant="primary"
+					><MingcuteStarLine aria-hidden="true" /></IconButton
+				>
+				<IconButton label="Like" variant="default">
 					<MingcuteHeartLine aria-hidden="true" />
-				</Button>
-				<Button variant="ghost" size="icon-md" aria-label="Settings">
-					<MingcuteSettings2Line aria-hidden="true" />
-				</Button>
-				<Button variant="default" size="icon-md" aria-label="Download">
+				</IconButton>
+				<IconButton label="Settings"><MingcuteSettings2Line aria-hidden="true" /></IconButton>
+				<IconButton label="Download" variant="tint">
 					<MingcuteDownloadLine aria-hidden="true" />
-				</Button>
+				</IconButton>
 			</div>
 		</div>
 	</div>
@@ -182,11 +200,11 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Badges</p>
 			<div class="flex flex-wrap gap-1.5">
 				<Badge>Default</Badge>
-				<Badge variant="neutral">Outline</Badge>
+				<Badge variant="neutral">Neutral</Badge>
 				<Badge variant="success">Success</Badge>
 				<Badge variant="warning">Warning</Badge>
 				<Badge variant="info">Info</Badge>
-				<Badge variant="danger">Error</Badge>
+				<Badge variant="danger">Danger</Badge>
 			</div>
 		</div>
 		<div>
@@ -280,20 +298,66 @@ Docs: HorizonLayout. Live examples of the HorizonLayout component.
 	</div>
 {/snippet}
 
-<section id="horizon-layout">
-	<p class="mb-6 text-sm text-muted">
-		Drag tabs between panes, resize splits, float panels over the layout, and pop views out into
-		separate windows.
+{#snippet maximizedScenePanel()}
+	<p class="p-4 text-sm text-fg-2">
+		The scene, maximised: the restore button brings back the split.
 	</p>
-	<div class="h-120">
-		<HorizonLayout
-			restoreLabel="Restore view"
-			translations={englishTranslations}
-			bind:config={layoutConfig}
-			views={layoutViews}
-			tabgroupControls={[layoutPopOutBtn, layoutMaximizeBtn]}
-			onPopoutClose={floatClosedPopout}
-			showSplitRatio
-		/>
-	</div>
-</section>
+{/snippet}
+
+{#snippet maximizedConsolePanel()}
+	<p class="p-4 font-mono text-xs text-fg-2">Build finished in 1.2 s.</p>
+{/snippet}
+
+<div class="grid gap-4">
+	<Playground
+		description="Drag tabs between panes, resize splits, float panels over the layout, pop views out into windows of their own, and maximise one."
+		controls={{
+			restoreLabel: text('Restore view'),
+			toolbar: choice(['pop out and maximize', 'maximize', 'none'] as const),
+			showSplitRatio: boolean(true),
+			disableResizeSplits: boolean(),
+			disableDragAndDrop: boolean(),
+			hideTabBar: boolean(),
+			minWidthRatio: number(0.1, { min: 0, max: 0.4, step: 0.05 }),
+			minHeightRatio: number(0.2, { min: 0, max: 0.4, step: 0.05 }),
+			maxDepth: number(6, { min: 3, max: 8 })
+		}}
+	>
+		{#snippet example(values)}
+			<div class="h-120 w-full">
+				<HorizonLayout
+					restoreLabel={values.restoreLabel}
+					translations={englishTranslations}
+					bind:config={layoutConfig}
+					views={layoutViews}
+					tabgroupControls={values.toolbar === 'none'
+						? []
+						: values.toolbar === 'maximize'
+							? [layoutMaximizeBtn]
+							: [layoutPopOutBtn, layoutMaximizeBtn]}
+					onPopoutClose={floatClosedPopout}
+					showSplitRatio={values.showSplitRatio}
+					disableResizeSplits={values.disableResizeSplits}
+					disableDragAndDrop={values.disableDragAndDrop}
+					hideTabBar={values.hideTabBar}
+					minWidthRatio={values.minWidthRatio}
+					minHeightRatio={values.minHeightRatio}
+					maxDepth={values.maxDepth}
+				/>
+			</div>
+		{/snippet}
+	</Playground>
+	<Card
+		title="A maximised view"
+		description="While a view is maximised, the restore button at the top right brings back the layout; its label is its name and tooltip."
+	>
+		<div class="h-48">
+			<HorizonLayout
+				restoreLabel="Restore view"
+				translations={englishTranslations}
+				bind:config={maximizedConfig}
+				views={maximizedViews}
+			/>
+		</div>
+	</Card>
+</div>
