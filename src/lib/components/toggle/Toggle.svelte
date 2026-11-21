@@ -1,10 +1,12 @@
 <!--
 @component
 A button that stays pressed or not (Ark Toggle); `pressed` binds its state. An icon-only toggle
-takes its accessible name through `aria-label`.
+takes its accessible name through `aria-label`, and a `Tooltip` with the same text around it (its
+`trigger` snippet spreads its props onto the toggle), or is a `ToggleTooltip`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 	import { Toggle } from '@ark-ui/svelte';
 	import { cn } from '#lib/utils.js';
 
@@ -17,7 +19,7 @@ takes its accessible name through `aria-label`.
 		...rest
 	}: {
 		/** Classes merged onto Ark's `Toggle.Root`. */
-		class?: string;
+		class?: ClassValue | null;
 		/** The toggle's content: an icon, a label, or both. */
 		children?: Snippet;
 		/** Borderless, or outlined. */
