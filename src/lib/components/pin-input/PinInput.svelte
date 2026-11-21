@@ -2,7 +2,8 @@
 @component
 A row of one-character fields for a code, such as the sign-up code (Ark PinInput). `value` binds
 the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
-`translations.inputLabel` names each field ("Digit 2 of 6").
+`translations.inputLabel` names each field ("Digit 2 of 6"), and its `invalid` turns the fields'
+borders danger.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -67,7 +68,7 @@ the characters; without it, Ark's `defaultValue` sets the first ones. Ark's
 		{#each indexes as index (index)}
 			<PinInput.Input
 				{index}
-				class="flex size-10 items-center justify-center rounded-lg border border-border bg-sunken text-center text-sm font-medium text-fg transition-colors outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+				class="flex size-10 items-center justify-center rounded-lg border border-border bg-sunken text-center text-sm font-medium text-fg transition-colors outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger"
 			/>
 		{/each}
 	</PinInput.Control>
