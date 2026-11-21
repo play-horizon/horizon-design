@@ -82,7 +82,7 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 			class="rounded-xl border border-border bg-background p-3 text-fg"
 			data-testid="swatches-{name}"
 		>
-			<p class="mb-2 text-2xs font-bold tracking-overline text-faint uppercase">{name}</p>
+			<p class="mb-2 text-2xs font-bold tracking-overline text-muted uppercase">{name}</p>
 			<div class="grid gap-1">
 				{#each tokens as token (token)}
 					<div class="flex items-center gap-2.5 text-xs">
