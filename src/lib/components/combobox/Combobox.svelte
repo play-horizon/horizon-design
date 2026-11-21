@@ -72,6 +72,10 @@ own to fall back on here.
 		loading: translations.loading ?? ''
 	});
 
+	// The open button's id, shared by Ark's combobox and its tooltip, which both find it by id.
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+
 	const filters = useFilter({ sensitivity: 'base' });
 	let query = $state('');
 	const matches = $derived(items.filter((item) => filters().contains(item.label, query)));
@@ -88,6 +92,7 @@ own to fall back on here.
 <Combobox.Root
 	{collection}
 	{openOnClick}
+	ids={{ trigger: triggerId }}
 	onInputValueChange={changeInput}
 	translations={arkTranslations}
 	class={cn('flex flex-col gap-1.5', className)}
@@ -103,7 +108,7 @@ own to fall back on here.
 			class="flex h-8 w-full rounded-lg border border-border bg-sunken px-3 py-1 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
 			data-slot="combobox-input"
 		/>
-		<Tooltip content={translations.triggerLabel}>
+		<Tooltip content={translations.triggerLabel} {triggerId}>
 			{#snippet trigger(props)}
 				<Combobox.Trigger
 					{...props}

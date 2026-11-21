@@ -65,4 +65,14 @@ describe('ToggleGroup', () => {
 		expect(getByRole('radio', { name: 'Italic' }).getAttribute('data-state')).toBe('on');
 		expect(getByRole('radio', { name: 'Bold' }).getAttribute('data-state')).toBe('off');
 	});
+
+	it('keeps an item that has a tooltip its own: its part attributes and its id', () => {
+		const { getByRole } = render(ToggleGroup, {
+			props: { items, multiple: true, 'aria-label': 'Text style' }
+		});
+		const bold = getByRole('button', { name: 'Bold' });
+		expect(bold.getAttribute('data-scope')).toBe('toggle-group');
+		expect(bold.getAttribute('data-part')).toBe('item');
+		expect(bold.id).toMatch(/-item-bold$/);
+	});
 });

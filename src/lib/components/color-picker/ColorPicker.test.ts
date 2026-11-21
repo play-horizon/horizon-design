@@ -116,4 +116,12 @@ describe('ColorPicker', () => {
 		const { getByRole } = render(ColorPicker, { labels });
 		await expectTooltip(getByRole('button', { name: 'Choose a colour' }), 'Choose a colour');
 	});
+
+	it('keeps its swatch button its own, under the tooltip', () => {
+		const { getByRole } = render(ColorPicker, { labels });
+		const button = getByRole('button', { name: 'Choose a colour' });
+		expect(button.getAttribute('data-scope')).toBe('color-picker');
+		expect(button.getAttribute('data-part')).toBe('trigger');
+		expect(button.getAttribute('aria-controls')).toBeTruthy();
+	});
 });

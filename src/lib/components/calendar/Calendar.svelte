@@ -12,6 +12,7 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 	import type { DatePickerDateView } from '@ark-ui/svelte/date-picker';
 	import { cn } from '#lib/utils.js';
 	import CalendarViews from './CalendarViews.svelte';
+	import { calendarTriggerIds } from './trigger-ids';
 
 	let {
 		class: className = '',
@@ -40,6 +41,8 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 	} = $props();
 
 	const { tableRoleDescription, ...arkTranslations } = $derived(translations);
+	const uid = $props.id();
+	const ids = calendarTriggerIds(uid);
 </script>
 
 <DatePicker.Root
@@ -47,10 +50,12 @@ can set through `class`, such as `[--cell-size:--spacing(8)]`.
 	data-slot="calendar"
 	inline
 	fixedWeeks
+	{ids}
 	translations={arkTranslations}
 	{...rest}
 >
 	<CalendarViews
+		{ids}
 		translations={arkTranslations}
 		{tableRoleDescription}
 		maxView={rest.maxView as DatePickerDateView | undefined}

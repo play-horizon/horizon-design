@@ -113,4 +113,11 @@ describe('DatePicker', () => {
 		expect(document.activeElement).toBe(field);
 		expect((field as HTMLInputElement).value).toBe('15');
 	});
+
+	it('keeps its calendar button its own, under the tooltip', () => {
+		const { getByRole } = render(DatePicker, { label: 'Release date', translations });
+		const button = getByRole('button', { name: 'Show days' });
+		expect(button.getAttribute('data-scope')).toBe('date-picker');
+		expect(button.getAttribute('data-part')).toBe('trigger');
+	});
 });

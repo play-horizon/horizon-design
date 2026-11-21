@@ -17,6 +17,7 @@ as the field is pressed.
 	import { cn } from '#lib/utils.js';
 	import MingcuteCalendarLine from '~icons/mingcute/calendar-line';
 	import CalendarViews from '../calendar/CalendarViews.svelte';
+	import { calendarTriggerIds } from '../calendar/trigger-ids';
 	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
@@ -69,6 +70,12 @@ as the field is pressed.
 
 	const { contentRoleDescription, tableRoleDescription, ...arkTranslations } =
 		$derived(translations);
+
+	// The ids of the buttons that have a tooltip, shared by Ark's date picker and the tooltips,
+	// which both find them by id.
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+	const ids = calendarTriggerIds(uid);
 </script>
 
 <DatePicker.Root
@@ -77,6 +84,7 @@ as the field is pressed.
 	{value}
 	{openOnClick}
 	fixedWeeks
+	ids={{ trigger: triggerId, ...ids }}
 	translations={arkTranslations}
 	onValueChange={(details) => {
 		value = details.value;
@@ -92,7 +100,7 @@ as the field is pressed.
 		/>
 		<DatePicker.Context>
 			{#snippet render(api)}
-				<Tooltip content={arkTranslations.trigger(api().open)}>
+				<Tooltip content={arkTranslations.trigger(api().open)} {triggerId}>
 					{#snippet trigger(props)}
 						<DatePicker.Trigger
 							{...props}
@@ -113,6 +121,7 @@ as the field is pressed.
 				data-slot="date-picker-content"
 			>
 				<CalendarViews
+					{ids}
 					translations={arkTranslations}
 					{tableRoleDescription}
 					maxView={rest.maxView as DatePickerDateView | undefined}

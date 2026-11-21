@@ -14,12 +14,16 @@ month, year or decade first, then by what it does, so its name holds its label (
 	import MingcuteLeftLine from '~icons/mingcute/left-line';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 	import Tooltip from '../tooltip/Tooltip.svelte';
+	import type { CalendarTriggerIds } from './trigger-ids';
 
 	let {
+		ids,
 		translations,
 		tableRoleDescription,
 		maxView = 'year'
 	}: {
+		/** The ids of the previous and next buttons, the root's own (`calendarTriggerIds`). */
+		ids: CalendarTriggerIds;
 		/** The names of the previous and next buttons and of the view switch, as the root has them. */
 		translations: Required<
 			Pick<
@@ -80,7 +84,7 @@ month, year or decade first, then by what it does, so its name holds its label (
 		class="relative flex h-auto w-full items-center gap-1.5"
 		data-slot="calendar-view-control"
 	>
-		<Tooltip content={translations.prevTrigger(view)}>
+		<Tooltip content={translations.prevTrigger(view)} triggerId={ids.prevTrigger(view)}>
 			{#snippet trigger(props)}
 				<DatePicker.PrevTrigger {...props} class={navButtonClass} data-slot="calendar-prev-trigger">
 					<MingcuteLeftLine class="size-4" aria-hidden="true" />
@@ -103,7 +107,7 @@ month, year or decade first, then by what it does, so its name holds its label (
 				</DatePicker.ViewTrigger>
 			{/snippet}
 		</DatePicker.Context>
-		<Tooltip content={translations.nextTrigger(view)}>
+		<Tooltip content={translations.nextTrigger(view)} triggerId={ids.nextTrigger(view)}>
 			{#snippet trigger(props)}
 				<DatePicker.NextTrigger {...props} class={navButtonClass} data-slot="calendar-next-trigger">
 					<MingcuteRightLine class="size-4" aria-hidden="true" />

@@ -44,6 +44,10 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 		[key: string]: unknown;
 	} = $props();
 
+	// The items' ids, shared by Ark's toggle group and their tooltips, which both find them by id.
+	const uid = $props.id();
+	const itemId = (value: string) => `${uid}-item-${value}`;
+
 	const itemClass = $derived(
 		cn(
 			'relative inline-flex h-7 items-center justify-center rounded-md border border-transparent px-3 text-sm font-medium text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary data-[state=on]:text-fg',
@@ -63,6 +67,7 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 	data-slot="toggle-group"
 	bind:value
 	{multiple}
+	ids={{ item: itemId }}
 	{...rest}
 	{@attach multiple ? undefined : slidingIndicator('[data-state="on"]')}
 >
@@ -75,7 +80,7 @@ whose content is only an icon through its `label`, which its tooltip shows too.
 	{/if}
 	{#each items as item (item.value)}
 		{#if item.label}
-			<Tooltip content={item.label}>
+			<Tooltip content={item.label} triggerId={itemId(item.value)}>
 				{#snippet trigger(props)}
 					<ToggleGroup.Item
 						{...props}

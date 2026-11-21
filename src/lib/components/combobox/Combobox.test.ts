@@ -112,4 +112,17 @@ describe('Combobox', () => {
 			)
 		).toEqual(['Rally']);
 	});
+
+	it('keeps its open button its own: Ark finds it and opens the options from it', async () => {
+		const { getByRole } = setup();
+		const button = getByRole('button', { name: 'Show modes' });
+		expect(button.getAttribute('data-scope')).toBe('combobox');
+		expect(button.getAttribute('data-part')).toBe('trigger');
+		await fireEvent.click(button);
+		await waitFor(() =>
+			expect(
+				document.querySelector('[data-slot="combobox-content"]')?.getAttribute('data-state')
+			).toBe('open')
+		);
+	});
 });

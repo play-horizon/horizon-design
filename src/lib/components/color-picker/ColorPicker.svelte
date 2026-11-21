@@ -84,6 +84,10 @@ for assistive technology and gives the values the sliders announce; the trigger 
 		return color.toFormat(format.startsWith('hsl') ? 'hsla' : 'hsba');
 	}
 
+	// The trigger's id, shared by Ark's color picker and its tooltip, which both find it by id.
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+
 	/** Takes the typed hex when it reads as a colour; otherwise puts the current one back. */
 	function commitHex(input: HTMLInputElement, current: Color, setValue: (color: Color) => void) {
 		const typed = parseHex(input.value);
@@ -124,6 +128,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 	{value}
 	{disabled}
 	{readOnly}
+	ids={{ trigger: triggerId }}
 	onValueChange={(details) => {
 		value = details.value;
 		onValueChange?.(details);
@@ -135,7 +140,7 @@ for assistive technology and gives the values the sliders announce; the trigger 
 	{/if}
 	<ColorPicker.Control class="flex items-center gap-2">
 		{@render hexField('h-8 px-3 py-1 text-sm shadow-sm')}
-		<Tooltip content={labels.trigger}>
+		<Tooltip content={labels.trigger} {triggerId}>
 			{#snippet trigger(props)}
 				<ColorPicker.Trigger
 					{...props}
