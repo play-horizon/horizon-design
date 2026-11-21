@@ -3,7 +3,8 @@
 A date field with a calendar popover (Ark DatePicker). `label` names the field; `placeholder` and
 `translations` (the names of the controls, which the icon buttons show in a tooltip too, and the
 roles the popover and its tables are announced as) are passed in. The popover's calendar is
-`Calendar`'s: six weeks, and month and year views of the same size.
+`Calendar`'s: six weeks, and month and year views of the same size. `openOnClick` opens it as soon
+as the field is pressed.
 -->
 <script lang="ts">
 	import { DatePicker, type DatePickerRootProps } from '@ark-ui/svelte';
@@ -24,6 +25,7 @@ roles the popover and its tables are announced as) are passed in. The popover's 
 		placeholder = '',
 		value = $bindable(),
 		onValueChange,
+		openOnClick = false,
 		translations,
 		...rest
 	}: {
@@ -37,6 +39,11 @@ roles the popover and its tables are announced as) are passed in. The popover's 
 		value?: DateValue[];
 		/** Called with the new dates when they change. */
 		onValueChange?: (details: DatePickerValueChangeDetails) => void;
+		/**
+		 * Opens the calendar as soon as the field is pressed, not only from the calendar button or
+		 * the arrow keys; the field keeps the focus, so typing a date starts at once.
+		 */
+		openOnClick?: boolean;
 		/**
 		 * The accessible names Ark gives the controls: the calendar button (`trigger(open)`), the
 		 * popover (`content`), each day (`dayCell(state)`, from its formatted `valueText`), the
@@ -68,6 +75,7 @@ roles the popover and its tables are announced as) are passed in. The popover's 
 	class={cn('flex flex-col gap-1.5', className)}
 	data-slot="date-picker"
 	{value}
+	{openOnClick}
 	fixedWeeks
 	translations={arkTranslations}
 	onValueChange={(details) => {

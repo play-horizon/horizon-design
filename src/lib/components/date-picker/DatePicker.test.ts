@@ -1,11 +1,12 @@
 /**
  * Tests of `DatePicker`: the label names the field, every string announced comes from the app
- * rather than from Ark's English defaults, picking a day binds `value` and fills the field, and the
- * calendar button shows its name in a tooltip.
+ * rather than from Ark's English defaults, picking a day binds `value` and fills the field, the
+ * calendar button shows its name in a tooltip, and `openOnClick` opens the calendar from the field.
  * @module
  */
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render } from '@testing-library/svelte';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 import { parseDate, type DateValue } from '@ark-ui/svelte/date-picker';
 import DatePicker from './DatePicker.svelte';
 import { expectTooltip } from '../../../test/tooltip';
@@ -90,5 +91,26 @@ describe('DatePicker', () => {
 	it('names the calendar button in its tooltip', async () => {
 		const { getByRole } = render(DatePicker, { label: 'Release date', translations });
 		await expectTooltip(getByRole('button', { name: 'Show days' }), 'Show days');
+	});
+
+	it('opens the calendar from a press on the field only with openOnClick', async () => {
+		const content = () => document.querySelector('[data-slot="date-picker-content"]');
+		const closed = render(DatePicker, { label: 'Release date', translations });
+		await fireEvent.click(closed.getByRole('textbox', { name: 'Release date' }));
+		expect(content()?.getAttribute('data-state')).toBe('closed');
+		closed.unmount();
+
+		const { getByRole } = render(DatePicker, {
+			label: 'Release date',
+			translations,
+			openOnClick: true
+		});
+		const field = getByRole('textbox', { name: 'Release date' });
+		const user = userEvent.setup();
+		await user.click(field);
+		await waitFor(() => expect(content()?.getAttribute('data-state')).toBe('open'));
+		await user.keyboard('15');
+		expect(document.activeElement).toBe(field);
+		expect((field as HTMLInputElement).value).toBe('15');
 	});
 });
