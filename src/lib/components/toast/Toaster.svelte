@@ -21,7 +21,7 @@ region named by `label`. The toaster's `placement` and `offsets` position the st
 		toaster: ReturnType<typeof import('@ark-ui/svelte').createToaster>;
 		/** The toasts region's accessible name, such as "Notifications". */
 		label: string;
-		/** Each toast's close button's accessible name, such as "Close". */
+		/** Each toast's close button's tooltip and accessible name, such as "Close". */
 		closeLabel: string;
 		/** Other props of Ark's `Toaster`. */
 		[key: string]: unknown;

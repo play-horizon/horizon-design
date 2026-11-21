@@ -1,7 +1,8 @@
 <!--
 @component
 One toast message: an info, success, warning or error tint (or, while loading, a neutral one with
-a spinner), a title, a description and a close button named by `closeLabel`.
+a spinner), a title, a description and a close button named by `closeLabel`, its tooltip and its
+accessible name.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -9,6 +10,7 @@ a spinner), a title, a description and a close button named by `closeLabel`.
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 	import { cn } from '#lib/utils.js';
 	import Spinner from '../spinner/Spinner.svelte';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 
 	let {
 		class: className = '',
@@ -27,7 +29,7 @@ a spinner), a title, a description and a close button named by `closeLabel`.
 		description?: string;
 		/** The tint: info, success, warning or error; loading shows a spinner, for work in progress. */
 		type?: 'info' | 'success' | 'warning' | 'error' | 'loading';
-		/** The close button's accessible name, such as "Close". */
+		/** The close button's tooltip and accessible name, such as "Close". */
 		closeLabel: string;
 		/** More content under the description, such as an action. */
 		children?: Snippet;
@@ -75,10 +77,15 @@ a spinner), a title, a description and a close button named by `closeLabel`.
 			{@render children()}
 		{/if}
 	</div>
-	<Toast.CloseTrigger
-		aria-label={closeLabel}
-		class="absolute top-2 right-2 rounded p-1 text-muted opacity-0 transition-opacity outline-none group-hover:opacity-70 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
-	>
-		<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
-	</Toast.CloseTrigger>
+	<Tooltip content={closeLabel}>
+		{#snippet trigger(props)}
+			<Toast.CloseTrigger
+				{...props}
+				aria-label={closeLabel}
+				class="absolute top-2 right-2 rounded p-1 text-muted opacity-0 transition-opacity outline-none group-hover:opacity-70 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
+			>
+				<MingcuteCloseLine class="size-3.5" aria-hidden="true" />
+			</Toast.CloseTrigger>
+		{/snippet}
+	</Tooltip>
 </Toast.Root>
