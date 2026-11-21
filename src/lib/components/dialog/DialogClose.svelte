@@ -9,6 +9,7 @@ is then also its tooltip.
 	import { mergeProps } from '@ark-ui/svelte/utils';
 	import { cn } from '#lib/utils.js';
 	import Tooltip from '../tooltip/Tooltip.svelte';
+	import { dialogContext } from './context';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	type Content =
@@ -37,6 +38,9 @@ is then also its tooltip.
 		[key: string]: unknown;
 	} = $props();
 
+	// The dialog's close button id, shared with the icon's tooltip (see `context.ts`).
+	const closeTriggerId = dialogContext()?.closeTriggerId;
+
 	const classes = $derived(
 		cn(
 			'rounded-sm text-muted transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none',
@@ -51,8 +55,7 @@ is then also its tooltip.
 		{@render children()}
 	</Dialog.CloseTrigger>
 {:else}
-	<!-- Above the dialog's own layer (z-70), which a tooltip's default one is under. -->
-	<Tooltip content={label} contentClass="z-80">
+	<Tooltip content={label} triggerId={closeTriggerId}>
 		{#snippet trigger(props)}
 			<Dialog.CloseTrigger
 				{...mergeProps(props, rest)}

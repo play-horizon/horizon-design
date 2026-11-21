@@ -13,6 +13,7 @@ first state.
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
 	import Tooltip from '../tooltip/Tooltip.svelte';
+	import { setDialogContext } from '../dialog/context';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	type Side = 'top' | 'bottom' | 'left' | 'right';
@@ -78,12 +79,16 @@ first state.
 			'inset-y-0 right-0 border-l data-[state=open]:animate-sheet-enter-right data-[state=closed]:animate-sheet-exit-right h-full w-full max-w-sm rounded-l-xl'
 	};
 
-	// The tooltip and the dialog share the trigger, so both must know it by the same id.
-	const triggerId = $props.id();
+	const uid = $props.id();
+	// The ids of the buttons that have a tooltip, shared by Ark's dialog and the tooltips, which
+	// both find them by id.
+	const triggerId = `${uid}-trigger`;
+	const closeTriggerId = `${uid}-close`;
+	setDialogContext({ closeTriggerId });
 </script>
 
 <Dialog.Root
-	ids={{ trigger: triggerId }}
+	ids={{ trigger: triggerId, closeTrigger: closeTriggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -92,7 +97,7 @@ first state.
 	{...rest}
 >
 	{#if triggerContent && triggerLabel}
-		<Tooltip content={triggerLabel} ids={{ trigger: triggerId }}>
+		<Tooltip content={triggerLabel} {triggerId}>
 			{#snippet trigger(props)}
 				<Dialog.Trigger
 					{...props}
@@ -124,8 +129,7 @@ first state.
 				data-slot="sheet-content"
 			>
 				{#if showClose}
-					<!-- Above the sheet's z-70 layer, which would hide a tooltip of the default z-50. -->
-					<Tooltip content={closeLabel} contentClass="z-80">
+					<Tooltip content={closeLabel} triggerId={closeTriggerId}>
 						{#snippet trigger(props)}
 							<Dialog.CloseTrigger
 								{...props}

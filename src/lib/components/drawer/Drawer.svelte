@@ -54,9 +54,15 @@ dismiss it.
 		/** Other props of Ark's `Drawer.Root`, such as `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// The close button's id, shared by Ark's dialog (which focuses it first in an alert dialog) and
+	// its tooltip, which both find it by id.
+	const uid = $props.id();
+	const closeTriggerId = `${uid}-close`;
 </script>
 
 <Drawer.Root
+	ids={{ closeTrigger: closeTriggerId }}
 	swipeDirection="end"
 	{open}
 	onOpenChange={(details) => {
@@ -84,8 +90,7 @@ dismiss it.
 				data-slot="drawer-content"
 			>
 				{#if showClose}
-					<!-- Above the drawer's own layer (z-70), which a tooltip's default one is under. -->
-					<Tooltip content={closeLabel} contentClass="z-80">
+					<Tooltip content={closeLabel} triggerId={closeTriggerId}>
 						{#snippet trigger(props)}
 							<Drawer.CloseTrigger
 								{...props}

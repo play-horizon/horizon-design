@@ -70,7 +70,7 @@ it is open; without it, Ark's `defaultOpen` sets the first state.
 	{...rest}
 >
 	{#if triggerContent && triggerLabel}
-		<Tooltip content={triggerLabel} ids={{ trigger: triggerId }}>
+		<Tooltip content={triggerLabel} {triggerId}>
 			{#snippet trigger(props)}
 				<Popover.Trigger
 					{...props}

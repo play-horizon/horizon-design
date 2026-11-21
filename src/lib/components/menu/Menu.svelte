@@ -58,7 +58,7 @@ that shows only an icon takes a `triggerLabel`: its accessible name and its tool
 	{...rest}
 >
 	{#if triggerContent && triggerLabel}
-		<Tooltip content={triggerLabel} ids={{ trigger: triggerId }}>
+		<Tooltip content={triggerLabel} {triggerId}>
 			{#snippet trigger(props)}
 				<Menu.Trigger
 					{...props}

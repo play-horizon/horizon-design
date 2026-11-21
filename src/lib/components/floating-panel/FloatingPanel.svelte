@@ -83,8 +83,7 @@ its tooltip.
 					>
 						{title}
 					</FloatingPanel.Title>
-					<!-- Above the panel's own layer (z-80), which a tooltip's default one is under. -->
-					<Tooltip content={closeLabel} contentClass="z-90">
+					<Tooltip content={closeLabel}>
 						{#snippet trigger(props)}
 							<FloatingPanel.CloseTrigger
 								{...props}

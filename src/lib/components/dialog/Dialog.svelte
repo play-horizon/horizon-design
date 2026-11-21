@@ -10,6 +10,7 @@ translucent surface.
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from '#lib/utils.js';
 	import Tooltip from '../tooltip/Tooltip.svelte';
+	import { setDialogContext } from './context';
 	import MingcuteCloseLine from '~icons/mingcute/close-line';
 
 	let {
@@ -54,9 +55,16 @@ translucent surface.
 		/** Other props of Ark's `Dialog.Root`, such as `role="alertdialog"` or `onExitComplete`. */
 		[key: string]: unknown;
 	} = $props();
+
+	// The close button's id, shared by Ark's dialog (which focuses it first in an alert dialog) and
+	// its tooltip, which both find it by id.
+	const uid = $props.id();
+	const closeTriggerId = `${uid}-close`;
+	setDialogContext({ closeTriggerId });
 </script>
 
 <Dialog.Root
+	ids={{ closeTrigger: closeTriggerId }}
 	{open}
 	onOpenChange={(details) => {
 		open = details.open;
@@ -83,8 +91,7 @@ translucent surface.
 				data-slot="dialog-content"
 			>
 				{#if showClose}
-					<!-- Above the dialog's own layer (z-70), which a tooltip's default one is under. -->
-					<Tooltip content={closeLabel} contentClass="z-80">
+					<Tooltip content={closeLabel} triggerId={closeTriggerId}>
 						{#snippet trigger(props)}
 							<Dialog.CloseTrigger
 								{...props}

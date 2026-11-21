@@ -89,7 +89,7 @@ text as its accessible name.
 		{/each}
 	</Carousel.ItemGroup>
 	{#if showArrows}
-		<Tooltip content={arkTranslations.prevTrigger} ids={{ trigger: ids.prevTrigger }}>
+		<Tooltip content={arkTranslations.prevTrigger} triggerId={ids.prevTrigger}>
 			{#snippet trigger(props)}
 				<Carousel.PrevTrigger
 					{...props}
@@ -101,7 +101,7 @@ text as its accessible name.
 				</Carousel.PrevTrigger>
 			{/snippet}
 		</Tooltip>
-		<Tooltip content={arkTranslations.nextTrigger} ids={{ trigger: ids.nextTrigger }}>
+		<Tooltip content={arkTranslations.nextTrigger} triggerId={ids.nextTrigger}>
 			{#snippet trigger(props)}
 				<Carousel.NextTrigger
 					{...props}
@@ -122,7 +122,7 @@ text as its accessible name.
 			<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 			{#each slides as _, i (i)}
 				{@const name = arkTranslations.indicator(i)}
-				<Tooltip content={name} ids={{ trigger: ids.indicator(i) }}>
+				<Tooltip content={name} triggerId={ids.indicator(i)}>
 					{#snippet trigger(props)}
 						<Carousel.Indicator
 							{...props}

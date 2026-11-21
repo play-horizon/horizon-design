@@ -83,7 +83,7 @@ field's announced role (`roleDescription`). Ark's `invalid` turns the border dan
 		<div class="flex shrink-0 flex-col border-l border-border">
 			<Tooltip
 				content={translations.incrementLabel}
-				ids={{ trigger: ids.incrementTrigger }}
+				triggerId={ids.incrementTrigger}
 				positioning={{ placement: 'right' }}
 			>
 				{#snippet trigger(props)}
@@ -97,7 +97,7 @@ field's announced role (`roleDescription`). Ark's `invalid` turns the border dan
 			</Tooltip>
 			<Tooltip
 				content={translations.decrementLabel}
-				ids={{ trigger: ids.decrementTrigger }}
+				triggerId={ids.decrementTrigger}
 				positioning={{ placement: 'right' }}
 			>
 				{#snippet trigger(props)}
