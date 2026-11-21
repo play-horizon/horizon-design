@@ -36,7 +36,7 @@ A group of `SidebarItem`s, with an optional overline label that names the group.
 	{#if label}
 		<p
 			id={labelId}
-			class="px-2.5 pt-3 pb-1 text-2xs font-bold tracking-overline text-faint uppercase group-data-[collapsed=true]/sidebar:sr-only"
+			class="px-2.5 pt-3 pb-1 text-2xs font-bold tracking-overline text-muted uppercase group-data-[collapsed=true]/sidebar:sr-only"
 		>
 			{label}
 		</p>

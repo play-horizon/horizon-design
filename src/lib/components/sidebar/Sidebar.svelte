@@ -1,17 +1,20 @@
 <!--
 @component
 An app's navigation sidebar: a sunken column with an optional header (the brand), the
-navigation itself (`SidebarSection` and `SidebarItem`) and an optional footer (the account).
-`collapsed` narrows it to the items' icons: their text and the sections' labels are clipped or
-visually hidden, and still read by assistive technology.
+navigation itself (`SidebarSection` and `SidebarItem`, named by `label`) and an optional footer
+(the account). `collapsed` narrows it to the items' icons: their text and the sections' labels
+are clipped or visually hidden, and still read by assistive technology, and each item shows its
+text as a tooltip.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '#lib/utils.js';
+	import { setSidebarContext } from './context';
 
 	let {
 		class: className = '',
 		collapsed = false,
+		label,
 		header,
 		footer,
 		children,
@@ -21,6 +24,11 @@ visually hidden, and still read by assistive technology.
 		class?: string;
 		/** Narrows the sidebar to its icons. */
 		collapsed?: boolean;
+		/**
+		 * The navigation's accessible name, translated, such as "Main"; needed when the page has
+		 * more than one navigation.
+		 */
+		label?: string;
 		/** The top of the sidebar, such as the brand. */
 		header?: Snippet;
 		/** The bottom of the sidebar, such as the account. */
@@ -30,6 +38,12 @@ visually hidden, and still read by assistive technology.
 		/** Other attributes, passed on to the `<aside>`. */
 		[key: string]: unknown;
 	} = $props();
+
+	setSidebarContext({
+		get collapsed() {
+			return collapsed;
+		}
+	});
 </script>
 
 <aside
@@ -48,6 +62,7 @@ visually hidden, and still read by assistive technology.
 		</div>
 	{/if}
 	<nav
+		aria-label={label}
 		class="flex flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2.5 pb-3"
 		data-slot="sidebar-content"
 	>
