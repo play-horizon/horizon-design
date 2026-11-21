@@ -21,7 +21,7 @@ Docs: InspectorPanel. Live examples of the InspectorPanel component.
 		class="min-h-40 w-full resize-y overflow-hidden rounded-xl border border-border"
 		style="height: 180px;"
 	>
-		<ScrollArea class="size-full p-3">
+		<ScrollArea class="size-full p-3" label="Components">
 			<InspectorPanel bind:cards={inspectorCards} bind:expandedIds={inspectorExpanded}>
 				{#snippet content(card)}
 					{#if card.id === 'transform'}

@@ -1,96 +1,62 @@
 <!--
 @component
-Docs: ScrollArea. Live examples of the ScrollArea component.
+Docs: ScrollArea. A playground over the region's size, content and name, and an overflowing and a
+fitting region side by side: the scrollbar keeps clear of the rounded corners, and only the
+overflowing region is a tab stop.
 -->
 <script lang="ts">
 	import { Card } from '#lib/components/card/index.js';
 	import { ScrollArea } from '#lib/components/scroll-area/index.js';
+	import Playground from '../playground/Playground.svelte';
+	import { choice, number, text } from '../playground/controls';
 
-	const scrollItems = Array.from({ length: 20 }, (_, i) => ({
-		id: i + 1,
-		text: `Item ${i + 1} — lorem ipsum dolor sit amet consectetur`
+	const items = Array.from({ length: 40 }, (_, index) => ({
+		id: index + 1,
+		text: `Item ${index + 1}: lorem ipsum dolor sit amet consectetur`
 	}));
 </script>
 
-<section id="scroll-area">
-	<Card>
-		<div class="grid gap-4 sm:grid-cols-2">
-			<div class="space-y-2">
-				<p class="text-xs font-semibold tracking-widest text-muted uppercase">
-					Overflowing — scrollbar visible
-				</p>
-				<ScrollArea class="h-52 rounded-lg border border-border p-4">
-					<div class="space-y-3">
-						{#each scrollItems as item (item.id)}
-							<div
-								class="group flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-hover"
-							>
-								<div
-									class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-xs font-bold text-primary transition-colors group-hover:bg-primary/25"
-								>
-									{item.id}
-								</div>
-								<p class="text-sm text-muted transition-colors group-hover:text-fg">
-									{item.text}
-								</p>
-							</div>
-						{/each}
-					</div>
-				</ScrollArea>
+{#snippet list(count: number)}
+	<div class="space-y-3">
+		{#each items.slice(0, count) as item (item.id)}
+			<div class="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-hover">
+				<div
+					class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-xs font-bold text-primary"
+				>
+					{item.id}
+				</div>
+				<p class="text-sm text-fg-2">{item.text}</p>
 			</div>
-			<div class="space-y-2">
-				<p class="text-xs font-semibold tracking-widest text-muted uppercase">
-					Fits — no scrollbar
-				</p>
-				<ScrollArea class="h-52 rounded-lg border border-border p-4">
-					<div class="space-y-3">
-						{#each scrollItems.slice(0, 2) as item (item.id)}
-							<div
-								class="group flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-hover"
-							>
-								<div
-									class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-xs font-bold text-primary transition-colors group-hover:bg-primary/25"
-								>
-									{item.id}
-								</div>
-								<p class="text-sm text-muted transition-colors group-hover:text-fg">
-									{item.text}
-								</p>
-							</div>
-						{/each}
-					</div>
-				</ScrollArea>
-			</div>
-		</div>
-	</Card>
-	<Card class="mt-4">
-		<div class="space-y-2">
-			<p class="text-xs font-semibold tracking-widest text-muted uppercase">
-				Resizable — drag the corner
-			</p>
-			<div
-				class="min-h-24 w-full resize-y overflow-hidden rounded-lg border border-border"
-				style="height: 80px;"
+		{/each}
+	</div>
+{/snippet}
+
+<div class="grid gap-4">
+	<Playground
+		controls={{
+			items: number(20, { min: 1, max: 40 }),
+			label: text('Items'),
+			height: choice(['h-40', 'h-52', 'h-72'], 'h-52'),
+			corners: choice(['rounded-xl', 'rounded-lg', 'rounded-none'])
+		}}
+	>
+		{#snippet example(values)}
+			<ScrollArea
+				class="w-full border border-border p-4 {values.height} {values.corners}"
+				label={values.label || 'Items'}
 			>
-				<ScrollArea class="size-full p-4">
-					<div class="space-y-3">
-						{#each scrollItems.slice(0, 6) as item (item.id)}
-							<div
-								class="group flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-hover"
-							>
-								<div
-									class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-xs font-bold text-primary transition-colors group-hover:bg-primary/25"
-								>
-									{item.id}
-								</div>
-								<p class="text-sm text-muted transition-colors group-hover:text-fg">
-									{item.text}
-								</p>
-							</div>
-						{/each}
-					</div>
-				</ScrollArea>
-			</div>
+				{@render list(values.items)}
+			</ScrollArea>
+		{/snippet}
+	</Playground>
+	<Card title="Overflowing and fitting">
+		<div class="grid gap-4 sm:grid-cols-2">
+			<ScrollArea class="h-52 rounded-xl border border-border p-4" label="Many items">
+				{@render list(20)}
+			</ScrollArea>
+			<ScrollArea class="h-52 rounded-xl border border-border p-4" label="Two items">
+				{@render list(2)}
+			</ScrollArea>
 		</div>
 	</Card>
-</section>
+</div>

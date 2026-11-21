@@ -1,7 +1,7 @@
 /**
  * Test setup for jsdom: the browser APIs the components use and jsdom lacks. `matchMedia`
  * answers from `mediaState` (tests flip `prefers-color-scheme` and `prefers-reduced-motion` with
- * `setMedia`), and `ResizeObserver` does nothing (jsdom has no layout). Components are unmounted after each test by
+ * `setMedia`), and `ResizeObserver` and `IntersectionObserver` do nothing (jsdom has no layout). Components are unmounted after each test by
  * the testing library's own setup (`svelteTesting` in vite.config.ts).
  * @module
  */
@@ -41,6 +41,19 @@ globalThis.ResizeObserver = class {
 	observe() {}
 	unobserve() {}
 	disconnect() {}
+};
+
+globalThis.IntersectionObserver = class {
+	readonly root = null;
+	readonly rootMargin = '0px';
+	readonly scrollMargin = '0px';
+	readonly thresholds = [0];
+	observe() {}
+	unobserve() {}
+	disconnect() {}
+	takeRecords(): IntersectionObserverEntry[] {
+		return [];
+	}
 };
 
 afterEach(() => mediaState.clear());
