@@ -70,9 +70,9 @@ button that stay their own.
 					<LinkOverlay href="#top">Frostbite Arena</LinkOverlay>
 				</p>
 				<p class="mt-1 text-sm text-muted">
-					By <a href="#top" class="font-medium text-primary underline underline-offset-2"
-						>Ice Forge</a
-					>, updated yesterday.
+					By <a href="#top" class="font-medium text-primary underline underline-offset-2">
+						Ice Forge
+					</a>, updated yesterday.
 				</p>
 				<div class="mt-3 flex items-center gap-2">
 					<Badge variant="info">Fighting</Badge>

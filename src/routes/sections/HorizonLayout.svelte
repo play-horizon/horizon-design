@@ -143,9 +143,9 @@ showing a maximised view with its restore button.
 				Icon buttons
 			</p>
 			<div class="flex flex-wrap items-center gap-2">
-				<IconButton label="Star" variant="primary"
-					><MingcuteStarLine aria-hidden="true" /></IconButton
-				>
+				<IconButton label="Star" variant="primary">
+					<MingcuteStarLine aria-hidden="true" />
+				</IconButton>
 				<IconButton label="Like" variant="default">
 					<MingcuteHeartLine aria-hidden="true" />
 				</IconButton>

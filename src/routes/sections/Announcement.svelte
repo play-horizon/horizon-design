@@ -15,9 +15,9 @@ plain pill, one with an icon, one with a tag and one inside a link.
 
 <!-- A solid tag: a tinted badge on the pill's own tint would be too faint to read. -->
 {#snippet tag(text: string)}
-	<span class="-ml-1.5 rounded-full bg-primary px-2 text-xs font-semibold text-on-primary"
-		>{text}</span
-	>
+	<span class="-ml-1.5 rounded-full bg-primary px-2 text-xs font-semibold text-on-primary">
+		{text}
+	</span>
 {/snippet}
 
 <div class="grid gap-4">

@@ -66,8 +66,10 @@ danger.
 	{#if label}
 		<RadioGroup.Label
 			class={cn('leading-none font-medium', sizeClasses.label)}
-			data-slot="radio-group-label">{label}</RadioGroup.Label
+			data-slot="radio-group-label"
 		>
+			{label}
+		</RadioGroup.Label>
 	{/if}
 	<div
 		class="flex flex-col gap-3 group-data-[orientation=horizontal]/radio-group:flex-row group-data-[orientation=horizontal]/radio-group:flex-wrap group-data-[orientation=horizontal]/radio-group:gap-x-5"

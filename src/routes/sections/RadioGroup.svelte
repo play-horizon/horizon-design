@@ -23,9 +23,9 @@ and the disabled and invalid states.
 </script>
 
 {#snippet proLabel()}
-	<span class="text-sm"
-		>Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge></span
-	>
+	<span class="text-sm">
+		Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge>
+	</span>
 {/snippet}
 
 <div class="grid gap-4">
