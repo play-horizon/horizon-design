@@ -2,7 +2,8 @@
 @component
 The theme switch: three icon buttons (system, dark, light) on a sunken pill, with a raised
 highlight that slides to the chosen one. Choosing one calls `theme.set`, which saves the mode and crossfades the page. The labels
-name each mode for assistive technology and tooltips; the app passes them translated.
+name each mode, both for assistive technology and in each button's tooltip; the app passes them
+translated.
 -->
 <script lang="ts" module>
 	/** The switch's accessible texts. */
@@ -20,6 +21,7 @@ name each mode for assistive technology and tooltips; the app passes them transl
 
 <script lang="ts">
 	import { cn } from '#lib/utils.js';
+	import Tooltip from '../tooltip/Tooltip.svelte';
 	import MingcuteComputerLine from '~icons/mingcute/computer-line';
 	import MingcuteMoonLine from '~icons/mingcute/moon-line';
 	import MingcuteSunLine from '~icons/mingcute/sun-line';
@@ -29,12 +31,15 @@ name each mode for assistive technology and tooltips; the app passes them transl
 	let {
 		labels,
 		size = 'md',
+		tooltipSide = 'bottom',
 		class: className = ''
 	}: {
 		/** The names of the group and of each mode, translated. */
 		labels: ThemeSwitchLabels;
 		/** The control's size. */
 		size?: 'sm' | 'md';
+		/** The side of the buttons their tooltips show on. */
+		tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
 		/** Classes merged onto the `<div>`. */
 		class?: string;
 	} = $props();
@@ -62,19 +67,23 @@ name each mode for assistive technology and tooltips; the app passes them transl
 		data-slot="theme-switch-indicator"
 	></span>
 	{#each modes as mode (mode.value)}
-		<button
-			type="button"
-			aria-pressed={theme.mode === mode.value}
-			aria-label={labels[mode.value]}
-			title={labels[mode.value]}
-			class={cn(
-				'relative grid place-items-center rounded-md text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary',
-				size === 'sm' ? 'size-5.5 [&_svg]:size-3.5' : 'size-6.5 [&_svg]:size-4',
-				theme.mode === mode.value && 'text-fg'
-			)}
-			onclick={() => theme.set(mode.value)}
-		>
-			<mode.Icon aria-hidden="true" />
-		</button>
+		<Tooltip content={labels[mode.value]} positioning={{ placement: tooltipSide }}>
+			{#snippet trigger(props)}
+				<button
+					{...props}
+					type="button"
+					aria-pressed={theme.mode === mode.value}
+					aria-label={labels[mode.value]}
+					class={cn(
+						'relative grid place-items-center rounded-md text-muted transition-colors outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-primary',
+						size === 'sm' ? 'size-5.5 [&_svg]:size-3.5' : 'size-6.5 [&_svg]:size-4',
+						theme.mode === mode.value && 'text-fg'
+					)}
+					onclick={() => theme.set(mode.value)}
+				>
+					<mode.Icon aria-hidden="true" />
+				</button>
+			{/snippet}
+		</Tooltip>
 	{/each}
 </div>

@@ -4,6 +4,7 @@
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
+import { expectTooltip } from '../../../test/tooltip';
 import ThemeSwitch from './ThemeSwitch.svelte';
 import { theme } from '#lib/theme.svelte.js';
 
@@ -25,5 +26,10 @@ describe('ThemeSwitch', () => {
 		expect(getByRole('button', { name: 'System' }).getAttribute('aria-pressed')).toBe('false');
 		expect(document.documentElement.dataset.theme).toBe('light');
 		expect(getByRole('group').querySelector('[data-slot="theme-switch-indicator"]')).toBeTruthy();
+	});
+
+	it('shows the name of each mode in a tooltip, the same as its accessible name', async () => {
+		const { getByRole } = render(ThemeSwitch, { labels });
+		await expectTooltip(getByRole('button', { name: 'Dark' }), 'Dark');
 	});
 });
