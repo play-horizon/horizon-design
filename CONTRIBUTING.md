@@ -100,6 +100,25 @@ Two workflows run every day on `main` (and on demand from the Actions tab):
   runtime isn't checked, and `@types/node` is held to the newest release of its major. Fix it by
   updating them in a `BUILD: …` commit, with the checks above.
 
+  A package that can't be updated yet (its new major breaks a tool we depend on) goes into
+  `scripts/dependencies/held-back.json`, with why and the day to look at it again:
+
+  ```json
+  {
+  	"typescript": {
+  		"reason": "SvelteKit, svelte-check, svelte-package and typescript-eslint don't support TypeScript 7 yet (their peer ranges stop at 6).",
+  		"recheck": "2026-12-21"
+  	}
+  }
+  ```
+
+  A held-back package passes the check and is listed in its summary, as long as no newer release
+  semver keeps compatible with its version exists (`^current`: the same major, or the same minor
+  below 1.0), whatever range `package.json` gives it: a patch of the held major (or minor, below
+  1.0) still fails it. Its entry fails the check the day after `recheck` (a UTC day), so it is
+  looked at again (update the package, or give a new reason and day), and as soon as the package
+  is up to date, so the entry is removed.
+
 ## License
 
 By contributing you agree that your contributions are licensed under the

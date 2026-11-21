@@ -3,7 +3,9 @@ name: Outdated dependencies
 # Every day, fails when a direct dependency (or the pnpm version of packageManager) has a newer
 # version than the one locked, and lists them in the job summary (scripts/dependencies/outdated.ts,
 # where Node follows .node-version: the runtime isn't checked, and @types/node is held to its
-# newest release of that major). Dependencies are installed without running their scripts.
+# newest release of that major). A package listed in scripts/dependencies/held-back.json passes
+# until its recheck day, as long as no newer release semver keeps compatible (^current) exists; an
+# overdue or stale entry fails. Dependencies are installed without running their scripts.
 on:
   schedule:
     - cron: '23 5 * * *'
@@ -33,8 +35,8 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       # pnpm outdated exits with 1 whenever something is outdated: only an exit without any JSON is
-      # its own failure (the registry unreachable…). The summary fails on anything outdated, and on
-      # output it can't read.
+      # its own failure (the registry unreachable…). The script fails on anything outdated, on
+      # output it can't read, and when a registry lookup of its own fails.
       - name: List the outdated dependencies
         run: |
           status=0
@@ -43,10 +45,4 @@ jobs:
             echo "::error::pnpm outdated failed with status $status"
             exit 1
           fi
-          # The newest @types/node of the Node line CI runs, which pnpm outdated doesn't tell. pnpm
-          # writes a failure as JSON on stdout: anything but a version fails the step.
-          set -o pipefail
-          TYPES_NODE_LINE_LATEST=$(pnpm view "@types/node@$(cat .node-version)" version --json |
-            node --input-type=module -e 'const v = [JSON.parse(await new Response(process.stdin).text())].flat().at(-1); if (typeof v !== "string" || !/^\d+\.\d+\.\d+$/.test(v)) { console.error(`::error::no @types/node version: ${JSON.stringify(v)}`); process.exit(1); } console.log(v)')
-          export TYPES_NODE_LINE_LATEST
           node scripts/dependencies/outdated.ts < "$RUNNER_TEMP/outdated.json"
