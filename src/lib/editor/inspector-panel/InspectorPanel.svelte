@@ -8,6 +8,12 @@ the focus to the card above or below, Home and End to the first and the last, an
 Shift+down move the card itself. With the pointer, a card is dragged by its handle, which assistive
 technologies don't see (the header's Shift+arrows are their way to reorder), and dropped on the
 upper or lower half of another card to go before or after it.
+
+With `onRemove`, each card's header ends with a remove button (an icon button whose tooltip and
+accessible name are `removeLabel(card)`), except on cards marked `removable: false`. The panel only
+reports the press: the app removes the card from `cards`. When it does so during `onRemove`, the
+focus, which fell with the card, moves to the header that took its place, or to the one above; an
+app that asks first (a confirmation dialog) gives the focus back itself once it removes the card.
 -->
 <script module lang="ts">
 	/** A card of the inspector: one component of the selected object. */
@@ -18,9 +24,21 @@ upper or lower half of another card to go before or after it.
 		title: string;
 		/** A short summary shown after the title, such as the component's main value. */
 		subtitle?: string;
+		/** `false` hides the card's remove button, for a component the object can't lose. */
+		removable?: boolean;
 		/** The app's own data for the card's body (`content`), such as the component's fields. */
 		[key: string]: unknown;
 	};
+
+	/** The remove buttons: both props or neither, so a button never goes without its name. */
+	type RemoveProps =
+		| { onRemove?: undefined; removeLabel?: undefined }
+		| {
+				/** Called with the card whose remove button was pressed. */
+				onRemove: (card: InspectorCard) => void;
+				/** A card's remove button's name and tooltip, translated, such as "Remove Transform". */
+				removeLabel: (card: InspectorCard) => string;
+		  };
 </script>
 
 <script lang="ts">
@@ -39,6 +57,8 @@ upper or lower half of another card to go before or after it.
 	import { cn } from '#lib/utils.js';
 	import MingcuteRightLine from '~icons/mingcute/right-line';
 	import MingcuteDotsVerticalLine from '~icons/mingcute/dots-vertical-line';
+	import MingcuteDelete2Line from '~icons/mingcute/delete-2-line';
+	import IconButton from '../../components/icon-button/IconButton.svelte';
 	import { setTextDragPreview } from '../drag-preview';
 
 	let {
@@ -47,7 +67,9 @@ upper or lower half of another card to go before or after it.
 		expandedIds = $bindable<string[]>([]),
 		content,
 		onCardsChange,
-		onExpandedChange
+		onExpandedChange,
+		onRemove,
+		removeLabel
 	}: {
 		/** Classes added to the column's element. */
 		class?: string;
@@ -61,7 +83,7 @@ upper or lower half of another card to go before or after it.
 		onCardsChange?: (cards: InspectorCard[]) => void;
 		/** Called with the ids of the open cards after the user opens or closes one. */
 		onExpandedChange?: (expandedIds: string[]) => void;
-	} = $props();
+	} & RemoveProps = $props();
 
 	const uid = $props.id();
 	/** Tags this panel's drags: its cards take nothing else, and other views ignore them. */
@@ -89,6 +111,24 @@ upper or lower half of another card to go before or after it.
 		const next = shown.includes(id) ? shown.filter((v) => v !== id) : [...shown, id];
 		expandedIds = next;
 		onExpandedChange?.(next);
+	}
+
+	/** Whether the keyboard focus is nowhere (on the body), as when the focused button is removed. */
+	function isFocusLost(): boolean {
+		return document.activeElement === null || document.activeElement === document.body;
+	}
+
+	/**
+	 * Reports the removal; if the app removed the card meanwhile (replacing `cards` or changing it in
+	 * place), the focus, which fell with the card's remove button, moves to the header that took its
+	 * place, or to the one above.
+	 */
+	async function removeCard(card: InspectorCard, index: number) {
+		onRemove?.(card);
+		await tick();
+		const ids = cards.map((c) => c.id);
+		if (ids.includes(card.id) || !isFocusLost()) return;
+		focusHeader(ids[index] ?? ids[index - 1]);
 	}
 
 	function setCards(next: InspectorCard[]) {
@@ -242,6 +282,17 @@ upper or lower half of another card to go before or after it.
 						<span class="text-xs text-muted">{card.subtitle}</span>
 					{/if}
 				</button>
+				{#if onRemove && removeLabel && card.removable !== false}
+					<IconButton
+						label={removeLabel(card)}
+						size="xs"
+						side="left"
+						data-slot="inspector-panel-remove"
+						onclick={() => void removeCard(card, i)}
+					>
+						<MingcuteDelete2Line aria-hidden="true" />
+					</IconButton>
+				{/if}
 				<!-- Pointer only: on the keyboard, Shift+arrows on the header move the card. -->
 				<div
 					{@attach handleDrag(card)}
