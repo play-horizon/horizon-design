@@ -109,10 +109,8 @@ library's own `slidePage`, as the apps use it).
 
 	:global(.section-tag) {
 		margin-bottom: 0.25rem;
-		color: var(--primary);
-		font-size: var(--text-2xs);
-		font-weight: 700;
-		letter-spacing: var(--tracking-overline);
-		text-transform: uppercase;
+		color: var(--muted);
+		font-size: var(--text-xs);
+		font-weight: 600;
 	}
 </style>

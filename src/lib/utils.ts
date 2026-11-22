@@ -9,8 +9,8 @@ import { extendTailwindMerge, validators } from 'tailwind-merge';
 
 // Theme values tailwind-merge can't recognise on its own: without them, `text-display` would
 // count as a text colour and replace `text-fg`, `h-control-md` wouldn't yield to `h-8`, and a
-// caller's `animate-zoom-in` wouldn't replace a component's `animate-fade-in`. Every `animate-*`,
-// `ease-*` and `tracking-*` class sets one property only, so any name of the theme is one of them.
+// caller's `animate-zoom-in` wouldn't replace a component's `animate-fade-in`. Every `animate-*`
+// and `ease-*` class sets one property only, so any name of the theme is one of them.
 const twMerge = extendTailwindMerge({
 	extend: {
 		theme: {
@@ -18,8 +18,7 @@ const twMerge = extendTailwindMerge({
 			'inset-shadow': ['highlight'],
 			spacing: ['control-xs', 'control-sm', 'control-md', 'control-lg'],
 			animate: [validators.isAny],
-			ease: [validators.isAny],
-			tracking: [validators.isAny]
+			ease: [validators.isAny]
 		}
 	}
 });

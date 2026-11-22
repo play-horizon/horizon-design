@@ -64,7 +64,7 @@ Transform card is marked unremovable). Reset brings back the removed cards.
 	{#snippet example(values)}
 		<div class="grid w-full gap-2">
 			<div class="h-72 overflow-hidden rounded-xl border border-border">
-				<ScrollArea class="size-full p-3" label="Components">
+				<ScrollArea class="size-full" label="Components">
 					{#if values.removal}
 						<InspectorPanel
 							bind:cards

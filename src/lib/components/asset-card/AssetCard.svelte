@@ -1,8 +1,8 @@
 <!--
 @component
 An asset in a list (a store listing, an entry of My assets or of a game's assets): its square
-thumbnail, its name, its kind, a `meta` line (votes, the rig profile) and `actions` (Add to my
-assets). Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a neutral fill.
+thumbnail, its name, then its kind and a `meta` line in muted text (votes, the rig profile), and
+`actions` (Add to my assets). Without a thumbnail, `placeholder` (an icon of the kind) is drawn on a neutral fill.
 
 It is interactive only when given something to do: with `href`, its name is a link; with `onclick`,
 a button; with `selectable` too, a toggle whose pressed state is `selected`, for pickers. The link
@@ -12,7 +12,6 @@ a button), and the actions stay their own buttons. With none of them, it is a pl
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cn } from '#lib/utils.js';
-	import Badge from '../badge/Badge.svelte';
 
 	let {
 		name,
@@ -93,8 +92,11 @@ a button), and the actions stay their own buttons. With none of them, it is a pl
 			<span class="truncate text-sm font-semibold text-fg">{name}</span>
 		{/if}
 		<div class="flex min-w-0 items-center gap-1.5 text-xs text-muted">
-			<Badge size="sm">{kind}</Badge>
-			{#if meta}<span class="relative z-2 truncate">{@render meta()}</span>{/if}
+			<span class="shrink-0">{kind}</span>
+			{#if meta}
+				<span aria-hidden="true">·</span>
+				<span class="relative z-2 truncate">{@render meta()}</span>
+			{/if}
 		</div>
 	</div>
 	{#if actions}

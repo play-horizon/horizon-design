@@ -25,7 +25,7 @@ flow once every step is done.
 	<p class="py-4 text-sm text-muted">Review and confirm your information.</p>
 {/snippet}
 {#snippet completed()}
-	<p class="py-4 text-sm text-success">All steps completed!</p>
+	<p class="py-4 text-sm text-success">All steps are complete.</p>
 {/snippet}
 {#snippet stepContent()}
 	<p class="py-4 text-sm text-muted">The content of the current step.</p>

@@ -100,7 +100,9 @@ describe('InspectorPanel', () => {
 		drag = await startDrag(handle, { clientX: 10, clientY: 10 });
 		// Collider's lower half (100 to 120): after the last card, the line drawn below it.
 		await dragOver(rows[2], { clientX: 10, clientY: 110 }, drag);
-		expect(rows[2].querySelector('.-bottom-0\\.75')).not.toBeNull();
+		expect(
+			rows[2].querySelector('[data-slot="inspector-panel-drop-line"][data-edge="bottom"]')
+		).not.toBeNull();
 		await drop(rows[2], { clientX: 10, clientY: 110 }, drag);
 		expect(order()).toEqual(['mesh', 'collider', 'transform']);
 	});

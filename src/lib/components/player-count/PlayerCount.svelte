@@ -1,7 +1,7 @@
 <!--
 @component
 How many people are playing a game now: a live dot and the count. `inline` (the game page) shows
-the count in bold followed by its label; `overlay` (on game art) is a dark pill with the count
+the count in bold followed by its label; `overlay` (on game art) is a dark label with the count
 only, its label kept for assistive technology. The app passes the count already formatted by the
 i18n layer (`9,870`, `4.2k`) and the label translated (`playing now`). `live` false shows an idle
 dot, for a game nobody is playing.
@@ -21,7 +21,7 @@ dot, for a game nobody is playing.
 		count: string;
 		/** What the count counts, such as "playing now". */
 		label: string;
-		/** `inline` for a page, `overlay` for a pill over game art. */
+		/** `inline` for a page, `overlay` for a label over game art. */
 		variant?: 'inline' | 'overlay';
 		/** False when nobody is playing: the dot turns idle. */
 		live?: boolean;
@@ -37,7 +37,7 @@ dot, for a game nobody is playing.
 		'inline-flex shrink-0 items-center whitespace-nowrap tabular-nums',
 		variant === 'inline'
 			? 'gap-1.75 text-base text-fg'
-			: 'h-5 gap-1.25 rounded-full bg-art-scrim px-1.75 text-xs font-semibold text-on-art',
+			: 'h-5 gap-1.25 rounded-md bg-art-scrim px-1.75 text-xs font-semibold text-on-art',
 		className
 	)}
 	data-slot="player-count"

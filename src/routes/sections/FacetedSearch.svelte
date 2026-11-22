@@ -88,7 +88,7 @@ page as game cards.
 
 	let playgroundQuery = $state('');
 	let playgroundSelected = $state<Record<string, string[]>>({});
-	let playgroundSort = $state<string>();
+	let playgroundSort = $state('players');
 
 	let query = $state('');
 	let selected = $state<Record<string, string[]>>({});

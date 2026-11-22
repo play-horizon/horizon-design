@@ -6,7 +6,6 @@ and tags, and a Back button of the `art` variant, readable over the art when hov
 <script lang="ts">
 	import { GameHero } from '#lib/components/game-hero/index.js';
 	import { Avatar } from '#lib/components/avatar/index.js';
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Button } from '#lib/components/button/index.js';
 	import MingcuteArrowLeftLine from '~icons/mingcute/arrow-left-line';
 	import { art } from '../examples';
@@ -33,9 +32,7 @@ and tags, and a Back button of the `art` variant, readable over the art when hov
 			<span>by <b class="text-fg">lena_n</b></span>
 		{/snippet}
 		{#snippet tags()}
-			<Badge size="sm">obby</Badge>
-			<Badge size="sm">platformer</Badge>
-			<Badge size="sm">social</Badge>
+			<span>obby · platformer · social</span>
 		{/snippet}
 		<div class="w-full overflow-hidden rounded-xl border border-border bg-background pb-6">
 			<GameHero

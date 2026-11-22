@@ -73,7 +73,7 @@ made only of dialogs.
 			id: 'middle',
 			type: 'dialog' as const,
 			title: 'Step 2',
-			description: 'Keep going, you are doing great!',
+			description: 'Back and Next move between the steps.',
 			actions: [
 				{ label: 'Back', action: 'prev' as const },
 				{ label: 'Next', action: 'next' as const }
@@ -82,7 +82,7 @@ made only of dialogs.
 		{
 			id: 'done',
 			type: 'dialog' as const,
-			title: 'Done!',
+			title: 'Done',
 			description: 'You have completed the tour.',
 			actions: [{ label: 'Finish', action: 'dismiss' as const }]
 		}

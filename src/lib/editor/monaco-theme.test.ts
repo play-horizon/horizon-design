@@ -15,7 +15,7 @@ describe('createMonacoTheme', () => {
 		expect(theme.rules).toContainEqual({ token: '', foreground: 'f1f5f9' });
 		expect(theme.rules).toContainEqual({
 			token: 'comment',
-			foreground: '738199',
+			foreground: '808da6',
 			fontStyle: 'italic'
 		});
 		expect(theme.rules).toContainEqual({ token: 'keyword', foreground: 'ba93fb' });
@@ -27,10 +27,10 @@ describe('createMonacoTheme', () => {
 			'editor.lineHighlightBackground': '#ffffff09',
 			'editorBracketMatch.background': '#598dff21',
 			// Tints: primary at 0x4d (30 %), faint at 0x40 (25 %), background fully transparent.
-			'editor.selectionBackground': '#598dff4d',
-			'scrollbarSlider.background': '#5b698340',
-			'scrollbarSlider.hoverBackground': '#5b698366',
-			'scrollbarSlider.activeBackground': '#5b698380',
+			'editor.selectionBackground': '#5e90fe4d',
+			'scrollbarSlider.background': '#7c8ba740',
+			'scrollbarSlider.hoverBackground': '#7c8ba766',
+			'scrollbarSlider.activeBackground': '#7c8ba780',
 			'editor.lineHighlightBorder': '#11162400',
 			'scrollbar.shadow': '#11162400'
 		});
@@ -44,8 +44,8 @@ describe('createMonacoTheme', () => {
 		expect(theme.colors).toMatchObject({
 			'editor.background': '#f9fafc',
 			'editor.lineHighlightBackground': '#3246730a',
-			'editor.selectionBackground': '#265de94d',
-			'scrollbarSlider.background': '#808da240',
+			'editor.selectionBackground': '#1e53de4d',
+			'scrollbarSlider.background': '#606c8040',
 			'editor.lineHighlightBorder': '#f9fafc00'
 		});
 	});

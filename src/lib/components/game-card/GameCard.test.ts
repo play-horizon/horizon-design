@@ -1,6 +1,7 @@
 /**
  * Tests of `GameCard`: the card's link or button carries the game's name, its controls stay
- * outside the link, and with neither `href` nor `onclick` it is a plain display.
+ * outside the link, with neither `href` nor `onclick` it is a plain display, and without a
+ * thumbnail its art is the sunken fill.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -35,6 +36,14 @@ describe('GameCard', () => {
 		expect(card.contains(action)).toBe(false);
 		await fireEvent.click(card);
 		expect(onclick).toHaveBeenCalledOnce();
+	});
+
+	it('draws a card without a thumbnail on the sunken fill, which stands apart from the page in both themes', () => {
+		for (const variant of ['default', 'feature'] as const) {
+			const { container, unmount } = render(GameCard, { name: 'Rooftop trials', variant });
+			expect(container.querySelector('.aspect-video')?.classList.contains('bg-sunken')).toBe(true);
+			unmount();
+		}
 	});
 
 	it('is a plain display with neither href nor onclick, in both variants', () => {

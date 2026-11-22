@@ -65,7 +65,7 @@ with its labels translated; `value` holds the chosen tags' ids, in the order the
 			aria-pressed={on}
 			disabled={disabled || (full && !on)}
 			class={cn(
-				'inline-flex h-control-sm items-center rounded-full border px-2.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-40',
+				'inline-flex h-control-sm items-center rounded-md border px-2.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-40',
 				on
 					? 'border-primary-border bg-primary-subtle text-primary'
 					: 'border-border bg-surface text-fg-2 hover:bg-hover hover:text-fg'

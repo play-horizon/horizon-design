@@ -1,7 +1,8 @@
 <!--
 @component
-The Editor's inspector: a column of collapsible cards (a component each) that can be reordered by
-drag or keyboard.
+The Editor's inspector: a column of flat collapsible sections divided by hairlines, a component each
+(`cards` in the API). A section opens and closes by its header row, and the sections can be
+reordered by drag or keyboard.
 
 Each card's header is a button that opens and closes it. On a header, the up and down arrows move
 the focus to the card above or below, Home and End to the first and the last, and Shift+up and
@@ -234,11 +235,7 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 	}
 </script>
 
-<div
-	{@attach panelDrop}
-	data-slot="inspector-panel"
-	class={cn('flex flex-col gap-1 text-sm', className)}
->
+<div {@attach panelDrop} data-slot="inspector-panel" class={cn('flex flex-col text-sm', className)}>
 	{#each cards as card, i (card.id)}
 		{@const isExpanded = expandedIds.includes(card.id)}
 
@@ -246,27 +243,29 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 			{@attach cardDrop(card)}
 			data-slot="inspector-panel-card"
 			class={cn(
-				'relative flex flex-col rounded-md border border-border transition-opacity duration-150',
+				'relative flex flex-col border-b border-border transition-opacity duration-150',
 				draggingId === card.id && 'opacity-30'
 			)}
 		>
 			{#if dropTarget?.id === card.id}
 				<div
 					class={[
-						'pointer-events-none absolute inset-x-1 h-px rounded-full bg-primary',
-						dropTarget.edge === 'top' ? '-top-0.75' : '-bottom-0.75'
+						'pointer-events-none absolute inset-x-0 z-1 h-0.5 bg-primary',
+						dropTarget.edge === 'top' ? 'top-0' : 'bottom-0'
 					]}
+					data-slot="inspector-panel-drop-line"
+					data-edge={dropTarget.edge}
 					aria-hidden="true"
 				></div>
 			{/if}
-			<div class="flex items-center rounded-sm pr-2 transition-colors hover:bg-hover/50">
+			<div class="flex items-center pr-2 transition-colors hover:bg-hover/50">
 				<button
 					type="button"
 					id={headerId(card.id)}
 					aria-expanded={isExpanded}
 					aria-controls={bodyId(card.id)}
 					aria-keyshortcuts="Shift+ArrowUp Shift+ArrowDown"
-					class="flex min-w-0 flex-1 cursor-default items-center gap-1.5 rounded-sm px-2 py-1.5 text-left"
+					class="flex min-w-0 flex-1 cursor-default items-center gap-1.5 px-2 py-1.5 text-left"
 					onclick={() => toggleExpanded(card.id)}
 					onkeydown={(event) => handleHeaderKeydown(event, i)}
 				>
@@ -314,7 +313,7 @@ app that asks first (a confirmation dialog) gives the focus back itself once it 
 				inert={!isExpanded}
 			>
 				<div class="overflow-hidden">
-					<div class="border-t border-border px-3 py-2.5">
+					<div class="px-3 pt-0.5 pb-2.5">
 						{#if content}
 							{@render content(card)}
 						{/if}

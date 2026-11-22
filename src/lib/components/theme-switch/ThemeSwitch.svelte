@@ -1,6 +1,6 @@
 <!--
 @component
-The theme switch: three icon buttons (system, dark, light) on a sunken pill, with a raised
+The theme switch: three icon buttons (system, dark, light) on a sunken track, with a raised
 highlight that slides to the chosen one. Once it has slid, choosing calls `theme.set`, which saves
 the mode and crossfades the page (at once under reduced motion). The labels name each mode, both for assistive technology and in each button's tooltip; the app passes them
 translated.

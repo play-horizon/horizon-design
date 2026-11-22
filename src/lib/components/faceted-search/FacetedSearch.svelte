@@ -77,7 +77,10 @@ shows while any option is chosen. Every text is passed in, translated.
 		facets: readonly Facet[];
 		/** The ways to order the results; no sort control when empty. */
 		sorts?: readonly SortOption[];
-		/** The chosen sort's id (bindable); unset, the first of `sorts`. */
+		/**
+		 * The chosen sort's id (bindable); left out, the first of `sorts`. Bind it to a state that
+		 * holds an id: Svelte refuses to bind an unset value to a prop that has a fallback.
+		 */
 		sort?: string;
 		/** The search field's accessible name, such as "Search games". */
 		searchLabel: string;
@@ -130,7 +133,7 @@ shows while any option is chosen. Every text is passed in, translated.
 	<aside class="flex min-h-0 flex-col gap-5 overflow-y-auto">
 		{#each facets as facet (facet.id)}
 			<fieldset class="grid gap-1.5">
-				<legend class="mb-1.5 text-2xs font-bold tracking-overline text-faint uppercase">
+				<legend class="mb-1.5 text-xs font-semibold text-muted">
 					{facet.label}
 				</legend>
 				{#each facet.options as option (option.id)}

@@ -25,7 +25,7 @@ the square icon, the name, a `byline` (the creator) and the game's `tags` over i
 		icon?: string;
 		/** The line under the name: the creator. */
 		byline?: Snippet;
-		/** The game's tags, next to the byline. */
+		/** The game's tags, next to the byline, as plain text ("obby · platformer"), never badges. */
 		tags?: Snippet;
 		/** Drawn at the banner's top left, such as a Back button. */
 		top?: Snippet;
@@ -62,7 +62,7 @@ the square icon, the name, a `byline` (the creator) and the game's `tags` over i
 						<div class="flex items-center gap-1.5 text-fg-2">{@render byline()}</div>
 					{/if}
 					{#if tags}
-						<div class="flex flex-wrap gap-1.5">{@render tags()}</div>
+						<div class="flex flex-wrap gap-1.5 text-fg-2">{@render tags()}</div>
 					{/if}
 				</div>
 			{/if}

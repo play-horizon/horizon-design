@@ -62,7 +62,8 @@ export type Theme = (typeof themes)[number];
 
 /**
  * A token's value: a palette entry, the same entry with an alpha (`[name, alpha]`), or an OKLCH
- * literal for the few colours that sit between ramp steps.
+ * literal for the colours that sit between ramp steps, among them the text colours whose ramp step
+ * fell short of 4.5:1 and was lightened (dark) or darkened (light) just enough, hue kept.
  */
 export type ColorValue = PaletteName | readonly [PaletteName, number] | `oklch(${string})`;
 
@@ -79,7 +80,8 @@ export const colorTokenDocs = {
 	fg: 'Primary text.',
 	'fg-2': 'Secondary text: body copy next to primary text.',
 	muted: 'Labels, metadata and placeholder text.',
-	faint: 'Decorative and disabled text, overline labels.',
+	faint:
+		'The quietest text: hints, counts and disabled text, still 4.5:1 on every surface; never on a tint.',
 	primary: 'The one main action, links, selection and focus.',
 	'primary-hover': 'A hovered primary action.',
 	'on-primary': 'Text and icons on a primary fill.',
@@ -106,8 +108,8 @@ export const colorTokenDocs = {
 	scrim: 'The dimmed backdrop behind modal overlays.',
 	paper: 'Always white: switch and slider thumbs, QR code backgrounds.',
 	'on-art': 'Text and icons drawn over game art, in both themes.',
-	'art-scrim': 'Translucent pills drawn over game art, in both themes.',
-	'art-scrim-hover': 'A hovered translucent pill over game art, in both themes.',
+	'art-scrim': 'Translucent labels and buttons drawn over game art, in both themes.',
+	'art-scrim-hover': 'A hovered translucent button over game art, in both themes.',
 	'avatar-1': 'Avatar fallback tone 1.',
 	'avatar-2': 'Avatar fallback tone 2.',
 	'avatar-3': 'Avatar fallback tone 3.',
@@ -148,7 +150,10 @@ const shared = {
 	'avatar-5': 'oklch(0.54 0.09 200)'
 } as const satisfies Partial<Record<ColorToken, ColorValue>>;
 
-/** The semantic colour tokens of each theme. */
+/**
+ * The semantic colour tokens of each theme. Every text colour keeps 4.5:1 (WCAG 2.2 AA) on every fill
+ * it is drawn on, which `tokens.test.ts` checks pair by pair.
+ */
 export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 	dark: {
 		background: 'navy-950',
@@ -161,14 +166,14 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		'border-strong': 'navy-700',
 		fg: 'oklch(0.968 0.007 248)',
 		'fg-2': 'oklch(0.86 0.02 255)',
-		muted: 'oklch(0.68 0.045 261)',
-		faint: 'oklch(0.52 0.045 263)',
-		primary: 'blue-400',
+		muted: 'oklch(0.685 0.045 261)',
+		faint: 'oklch(0.635 0.045 263)',
+		primary: 'oklch(0.672 0.172 263.8)',
 		'primary-hover': 'blue-300',
 		'on-primary': 'oklch(0.17 0.02 265)',
 		'primary-subtle': ['blue-400', 0.13],
 		'primary-border': ['blue-400', 0.45],
-		danger: 'red-400',
+		danger: 'oklch(0.679 0.208 25.6)',
 		'danger-subtle': ['red-400', 0.13],
 		'danger-border': ['red-400', 0.45],
 		'on-danger': 'oklch(0.18 0.03 25)',
@@ -184,7 +189,7 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		accent: 'violet-400',
 		'accent-subtle': ['violet-400', 0.13],
 		'accent-border': ['violet-400', 0.35],
-		server: 'blue-400',
+		server: 'oklch(0.672 0.172 263.8)',
 		local: 'green-400',
 		scrim: 'oklch(0.12 0.02 268 / 0.62)',
 		...shared,
@@ -195,7 +200,7 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		'code-string': 'oklch(0.8 0.13 150)',
 		'code-number': 'oklch(0.8 0.13 65)',
 		'code-type': 'oklch(0.82 0.1 190)',
-		'code-comment': 'oklch(0.6 0.04 262)',
+		'code-comment': 'oklch(0.642 0.04 262)',
 		'code-attribute': 'oklch(0.82 0.08 25)'
 	},
 	light: {
@@ -209,18 +214,18 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		'border-strong': 'navy-300',
 		fg: 'oklch(0.208 0.04 265.8)',
 		'fg-2': 'oklch(0.33 0.045 265)',
-		muted: 'oklch(0.5 0.041 259)',
-		faint: 'oklch(0.64 0.035 260)',
-		primary: 'blue-600',
+		muted: 'oklch(0.498 0.041 259)',
+		faint: 'oklch(0.529 0.035 260)',
+		primary: 'oklch(0.503 0.219 264)',
 		'primary-hover': 'blue-700',
 		'on-primary': 'navy-0',
 		'primary-subtle': ['blue-600', 0.09],
 		'primary-border': ['blue-600', 0.4],
-		danger: 'red-600',
+		danger: 'oklch(0.525 0.207 25.3)',
 		'danger-subtle': ['red-600', 0.08],
 		'danger-border': ['red-600', 0.4],
 		'on-danger': 'navy-0',
-		success: 'green-600',
+		success: 'oklch(0.477 0.103 162.6)',
 		'success-subtle': ['green-600', 0.1],
 		'success-border': ['green-600', 0.4],
 		// A gold, not the dark theme's amber darkened (which reads brown): as text it keeps 4.5:1
@@ -228,14 +233,14 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		warning: 'gold-600',
 		'warning-subtle': ['gold-300', 0.2],
 		'warning-border': ['gold-600', 0.45],
-		info: 'sky-600',
+		info: 'oklch(0.499 0.125 245)',
 		'info-subtle': ['sky-600', 0.09],
 		'info-border': ['sky-600', 0.4],
 		accent: 'violet-600',
 		'accent-subtle': ['violet-600', 0.08],
 		'accent-border': ['violet-600', 0.35],
-		server: 'blue-600',
-		local: 'green-600',
+		server: 'oklch(0.503 0.219 264)',
+		local: 'oklch(0.477 0.103 162.6)',
 		scrim: 'oklch(0.2 0.04 266 / 0.4)',
 		...shared,
 		'grid-line': 'oklch(0.3 0.05 265 / 0.06)',
@@ -243,9 +248,9 @@ export const colors: Record<Theme, Record<ColorToken, ColorValue>> = {
 		'code-keyword': 'oklch(0.5 0.2 300)',
 		'code-function': 'oklch(0.48 0.12 245)',
 		'code-string': 'oklch(0.5 0.13 150)',
-		'code-number': 'oklch(0.55 0.136 55)',
+		'code-number': 'oklch(0.526 0.13 55)',
 		'code-type': 'oklch(0.5 0.085 200)',
-		'code-comment': 'oklch(0.58 0.03 262)',
+		'code-comment': 'oklch(0.515 0.03 262)',
 		'code-attribute': 'oklch(0.5 0.15 25)'
 	}
 };

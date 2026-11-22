@@ -22,10 +22,6 @@ game's details with text and snippet values side by side.
 	<Badge variant="success">Active</Badge>
 {/snippet}
 
-{#snippet beta()}
-	<Badge variant="info">Beta</Badge>
-{/snippet}
-
 <div class="grid gap-4">
 	<Playground
 		description="Each value is text or a snippet, such as a badge."
@@ -54,8 +50,7 @@ game's details with text and snippet values side by side.
 			items={[
 				{ label: 'Name', value: 'Neon Drift' },
 				...details,
-				{ label: 'Status', value: active },
-				{ label: 'Channel', value: beta }
+				{ label: 'Status', value: active }
 			]}
 		/>
 	</Card>

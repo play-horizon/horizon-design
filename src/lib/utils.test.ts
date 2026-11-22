@@ -11,18 +11,17 @@ describe('cn', () => {
 		expect(cn('text-fg', 'text-display')).toBe('text-fg text-display');
 	});
 
-	it('lets a later control height, animation, easing or tracking override an earlier one', () => {
+	it('lets a later control height, animation or easing override an earlier one', () => {
 		expect(cn('h-control-md', 'h-8')).toBe('h-8');
 		expect(cn('data-[state=open]:animate-fade-in', 'data-[state=open]:animate-zoom-in')).toBe(
 			'data-[state=open]:animate-zoom-in'
 		);
 		expect(cn('ease-standard', 'ease-in')).toBe('ease-in');
-		expect(cn('tracking-overline', 'tracking-wide')).toBe('tracking-wide');
 	});
 
 	it('keeps classes that do not conflict', () => {
-		expect(cn('tracking-overline text-faint', false, 'uppercase')).toBe(
-			'tracking-overline text-faint uppercase'
+		expect(cn('h-control-md text-faint', false, 'rounded-md')).toBe(
+			'h-control-md text-faint rounded-md'
 		);
 	});
 });

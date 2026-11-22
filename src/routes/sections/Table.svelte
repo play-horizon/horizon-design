@@ -1,11 +1,10 @@
 <!--
 @component
 Docs: Table. A playground over the data (how many rows, text cells or columns rendered by their
-`cell` snippet), then a table of text cells and one whose columns render a status dot, a badge
-and an icon button.
+`cell` snippet), then a table of text cells and one whose columns render a status dot, a muted
+role and an icon button.
 -->
 <script lang="ts">
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import { IconButton } from '#lib/components/icon-button/index.js';
 	import { Status } from '#lib/components/status/index.js';
@@ -50,7 +49,7 @@ and an icon button.
 {/snippet}
 
 {#snippet roleCell(member: Member)}
-	<Badge variant={member.role === 'Owner' ? 'primary' : 'neutral'}>{member.role}</Badge>
+	<span class="text-muted">{member.role}</span>
 {/snippet}
 
 {#snippet actionsCell(member: Member)}
