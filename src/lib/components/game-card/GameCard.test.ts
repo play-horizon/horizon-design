@@ -1,6 +1,6 @@
 /**
- * Tests of `GameCard`: the card's link or button carries the game's name, and its controls stay
- * outside the link.
+ * Tests of `GameCard`: the card's link or button carries the game's name, its controls stay
+ * outside the link, and with neither `href` nor `onclick` it is a plain display.
  * @module
  */
 import { describe, expect, it, vi } from 'vitest';
@@ -35,5 +35,30 @@ describe('GameCard', () => {
 		expect(card.contains(action)).toBe(false);
 		await fireEvent.click(card);
 		expect(onclick).toHaveBeenCalledOnce();
+	});
+
+	it('is a plain display with neither href nor onclick, in both variants', () => {
+		for (const variant of ['default', 'feature'] as const) {
+			const { container, getByText, unmount } = render(GameCard, {
+				name: 'Quiet Woods',
+				variant,
+				meta: text('Developer')
+			});
+			expect(getByText('Quiet Woods').tagName).toBe('SPAN');
+			expect(getByText('Developer')).toBeTruthy();
+			expect(container.querySelector('a, button, [tabindex]')).toBeNull();
+			expect(container.innerHTML).not.toContain('group-hover:');
+			expect(container.querySelector('[data-interactive]')).toBeNull();
+			unmount();
+		}
+	});
+
+	it('lifts on hover, and is marked interactive, when it leads somewhere', () => {
+		for (const target of [{ href: '/games/neon' }, { onclick: vi.fn() }]) {
+			const { container, unmount } = render(GameCard, { name: 'Neon Drift', ...target });
+			expect(container.innerHTML).toContain('group-hover:-translate-y-0.5');
+			expect(container.querySelector('[data-interactive]')).not.toBeNull();
+			unmount();
+		}
 	});
 });
