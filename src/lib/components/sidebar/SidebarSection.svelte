@@ -1,6 +1,6 @@
 <!--
 @component
-A group of `SidebarItem`s, with an optional overline label that names the group. A collapsed
+A group of `SidebarItem`s, with an optional label that names the group. A collapsed
 `Sidebar` hides the label visually.
 -->
 <script lang="ts">
@@ -15,7 +15,7 @@ A group of `SidebarItem`s, with an optional overline label that names the group.
 	}: {
 		/** Classes added to the group. */
 		class?: string;
-		/** The group's overline label; none when empty. */
+		/** The group's label, in sentence case; none when empty. */
 		label?: string;
 		/** The group's `SidebarItem`s. */
 		children?: Snippet;
@@ -36,7 +36,7 @@ A group of `SidebarItem`s, with an optional overline label that names the group.
 	{#if label}
 		<p
 			id={labelId}
-			class="px-2.5 pt-3 pb-1 text-2xs font-bold tracking-overline text-muted uppercase group-data-[collapsed=true]/sidebar:sr-only"
+			class="px-2.5 pt-3 pb-1 text-xs font-semibold text-muted group-data-[collapsed=true]/sidebar:sr-only"
 		>
 			{label}
 		</p>

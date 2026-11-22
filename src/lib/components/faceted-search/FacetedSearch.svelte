@@ -130,7 +130,7 @@ shows while any option is chosen. Every text is passed in, translated.
 	<aside class="flex min-h-0 flex-col gap-5 overflow-y-auto">
 		{#each facets as facet (facet.id)}
 			<fieldset class="grid gap-1.5">
-				<legend class="mb-1.5 text-2xs font-bold tracking-overline text-faint uppercase">
+				<legend class="mb-1.5 text-xs font-semibold text-muted">
 					{facet.label}
 				</legend>
 				{#each facet.options as option (option.id)}

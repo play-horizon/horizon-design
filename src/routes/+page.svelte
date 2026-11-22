@@ -19,6 +19,7 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 
 	const tokens = Object.keys(tokenValues.dark) as ColorToken[];
 	const themes = ['dark', 'light'] as const;
+	const themeNames = { dark: 'Dark', light: 'Light' } as const;
 	// Full class names, so Tailwind finds them in the source.
 	const textSizes = [
 		'text-2xs',
@@ -82,7 +83,7 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 			class="rounded-xl border border-border bg-background p-3 text-fg"
 			data-testid="swatches-{name}"
 		>
-			<p class="mb-2 text-2xs font-bold tracking-overline text-muted uppercase">{name}</p>
+			<p class="mb-2 text-xs font-semibold text-muted">{themeNames[name]}</p>
 			<div class="grid gap-1">
 				{#each tokens as token (token)}
 					<div class="flex items-center gap-2.5 text-xs">
@@ -112,7 +113,7 @@ the type scale, radius, elevation, and the page motion (theme crossfade, navigat
 			<span class={size}>Build worlds with your friends</span>
 		</div>
 	{/each}
-	<p class="mt-3 text-2xs font-bold tracking-overline text-faint uppercase">Marketing</p>
+	<p class="mt-3 text-xs font-semibold text-muted">Marketing</p>
 	{#each displaySizes as size (size)}
 		<div class="flex items-baseline gap-4">
 			<span class="w-32 shrink-0 font-mono text-xs text-muted">{size}</span>

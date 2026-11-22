@@ -119,7 +119,7 @@ showing a maximised view with its restore button.
 {#snippet layoutControlsPanel()}
 	<div class="h-full space-y-5 overflow-auto p-4">
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Variants</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Variants</p>
 			<div class="flex flex-wrap gap-2">
 				<Button variant="primary" size="sm">Primary</Button>
 				<Button size="sm">Default</Button>
@@ -130,7 +130,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Sizes</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Sizes</p>
 			<div class="flex flex-wrap items-center gap-2">
 				<Button size="lg">LG</Button>
 				<Button size="md">MD</Button>
@@ -139,9 +139,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
-				Icon buttons
-			</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Icon buttons</p>
 			<div class="flex flex-wrap items-center gap-2">
 				<IconButton label="Star" variant="primary">
 					<MingcuteStarLine aria-hidden="true" />
@@ -161,9 +159,7 @@ showing a maximised view with its restore button.
 {#snippet layoutInputsPanel()}
 	<div class="h-full space-y-3 overflow-auto p-4">
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
-				Text inputs
-			</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Text inputs</p>
 			<div class="space-y-2">
 				<Input placeholder="Default input..." />
 				<Input placeholder="Disabled input..." disabled />
@@ -171,7 +167,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Select</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Select</p>
 			<NativeSelect aria-label="Framework">
 				<option>Svelte</option>
 				<option>React</option>
@@ -180,9 +176,7 @@ showing a maximised view with its restore button.
 			</NativeSelect>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
-				Toggle controls
-			</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Toggle controls</p>
 			<div class="flex flex-col gap-2">
 				<Switch label="Dark mode" />
 				<Switch defaultChecked label="Notifications" />
@@ -197,7 +191,7 @@ showing a maximised view with its restore button.
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div role="region" aria-label="Visual" tabindex="0" class="h-full space-y-4 overflow-auto p-4">
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Badges</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Badges</p>
 			<div class="flex flex-wrap gap-1.5">
 				<Badge>Default</Badge>
 				<Badge variant="neutral">Neutral</Badge>
@@ -208,7 +202,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Avatars</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Avatars</p>
 			<AvatarStack
 				people={['RK', 'JD', 'AM', 'SL'].map((initials) => ({
 					id: initials,
@@ -220,7 +214,7 @@ showing a maximised view with its restore button.
 			/>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Status</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Status</p>
 			<div class="flex flex-wrap gap-3">
 				<div class="flex items-center gap-1.5 text-xs"><Status variant="online" />Online</div>
 				<div class="flex items-center gap-1.5 text-xs"><Status variant="away" />Away</div>
@@ -229,7 +223,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Alerts</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Alerts</p>
 			<div class="space-y-2">
 				<Alert variant="info" title="Heads up" description="A short informational note." />
 				<Alert variant="success" title="Changes saved" />
@@ -244,7 +238,7 @@ showing a maximised view with its restore button.
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div role="region" aria-label="Feedback" tabindex="0" class="h-full space-y-4 overflow-auto p-4">
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">Progress</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Progress</p>
 			<div class="space-y-2">
 				<div class="flex items-center gap-3">
 					<Progress value={72} class="flex-1" />
@@ -261,9 +255,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
-				Loading states
-			</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Loading states</p>
 			<div class="flex flex-wrap items-center gap-3">
 				<Spinner />
 				<Skeleton class="h-4 w-28 rounded" />
@@ -272,9 +264,7 @@ showing a maximised view with its restore button.
 			</div>
 		</div>
 		<div>
-			<p class="mb-2.5 text-[11px] font-semibold tracking-widest text-muted uppercase">
-				Circular progress
-			</p>
+			<p class="mb-2.5 text-xs font-semibold text-muted">Circular progress</p>
 			<div class="flex items-center gap-4">
 				<CircularProgress value={65} label="Upload" valueText="65%" />
 				<CircularProgress value={30} label="Build" valueText="30%" />
