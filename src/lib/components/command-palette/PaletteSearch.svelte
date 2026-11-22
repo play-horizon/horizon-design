@@ -127,7 +127,7 @@ opens (the dialog unmounts its content on close), so every opening starts with a
 		>
 			<span class="min-w-0 truncate">{command.label}</span>
 			{#if command.group}
-				<span class="shrink-0 text-xs text-faint">{command.group}</span>
+				<span class="shrink-0 text-xs text-muted">{command.group}</span>
 			{/if}
 			{#if command.shortcut}
 				<Kbd class="ml-auto">{command.shortcut}</Kbd>

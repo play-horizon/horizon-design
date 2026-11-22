@@ -51,7 +51,7 @@ plain pill, one with an icon, one with a tag and one inside a link.
 				Dark and light themes
 			</Announcement>
 			<a href={resolve('/[section]', { section: 'button' })} class="rounded-full">
-				<Announcement class="transition-colors hover:bg-primary/20">
+				<Announcement class="transition-colors hover:border-primary">
 					See the buttons
 					<MingcuteArrowRightLine class="size-3.5" aria-hidden="true" />
 				</Announcement>

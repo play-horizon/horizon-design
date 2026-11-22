@@ -115,6 +115,12 @@ the same, and never write a colour literal.
   `ContextMenu`, `HoverCard`, `FloatingPanel`, `CommandPalette`) take `frosted` for a translucent,
   blurred surface; the `frosted` utility is for overlays only.
 - Tailwind's default palette and shadows are removed: only these tokens produce colour utilities.
+- **Contrast:** every text colour keeps 4.5:1 (WCAG 2.2 AA) on every fill it is drawn on, in both
+  themes: the neutral texts on every surface and on `hover`, and `fg`, `fg-2` and `muted` also on
+  each status tint; the coloured texts on every surface, on `hover` and on their own tint; the code
+  colours on the current line. `active` (a pressed or current item) carries `fg`, `fg-2` or `muted`
+  only, and `faint` never sits on a tint. The one exception is the code editor's selection
+  highlights, laid by the user over any text. A test checks each pair.
 
 The tokens have one source, `scripts/tokens/tokens.ts`. When the library is built,
 `scripts/tokens/generate.ts` writes the theme CSS (`src/lib/generated/theme.css`) and the

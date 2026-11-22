@@ -15,12 +15,15 @@ const variants = {
 	/** The one main action of a screen. */
 	primary:
 		'bg-primary border-primary text-on-primary font-semibold hover:bg-primary-hover hover:border-primary-hover',
-	/** A secondary action that should stand out: tinted with the primary colour. */
-	tint: 'bg-primary-subtle border-primary-border text-primary hover:bg-primary/20',
+	/**
+	 * A secondary action that should stand out: tinted with the primary colour. Hovered, its border
+	 * takes the full colour: a darker tint behind the text would take it under 4.5:1.
+	 */
+	tint: 'bg-primary-subtle border-primary-border text-primary hover:border-primary',
 	/** A quiet action in toolbars and lists. */
 	ghost: 'bg-transparent border-transparent text-fg-2 hover:bg-hover hover:text-fg',
 	/** A destructive action next to others. */
-	danger: 'bg-danger-subtle border-danger-border text-danger hover:bg-danger/20',
+	danger: 'bg-danger-subtle border-danger-border text-danger hover:border-danger',
 	/** The confirming action of a destructive dialog. */
 	'danger-solid': 'bg-danger border-danger text-on-danger font-semibold hover:opacity-90',
 	/** An action over game art, such as a game page's Back: a dark translucent pill in both themes. */

@@ -75,8 +75,8 @@ describe('tokenValues', () => {
 			oklch: 'oklch(0.202 0.029 268.7)',
 			hex: '#111624'
 		});
-		// oklch(0.663 0.178 263.8) → sRGB 88.95, 140.89, 254.83
-		expect(tokenValues.dark.primary).toEqual({ oklch: 'oklch(0.663 0.178 263.8)', hex: '#598dff' });
+		// oklch(0.672 0.172 263.8) → sRGB 93.68, 144.34, 254.46
+		expect(tokenValues.dark.primary).toEqual({ oklch: 'oklch(0.672 0.172 263.8)', hex: '#5e90fe' });
 		// oklch(0.985 0.003 255) → sRGB 248.69, 250.16, 252.08
 		expect(tokenValues.light.background).toEqual({
 			oklch: 'oklch(0.985 0.003 255)',
@@ -163,16 +163,109 @@ describe('contrast', () => {
 	const value = (theme: Theme, token: keyof typeof colorTokenDocs) =>
 		toOklchText(colors[theme][token]);
 
-	it('keeps warning text at 4.5:1 on every surface and on its own tint, in both themes', () => {
+	const surfaces = ['background', 'sunken', 'surface', 'raised'] as const;
+
+	/** Asserts 4.5:1 for `text` on `fill` laid over each of `backdrops` (`fill` alone when opaque). */
+	function expectReadable(theme: Theme, text: string, fill: string, label: string): void {
+		for (const backdrop of surfaces) {
+			expect(
+				contrast(text, fill, value(theme, backdrop)),
+				`${theme}: ${label} over ${backdrop}`
+			).toBeGreaterThanOrEqual(4.5);
+		}
+	}
+
+	it('keeps the neutral text at 4.5:1 on every neutral fill, in both themes', () => {
 		for (const theme of themes) {
-			for (const surface of ['background', 'surface', 'raised', 'sunken'] as const) {
-				const backdrop = value(theme, surface);
-				const label = `${theme} warning on ${surface}`;
-				expect(contrast(value(theme, 'warning'), backdrop), label).toBeGreaterThanOrEqual(4.5);
+			for (const text of ['fg', 'fg-2', 'muted', 'faint'] as const) {
+				for (const fill of [...surfaces, 'hover'] as const) {
+					expect(
+						contrast(value(theme, text), value(theme, fill)),
+						`${theme}: ${text} on ${fill}`
+					).toBeGreaterThanOrEqual(4.5);
+				}
+			}
+			// Alerts, toasts and selected rows set neutral text on a status tint.
+			for (const tint of ['primary', 'danger', 'success', 'warning', 'info', 'accent'] as const) {
+				for (const text of ['fg', 'fg-2', 'muted'] as const) {
+					expectReadable(
+						theme,
+						value(theme, text),
+						value(theme, `${tint}-subtle`),
+						`${text} on the ${tint} tint`
+					);
+				}
+			}
+			// A pressed or current item (`active`) carries the three louder neutral texts only.
+			for (const text of ['fg', 'fg-2', 'muted'] as const) {
 				expect(
-					contrast(value(theme, 'warning'), value(theme, 'warning-subtle'), backdrop),
-					`${label}'s tint`
+					contrast(value(theme, text), value(theme, 'active')),
+					`${theme}: ${text} on active`
 				).toBeGreaterThanOrEqual(4.5);
+			}
+		}
+	});
+
+	it('keeps coloured text at 4.5:1 on every surface, on a hovered row and on its own tint', () => {
+		const tinted = ['primary', 'danger', 'success', 'warning', 'info', 'accent'] as const;
+		for (const theme of themes) {
+			for (const text of [...tinted, 'primary-hover', 'server', 'local'] as const) {
+				for (const fill of [...surfaces, 'hover'] as const) {
+					expect(
+						contrast(value(theme, text), value(theme, fill)),
+						`${theme}: ${text} on ${fill}`
+					).toBeGreaterThanOrEqual(4.5);
+				}
+			}
+			for (const text of tinted) {
+				expectReadable(
+					theme,
+					value(theme, text),
+					value(theme, `${text}-subtle`),
+					`${text} on its tint`
+				);
+			}
+			// The Editor's mode badges: the mode's colour on itself at 12% (`bg-server/12`).
+			for (const mode of ['server', 'local'] as const) {
+				const color = value(theme, mode);
+				expectReadable(theme, color, color.replace(/\)$/, ' / 0.12)'), `${mode} on its badge`);
+			}
+		}
+	});
+
+	it('keeps text on the solid primary and danger fills at 4.5:1', () => {
+		for (const theme of themes) {
+			for (const [text, fill] of [
+				['on-primary', 'primary'],
+				['on-primary', 'primary-hover'],
+				['on-danger', 'danger']
+			] as const) {
+				expect(
+					contrast(value(theme, text), value(theme, fill)),
+					`${theme}: ${text} on ${fill}`
+				).toBeGreaterThanOrEqual(4.5);
+			}
+		}
+	});
+
+	it('keeps every code colour at 4.5:1 on the current line, on every surface', () => {
+		const code = [
+			'keyword',
+			'function',
+			'string',
+			'number',
+			'type',
+			'comment',
+			'attribute'
+		] as const;
+		for (const theme of themes) {
+			for (const name of code) {
+				expectReadable(
+					theme,
+					value(theme, `code-${name}`),
+					value(theme, 'code-line'),
+					`code-${name}`
+				);
 			}
 		}
 	});
