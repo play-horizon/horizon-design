@@ -10,7 +10,8 @@ neither, it is a plain display: no hover, no focus.
 - `feature` (Continue playing): a larger card with the square `icon`, the name and the `meta`
   line drawn over the bottom of the art, and an `action` (Play) at its bottom right.
 
-The art carries the colour; without a thumbnail, a neutral fill stands in.
+The art carries the colour; without a thumbnail, the sunken fill stands in, apart from the page in
+both themes.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -81,7 +82,7 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 	>
 		<div
 			class={cn(
-				'relative grid aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
+				'relative grid aspect-video overflow-hidden rounded-lg bg-sunken shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
 				lift
 			)}
 		>
@@ -122,7 +123,7 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 	>
 		<div
 			class={cn(
-				'relative aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
+				'relative aspect-video overflow-hidden rounded-lg bg-sunken shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
 				lift
 			)}
 		>
