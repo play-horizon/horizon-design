@@ -1,8 +1,9 @@
 <!--
 @component
-An app's navigation sidebar: a sunken column with an optional header (the brand), the
-navigation itself (`SidebarSection` and `SidebarItem`, named by `label`) and an optional footer
-(the account). `collapsed` narrows it to the items' icons: their text and the sections' labels
+An app's navigation sidebar: a sunken column with an optional header (the brand), then the
+navigation landmark (named by `label`), which holds both the navigation itself (`SidebarSection`
+and `SidebarItem`), scrolling when it overflows, and the optional footer pinned beneath it (the
+account's entries). `collapsed` narrows it to the items' icons: their text and the sections' labels
 are clipped or visually hidden, and still read by assistive technology, and each item shows its
 text as a tooltip.
 -->
@@ -31,7 +32,7 @@ text as a tooltip.
 		label?: string;
 		/** The top of the sidebar, such as the brand. */
 		header?: Snippet;
-		/** The bottom of the sidebar, such as the account. */
+		/** The bottom of the sidebar, inside the navigation landmark, such as the account's entries. */
 		footer?: Snippet;
 		/** The navigation: `SidebarSection`s and `SidebarItem`s. */
 		children?: Snippet;
@@ -61,16 +62,20 @@ text as a tooltip.
 			{@render header()}
 		</div>
 	{/if}
-	<nav
-		aria-label={label}
-		class="flex flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2.5 pb-3"
-		data-slot="sidebar-content"
-	>
-		{@render children?.()}
-	</nav>
-	{#if footer}
-		<div class="mx-2.5 border-t border-border px-1 py-3" data-slot="sidebar-footer">
-			{@render footer()}
+	<nav aria-label={label} class="flex min-h-0 flex-1 flex-col">
+		<div
+			class="flex flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2.5 pb-3"
+			data-slot="sidebar-content"
+		>
+			{@render children?.()}
 		</div>
-	{/if}
+		{#if footer}
+			<div
+				class="mx-2.5 flex flex-col gap-0.5 border-t border-border py-3"
+				data-slot="sidebar-footer"
+			>
+				{@render footer()}
+			</div>
+		{/if}
+	</nav>
 </aside>

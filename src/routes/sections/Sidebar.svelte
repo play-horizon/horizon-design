@@ -1,9 +1,10 @@
 <!--
 @component
 Docs: Sidebar. A playground over the sidebar's props (collapsed, header, footer, section labels,
-counts, the current entry), then the expanded sidebar with its header and footer beside the same
-navigation collapsed to its icons, whose entries show their text as a tooltip, and entries that
-are buttons rather than links.
+counts, the current entry), then the expanded sidebar with its header and its footer (the
+account's entry, inside the navigation landmark) beside the same navigation collapsed to its
+icons, whose entries show their text as a tooltip, and entries that are buttons rather than
+links.
 -->
 <script lang="ts">
 	import { Badge } from '#lib/components/badge/index.js';
@@ -33,12 +34,10 @@ are buttons rather than links.
 {/snippet}
 
 {#snippet account()}
-	<div class="flex items-center gap-2 overflow-hidden">
-		<MingcuteUser3Line class="size-4 shrink-0 text-muted" aria-hidden="true" />
-		<span class="truncate text-xs text-muted group-data-[collapsed=true]/sidebar:sr-only">
-			Signed in as Alex
-		</span>
-	</div>
+	<SidebarItem href="#top">
+		<MingcuteUser3Line aria-hidden="true" />
+		Account
+	</SidebarItem>
 {/snippet}
 
 {#snippet navigation(options: { active: string; labels: boolean; counts: boolean })}
