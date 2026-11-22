@@ -1,8 +1,9 @@
 <!--
 @component
-Docs: GameCard. A playground over its variant, its link or button, its art and every slot, then
-the large Continue playing cards with their Play action, a row of cards with live counts and
-tags, and cards with editing avatars, a status line, and no thumbnail.
+Docs: GameCard. A playground over its variant, its link, button or plain display, its art and
+every slot, then the large Continue playing cards with their Play action, a row of cards with
+live counts and tags, cards with editing avatars, a status line, and no thumbnail, and a plain
+card that leads nowhere.
 -->
 <script lang="ts">
 	import { GameCard } from '#lib/components/game-card/index.js';
@@ -42,7 +43,7 @@ tags, and cards with editing avatars, a status line, and no thumbnail.
 		controls={{
 			name: text('Neon Drift'),
 			variant: choice(['default', 'feature'] as const),
-			target: choice(['button', 'link'] as const),
+			target: choice(['button', 'link', 'none'] as const),
 			thumbnail: boolean(true),
 			icon: boolean(true),
 			overlay: boolean(true),
@@ -139,6 +140,15 @@ tags, and cards with editing avatars, a status line, and no thumbnail.
 			</GameCard>
 			<GameCard name="Rooftop trials" onclick={() => (opened = 'Rooftop trials')}>
 				{#snippet meta()}Not published{/snippet}
+			</GameCard>
+		</div>
+	</div>
+	<div>
+		<h2 class="mb-3 text-lg font-bold">Display only</h2>
+		<p class="mb-3 text-sm text-muted">Without href or onclick: no hover, nothing to focus.</p>
+		<div class="grid grid-cols-3 gap-4">
+			<GameCard name="Quiet Woods" thumbnail={art.woods}>
+				{#snippet meta()}Developer{/snippet}
 			</GameCard>
 		</div>
 	</div>

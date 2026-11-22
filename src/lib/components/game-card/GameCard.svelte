@@ -1,8 +1,9 @@
 <!--
 @component
-A game in a list: its 16:9 thumbnail and its name, the card's link (`href`) or button
-(`onclick`). The link covers the whole card, while controls drawn on it (`action`, `corner`) stay
-their own buttons.
+A game in a list: its 16:9 thumbnail and its name. It is interactive only when given something to
+do: with `href`, the name is a link; with `onclick`, a button; either covers the whole card (hover
+lift, focus ring), while controls drawn on it (`action`, `corner`) stay their own buttons. With
+neither, it is a plain display: no hover, no focus.
 
 - `default`: the art, then the name and a `meta` line (tags, status) under it; `overlay` draws
   at the art's top left (a `PlayerCount`), `corner` at its top right (an `AvatarStack`).
@@ -28,11 +29,11 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 		action,
 		class: className = ''
 	}: {
-		/** The game's name: the card's link text. */
+		/** The game's name: the card's link or button text. */
 		name: string;
-		/** Where the card leads. */
+		/** Where the card leads, already resolved: its name is a link. */
 		href?: string;
-		/** Called when the card is chosen, when it has no `href`. */
+		/** Called when the card is chosen, when it has no `href`: its name is a button. */
 		onclick?: () => void;
 		/** The 16:9 thumbnail's URL. */
 		thumbnail?: string;
@@ -52,6 +53,9 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 		class?: string;
 	} = $props();
 
+	const interactive = $derived(Boolean(href || onclick));
+	// The art lifts on hover only when the card leads somewhere.
+	const lift = $derived(interactive && 'group-hover:-translate-y-0.5 group-hover:shadow-md');
 	// The link's ::after covers the card, so a click anywhere follows it; focus rings the card.
 	const stretched =
 		'outline-none after:absolute after:inset-0 after:z-1 after:rounded-lg focus-visible:after:ring-2 focus-visible:after:ring-primary focus-visible:after:ring-offset-2 focus-visible:after:ring-offset-background';
@@ -61,15 +65,25 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 	{#if href}
 		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- the app passes an href it has already resolved -->
 		<a {href} class={cn(stretched, extra)}>{name}</a>
-	{:else}
+	{:else if onclick}
 		<button type="button" class={cn(stretched, 'text-left', extra)} {onclick}>{name}</button>
+	{:else}
+		<span class={extra}>{name}</span>
 	{/if}
 {/snippet}
 
 {#if variant === 'feature'}
-	<div class={cn('group relative min-w-0', className)} data-slot="game-card" data-variant="feature">
+	<div
+		class={cn('group relative min-w-0', className)}
+		data-slot="game-card"
+		data-variant="feature"
+		data-interactive={interactive || undefined}
+	>
 		<div
-			class="relative grid aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard group-hover:-translate-y-0.5 group-hover:shadow-md"
+			class={cn(
+				'relative grid aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
+				lift
+			)}
 		>
 			<!-- The art, its scrim and the name bar share one grid cell, none of them positioned, so
 			     the link's ::after is placed against this container and covers the whole card. -->
@@ -104,9 +118,13 @@ The art carries the colour; without a thumbnail, a neutral fill stands in.
 		class={cn('group relative grid min-w-0 content-start gap-2', className)}
 		data-slot="game-card"
 		data-variant="default"
+		data-interactive={interactive || undefined}
 	>
 		<div
-			class="relative aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard group-hover:-translate-y-0.5 group-hover:shadow-md"
+			class={cn(
+				'relative aspect-video overflow-hidden rounded-lg bg-raised shadow-sm transition-[transform,box-shadow] duration-200 ease-standard',
+				lift
+			)}
 		>
 			{#if thumbnail}
 				<img src={thumbnail} alt="" class="absolute inset-0 size-full object-cover" />
