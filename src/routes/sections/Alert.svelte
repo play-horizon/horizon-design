@@ -8,13 +8,13 @@ only a title or only a description. Warnings and errors are `alert`s, the others
 	import { Alert } from '#lib/components/alert/index.js';
 	import { Button } from '#lib/components/button/index.js';
 	import { Card } from '#lib/components/card/index.js';
-	import MingcuteSparklesLine from '~icons/mingcute/sparkles-line';
+	import MingcuteTimeLine from '~icons/mingcute/time-line';
 	import Playground from '../playground/Playground.svelte';
 	import { boolean, choice, text } from '../playground/controls';
 
 	const variants = ['default', 'info', 'success', 'warning', 'error', 'destructive'] as const;
 	const samples: Record<(typeof variants)[number], { title: string; description: string }> = {
-		default: { title: 'Heads up', description: 'The editor restarts after the update.' },
+		default: { title: 'Restart required', description: 'The editor restarts after the update.' },
 		info: { title: 'Saving', description: 'Your changes are being saved.' },
 		success: { title: 'Published', description: 'Sky Racer is live for every player.' },
 		warning: { title: 'Large upload', description: 'This model has over 1 million triangles.' },
@@ -23,8 +23,8 @@ only a title or only a description. Warnings and errors are `alert`s, the others
 	};
 </script>
 
-{#snippet sparkles()}
-	<MingcuteSparklesLine class="size-4 text-accent" aria-hidden="true" />
+{#snippet clock()}
+	<MingcuteTimeLine class="size-4" aria-hidden="true" />
 {/snippet}
 
 <div class="grid gap-4">
@@ -43,7 +43,7 @@ only a title or only a description. Warnings and errors are `alert`s, the others
 				variant={values.variant}
 				title={values.title}
 				description={values.description}
-				icon={values.customIcon ? sparkles : undefined}
+				icon={values.customIcon ? clock : undefined}
 			>
 				{#if values.action}
 					<div class="mt-2"><Button size="sm">Retry</Button></div>
@@ -70,7 +70,7 @@ only a title or only a description. Warnings and errors are `alert`s, the others
 					<Button size="sm" variant="ghost">Cancel</Button>
 				</div>
 			</Alert>
-			<Alert title="New: playgrounds" description="Every prop can be tried live." icon={sparkles} />
+			<Alert title="Maintenance tonight" description="Servers restart at 02:00 UTC." icon={clock} />
 			<Alert variant="success" title="Saved" />
 			<Alert variant="warning" description="Only a description, without a title." />
 		</div>

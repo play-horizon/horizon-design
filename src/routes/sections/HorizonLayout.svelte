@@ -225,7 +225,11 @@ showing a maximised view with its restore button.
 		<div>
 			<p class="mb-2.5 text-xs font-semibold text-muted">Alerts</p>
 			<div class="space-y-2">
-				<Alert variant="info" title="Heads up" description="A short informational note." />
+				<Alert
+					variant="info"
+					title="Restart required"
+					description="The editor restarts after the update."
+				/>
 				<Alert variant="success" title="Changes saved" />
 			</div>
 		</div>

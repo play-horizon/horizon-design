@@ -57,7 +57,7 @@ publish status with a link, a read notification, and the empty state.
 	<Playground
 		controls={{
 			heading: text('Notifications'),
-			emptyText: text("You're all caught up."),
+			emptyText: text('No notifications.'),
 			markAllLabel: text('Mark all as read'),
 			unreadLabel: text('unread'),
 			markAll: boolean(true),
@@ -91,7 +91,7 @@ publish status with a link, a read notification, and the empty state.
 			<NotificationCenter
 				{items}
 				heading="Inbox"
-				emptyText="You're all caught up."
+				emptyText="No notifications."
 				markAllLabel="Mark all as read"
 				unreadLabel="unread"
 				onMarkAllRead={() => (items = markAllRead(items))}
@@ -108,7 +108,7 @@ publish status with a link, a read notification, and the empty state.
 			<NotificationCenter
 				items={[]}
 				heading="Empty inbox"
-				emptyText="You're all caught up."
+				emptyText="No notifications."
 				markAllLabel="Mark all as read"
 				unreadLabel="unread"
 			/>
