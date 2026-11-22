@@ -4,7 +4,6 @@ Docs: Marquee. A playground over every prop, then a marquee on each side (left, 
 down), a reversed one, one filled to its width and a paused one.
 -->
 <script lang="ts">
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import { Marquee, MarqueeItem } from '#lib/components/marquee/index.js';
 	import Playground from '../playground/Playground.svelte';
@@ -18,7 +17,7 @@ down), a reversed one, one filled to its width and a paused one.
 {#snippet items(names: readonly string[])}
 	{#each names as name (name)}
 		<MarqueeItem>
-			<Badge variant="neutral" class="whitespace-nowrap">{name}</Badge>
+			<span class="text-sm whitespace-nowrap text-fg-2">{name}</span>
 		</MarqueeItem>
 	{/each}
 {/snippet}

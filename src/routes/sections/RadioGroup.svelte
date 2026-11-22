@@ -5,7 +5,6 @@ states), then every size, a horizontal group, a disabled option, an option with 
 and the disabled and invalid states.
 -->
 <script lang="ts">
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import { RadioGroup } from '#lib/components/radio-group/index.js';
 	import Playground from '../playground/Playground.svelte';
@@ -24,7 +23,7 @@ and the disabled and invalid states.
 
 {#snippet proLabel()}
 	<span class="text-sm">
-		Pro <Badge variant="info" class="ml-1 py-0 text-[10px]">Popular</Badge>
+		Pro <span class="ml-1 text-xs text-muted">Most chosen</span>
 	</span>
 {/snippet}
 

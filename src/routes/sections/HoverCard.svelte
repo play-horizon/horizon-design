@@ -5,7 +5,6 @@ profile card on a button, a card on an inline link, and a frosted card over game
 -->
 <script lang="ts">
 	import { Avatar } from '#lib/components/avatar/index.js';
-	import { Badge } from '#lib/components/badge/index.js';
 	import { buttonVariants } from '#lib/components/button/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import { HoverCard } from '#lib/components/hover-card/index.js';
@@ -22,7 +21,7 @@ profile card on a button, a card on an inline link, and a frosted card over game
 		<div>
 			<p class="text-sm font-semibold">Nova Studio</p>
 			<p class="mt-0.5 text-xs text-muted">Makes racing games since 2024.</p>
-			<Badge variant="neutral" class="mt-2">12 games</Badge>
+			<p class="mt-2 text-xs text-muted">12 games</p>
 		</div>
 	</div>
 {/snippet}

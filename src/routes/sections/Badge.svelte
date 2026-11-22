@@ -7,8 +7,9 @@ variant at both sizes, and badges with an icon.
 	import { Badge } from '#lib/components/badge/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import MingcuteCheckLine from '~icons/mingcute/check-line';
-	import MingcuteStarLine from '~icons/mingcute/star-line';
-	import MingcuteUser1Line from '~icons/mingcute/user-1-line';
+	import MingcuteCloseCircleLine from '~icons/mingcute/close-circle-line';
+	import MingcuteNotificationLine from '~icons/mingcute/notification-line';
+	import MingcuteWarningLine from '~icons/mingcute/warning-line';
 	import Playground from '../playground/Playground.svelte';
 	import { boolean, choice, text } from '../playground/controls';
 
@@ -29,7 +30,7 @@ variant at both sizes, and badges with an icon.
 <div class="grid gap-4">
 	<Playground
 		controls={{
-			label: text('Featured'),
+			label: text('Unread'),
 			icon: boolean(),
 			variant: choice(variants, 'primary'),
 			size: choice(sizes)
@@ -37,7 +38,7 @@ variant at both sizes, and badges with an icon.
 	>
 		{#snippet example(values)}
 			<Badge variant={values.variant} size={values.size}>
-				{#if values.icon}<MingcuteStarLine aria-hidden="true" />{/if}
+				{#if values.icon}<MingcuteNotificationLine aria-hidden="true" />{/if}
 				{values.label}
 			</Badge>
 		{/snippet}
@@ -53,12 +54,13 @@ variant at both sizes, and badges with an icon.
 			{/each}
 		</div>
 	</Card>
-	<Card title="With an icon">
+	<Card title="With an icon" description="Badges mark state to notice; metadata is muted text.">
 		<div class="flex flex-wrap items-center gap-2">
 			<Badge variant="success"><MingcuteCheckLine aria-hidden="true" />Verified</Badge>
-			<Badge variant="accent"><MingcuteStarLine aria-hidden="true" />Featured</Badge>
-			<Badge><MingcuteUser1Line aria-hidden="true" />12 playing</Badge>
-			<Badge size="sm" variant="warning"><MingcuteStarLine aria-hidden="true" />Beta</Badge>
+			<Badge variant="danger"><MingcuteCloseCircleLine aria-hidden="true" />2 errors</Badge>
+			<Badge size="sm" variant="warning">
+				<MingcuteWarningLine aria-hidden="true" />Not applied
+			</Badge>
 		</div>
 	</Card>
 </div>

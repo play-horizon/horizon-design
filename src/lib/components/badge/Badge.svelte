@@ -1,6 +1,7 @@
 <!--
 @component
-A small label: a status, a count, a tag or a restriction badge. `variant` sets its colour
+A small label for state the user must notice: a status, an unread or error count, a restriction
+badge. Metadata (tags, a kind, a role) is muted text, not a badge. `variant` sets its colour
 (neutral, primary, success, warning, danger, info, accent, and the Editor's server and local
 modes); `size` its height (md 20 px, sm 17 px).
 -->

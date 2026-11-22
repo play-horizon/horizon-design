@@ -2,16 +2,13 @@
 @component
 Docs: Card. A playground over every part (the title, the description, the content, the footer),
 then cards with every part, with a header and content only, with content only, and two cards
-built for an app: a stat and a person.
+built for an app: a release and a person.
 -->
 <script lang="ts">
 	import { Avatar } from '#lib/components/avatar/index.js';
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Button } from '#lib/components/button/index.js';
 	import { Card } from '#lib/components/card/index.js';
-	import { Progress } from '#lib/components/progress/index.js';
 	import { Status } from '#lib/components/status/index.js';
-	import MingcuteArrowUpLine from '~icons/mingcute/arrow-up-line';
 	import Playground from '../playground/Playground.svelte';
 	import { boolean, text } from '../playground/controls';
 </script>
@@ -55,15 +52,10 @@ built for an app: a stat and a person.
 		<Card>
 			<p class="text-sm text-muted">Content only, without a header or footer.</p>
 		</Card>
-		<Card title="Players" description="This week">
-			<div class="space-y-3">
-				<div class="text-3xl font-bold text-primary">42,890</div>
-				<div class="flex items-center gap-1.5 text-xs text-success">
-					<MingcuteArrowUpLine class="size-3.5" aria-hidden="true" />
-					<span>+12.5% from last week</span>
-				</div>
-				<Progress value={72} label="Weekly goal" />
-			</div>
+		<Card title="Release 18" description="Published on 7 November 2026">
+			<p class="text-sm text-fg-2">
+				The crane swings slower, and the hook has a warning light. 46 players are on it now.
+			</p>
 		</Card>
 		<Card title="Member">
 			<div class="space-y-4">
@@ -79,10 +71,7 @@ built for an app: a stat and a person.
 						<p class="text-xs text-muted">sam@example.com</p>
 					</div>
 				</div>
-				<div class="flex gap-2">
-					<Badge>Owner</Badge>
-					<Badge variant="accent">Pro</Badge>
-				</div>
+				<p class="text-xs text-muted">Owner</p>
 			</div>
 			{#snippet footer()}
 				<Button size="sm" class="w-full">View profile</Button>

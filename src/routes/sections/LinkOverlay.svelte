@@ -5,7 +5,6 @@ on top, then a card whose whole area follows its link, and a card with a second 
 button that stay their own.
 -->
 <script lang="ts">
-	import { Badge } from '#lib/components/badge/index.js';
 	import { Card } from '#lib/components/card/index.js';
 	import { IconButton } from '#lib/components/icon-button/index.js';
 	import { LinkBox, LinkOverlay } from '#lib/components/link-overlay/index.js';
@@ -75,7 +74,7 @@ button that stay their own.
 					</a>, updated yesterday.
 				</p>
 				<div class="mt-3 flex items-center gap-2">
-					<Badge variant="info">Fighting</Badge>
+					<span class="text-sm text-muted">Fighting</span>
 					<IconButton label="Like" size="sm" class="ml-auto">
 						<MingcuteHeartLine aria-hidden="true" />
 					</IconButton>
