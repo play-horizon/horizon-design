@@ -424,6 +424,26 @@ package computes exactly the instructions a hierarchy needs (reorder above or be
 reparent by indent level) and a list's closest edge. `@dnd-kit/svelte` was the alternative; its
 Svelte port is younger and less proven. The keyboard does the same moves (Shift+arrows).
 
+## Upgrading from 2.0
+
+2.1.0 changes what an app may see or test:
+
+- **Token values:** the text colours that fell short of 4.5:1 moved in lightness, hue kept: `muted`
+  and `faint`, `primary` and `server`, `danger`, and `code-comment` in both themes, and in the light
+  theme `success`, `local`, `info` and `code-number`. Code that copied a hex from
+  `horizon-design/tokens` gets the new values.
+- **`tracking-overline` is removed**, with the uppercase labels it spaced: section labels
+  (`SidebarSection`, `FacetedSearch`'s legends) are sentence case, small and semibold.
+- **`Button`'s `tint` and `danger` variants** mark their hover with the full-colour border instead of
+  a darker tint.
+- **`InspectorPanel`** draws its components as flat sections divided by hairlines, not bordered
+  cards; its drop line is `[data-slot="inspector-panel-drop-line"]`, with `data-edge` `top` or
+  `bottom`.
+- **`AssetCard`** shows its `kind` as muted text, no longer a `Badge`.
+- **`TagPicker`'s** tags and **`PlayerCount`'s** overlay are rounded like the controls (6 px), no
+  longer fully.
+- **`GameCard`** without a thumbnail draws its art box with the `sunken` fill (it was `raised`).
+
 ## Upgrading from 1.0.0
 
 2.0.0 changes what code written for 1.0.0 may rely on:
