@@ -1,7 +1,7 @@
 /*
- * horizon-layout 2.0.2's default theme (`src/lib/horizon-layout.css` at its tag v2.0.2), adapted to
+ * horizon-layout 2.0.3's default theme (`src/lib/horizon-layout.css` at its tag v2.0.3), adapted to
  * horizon-design. It keeps the library's rules, in its order, so that upgrading horizon-layout is a
- * diff of the library's new default theme against 2.0.2's, applied here, with these deliberate
+ * diff of the library's new default theme against 2.0.3's, applied here, with these deliberate
  * differences kept:
  *
  * - The `--hl-*` variables take horizon-design's tokens, set on the layout's root
