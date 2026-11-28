@@ -1,7 +1,9 @@
 <!--
 @component
 Docs: Combobox. A playground over every prop (with `openOnClick`, a press on the field opens the
-options and typing searches at once), and a single and a multiple choice side by side.
+options and typing searches at once), a single and a multiple choice side by side, and one whose
+`translations` give every announcement: the options found and, on Apple devices, the option the
+keyboard moves to.
 -->
 <script lang="ts">
 	import { Card } from '#lib/components/card/index.js';
@@ -17,6 +19,14 @@ options and typing searches at once), and a single and a multiple choice side by
 		{ label: 'Angular', value: 'angular' }
 	];
 	const translations = { triggerLabel: 'Show frameworks' };
+	const announced = {
+		...translations,
+		resultsCount: (count: number) => (count === 1 ? '1 framework' : `${count} frameworks`),
+		noResults: 'No framework found',
+		loading: 'Looking for frameworks',
+		highlightedItem: ({ label, selected }: { label: string; selected: boolean }) =>
+			selected ? `${label}, selected` : label
+	};
 </script>
 
 <div class="grid gap-4">
@@ -69,6 +79,26 @@ options and typing searches at once), and a single and a multiple choice side by
 				multiple
 				openOnClick
 			/>
+		</div>
+	</Card>
+	<Card title="Announcements">
+		<div class="grid gap-2">
+			<Combobox
+				class="w-64"
+				items={frameworks}
+				translations={announced}
+				label="Announced framework"
+				placeholder="Search…"
+				emptyText="No results found."
+				defaultValue={['svelte']}
+				openOnClick
+			/>
+			<p class="text-xs text-muted">
+				Screen readers hear the options found as the search settles (<code>resultsCount</code>,
+				<code>noResults</code>, <code>loading</code>) and, on Apple devices, the option the keyboard
+				moves to (<code>highlightedItem</code>): “Svelte, selected” for the one already chosen.
+				Without <code>highlightedItem</code> they hear its label alone.
+			</p>
 		</div>
 	</Card>
 </div>

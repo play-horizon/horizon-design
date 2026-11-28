@@ -1,11 +1,13 @@
 /**
  * Tests of `Combobox`: typing keeps the options whose label contains the text, ignoring case
  * and accents, and shows `emptyText` when none does; Ark announces the options found only in
- * the messages `translations` gives; the open button shows its name in a tooltip; and
+ * the messages `translations` gives, and, on an Apple device, the option the keyboard moves to
+ * by its label alone or in the text `highlightedItem` gives; the open button shows its name in
+ * a tooltip; and
  * `openOnClick` opens the options from a press on the field, which keeps the focus for typing.
  * @module
  */
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import type { ComponentProps } from 'svelte';
 import userEvent from '@testing-library/user-event';
@@ -78,6 +80,52 @@ describe('Combobox', () => {
 		});
 		await type(input, 'ra');
 		expect(await announcements()).toEqual(['2 modes']);
+	});
+
+	describe('on an Apple device', () => {
+		beforeEach(() => {
+			vi.spyOn(navigator, 'platform', 'get').mockReturnValue('MacIntel');
+		});
+		afterEach(() => {
+			vi.restoreAllMocks();
+		});
+
+		/**
+		 * Renders the combobox with Rally chosen, opens it, which highlights the chosen option, and
+		 * moves down to the next one, Drift: what was announced after each.
+		 */
+		async function highlightChosenThenNext(
+			translations: ComponentProps<typeof Combobox>['translations']
+		): Promise<string[][]> {
+			const view = render(Combobox, {
+				items,
+				label: 'Mode',
+				emptyText: 'No match',
+				translations,
+				defaultValue: ['rally']
+			});
+			const user = userEvent.setup();
+			await user.click(view.getByRole('button', { name: 'Show modes' }));
+			const first = await announcements();
+			await user.keyboard('{ArrowDown}');
+			return [first, await announcements()];
+		}
+
+		it('announces the highlighted option by its label alone without highlightedItem', async () => {
+			expect(await highlightChosenThenNext({ triggerLabel: 'Show modes' })).toEqual([
+				['Rally'],
+				['Drift']
+			]);
+		});
+
+		it('announces the highlighted option in the text highlightedItem gives', async () => {
+			expect(
+				await highlightChosenThenNext({
+					triggerLabel: 'Show modes',
+					highlightedItem: ({ label, selected }) => (selected ? `${label}, choisi` : label)
+				})
+			).toEqual([['Rally, choisi'], ['Drift']]);
+		});
 	});
 
 	it('names the open button in its tooltip', async () => {

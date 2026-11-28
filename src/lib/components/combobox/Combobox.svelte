@@ -5,7 +5,9 @@ options whose label contains the text, ignoring case and accents, and `emptyText
 does. `label`, required, names the field, and Ark `translations` name the open button
 (`triggerLabel`, also its tooltip). `openOnClick` opens the options as soon as the field is pressed. Ark announces the number of matching options to screen readers only when
 `translations` gives the messages (`resultsCount`, `noResults`, `loading`): it has no English of its
-own to fall back on here.
+own to fall back on here. On Apple devices, where screen readers don't read the option the
+keyboard moves to, Ark announces it: by its label alone, unless `translations` gives
+`highlightedItem`, which then says in the app's language that the option is already chosen.
 -->
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
@@ -56,9 +58,13 @@ own to fall back on here.
 		/**
 		 * `triggerLabel` names the button that opens the options; `resultsCount`, `noResults` and
 		 * `loading`, when given, are announced to screen readers as the options settle.
+		 * `highlightedItem`, when given, makes the text announced on Apple devices for the option the
+		 * keyboard moves to, from its `label` and whether it is `selected`, such as
+		 * `({ label, selected }) => (selected ? `${label}, selected` : label)`; without it the label
+		 * alone is announced.
 		 */
 		translations: Required<Pick<ArkTranslations, 'triggerLabel'>> &
-			Pick<ArkTranslations, 'resultsCount' | 'noResults' | 'loading'>;
+			Pick<ArkTranslations, 'resultsCount' | 'noResults' | 'loading' | 'highlightedItem'>;
 		/** Classes merged onto the root. */
 		class?: string;
 		/** Ark's `ids`, merged with the ids the kit gives the buttons it adds a tooltip to, which win. */
@@ -68,12 +74,14 @@ own to fall back on here.
 	} = $props();
 
 	// Ark's announcements default to English: each stays silent unless `translations` gives it
-	// (Ark takes an undefined message as its own English one).
+	// (Ark takes an undefined message as its own English one), except the highlighted option's,
+	// whose label is the app's own text: only Ark's English ", selected" is left out.
 	const arkTranslations = $derived({
 		triggerLabel: translations.triggerLabel,
 		resultsCount: translations.resultsCount ?? (() => ''),
 		noResults: translations.noResults ?? '',
-		loading: translations.loading ?? ''
+		loading: translations.loading ?? '',
+		highlightedItem: translations.highlightedItem ?? (({ label }: { label: string }) => label)
 	});
 
 	// The open button's id, shared by Ark's combobox and its tooltip, which both find it by id.
