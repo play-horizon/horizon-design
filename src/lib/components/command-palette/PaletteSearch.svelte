@@ -84,8 +84,14 @@ opens (the dialog unmounts its content on close), so every opening starts with a
 		disableLayer: true,
 		scrollToIndexFn: ({ index }) => list?.scrollToIndex(index),
 		// The palette announces its empty text itself, below; Ark's own announcements would be in
-		// English.
-		translations: { resultsCount: () => '', noResults: '', loading: '' }
+		// English. A command is never a selected value, so the one the keyboard moves to is
+		// announced, on Apple devices, by its label.
+		translations: {
+			resultsCount: () => '',
+			noResults: '',
+			loading: '',
+			highlightedItem: ({ label }) => label
+		}
 	}));
 </script>
 
